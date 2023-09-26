@@ -1,0 +1,101 @@
+import { Request, Response } from "express";
+
+import Accounts from "../../auth/accounts";
+import crypto from "crypto";
+
+import { AccountUser, Account, Session, User, Database, minutes } from "../../auth/index";
+import Sequelize, { Empresa, Usuario } from "../../database";
+
+export default class LoginController {
+
+  //200 - autorizado
+  //201 - requer informar account
+  //202 - requer informar empresa
+  async signin(req: Request, res: Response) {
+    try {
+
+      let accountId = req.body.accountId;
+      let empresaId = req.body.empresaId;
+
+      const Accounttransaction = await new Accounts().sequelize?.transaction();
+
+      const user = await User.findOne({attributes: ["id", "email", "password"], where: {email: req.body.email, password: req.body.password}, transaction: Accounttransaction});
+
+      
+      if (accountId == "") {
+  
+        const accountsUsers = await AccountUser.findAll({include: [Account], where: {userId: user?.id}, transaction: Accounttransaction});
+      
+        if (accountsUsers.length > 1) {
+          let accounts = [];
+          for(let i = 0; i < accountsUsers.length; i++) {
+            accounts.push(accountsUsers[i].Account);
+          }
+          res.status(201).json(accounts);
+          return;
+        }
+
+        accountId = accountsUsers[0].accountId;
+        
+      }
+
+      const account = await Account.findOne({include: [Database], where: {id: accountId}, transaction: Accounttransaction});
+
+
+      const transaction = await new Sequelize({
+        host: account?.Database?.host,
+        username: account?.Database?.username,
+        password: account?.Database?.password,
+        database: account?.Database?.database
+      }).sequelize?.transaction();
+
+      if (empresaId == "") {
+
+        const empresas = await Empresa.findAll({transaction: transaction});
+
+        if (empresas.length > 1) {
+          res.status(202).json(empresas);
+          return;
+        }
+
+        empresaId = empresas[0].id;
+
+      }
+
+      const session = await Session.create({id: crypto.randomUUID(), userId: user?.id, accountId: accountId, lastAcess: new Date()}, {transaction: Accounttransaction});
+      Accounttransaction?.commit();
+      
+      const usuario = await Usuario.findOne({where: {id: user?.id}, transaction: transaction});
+      const empresa = await Empresa.findOne({where: {id: empresaId}, transaction: transaction});
+      
+      res.status(200).json({id: session?.id, usuario: usuario, empresa: empresa, lastAcess: session?.lastAcess?.toLocaleString('en'), expiresIn: minutes});
+      
+
+    } catch (err) {
+      res.status(500).json({
+        message: err
+      });
+    }
+  }
+
+  async signout(req: Request, res: Response) {
+    try {
+
+      const id = req.body.id;
+
+      const transaction = await new Accounts().sequelize?.transaction();
+
+      await Session.destroy({where: {id: id}, transaction});
+
+      transaction?.commit();
+
+      res.status(200).json({message: "signout success!"});
+
+    } catch (err) {
+      res.status(500).json({
+        message: "Internal Server Error!"
+      });
+    }
+  }
+
+}
