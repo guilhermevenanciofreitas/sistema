@@ -6,7 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
-### `npm run dev`
+### `npm run web:dev`
 
 Executa o aplicativo no modo de desenvolvimento.\
 Abre [http://localhost:3000](http://localhost:3000) para visualizá-lo no navegador.
@@ -14,7 +14,7 @@ Abre [http://localhost:3000](http://localhost:3000) para visualizá-lo no navega
 A página será recarregada se você fizer edições.\
 Você também verá erros de lint no console.
 
-### `npm run build`
+### `npm run web:build`
 
 Constrói o aplicativo para produção na pasta `build`.\
 Ele agrupa corretamente o React no modo de produção e otimiza a construção para o melhor desempenho.
