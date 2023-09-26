@@ -1,6 +1,6 @@
-## Available Scripts
+## Scripts disponíveis
 
-In the project directory, you can run:
+No diretório do projeto, você pode executar:
 
 ### `npm dev`
 
