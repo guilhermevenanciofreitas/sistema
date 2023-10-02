@@ -21,3 +21,7 @@ Ele agrupa corretamente o React no modo de produção e otimiza a construção p
 
 A compilação é reduzida e os nomes dos arquivos incluem os hashes.\
 Seu aplicativo está pronto para ser implantado!
+
+### `react-native doctor`
+
+Verifica se os requisitos estão instalados corretamentes para windows, android
