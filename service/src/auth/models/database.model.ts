@@ -6,16 +6,16 @@ export class Database extends Model {
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
   id?: string;
 
-  @Column({type: DataType.STRING, field: "host"})
+  @Column({type: DataType.STRING(50), field: "host"})
   host?: string;
 
-  @Column({type: DataType.STRING, field: "username"})
+  @Column({type: DataType.STRING(30), field: "username"})
   username?: string;
 
-  @Column({type: DataType.STRING, field: "password"})
+  @Column({type: DataType.STRING(30), field: "password"})
   password?: string;
 
-  @Column({type: DataType.STRING, field: "database"})
+  @Column({type: DataType.STRING(80), field: "database"})
   database?: string;
 
 }

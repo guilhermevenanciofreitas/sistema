@@ -5,3 +5,8 @@
 
 # production
 /build
+
+# platforms
+/android
+/windows
+/ios

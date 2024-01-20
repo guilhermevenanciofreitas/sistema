@@ -11,18 +11,17 @@ export { AccountUser } from './models/accountUser.model';
 export { User } from "./models/user.model";
 export { Database } from './models/database.model';
 
-import Sequelize, { Usuario } from "../database";
-import { Transaction } from "sequelize";
+import Sequelize from "../database";
 
 export const minutes = 60;
 
-export default async function Auth(req: Request, res: Response): Promise<Transaction | undefined> {
+export default async function Auth(req: Request, res: Response): Promise<any> {
 
     const transaction = await new Accounts().sequelize?.transaction();
 
     try {
             
-        const session = await Session.findOne({include: [{model: Account, include: [Database]}], where: {id: req.headers.authorization}, transaction});
+        const session = await Session.findOne({attributes: ["id", "lastAcess"], include: [{attributes: ["id"], model: Account, include: [{attributes: ["host", "username", "password", "database"], model: Database}]}], where: {id: req.headers.authorization}, transaction});
 
         if (!session) {
             res.status(401).json({message: "Session expired!"});
@@ -42,19 +41,18 @@ export default async function Auth(req: Request, res: Response): Promise<Transac
 
         await session.update({lastAcess: lastAcess, transaction});
 
-        res.setHeader("Last-Acess", lastAcess.toLocaleString('en'));
+        res.setHeader("Last-Acess", lastAcess.toLocaleString('en-US'));
         res.setHeader("Expires-In", minutes);
 
         const config = session?.Account?.Database;
         
         transaction?.commit();
 
-        return await new Sequelize({
-            host: config?.host,
-            username: config?.username,
-            password: config?.password,
-            database: config?.database
-        }).sequelize?.transaction();
+        return { 
+            transaction: await new Sequelize({ host: config?.host, username: config?.username, password: config?.password, database: config?.database}).sequelize?.transaction(),
+            usuarioId: session?.userId,
+            empresaId: session?.empresaId,
+        };
 
     } catch (err) {
         transaction?.rollback();

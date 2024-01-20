@@ -17,14 +17,14 @@ export default class LoginController {
       let accountId = req.body.accountId;
       let empresaId = req.body.empresaId;
 
-      const Accounttransaction = await new Accounts().sequelize?.transaction();
+      const accountTransaction = await new Accounts().sequelize?.transaction();
 
-      const user = await User.findOne({attributes: ["id", "email", "password"], where: {email: req.body.email, password: req.body.password}, transaction: Accounttransaction});
+      const user = await User.findOne({attributes: ["id", "email", "password"], where: {email: req.body.email, password: req.body.password}, transaction: accountTransaction});
 
       
       if (accountId == "") {
   
-        const accountsUsers = await AccountUser.findAll({include: [Account], where: {userId: user?.id}, transaction: Accounttransaction});
+        const accountsUsers = await AccountUser.findAll({attributes: ["accountId"], include: [{attributes: ["id", "name"], model: Account}], where: {userId: user?.id}, transaction: accountTransaction});
       
         if (accountsUsers.length > 1) {
           let accounts = [];
@@ -39,7 +39,7 @@ export default class LoginController {
         
       }
 
-      const account = await Account.findOne({include: [Database], where: {id: accountId}, transaction: Accounttransaction});
+      const account = await Account.findOne({include: [{attributes: ["host", "username", "password", "database"], model: Database}], where: {id: accountId}, transaction: accountTransaction});
 
 
       const transaction = await new Sequelize({
@@ -51,7 +51,7 @@ export default class LoginController {
 
       if (empresaId == "") {
 
-        const empresas = await Empresa.findAll({transaction: transaction});
+        const empresas = await Empresa.findAll({attributes: ["id", "nomeFantasia"], transaction: transaction});
 
         if (empresas.length > 1) {
           res.status(202).json(empresas);
@@ -62,13 +62,13 @@ export default class LoginController {
 
       }
 
-      const session = await Session.create({id: crypto.randomUUID(), userId: user?.id, accountId: accountId, lastAcess: new Date()}, {transaction: Accounttransaction});
-      Accounttransaction?.commit();
+      const session = await Session.create({id: crypto.randomUUID(), userId: user?.id, accountId: accountId, empresaId: empresaId, lastAcess: new Date()}, {transaction: accountTransaction});
+      accountTransaction?.commit();
       
-      const usuario = await Usuario.findOne({where: {id: user?.id}, transaction: transaction});
-      const empresa = await Empresa.findOne({where: {id: empresaId}, transaction: transaction});
+      const usuario = await Usuario.findOne({attributes: ["id", "nome"], where: {id: user?.id}, transaction: transaction});
+      const empresa = await Empresa.findOne({attributes: ["id", "nomeFantasia"], where: {id: empresaId}, transaction: transaction});
       
-      res.status(200).json({id: session?.id, usuario: usuario, empresa: empresa, lastAcess: session?.lastAcess?.toLocaleString('en'), expiresIn: minutes});
+      res.status(200).json({id: session?.id, usuario: usuario, empresa: empresa, lastAcess: session?.lastAcess?.toLocaleString('en-US'), expiresIn: minutes});
       
 
     } catch (err) {
@@ -93,7 +93,7 @@ export default class LoginController {
 
     } catch (err) {
       res.status(500).json({
-        message: "Internal Server Error!"
+        message: err
       });
     }
   }

@@ -13,6 +13,9 @@ export class Session extends Model {
   @Column({type: DataType.UUID, field: "accountId"})
   accountId?: string;
 
+  @Column({type: DataType.UUID, field: "empresaId"})
+  empresaId?: string;
+
   @Column({type: DataType.DATE, field: "lastAcess"})
   lastAcess?: Date;
 

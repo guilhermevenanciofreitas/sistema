@@ -11,10 +11,10 @@ export class Accounts {
 
   private async connectToDatabase() {
     this.sequelize = new Sequelize({
-      database: "accounts",
-      username: "guilherme",
+      database: "auth",
+      username: "postgres",
       password: "@Rped94ft",
-      host: "66.70.245.150",
+      host: "localhost",
       dialect: "postgres",
       timezone: "America/Sao_Paulo",
       pool: {

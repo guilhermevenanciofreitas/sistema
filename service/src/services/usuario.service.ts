@@ -4,16 +4,29 @@ import crypto from "crypto";
 
 export class UsuarioService {
 
-    public static Add = async (usuario: Usuario, transaction: Transaction | undefined) => {
+    public static IsValid = (usuario: Usuario) => {
+
+        if (usuario.email == '') {
+            return { success: false, message: 'Informe o e-mail!' };
+        }
+
+        return { success: true };
+
+    }
+
+    public static Create = async (usuario: Usuario, transaction: Transaction | undefined) => {
+
+        usuario.id = crypto.randomUUID();
+        
+        await Usuario.create({...usuario}, {transaction});
+
+    }
+
+    public static Update = async (usuario: Usuario, transaction: Transaction | undefined) => {
 
         const id = usuario.id ? await Usuario.findOne({where: {id: usuario.id}, transaction}) : undefined;
 
-        if (!id) {
-            usuario.id = crypto.randomUUID();
-            await Usuario.create({...usuario}, {transaction});
-        } else {
-            await Usuario.update(usuario, {where: {id: usuario.id}, transaction});
-        }
+        await Usuario.update(usuario, {where: {id: usuario.id}, transaction});
 
     }
 

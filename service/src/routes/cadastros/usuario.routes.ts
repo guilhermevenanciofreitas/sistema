@@ -10,10 +10,9 @@ class UsuarioRoutes {
   }
 
   intializeRoutes() {
-    this.router.get("/test", this.controller.test);
     this.router.post("/findAll", this.controller.findAll);
     this.router.post("/findOne", this.controller.findOne);
-    this.router.post("/create", this.controller.create);
+    this.router.post("/save", this.controller.save);
     this.router.post("/delete", this.controller.delete);
   }
 }
