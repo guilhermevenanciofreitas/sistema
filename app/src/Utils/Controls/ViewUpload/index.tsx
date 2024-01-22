@@ -24,16 +24,6 @@ export class ControlViewUpload extends React.Component {
 
     }
 
-    public Confirm = () =>
-    {
-        return this.state;
-    }
-
-    public Cancel = () =>
-    {
-        return undefined;
-    }
-
-  protected Close: Function = () => undefined;
+    protected Close: Function = () => undefined;
 
 }

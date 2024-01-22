@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { MessageBox } from "../Utils/Controls";
 
 export class Service {
 
@@ -6,7 +7,7 @@ export class Service {
 
     static Post = async (path: string, data: any): Promise<AxiosResponse|undefined> => {
 
-        try {
+        //try {
 
             let config = {};
 
@@ -30,10 +31,10 @@ export class Service {
             
             return r;
             
-        } catch (err: any) {
+        /*} catch (err: any) {
 
             if (err.code == "ERR_NETWORK") {
-                alert(`POST ${err.config.url} net::ERR_CONNECTION_REFUSED`);
+                throw new Error(`POST ${err.config.url} net::ERR_CONNECTION_REFUSED`);
             }
 
             //Session expired
@@ -46,6 +47,7 @@ export class Service {
             throw new Error(err);
 
         }
+        */
     }
 
 }

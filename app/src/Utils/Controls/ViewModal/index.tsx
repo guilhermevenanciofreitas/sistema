@@ -1,6 +1,6 @@
 import React from 'react';
 
-export class ControlViewModal extends React.Component<Readonly<{Title: string}>> {
+export class ControlViewModal<T = {}> extends React.Component<T> {
 
   protected Initialize = (Close: any) => {
 

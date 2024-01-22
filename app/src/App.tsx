@@ -1,25 +1,30 @@
 import React, { useEffect } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+
+//Cadastros
+import Clientes from "./Views/Cadastros/Clientes";
+import Fornecedores from "./Views/Cadastros/Fornecedores";
 import Usuarios from "./Views/Cadastros/Usuarios/index";
+
 import { Login } from "./Views/Login";
+
 
 export default class App extends React.Component {
     render(): React.ReactNode {
       return (
-        <>
-        <div id="message-box" />
         <Routes>
             <Route>
                 <Route path="/" element={<RequireLogin><Usuarios /></RequireLogin>} />
                 <Route path="/login" element={<Login />} />
 
+                <Route path="/clientes" element={<RequireLogin><Clientes /></RequireLogin>} />
+                <Route path="/fornecedores" element={<RequireLogin><Fornecedores /></RequireLogin>} />
+
                 <Route path="/usuarios" element={<Usuarios />} />
 
-                <Route path="*" element={<div>Página não encotrada</div>} />
+                <Route path="*" element={<div>Página não encontrada!</div>} />
             </Route>
         </Routes>
-        </>
-        
       );
     }
 }

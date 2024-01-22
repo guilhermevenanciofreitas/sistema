@@ -2,20 +2,20 @@ import React from 'react';
 
 export class ControlViewFilter extends React.Component {
 
-  protected Initialize = (Close: any) => {
+    protected Initialize = (Close: any) => {
 
-      return new Promise<any>(resolve => {
+        return new Promise<any>(resolve => {
 
-          this.Close = (value: any) => {
-              Close();
-              return resolve(value);
-          };
+            this.Close = (value: any) => {
+                Close();
+                return resolve(value);
+            };
 
-      });
+        });
 
-  }
+    }
 
-  public Show = async (filter: any): Promise<any> =>
+    public Show = async (filter: any): Promise<any> =>
     {
  
         this.setState({open: true, filter: {...filter}});
@@ -24,18 +24,6 @@ export class ControlViewFilter extends React.Component {
  
     }
 
-    
-
-    public Confirm = () =>
-    {
-        return this.state;
-    }
-
-    public Clear = () =>
-    {
-        return undefined;
-    }
-
-  protected Close: Function = () => undefined;
+    protected Close: Function = () => undefined;
 
 }

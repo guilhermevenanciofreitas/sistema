@@ -3,13 +3,18 @@ import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
 
-export class ViewUsuarioBase extends ViewModal<Readonly<{Title: string}>> {
+export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: string}>> {
 
     state = {
         open: false,
-        id: "",
+        tipo: "",
+        cpfCnpj: "",
         nome: "",
-        email: "",
+        apelido: "",
+        isCliente: false,
+        isFornecedor: false,
+        isTransportadora: false,
+        isFuncionario: false
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -71,7 +76,7 @@ export class ViewUsuarioBase extends ViewModal<Readonly<{Title: string}>> {
 
     private Limpar = () =>
     {
-        this.setState({id: "", nome: "", email: ""});
+        this.setState({id: "", nome: "", isCliente: this.props.Tipo == "Cliente"});
     }
 
 }

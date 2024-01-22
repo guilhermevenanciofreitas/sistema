@@ -1,112 +1,70 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styles from "./styles.module.css";
 import { DropDownList, DropDownListItem } from "../..";
 
 type Parameter = {
-    pageChangeHandler: Function;
-
-    totalRows: any;
-    defaultRowsPerPage: number;
-    //currentPage: any;
-    records: Array<number>;
-
-    style: 'Dropdown' | 'Buttons'
+    Type: 'Dropdown' | 'Buttons'
+    Count: any;
+    Limit: number;
+    OffSet: number;
+    Records: Array<number>;
+    OnPageChange: Function;
 }
 
-export const ControlPagination = ({pageChangeHandler, totalRows, defaultRowsPerPage, records, style}: Parameter) => {
+export class ControlPagination extends React.Component<Parameter> {
 
-  const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage || 100);
+  private noOfPages = () => Math.ceil((this.props.Count || 0) / this.props.Limit);
+  private pagesArr =() => [...new Array(this.noOfPages())];
 
-  // Calculating max number of pages
-  const noOfPages = Math.ceil((totalRows || 0) / rowsPerPage);
+  private pageFirstRecord = () => ((this.props.OffSet - 1) * this.props.Limit) + 1;
+  private pageLastRecord = () =>  this.pageFirstRecord() + this.props.Limit > this.props.Count ? this.props.Count : (this.pageFirstRecord() + this.props.Limit - 1);
 
-  // Creating an array with length equal to no.of pages
-  const pagesArr = [...new Array(noOfPages)];
+  render(): React.ReactNode {
+    return(
+      <div className={styles.pagination}>
 
-  // State variable to hold the current page. This value is
-  // passed to the callback provided by the parent
-  // const [currentPage, setCurrentPage] = useState(1);
+        <div className={styles.pageInfo}>
+          Registros&nbsp;
+        </div>
 
-  // Navigation arrows enable/disable state
-  const [currentPage, setCurrentPage] = useState(1);
-  
-
-
-  // These variables give the first and last record/row number
-  // with respect to the current page
-  const [pageFirstRecord, setPageFirstRecord] = useState(1);
-  const [pageLastRecord, setPageLastRecord] = useState(rowsPerPage);
-
-  // Onclick handlers for the butons
-  const onNextPage = () => onPageSelect(rowsPerPage, currentPage + 1);
-  const onPrevPage = () => onPageSelect(rowsPerPage, currentPage - 1);
-
-  const onPageSelect = (rowsPerPage: any, currentPage: any) => {
-    setCurrentPage(currentPage);
-    pageChangeHandler(rowsPerPage, currentPage);
-  };
-
-  // To set the starting index of the page
-  useEffect(() => {
-
-    const skipFactor = (currentPage - 1) * rowsPerPage;
-
-    // Some APIs require skip for paginaiton. If needed use that instead
-    // pageChangeHandler(skipFactor);
-    // pageChangeHandler(currentPage)
-    setPageFirstRecord(skipFactor + 1);
-    
-  }, [currentPage]);
-
-  // To set the last index of the page
-  useEffect(() => {
-    const count = pageFirstRecord + rowsPerPage;
-    setPageLastRecord(count > totalRows ? totalRows : count - 1);
-  }, [pageFirstRecord, rowsPerPage, totalRows]);
-
-  return (
-    <div className={styles.pagination}>
-
-      <div className={styles.pageInfo}>
-        Registros&nbsp;
-      </div>
-
-      <DropDownList SelectedValue={rowsPerPage} OnChange={(args: any) => {setRowsPerPage(args.Value);pageChangeHandler(args.Value, 1)}}>
-          {records.map((num, index) => {
-            return <DropDownListItem Label={num.toString()} Value={num} key={index}></DropDownListItem>
-          })}
-      </DropDownList>
-      
-      <div className={styles.pageInfo}>
-        &nbsp;Mostrando {pageFirstRecord}-{pageLastRecord} de {totalRows}
-      </div>
-
-      <button className={styles.pageBtn} onClick={onPrevPage} disabled={currentPage == 1}>
-        &#8249;
-      </button>
-
-      {style == 'Buttons' &&
-        <>
-          {pagesArr.map((num, index) => (
-            <button onClick={() => onPageSelect(rowsPerPage, index + 1)} className={`${styles.pageBtn} ${index + 1 === currentPage ? styles.activeBtn : ""}`} key={index}>
-              {index + 1}
-            </button>
-          ))}
-        </>
-      }
-      
-      {style == 'Dropdown' &&
-        <DropDownList SelectedValue={currentPage} OnChange={(args: any) => {if(args.Value == null) return;setCurrentPage(args.Value);pageChangeHandler(rowsPerPage, args.Value)}}>
-          {pagesArr.map((num, index) => (
-            <DropDownListItem Label={(index + 1).toString()} Value={index + 1}></DropDownListItem>
-          ))}
+        <DropDownList SelectedValue={this.props.Limit} OnChange={(args: any) => this.props.OnPageChange(args.Value, 1)}>
+            {this.props.Records.map((num, index) => {
+              return <DropDownListItem Label={num.toString()} Value={num} key={index}></DropDownListItem>
+            })}
         </DropDownList>
-      }
 
-      <button className={styles.pageBtn} onClick={onNextPage} disabled={noOfPages == currentPage}>
-        &#8250;
-      </button>
-    
-    </div>
-  );
-};
+        <div className={styles.pageInfo}>
+          &nbsp;Mostrando {this.pageFirstRecord()} - {this.pageLastRecord()} de {this.props.Count}
+        </div>
+
+        <button className={styles.pageBtn} onClick={() => this.props.OnPageChange(this.props.Limit, this.props.OffSet - 1)} disabled={this.props.OffSet == 1}>
+          &#8249;
+        </button>
+
+        {this.props.Type == 'Buttons' &&
+          <>
+            {this.pagesArr().map((num, index) => (
+              <button onClick={() => this.props.OnPageChange(this.props.Limit, index + 1)} className={`${styles.pageBtn} ${index + 1 === this.props.OffSet ? styles.activeBtn : ""}`} key={index}>
+                {index + 1}
+              </button>
+            ))}
+          </>
+        }
+
+        {this.props.Type == 'Dropdown' &&
+          <DropDownList SelectedValue={this.props.OffSet} OnChange={(args: any) => {if(args.Value == null) return;this.props.OnPageChange(this.props.Limit, args.Value)}}>
+            {this.pagesArr().map((num, index) => (
+              <DropDownListItem Label={(index + 1).toString()} Value={index + 1}></DropDownListItem>
+            ))}
+          </DropDownList>
+        }
+
+        <button className={styles.pageBtn} onClick={() => this.props.OnPageChange(this.props.Limit, this.props.OffSet + 1)} disabled={this.noOfPages() == this.props.OffSet}>
+          &#8250;
+        </button>
+
+      </div>
+    );
+  }
+
+}

@@ -1,13 +1,13 @@
 import React from "react";
 import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
 import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
-import { ViewUsuario } from "./View/index";
-import BaseUsuarios from "./index.base";
+import BaseParceiros from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
 import { ViewImportar } from "./importar";
 import { ViewFiltro } from "./filtro";
+import { ViewParceiro } from "./View";
 
 const Columns = [
     { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
@@ -15,21 +15,21 @@ const Columns = [
     { selector: (row: any) => row.email, sort: 'email', name: 'E-mail', sortable: true },
 ];
 
-export default class Usuarios extends BaseUsuarios {
+export default class Parceiros extends BaseParceiros {
 
     render(): React.ReactNode {
 
         return (
             <>
 
-                <ViewUsuario ref={this.ViewUsuario} Title="Usuário" />
+                <ViewParceiro ref={this.ViewParceiro} Title={this.props.ViewParceiro.Title} Tipo={this.props.Tipo} />
 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
 
                 <JoyLayout>
 
-                    <Title>Usuários</Title>
+                    <Title>{this.props.Title}</Title>
 
                     <Container>
                         <Left>

@@ -1,15 +1,15 @@
 import React from "react";
 import { Service } from "../../../Service";
-import { ViewUsuario } from "./View/index";
+import { ViewParceiro } from "./View/index";
 import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
 import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 
-export default class BaseUsuarios extends BaseIndex {
+export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Tipo: "Cliente" | "Fornecedor" | "Transportadora" | "Funcionario", ViewParceiro: {Title: string}}>> { //React.Component<Readonly<{Title: string, Tipo: "Cliente" | "Fornecedor" | "Transportadora" | "Funcionario", ViewParceiro: {Title: string}}>> {
 
-    protected ViewUsuario = React.createRef<ViewUsuario>();
+    protected ViewParceiro = React.createRef<ViewParceiro>();
 
     protected ViewImportar = React.createRef<ViewImportar>();
     protected ViewFiltro = React.createRef<ViewFiltro>();
@@ -26,6 +26,12 @@ export default class BaseUsuarios extends BaseIndex {
             sort: undefined
         },
     }
+
+    protected Finish: boolean = false;
+
+    componentDidMountFinish = (): void => {
+        this.Finish = true;
+    };
 
     componentDidMount = async () =>
     {
@@ -44,7 +50,7 @@ export default class BaseUsuarios extends BaseIndex {
         try
         {
 
-            const r = await this.ViewUsuario.current?.Show(id);
+            const r = await this.ViewParceiro.current?.Show(id);
 
             if (r) this.Pesquisar(this.state.Data);
        
@@ -60,7 +66,7 @@ export default class BaseUsuarios extends BaseIndex {
         try
         {
 
-            const r = await this.ViewUsuario.current?.Show(undefined);
+            const r = await this.ViewParceiro.current?.Show(undefined);
 
             if (r) this.Pesquisar(this.state.Data);
             

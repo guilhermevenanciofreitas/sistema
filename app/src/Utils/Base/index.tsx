@@ -1,6 +1,6 @@
 import React from "react";
 
-export class BaseIndex extends React.Component {
+export class BaseIndex<T = {}> extends React.Component<T> {
 
   protected Finish: boolean = false;
 

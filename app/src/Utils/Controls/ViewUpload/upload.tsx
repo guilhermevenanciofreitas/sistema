@@ -3,7 +3,7 @@ import { DialogContent, DialogTitle, Divider, Drawer, ModalClose, Sheet, Stack }
 import { Button } from "..";
 import { Done } from "@mui/icons-material";
 
-export class ControlUpload extends React.Component<Readonly<{children: any, Open: boolean, Close: any, Cancel: any, Confirm: any}>> {
+export class ControlUpload extends React.Component<Readonly<{children: any, Title: string, Open: boolean, Close: any, Cancel: any, Confirm: any}>> {
 
     render(): React.ReactNode {
         return(
@@ -12,7 +12,7 @@ export class ControlUpload extends React.Component<Readonly<{children: any, Open
 
                 <div style={{paddingTop: '50px'}}>
                     <Sheet sx={{borderRadius: 'md', p: 2, display: 'flex', flexDirection: 'column', gap: 2, height: '100%', overflow: 'auto'}}>
-                        <DialogTitle>Upload</DialogTitle>
+                        <DialogTitle>{this.props.Title}</DialogTitle>
                         <ModalClose />
                         <Divider sx={{ mt: 'auto' }} />
                         <DialogContent sx={{ gap: 2 }}>

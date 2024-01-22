@@ -2,46 +2,49 @@ import { Request, Response } from "express";
 import Auth from "../../auth";
 import { Usuario } from "../../database";
 import { UsuarioService } from "../../services/usuario.service";
-import { Sequelize } from "sequelize-typescript";
 import {Op} from "sequelize";
 
 export default class UsuarioController {
 
     async findAll(req: Request, res: Response) {
+        try {
 
-        Auth(req, res).then(async ({transaction, usuarioId, empresaId}) => {
+            Auth(req, res).then(async ({transaction}) => {
 
-            const limit = req.body.limit || undefined;
-            const offset = ((req.body.offset - 1) * limit) || undefined;
-            const filter = req.body.filter || undefined;
-            const sort = req.body.sort || undefined;
+                const limit = req.body.limit || undefined;
+                const offset = ((req.body.offset - 1) * limit) || undefined;
+                const filter = req.body.filter || undefined;
+                const sort = req.body.sort || undefined;
+        
+                let where: any = {};
+                let order: any = [];
+        
+                if (filter?.nome) {
+                    where = {"nome": {[Op.iLike]: `%${filter?.nome.replace(' ', "%")}%`}};
+                }
+        
+                if (filter?.email) {
+                    where = {"email": {[Op.iLike]: `%${filter?.email}%`}};
+                }
+        
+                if (sort) {
+                    order = [[sort.column, sort.direction]]
+                }
+        
+                console.log(order);
+        
+                const usuarios = await Usuario.findAndCountAll({attributes: ["id", "nome", "email"], where, order, limit, offset, transaction});
+        
+                res.status(200).json({rows: usuarios.rows, count: usuarios.count, limit, offset: req.body.offset, filter, sort});
+    
+            }).catch((err: any) => {
+                console.log(err);
+                res.status(401).json({message: err.message})
+            });
 
-            let where: any = {};
-            let order: any = [];
-
-            if (filter?.nome) {
-                where = {"nome": {[Op.iLike]: `%${filter?.nome}%`}};
-            }
-
-            if (filter?.email) {
-                where = {"email": {[Op.iLike]: `%${filter?.email}%`}};
-            }
-
-            if (sort) {
-                order = [[sort.column, sort.direction]]
-            }
-
-            console.log(order);
-
-            const usuarios = await Usuario.findAndCountAll({attributes: ["id", "nome", "email"], where, order, limit, offset, transaction});
-
-            res.status(200).json({rows: usuarios.rows, count: usuarios.count, limit, offset: req.body.offset, filter, sort});
-
-        }).catch((err) => {
-            console.log(err);
+        } catch (err) {
             res.status(500).json(err);
-        });
-
+        }
     }
 
     async findOne(req: Request, res: Response) {
@@ -53,7 +56,7 @@ export default class UsuarioController {
             res.status(200).json(usuario);
 
         }).catch((err) => {
-            res.status(500).json(err);
+            res.status(401).json(err);
         });
 
     }
@@ -82,7 +85,7 @@ export default class UsuarioController {
             res.status(200).json(Usuario);
             
         }).catch((err) => {
-            res.status(500).json(err);
+            res.status(401).json(err);
         });
 
     }
@@ -125,7 +128,7 @@ export default class UsuarioController {
             res.status(200).json({success: true});
 
         }).catch((err) => {
-            res.status(500).json(err);
+            res.status(401).json(err);
         });
 
     }

@@ -3,7 +3,7 @@ import { DialogContent, DialogTitle, Divider, Drawer, ModalClose, Sheet, Stack }
 import { Button } from "..";
 import { Done } from "@mui/icons-material";
 
-export class ControlFilter extends React.Component<Readonly<{children: any, Open: boolean, Close: any, Clear: any, Confirm: any}>> {
+export class ControlFilter extends React.Component<Readonly<{children: any, Open: boolean, Title: string, Close: any, Clear: any, Confirm: any}>> {
 
     render(): React.ReactNode {
         return(
@@ -12,7 +12,7 @@ export class ControlFilter extends React.Component<Readonly<{children: any, Open
 
                 <div style={{paddingTop: '50px'}}>
                     <Sheet sx={{borderRadius: 'md', p: 2, display: 'flex', flexDirection: 'column', gap: 2, height: '100%', overflow: 'auto'}}>
-                        <DialogTitle>Filtro</DialogTitle>
+                        <DialogTitle>{this.props.Title}</DialogTitle>
                         <ModalClose />
                         <Divider sx={{ mt: 'auto' }} />
                         <DialogContent sx={{ gap: 2 }}>

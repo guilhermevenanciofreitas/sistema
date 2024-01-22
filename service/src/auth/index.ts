@@ -19,45 +19,28 @@ export default async function Auth(req: Request, res: Response): Promise<any> {
 
     const transaction = await new Accounts().sequelize?.transaction();
 
-    try {
-            
-        const session = await Session.findOne({attributes: ["id", "lastAcess"], include: [{attributes: ["id"], model: Account, include: [{attributes: ["host", "username", "password", "database"], model: Database}]}], where: {id: req.headers.authorization}, transaction});
+    const session = await Session.findOne({attributes: ["id", "lastAcess"], include: [{attributes: ["id"], model: Account, include: [{attributes: ["host", "username", "password", "database"], model: Database}]}], where: {id: req.headers.authorization}, transaction});
 
-        if (!session) {
-            res.status(401).json({message: "Session expired!"});
-            return;
-        }
+    //Verificar se token ainda e válido
+    if (!session?.lastAcess || new Date(session?.lastAcess?.getTime() + minutes * 60000) <= new Date()) {
+        throw new Error("Sua sessão expirou!");
+    };
 
-        if (session?.lastAcess) {
-            const endAt = new Date(session?.lastAcess?.getTime() + minutes * 60000);
-            if (endAt <= new Date()) //Verificar se token ainda e válido
-            {
-                res.status(401).json({message: "Session expired!"});
-                return;
-            }
-        }
+    const lastAcess = new Date();
 
-        const lastAcess = new Date();
+    await session?.update({lastAcess: lastAcess, transaction});
 
-        await session.update({lastAcess: lastAcess, transaction});
+    res.setHeader("Last-Acess", lastAcess.toLocaleString('en-US'));
+    res.setHeader("Expires-In", minutes);
 
-        res.setHeader("Last-Acess", lastAcess.toLocaleString('en-US'));
-        res.setHeader("Expires-In", minutes);
+    const config = session?.Account?.Database;
+    
+    transaction?.commit();
 
-        const config = session?.Account?.Database;
-        
-        transaction?.commit();
-
-        return { 
-            transaction: await new Sequelize({ host: config?.host, username: config?.username, password: config?.password, database: config?.database}).sequelize?.transaction(),
-            usuarioId: session?.userId,
-            empresaId: session?.empresaId,
-        };
-
-    } catch (err) {
-        transaction?.rollback();
-        res.status(500).json({message: err});
-        return;
-    }
+    return { 
+        transaction: await new Sequelize({ host: config?.host, username: config?.username, password: config?.password, database: config?.database}).sequelize?.transaction(),
+        usuarioId: session?.userId,
+        empresaId: session?.empresaId,
+    };
 
 }
