@@ -6,9 +6,10 @@ import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
 import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
+import queryString from "query-string";
 
 export default class BaseUsuarios extends BaseIndex {
-
+ 
     protected ViewUsuario = React.createRef<ViewUsuario>();
 
     protected ViewImportar = React.createRef<ViewImportar>();
@@ -31,9 +32,18 @@ export default class BaseUsuarios extends BaseIndex {
     {
         try
         {
+
             if (this.Finish) return;
+
+            const { id } = queryString.parse(window.location.search);
+            if (id) {
+                await this.OpenUsuario(id.toString());
+            }
+
             await this.Pesquisar(this.state.Data);
+
             this.componentDidMountFinish();
+
         } catch (err: any) {
             await DisplayError.Show(err);
         }
@@ -44,7 +54,7 @@ export default class BaseUsuarios extends BaseIndex {
         try
         {
 
-            const r = await this.ViewUsuario.current?.Show(id);
+            const r = await this.OpenUsuario(id);
 
             if (r) this.Pesquisar(this.state.Data);
        
@@ -173,6 +183,14 @@ export default class BaseUsuarios extends BaseIndex {
         {
             await DisplayError.Show(err);
         }
+    }
+
+    private OpenUsuario = async (id: string) =>
+    {
+        history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
+        const r = await this.ViewUsuario.current?.Show(id);
+        history.back();
+        return r;
     }
 
     protected Pesquisar = async(Data: any): Promise<void> =>

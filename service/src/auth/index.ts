@@ -17,7 +17,9 @@ export const minutes = 60;
 
 export default async function Auth(req: Request, res: Response): Promise<any> {
 
-    const transaction = await new Accounts().sequelize?.transaction();
+    const sequelize = await new Accounts().sequelize;
+
+    const transaction = await sequelize?.transaction();
 
     const session = await Session.findOne({attributes: ["id", "lastAcess"], include: [{attributes: ["id"], model: Account, include: [{attributes: ["host", "username", "password", "database"], model: Database}]}], where: {id: req.headers.authorization}, transaction});
 
@@ -38,7 +40,7 @@ export default async function Auth(req: Request, res: Response): Promise<any> {
     transaction?.commit();
 
     return { 
-        transaction: await new Sequelize({ host: config?.host, username: config?.username, password: config?.password, database: config?.database}).sequelize?.transaction(),
+        sequelize: await new Sequelize({ host: config?.host, username: config?.username, password: config?.password, database: config?.database}).sequelize,
         usuarioId: session?.userId,
         empresaId: session?.empresaId,
     };

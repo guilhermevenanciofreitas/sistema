@@ -7,6 +7,8 @@ export { ControlForm as Form } from '../Controls/Form';
 export { ControlAutoComplete as AutoComplete } from '../Controls/Form/AutoComplete';
 export { ControlButton as Button } from '../../Utils/Controls/Form/Button';
 export { ControlCheckBox as CheckBox } from '../../Utils/Controls/Form/CheckBox';
+export { ControlDatePicker as DatePicker } from '../../Utils/Controls/Form/DatePicker';
+
 export { ControlTextBox as TextBox } from '../../Utils/Controls/Form/TextBox';
 
 export { ControlGridView as GridView } from './GridView/index';
@@ -15,6 +17,9 @@ export { ControlPagination as Pagination } from './GridView/Pagination/index';
 
 
 export { ControlMessageBox as MessageBox } from '../../Utils/Controls/MessageBox';
+
+export { ControlTab as Tab } from '../../Utils/Controls/Tab';
+export { ControlTabItem as TabItem } from '../../Utils/Controls/Tab/TabItem';
 
 export { ControlViewFilter as ViewFilter } from '../../Utils/Controls/ViewFilter';
 export { ControlFilter as Filter } from '../../Utils/Controls/ViewFilter/filter';

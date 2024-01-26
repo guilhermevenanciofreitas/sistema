@@ -7,14 +7,25 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: s
 
     state = {
         open: false,
-        tipo: "",
+        tipo: "CPF",
         cpfCnpj: "",
         nome: "",
         apelido: "",
         isCliente: false,
         isFornecedor: false,
         isTransportadora: false,
-        isFuncionario: false
+        isFuncionario: false,
+        nascimento: null,
+        sexo: null,
+        estadoCivil: "",
+        rg: "",
+        ie: "",
+        im: "",
+        escolaridade: null,
+        profissao: "",
+        isAtivo: true,
+        isBloquearVenda: true,
+        isBloquearCompra: true
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -24,7 +35,7 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: s
 
         if (id) {
             Loading.Show();
-            const r = await Service.Post("usuario/findOne", {id});
+            const r = await Service.Post("cliente/findOne", {id});
             Loading.Hide();
             this.setState(r?.data);
         }
@@ -54,7 +65,7 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: s
 
             Loading.Show();
 
-            let r = await Service.Post("usuario/save", this.state);
+            let r = await Service.Post("cliente/save", this.state);
     
             Loading.Hide();
     
@@ -76,7 +87,28 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: s
 
     private Limpar = () =>
     {
-        this.setState({id: "", nome: "", isCliente: this.props.Tipo == "Cliente"});
+        this.setState({
+            id: "",
+            tipo: "CPF",
+            cpfCnpj: "",
+            nome: "",
+            apelido: "",
+            isCliente: this.props.Tipo == "Cliente",
+            isFornecedor: this.props.Tipo == "Fornecedor",
+            isTransportadora: this.props.Tipo == "Transportadora",
+            isFuncionario: this.props.Tipo == "Funcionario",
+            nascimento: null,
+            sexo: null,
+            estadoCivil: null,
+            rg: "",
+            ie: "",
+            im: "",
+            escolaridade: null,
+            profissao: "",
+            isAtivo: true,
+            isBloquearVenda: true,
+            isBloquearCompra: true
+        });
     }
 
 }

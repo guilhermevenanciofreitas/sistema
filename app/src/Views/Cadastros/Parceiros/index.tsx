@@ -11,19 +11,22 @@ import { ViewParceiro } from "./View";
 
 const Columns = [
     { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
-    { selector: (row: any) => row.nome, sort: 'nome', name: 'Nome', sortable: true },
-    { selector: (row: any) => row.email, sort: 'email', name: 'E-mail', sortable: true },
+    { selector: (row: any) => row.cpfCnpj, sort: 'cpfCnpj', name: 'CPF/CNPJ', sortable: true },
+    { selector: (row: any) => row.nome, sort: 'nome', name: 'Nome/Razão Social', sortable: true },
+    { selector: (row: any) => row.apelido, sort: 'apelido', name: 'Apelido/NomeFantasia', sortable: true },
 ];
 
 export default class Parceiros extends BaseParceiros {
+
+    private ref = this.ViewParceiro;
 
     render(): React.ReactNode {
 
         return (
             <>
 
-                <ViewParceiro ref={this.ViewParceiro} Title={this.props.ViewParceiro.Title} Tipo={this.props.Tipo} />
-
+                {React.createElement(ViewParceiro, {...this.props.ViewParceiro.props, ref: this.ViewParceiro })}
+                
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
 

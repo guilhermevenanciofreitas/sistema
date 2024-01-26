@@ -10,10 +10,10 @@ class UsuarioRoutes {
   }
 
   intializeRoutes() {
-    this.router.post("/findAll", this.controller.findAll);
-    this.router.post("/findOne", this.controller.findOne);
-    this.router.post("/save", this.controller.save);
-    this.router.post("/delete", this.controller.delete);
+    this.router.post("/findAll", (req, res) => this.controller.findAll(req, res));
+    this.router.post("/findOne", (req, res) => this.controller.findOne(req, res));
+    this.router.post("/save", (req, res) => this.controller.save(req, res));
+    this.router.post("/delete", (req, res) => this.controller.delete(req, res));
   }
 }
 

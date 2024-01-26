@@ -1,8 +1,12 @@
 import { Sequelize as sequelize } from "sequelize-typescript";
+
 import { Usuario } from "./models/usuario.model";
+import { Parceiro } from "./models/parceiro.model";
 import { Empresa } from "./models/empresa.model";
 
+
 export { Usuario } from "./models/usuario.model";
+export { Parceiro } from "./models/parceiro.model";
 export { Empresa } from "./models/empresa.model";
 
 export default class Sequelize {
@@ -18,7 +22,12 @@ export default class Sequelize {
       ...options,
       dialect: "postgres",
       define: {timestamps: false},
-      models: [Empresa, Usuario]
+      models: [Empresa, Parceiro, Usuario],
+      pool: {
+        max: 5,
+        min: 0,
+        idle: 10000
+      },
     });
 
     await this.sequelize

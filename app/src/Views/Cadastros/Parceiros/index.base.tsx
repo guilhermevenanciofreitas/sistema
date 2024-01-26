@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ComponentClass } from "react";
 import { Service } from "../../../Service";
 import { ViewParceiro } from "./View/index";
 import { ViewFiltro } from "./filtro";
@@ -6,8 +6,10 @@ import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
 import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
+import queryString from "query-string";
+import { useParams } from "react-router-dom";
 
-export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Tipo: "Cliente" | "Fornecedor" | "Transportadora" | "Funcionario", ViewParceiro: {Title: string}}>> { //React.Component<Readonly<{Title: string, Tipo: "Cliente" | "Fornecedor" | "Transportadora" | "Funcionario", ViewParceiro: {Title: string}}>> {
+export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Tipo: "Cliente" | "Fornecedor" | "Transportadora" | "Funcionario", ViewParceiro: React.ReactElement}>> {
 
     protected ViewParceiro = React.createRef<ViewParceiro>();
 
@@ -27,19 +29,23 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
         },
     }
 
-    protected Finish: boolean = false;
-
-    componentDidMountFinish = (): void => {
-        this.Finish = true;
-    };
-
-    componentDidMount = async () =>
+    public componentDidMount = async () =>
     {
         try
         {
+
             if (this.Finish) return;
+
+            const { id } = queryString.parse(window.location.search);
+
+            if (id) {
+                await this.OpenParceiro(id.toString());
+            }
+
             await this.Pesquisar(this.state.Data);
+
             this.componentDidMountFinish();
+
         } catch (err: any) {
             await DisplayError.Show(err);
         }
@@ -50,7 +56,7 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
         try
         {
 
-            const r = await this.ViewParceiro.current?.Show(id);
+            const r = await this.OpenParceiro(id);
 
             if (r) this.Pesquisar(this.state.Data);
        
@@ -181,11 +187,39 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
         }
     }
 
-    protected Pesquisar = async(Data: any): Promise<void> =>
+    private OpenParceiro = async (id: string) =>
+    {
+        history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
+        const r = await this.ViewParceiro.current?.Show(id);
+        history.back();
+        return r;
+    }
+
+    private Pesquisar = async(Data: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("usuario/findAll", Data);
+
+        let tipo = "";
+
+        switch (this.props.Tipo)
+        {
+            case "Cliente":
+                tipo = "cliente";
+                break;
+            case "Fornecedor":
+                tipo = "fornecedor";
+                break;
+            case "Transportadora":
+                tipo = "transportadora";
+                break;
+            case "Funcionario":
+                tipo = "funcionario";
+                break;
+        }
+        
+        var r = await Service.Post(`${tipo}/findAll`, Data);
         this.setState({Loading: false, Data: r?.data});
+
     }
 
 }

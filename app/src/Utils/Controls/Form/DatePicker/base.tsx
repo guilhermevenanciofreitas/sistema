@@ -3,19 +3,15 @@ import React, { Component } from "react";
 class Parameters {
     Label?: string;
     PlaceHolder?: string;
-    Text?: string;
-    Mask?: any;
-    TextTransform?: "Normal" | "UpperCase" | "LowerCase";
+    Text?: string | null;
     OnChange?: Function;
 }
 
-export abstract class TextBoxBase extends React.Component<Parameters> {
+export abstract class DatePickerBase extends React.Component<Parameters> {
 
     static defaultProps = {
         Label: null,
-        Text: '',
-        Mask: null,
-        TextTransform: "Normal"
+        Text: null,
     };
 
     public abstract Focus(): void;

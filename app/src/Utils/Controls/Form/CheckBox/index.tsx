@@ -21,9 +21,7 @@ export class ControlCheckBox extends CheckBoxBase {
     render(): React.ReactNode
     {
         return (
-            <FormGroup>
-                <FormControlLabel control={<Checkbox ref={this.CheckBox} checked={this.props.Checked} onChange={this.CheckBox_Change} />} label={this.props.Label} />
-            </FormGroup>
+            <FormControlLabel control={<Checkbox ref={this.CheckBox} checked={this.props.Checked} onChange={this.CheckBox_Change} />} label={this.props.Label} />
         )
     }
 

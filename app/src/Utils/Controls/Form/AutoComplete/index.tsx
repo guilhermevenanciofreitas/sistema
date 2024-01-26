@@ -1,12 +1,9 @@
 import React from "react";
-import { Autocomplete, Box, CircularProgress, FormGroup, IconButton, TextField, autocompleteClasses } from "@mui/material";
+import { Autocomplete, Box, CircularProgress, FormLabel, IconButton, TextField, autocompleteClasses } from "@mui/joy";
 import Search from '@mui/icons-material/Search';
 import { AutoCompleteBase, ResultContext } from "./base";
 
 export class ControlAutoComplete extends AutoCompleteBase {
-
-  private AutoComplete = React.createRef<HTMLDivElement>();
-  private TextBox = React.createRef<HTMLInputElement>();
 
   private Search = (Text: string) =>
   {
@@ -19,16 +16,13 @@ export class ControlAutoComplete extends AutoCompleteBase {
 
   }
 
-  public Focus = (): void =>
-  {
-    this.TextBox.current?.focus();
-  }
-
   render(): React.ReactNode {
     return (
+      <>
+        <FormLabel>{this.props.Label}</FormLabel>
         <Autocomplete
 
-          ref={this.AutoComplete}
+          //ref={this.AutoComplete}
 
           onOpen={() => {
             this.Search('');
@@ -57,7 +51,10 @@ export class ControlAutoComplete extends AutoCompleteBase {
           openText={"Pesquisar"}
           clearText={'Limpar'}
       
-          popupIcon={<Search />}
+          //popupIcon={<Search />}
+
+          endDecorator={<Search />}
+
           sx={{
             [`& .${autocompleteClasses.popupIndicator}`]: {
               marginLeft: '5px',
@@ -65,9 +62,14 @@ export class ControlAutoComplete extends AutoCompleteBase {
             }
           }}
 
+          slotProps={{listbox: {sx: {zIndex: 10000}}}}
+
           readOnly={!this.props.Enable}
 
-          renderInput={(params) => (
+
+          
+
+          /*renderInput={(params: any) => (
             <TextField
               {...params}
               inputRef={this.TextBox}
@@ -79,13 +81,13 @@ export class ControlAutoComplete extends AutoCompleteBase {
                 ...params.InputProps,
                 endAdornment: (
                   <div style={{marginTop: '-12px', marginRight: '5px'}}>
-                    {this.state.Loading ? <CircularProgress color="inherit" size={20} /> : null}
+                    {this.state.Loading ? <CircularProgress color="primary" size="lg" /> : null}
                     {params.InputProps.endAdornment}
                   </div>
                 ),
               }}
             />
-          )}
+          )}*/
           renderOption={(props, option) => (
             <Box component="li" {...props}>
               <ResultContext.Provider value={{ args: option }}>
@@ -94,6 +96,7 @@ export class ControlAutoComplete extends AutoCompleteBase {
             </Box>
           )}
         />
+      </>
     )
   }
 

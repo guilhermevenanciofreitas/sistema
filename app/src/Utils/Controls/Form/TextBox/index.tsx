@@ -1,22 +1,35 @@
-/*import React, { ChangeEvent } from "react";
-import { TextBoxBase } from './base';
-import { EventArgs } from '../../../EventArgs';
-import _ from 'lodash';
-import { FormGroup, TextField } from "@mui/material";
-*/
-
-import * as React from 'react';
-import FormControl from '@mui/joy/FormControl';
+import React from 'react';
 import FormLabel from '@mui/joy/FormLabel';
-import FormHelperText from '@mui/joy/FormHelperText';
 import Input from '@mui/joy/Input';
 
 import { TextBoxBase } from './base';
 import { EventArgs } from '../../../EventArgs';
 
+import { IMaskInput } from 'react-imask';
+
+interface CustomProps {
+    onChange: (event: { target: { name: string; value: string } }) => void;
+    name: string;
+}
+
 export class ControlTextBox extends TextBoxBase {
 
     private TextBox = React.createRef<HTMLInputElement>();
+
+    private TextMaskAdapter = React.forwardRef<HTMLElement, CustomProps>((props: CustomProps, ref: any) =>
+    {
+        const { onChange, ...other } = props;
+        return (
+            <IMaskInput
+                {...other}
+                mask={this.props.Mask}
+                definitions = {{'#': /[0-9]/}}
+                inputRef={ref}
+                onAccept={(value: any) => onChange({ target: { name: props.name, value } })}
+                overwrite
+            />
+        )
+    });
 
     public Focus = (): void =>
     {
@@ -42,18 +55,12 @@ export class ControlTextBox extends TextBoxBase {
 
     render(): React.ReactNode
     {
-        /*return (
-            <FormGroup>
-                <TextField inputRef={this.TextBox} type="text" variant="filled" size="small" label={this.props.Label} placeholder={this.props.PlaceHolder} value={this.props.Text} onChange={this.TextBox_Change} InputLabelProps={{ shrink: true }} autoComplete='off' />
-            </FormGroup>
-        )*/
-
         return (
-            <FormControl>
+            <>
                 <FormLabel>{this.props.Label}</FormLabel>
-                <Input placeholder={this.props.PlaceHolder} value={this.props.Text} onChange={this.TextBox_Change} />
-            </FormControl>
-        )
+                <Input placeholder={this.props.PlaceHolder} value={this.props.Text} onChange={this.TextBox_Change} slotProps={this.props.Mask ? { input: { component: this.TextMaskAdapter } } : undefined } />
+            </>
+        );
     }
 
 }

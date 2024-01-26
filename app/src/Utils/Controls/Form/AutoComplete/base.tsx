@@ -36,6 +36,4 @@ export abstract class AutoCompleteBase extends React.Component<Parameter> {
         Result: []
     }
 
-    public abstract Focus(): void;
-
 }

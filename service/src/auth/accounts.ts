@@ -18,10 +18,9 @@ export class Accounts {
       dialect: "postgres",
       timezone: "America/Sao_Paulo",
       pool: {
-        //max: config.pool.max,
-        //min: config.pool.min,
-        //acquire: config.pool.acquire,
-        //idle: config.pool.idle
+        max: 5,
+        min: 0,
+        idle: 10000
       },
       define: {timestamps: false},
       models: [Account, AccountUser, Database, Session, User]

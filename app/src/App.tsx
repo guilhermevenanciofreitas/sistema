@@ -4,6 +4,9 @@ import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-
 //Cadastros
 import Clientes from "./Views/Cadastros/Clientes";
 import Fornecedores from "./Views/Cadastros/Fornecedores";
+import Funcionarios from "./Views/Cadastros/Funcionarios";
+import Transporadoras from "./Views/Cadastros/Transportadoras";
+
 import Usuarios from "./Views/Cadastros/Usuarios/index";
 
 import { Login } from "./Views/Login";
@@ -19,6 +22,8 @@ export default class App extends React.Component {
 
                 <Route path="/clientes" element={<RequireLogin><Clientes /></RequireLogin>} />
                 <Route path="/fornecedores" element={<RequireLogin><Fornecedores /></RequireLogin>} />
+                <Route path="/funcionarios" element={<RequireLogin><Funcionarios /></RequireLogin>} />
+                <Route path="/transporadoras" element={<RequireLogin><Transporadoras /></RequireLogin>} />
 
                 <Route path="/usuarios" element={<Usuarios />} />
 

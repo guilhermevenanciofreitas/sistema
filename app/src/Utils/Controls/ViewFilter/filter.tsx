@@ -15,7 +15,7 @@ export class ControlFilter extends React.Component<Readonly<{children: any, Open
                         <DialogTitle>{this.props.Title}</DialogTitle>
                         <ModalClose />
                         <Divider sx={{ mt: 'auto' }} />
-                        <DialogContent sx={{ gap: 2 }}>
+                        <DialogContent>
                             {this.props.children}
                         </DialogContent>
                         <Divider sx={{ mt: 'auto' }} />

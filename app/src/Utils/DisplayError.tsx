@@ -1,10 +1,13 @@
 import { MessageBox } from "./Controls";
+import { Loading } from "./Loading";
 
 export class DisplayError {
 
     public static Show = async (err: any) =>
     {
 
+        Loading.Hide();
+        
         if ((err?.request?.status || false) == 401) {
             await MessageBox.Show({title: "Ops!", width: 400, type: "Warning", content: err?.response?.data?.message,
                 buttons: [

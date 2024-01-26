@@ -19,15 +19,14 @@ export class ViewFiltro extends ViewFilter {
 
     public Confirm = () => this.state.filter;
    
-    public render(): ReactNode {
-
+    public render(): ReactNode
+    {
         return (
             <Filter Open={this.state.open} Title="Filtro" Close={this.Close} Clear={this.Clear} Confirm={this.Confirm}>
                 <TextBox Label='Nome' TextTransform='UpperCase' Text={this.state.filter.nome} OnChange={(args: EventArgs) => this.setState({filter: {...this.state.filter, nome: args.Value}})} />
                 <TextBox Label='Email' TextTransform='LowerCase' Text={this.state.filter.email} OnChange={(args: EventArgs) => this.setState({filter: {...this.state.filter, email: args.Value}})} />
             </Filter>
         );
-
     }
 
 }

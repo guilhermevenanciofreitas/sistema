@@ -12,10 +12,10 @@ import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
 import SupportRoundedIcon from '@mui/icons-material/SupportRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const MenuItems = [
   {title: "Cadastros", items: [{title: "Empresas", link: "empresas"}, {title: "Usuários", link: "usuarios"}, {title: "Clientes", link: "clientes"}]},
-  {title: "Cadastros 2", items: [{title: "Empresas", link: "empresas"}, {title: "Usuários", link: "usuarios"}, {title: "Clientes", link: "clientes"}]},
 ]
 
 export const SidebarWidth = {
@@ -27,6 +27,11 @@ export default function Sidebar() {
 
   const [status, setStatus] = React.useState('Closed');
   const [open, setOpen] = React.useState('');
+
+  function Navigation(link: string) {
+    const navigate = useNavigate();
+    navigate(`/${link}`);
+  }
 
   function Open(Item: string) {
     setOpen(open == Item ? '' : Item);
@@ -109,9 +114,12 @@ export default function Sidebar() {
                         <List sx={{ gap: 0.5 }} style={{paddingLeft: '30px'}}>
                           {Item.items.map((SubItem, Key2) => {
                             return (
-                              <ListItem key={Key2}>
-                                <ListItemButton sx={{color: '#ffffff'}}>{SubItem.title}</ListItemButton>
-                              </ListItem>
+                              <a href={SubItem.link}>
+                                <ListItem key={Key2}>
+                                  <ListItemButton sx={{color: '#ffffff'}}>{SubItem.title}</ListItemButton>
+                                </ListItem>
+                              </a>
+                              
                             );
                           })}
                         </List>
