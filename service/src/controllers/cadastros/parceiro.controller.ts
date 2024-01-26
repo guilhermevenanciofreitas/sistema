@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Parceiro, Usuario } from "../../database";
+import { Parceiro, TabelaPreco, Usuario } from "../../database";
 import { ParceiroService } from "../../services/parceiro.service";
 import {Op} from "sequelize";
 
@@ -56,13 +56,15 @@ export default class ParceiroController {
         });
     }
 
-    async findOne(req: Request, res: Response, tipo: string) {
+    async findOne(req: Request, res: Response, column: string) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try
             {
 
                 const transaction = await sequelize.transaction();
+
+                const where = {id: req.body.id, [column]: true};
 
                 const parceiro = await Parceiro.findOne({attributes: [
                     "id",
@@ -84,7 +86,13 @@ export default class ParceiroController {
                     "isAtivo",
                     "isBloquearVenda",
                     "isBloquearCompra"
-                ], where: {id: req.body.id}, transaction});
+                ],
+                include: [
+                    {model: TabelaPreco, attributes: ["id", "descricao"]}
+                ],
+                where,
+                transaction
+                });
     
                 res.status(200).json(parceiro);
 
@@ -110,8 +118,13 @@ export default class ParceiroController {
 
                 const Parceiro = req.body as Parceiro;
 
-                Parceiro.cpfCnpj = Parceiro.cpfCnpj?.replace(/[^0-9]/g,'');
-    
+                Parceiro.cpfCnpj = req.body.cpfCnpj?.replace(/[^0-9]/g,'');
+                Parceiro.tabelaPrecoId = req.body.tabelaPreco?.id || null;
+
+                console.log("@".repeat(30));
+                console.log(Parceiro.tabelaPrecoId);
+                console.log("@".repeat(30));
+                
                 const valid = ParceiroService.IsValid(Parceiro);
     
                 if (!valid.success) {

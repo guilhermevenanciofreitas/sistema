@@ -1,4 +1,5 @@
-import { Model, Table, Column, DataType } from "sequelize-typescript";
+import { Model, Table, Column, DataType, BelongsTo } from "sequelize-typescript";
+import { TabelaPreco } from "./tabelaPreco.model";
 
 @Table({tableName: "parceiros"})
 export class Parceiro extends Model {
@@ -48,6 +49,9 @@ export class Parceiro extends Model {
   @Column({type: DataType.STRING(80), field: "profissao"})
   profissao?: string;
 
+  @Column({type: DataType.INTEGER, field: "tabelaPrecoId"})
+  tabelaPrecoId?: number;
+
   @Column({type: DataType.SMALLINT, field: "escolaridade"})
   escolaridade?: number;
 
@@ -59,5 +63,8 @@ export class Parceiro extends Model {
 
   @Column({type: DataType.BOOLEAN, field: "isBloquearCompra"})
   isBloquearCompra?: boolean;
+  
+  @BelongsTo(() => TabelaPreco, 'tabelaPrecoId')
+  tabelaPreco?: TabelaPreco;
 
 }
