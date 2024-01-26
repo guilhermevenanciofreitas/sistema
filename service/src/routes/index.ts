@@ -5,6 +5,8 @@ import loginRoutes from "./login/login.routes";
 import usuarioRoutes from "./cadastros/usuario.routes";
 import clienteRoutes from "./cadastros/cliente.routes";
 import fornecedorRoutes from "./cadastros/fornecedor.routes";
+import produtoRoutes from "./cadastros/produto.routes";
+import servicoRoutes from "./cadastros/servico.routes";
 
 export default class Routes {
   constructor(app: Application) {
@@ -15,6 +17,9 @@ export default class Routes {
     app.use("/api/fornecedor", fornecedorRoutes);
     app.use("/api/transportadora", clienteRoutes);
     app.use("/api/funcionario", clienteRoutes);
+
+    app.use("/api/produto", produtoRoutes);
+    app.use("/api/servico", servicoRoutes);
 
   }
 }

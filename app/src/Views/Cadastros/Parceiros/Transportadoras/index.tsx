@@ -1,6 +1,6 @@
 import React from 'react';
-import Parceiros from '../Parceiros';
-import { ViewParceiro } from '../Parceiros/View';
+import Parceiros from '..';
+import { ViewParceiro } from '../View';
 
 export default class Transportadoras extends React.Component {
 

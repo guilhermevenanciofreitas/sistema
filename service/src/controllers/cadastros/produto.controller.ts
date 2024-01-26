@@ -1,16 +1,15 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Parceiro, Usuario } from "../../database";
-import { ParceiroService } from "../../services/parceiro.service";
+import { Produto } from "../../database";
+import { ProdutoService } from "../../services/produto.service";
 import {Op} from "sequelize";
 
-export default class ParceiroController {
+export default class ProdutoController {
 
-    async findAll(req: Request, res: Response, column: string) {
+    async findAll(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
-            try
-            {
+            try {
 
                 const transaction = await sequelize.transaction();
 
@@ -21,34 +20,29 @@ export default class ParceiroController {
         
                 let where: any = {};
                 let order: any = [];
-
-                where = {[column]: true};
         
-                if (filter?.cpfCnpj) {
-                    where = {"cpfCnpj": {[Op.iLike]: `%${filter?.cpfCnpj.replace(' ', "%")}%`}};
-                }
-
                 if (filter?.nome) {
                     where = {"nome": {[Op.iLike]: `%${filter?.nome.replace(' ', "%")}%`}};
                 }
         
-                if (filter?.apelido) {
-                    where = {"apelido": {[Op.iLike]: `%${filter?.apelido}%`}};
+                if (filter?.email) {
+                    where = {"email": {[Op.iLike]: `%${filter?.email}%`}};
                 }
         
                 if (sort) {
                     order = [[sort.column, sort.direction]]
                 }
         
-                const parceiros = await Parceiro.findAndCountAll({attributes: ["id", "cpfCnpj", "nome", "apelido"], where, order, limit, offset, transaction});
-                
+                console.log(order);
+        
+                const produtos = await Produto.findAndCountAll({attributes: ["id", "descricao"], where, order, limit, offset, transaction});
+        
                 sequelize.close();
 
-                res.status(200).json({rows: parceiros.rows, count: parceiros.count, limit, offset: req.body.offset, filter, sort});
+                res.status(200).json({rows: produtos.rows, count: produtos.count, limit, offset: req.body.offset, filter, sort});
 
             }
-            catch (err)
-            {
+            catch (err) {
                 res.status(500).json(err);
             }
         }).catch((err: any) => {
@@ -56,43 +50,21 @@ export default class ParceiroController {
         });
     }
 
-    async findOne(req: Request, res: Response, tipo: string) {
-
+    async findOne(req: Request, res: Response) {
+        
         Auth(req, res).then(async ({sequelize}) => {
             try
             {
-
                 const transaction = await sequelize.transaction();
 
-                const parceiro = await Parceiro.findOne({attributes: [
-                    "id",
-                    "cpfCnpj",
-                    "nome",
-                    "apelido",
-                    "isCliente",
-                    "isFornecedor",
-                    "isTransportadora",
-                    "isFuncionario",
-                    "nascimento",
-                    "sexo",
-                    "estadoCivil",
-                    "rg",
-                    "ie",
-                    "im",
-                    "escolaridade",
-                    "profissao",
-                    "isAtivo",
-                    "isBloquearVenda",
-                    "isBloquearCompra"
-                ], where: {id: req.body.id}, transaction});
+                const produto = await Produto.findOne({attributes: ["id", "descricao"], where: {id: req.body.id}, transaction});
     
-                res.status(200).json(parceiro);
-
                 sequelize.close();
-
+    
+                res.status(200).json(produto);
+    
             }
-            catch (err)
-            {
+            catch (err) {
                 res.status(500).json(err);
             }
         }).catch((err) => {
@@ -101,44 +73,41 @@ export default class ParceiroController {
     }
 
     async save(req: Request, res: Response) {
-    
+        
         Auth(req, res).then(async ({sequelize}) => {
             try
             {
-        
                 const transaction = await sequelize.transaction();
 
-                const Parceiro = req.body as Parceiro;
+                const Produto = req.body as Produto;
 
-                Parceiro.cpfCnpj = Parceiro.cpfCnpj?.replace(/[^0-9]/g,'');
-    
-                const valid = ParceiroService.IsValid(Parceiro);
-    
+                const valid = ProdutoService.IsValid(Produto);
+
                 if (!valid.success) {
                     res.status(201).json(valid);
                     return;
                 }
-    
-                if (!Parceiro.id) {
-                    await ParceiroService.Create(Parceiro, transaction);
+
+                if (!Produto.id) {
+                    await ProdutoService.Create(Produto, transaction);
                 } else {
-                    await ParceiroService.Update(Parceiro, transaction);
+                    await ProdutoService.Update(Produto, transaction);
                 }
-    
+
                 await transaction?.commit();
                 
                 sequelize.close();
 
-                res.status(200).json(Parceiro);
+                res.status(200).json(Produto);
 
             }
-            catch (err)
-            {
+            catch (err) {
                 res.status(500).json(err);
             }
         }).catch((err) => {
             res.status(401).json(err);
         });
+
     }
 
     /*
@@ -166,22 +135,31 @@ export default class ParceiroController {
         });
        
     }
+    */
 
     async delete(req: Request, res: Response) {
         
-        Auth(req, res).then(async ({transaction}) => {
+        Auth(req, res).then(async ({sequelize}) => {
+            try
+            {
 
-            await UsuarioService.Delete(req.body.id, transaction);
+                const transaction = await sequelize.transaction();
 
-            transaction?.commit();
+                await ProdutoService.Delete(req.body.id, transaction);
 
-            res.status(200).json({success: true});
+                transaction?.commit();
 
+                sequelize.close();
+
+                res.status(200).json({success: true});
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
         }).catch((err) => {
             res.status(401).json(err);
         });
-
     }
-    */
 
 }

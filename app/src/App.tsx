@@ -2,14 +2,17 @@ import React, { useEffect } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 //Cadastros
-import Clientes from "./Views/Cadastros/Clientes";
-import Fornecedores from "./Views/Cadastros/Fornecedores";
-import Funcionarios from "./Views/Cadastros/Funcionarios";
-import Transporadoras from "./Views/Cadastros/Transportadoras";
+import Clientes from "./Views/Cadastros/Parceiros/Clientes";
+import Fornecedores from "./Views/Cadastros/Parceiros/Fornecedores";
+import Funcionarios from "./Views/Cadastros/Parceiros/Funcionarios";
+import Transporadoras from "./Views/Cadastros/Parceiros/Transportadoras";
 
 import Usuarios from "./Views/Cadastros/Usuarios/index";
+import Produtos from "./Views/Cadastros/Produtos";
+import Servicos from "./Views/Cadastros/Servicos";
 
 import { Login } from "./Views/Login";
+
 
 
 export default class App extends React.Component {
@@ -26,6 +29,8 @@ export default class App extends React.Component {
                 <Route path="/transporadoras" element={<RequireLogin><Transporadoras /></RequireLogin>} />
 
                 <Route path="/usuarios" element={<Usuarios />} />
+                <Route path="/produtos" element={<Produtos />} />
+                <Route path="/servicos" element={<Servicos />} />
 
                 <Route path="*" element={<div>Página não encontrada!</div>} />
             </Route>
