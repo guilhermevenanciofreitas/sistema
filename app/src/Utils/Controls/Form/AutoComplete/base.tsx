@@ -12,7 +12,7 @@ class Parameter {
 
     public Pesquisa?: Function;
 
-    public Text?: Function;
+    public Text?: Function | undefined;
 
     public Enable?: boolean;
 
@@ -30,8 +30,6 @@ export abstract class AutoCompleteBase extends React.Component<Parameter> {
     };
 
     state = {
-        SelectedValue: null,
-        Text: '',
         Loading: false,
         Result: []
     }

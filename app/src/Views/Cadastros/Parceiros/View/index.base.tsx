@@ -23,6 +23,7 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: s
         im: "",
         escolaridade: null,
         profissao: "",
+        tabelaPreco: null,
         isAtivo: true,
         isBloquearVenda: true,
         isBloquearCompra: true
@@ -105,6 +106,7 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: s
             im: "",
             escolaridade: null,
             profissao: "",
+            tabelaPreco: null,
             isAtivo: true,
             isBloquearVenda: true,
             isBloquearCompra: true

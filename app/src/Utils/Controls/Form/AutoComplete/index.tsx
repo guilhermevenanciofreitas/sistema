@@ -1,5 +1,5 @@
 import React from "react";
-import { Autocomplete, Box, CircularProgress, FormLabel, IconButton, TextField, autocompleteClasses } from "@mui/joy";
+import { Autocomplete, AutocompleteOption, CircularProgress, FormLabel, autocompleteClasses } from "@mui/joy";
 import Search from '@mui/icons-material/Search';
 import { AutoCompleteBase, ResultContext } from "./base";
 
@@ -7,13 +7,9 @@ export class ControlAutoComplete extends AutoCompleteBase {
 
   private Search = async (Text: string) =>
   {
-
-    this.setState({Loading: true, Result: [{label: 'Carregando'}]});
-
+    this.setState({Loading: true});
     const Result = await this.props.Pesquisa?.call(null, Text);
-
     this.setState(({Loading: false, Result: Result}));
-
   }
 
   render(): React.ReactNode {
@@ -21,85 +17,49 @@ export class ControlAutoComplete extends AutoCompleteBase {
       <>
         <FormLabel>{this.props.Label}</FormLabel>
         <Autocomplete
+ 
+          loading={this.state.Loading}
 
-          //ref={this.AutoComplete}
+          placeholder="[Selecione]"
 
-          onOpen={() => {
-            this.Search('');
+          onOpen={async () => {
+            await this.Search('');
           }}
 
-          value={this.props.Value}
-          onChange={(event: any, newValue: string | null) => {
-            //this.setState({Value: newValue});
-            this.props.OnChange?.call(null, newValue);
-          }}
-
-          inputValue={this.state.Text}
-          onInputChange={(event: any, newInputValue: string | null) => {
-            this.setState({Text: newInputValue});
-            this.Search(newInputValue || "");
-          }}
-
-          noOptionsText={'Nenhum resultado encontrado!'}
-
-          autoHighlight={true}
-          selectOnFocus={true}
-
-          //isOptionEqualToValue={(option, value) => option['sigla'] === value['sigla']}
-          getOptionLabel={(option) => this.props.Text?.call(null, option)}
-          
-          options={this.state.Result}
-
-          openText={"Pesquisar"}
-          clearText={'Limpar'}
-      
-          //popupIcon={<Search />}
-
-          endDecorator={<Search />}
-
+          popupIcon={<Search />}
           sx={{
             [`& .${autocompleteClasses.popupIndicator}`]: {
-              marginLeft: '5px',
               transform: "none"
             }
           }}
 
-          slotProps={{listbox: {sx: {zIndex: 10000}}}}
+          value={this.props.Value}
+          onChange={(args, option) => this.props.OnChange?.call(null, option)}
 
-          readOnly={!this.props.Enable}
+          onInputChange={async (event: any, newInputValue: string | null) => {
+            if (event?.type != 'change') return; 
+            await this.Search(newInputValue || "");
+          }}
 
-
+          loadingText={'Carregando'}
+          options={this.state.Result}
+          noOptionsText={'Nenhum resultado encontrado!'}
+          getOptionLabel={(option) => this.props.Text?.call(null, option)}
           
+          endDecorator={this.state.Loading ? (<CircularProgress size="sm" sx={{ bgcolor: 'background.surface' }} />) : null}
 
-          /*renderInput={(params: any) => (
-            <TextField
-              {...params}
-              inputRef={this.TextBox}
-              InputLabelProps={{ shrink: true }}
-              label={this.props.Label}
-              variant="filled"
-              autoComplete='off'
-              InputProps={{
-                ...params.InputProps,
-                endAdornment: (
-                  <div style={{marginTop: '-12px', marginRight: '5px'}}>
-                    {this.state.Loading ? <CircularProgress color="primary" size="lg" /> : null}
-                    {params.InputProps.endAdornment}
-                  </div>
-                ),
-              }}
-            />
-          )}*/
+          slotProps={{listbox: {sx: {zIndex: 10000}}, clearIndicator: {sx: {visibility: 'visible'}}}}
           renderOption={(props, option) => (
-            <Box component="li" {...props}>
+            <AutocompleteOption {...props}>
               <ResultContext.Provider value={{ args: option }}>
                 {this.props.children}
               </ResultContext.Provider>
-            </Box>
+            </AutocompleteOption>
           )}
+
         />
       </>
-    )
+    );
   }
 
 }
