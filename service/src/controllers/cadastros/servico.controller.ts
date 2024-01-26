@@ -33,8 +33,6 @@ export default class ServicoController {
                     order = [[sort.column, sort.direction]]
                 }
         
-                console.log(order);
-        
                 const servicos = await Servico.findAndCountAll({attributes: ["id", "descricao"], where, order, limit, offset, transaction});
         
                 sequelize.close();
@@ -147,7 +145,7 @@ export default class ServicoController {
 
                 await ServicoService.Delete(req.body.id, transaction);
 
-                transaction?.commit();
+                await transaction?.commit();
 
                 sequelize.close();
 

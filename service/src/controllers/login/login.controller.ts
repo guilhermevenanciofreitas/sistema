@@ -17,7 +17,9 @@ export default class LoginController {
       let accountId = req.body.accountId;
       let empresaId = req.body.empresaId;
 
-      const accountTransaction = await new Accounts().sequelize?.transaction();
+      const sequelize = new Accounts().sequelize;
+
+      const accountTransaction = await sequelize?.transaction();
 
       const user = await User.findOne({attributes: ["id", "email", "password"], where: {email: req.body.email, password: req.body.password}, transaction: accountTransaction});
 
@@ -68,6 +70,8 @@ export default class LoginController {
       const usuario = await Usuario.findOne({attributes: ["id", "nome"], where: {id: user?.id}, transaction: transaction});
       const empresa = await Empresa.findOne({attributes: ["id", "nomeFantasia"], where: {id: empresaId}, transaction: transaction});
       
+      sequelize?.close();
+
       res.status(200).json({id: session?.id, usuario: usuario, empresa: empresa, lastAcess: session?.lastAcess?.toLocaleString('en-US'), expiresIn: minutes});
       
 

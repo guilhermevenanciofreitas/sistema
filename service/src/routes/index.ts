@@ -8,6 +8,8 @@ import fornecedorRoutes from "./cadastros/fornecedor.routes";
 import produtoRoutes from "./cadastros/produto.routes";
 import servicoRoutes from "./cadastros/servico.routes";
 
+import searchRoutes from "./search/index.routes";
+
 export default class Routes {
   constructor(app: Application) {
     app.use("/api/login", loginRoutes);
@@ -20,6 +22,11 @@ export default class Routes {
 
     app.use("/api/produto", produtoRoutes);
     app.use("/api/servico", servicoRoutes);
+
+
+
+
+    app.use("/api/search", searchRoutes);
 
   }
 }

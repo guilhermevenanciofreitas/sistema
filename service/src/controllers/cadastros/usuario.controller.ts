@@ -11,6 +11,7 @@ export default class UsuarioController {
         Auth(req, res).then(async ({sequelize}) => {
             try {
 
+                
                 const transaction = await sequelize.transaction();
 
                 const limit = req.body.limit || undefined;
@@ -32,8 +33,6 @@ export default class UsuarioController {
                 if (sort) {
                     order = [[sort.column, sort.direction]]
                 }
-        
-                console.log(order);
         
                 const usuarios = await Usuario.findAndCountAll({attributes: ["id", "nome", "email"], where, order, limit, offset, transaction});
         
@@ -147,7 +146,7 @@ export default class UsuarioController {
 
                 await UsuarioService.Delete(req.body.id, transaction);
 
-                transaction?.commit();
+                await transaction?.commit();
 
                 sequelize.close();
 

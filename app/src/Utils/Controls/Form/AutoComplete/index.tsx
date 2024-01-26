@@ -5,12 +5,12 @@ import { AutoCompleteBase, ResultContext } from "./base";
 
 export class ControlAutoComplete extends AutoCompleteBase {
 
-  private Search = (Text: string) =>
+  private Search = async (Text: string) =>
   {
 
-    this.setState({Loading: true});
+    this.setState({Loading: true, Result: [{label: 'Carregando'}]});
 
-    const Result = this.props.Pesquisa?.call(null, Text);
+    const Result = await this.props.Pesquisa?.call(null, Text);
 
     this.setState(({Loading: false, Result: Result}));
 
@@ -39,11 +39,13 @@ export class ControlAutoComplete extends AutoCompleteBase {
             this.setState({Text: newInputValue});
             this.Search(newInputValue || "");
           }}
+
           noOptionsText={'Nenhum resultado encontrado!'}
+
           autoHighlight={true}
           selectOnFocus={true}
 
-          isOptionEqualToValue={(option, value) => option['sigla'] === value['sigla']}
+          //isOptionEqualToValue={(option, value) => option['sigla'] === value['sigla']}
           getOptionLabel={(option) => this.props.Text?.call(null, option)}
           
           options={this.state.Result}

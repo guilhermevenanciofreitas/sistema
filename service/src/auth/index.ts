@@ -39,8 +39,10 @@ export default async function Auth(req: Request, res: Response): Promise<any> {
     
     transaction?.commit();
 
+    await sequelize?.close();
+
     return { 
-        sequelize: await new Sequelize({ host: config?.host, username: config?.username, password: config?.password, database: config?.database}).sequelize,
+        sequelize: await new Sequelize({host: config?.host, username: config?.username, password: config?.password, database: config?.database}).sequelize,
         usuarioId: session?.userId,
         empresaId: session?.empresaId,
     };

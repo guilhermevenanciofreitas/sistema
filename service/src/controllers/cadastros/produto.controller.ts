@@ -33,8 +33,6 @@ export default class ProdutoController {
                     order = [[sort.column, sort.direction]]
                 }
         
-                console.log(order);
-        
                 const produtos = await Produto.findAndCountAll({attributes: ["id", "descricao"], where, order, limit, offset, transaction});
         
                 sequelize.close();
@@ -147,7 +145,7 @@ export default class ProdutoController {
 
                 await ProdutoService.Delete(req.body.id, transaction);
 
-                transaction?.commit();
+                await transaction?.commit();
 
                 sequelize.close();
 

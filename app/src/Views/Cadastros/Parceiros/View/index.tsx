@@ -6,7 +6,8 @@ import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
 
 import { CountryTemplate } from '../../../../Utils/Controls/Form/AutoComplete/Templates/Country';
-import { Pesquisa } from '../../../../Utils/Controls/Form/AutoComplete/Pesquisa';
+import { Search } from '../../../../Search';
+import { TabelaPrecoTemplate } from '../../../../Search/Templates/TabelaPreco';
 
 export class ViewParceiro extends ViewParceiroBase {
 
@@ -101,8 +102,8 @@ export class ViewParceiro extends ViewParceiroBase {
                                     )}
                                     <div style={{display: 'flex'}}>
                                         <Grid md={3}>
-                                            <AutoComplete Label='Tabela de preço' Pesquisa={Pesquisa.Country} Text={(Item: any) => `${Item.nome_pais} - (${Item.sigla})` } Value={null} OnChange={(args: any) => this.setState({Pais: args})}>
-                                                <CountryTemplate />
+                                            <AutoComplete Label='Tabela de preço' Pesquisa={async(Text: string) => await Search.TabelaPreco(Text)} Text={(Item: any) => `${Item.descricao})` } Value={null} OnChange={(args: any) => this.setState({Pais: args})}>
+                                                <TabelaPrecoTemplate />
                                             </AutoComplete>
                                         </Grid>
                                     </div>

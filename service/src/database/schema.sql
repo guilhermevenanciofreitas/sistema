@@ -42,3 +42,8 @@ ALTER TABLE "produtos" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
 CREATE TABLE IF NOT EXISTS "servicos"();
 ALTER TABLE "servicos" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "servicos" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+
+--tabelasPreco
+CREATE TABLE IF NOT EXISTS "tabelasPreco"();
+ALTER TABLE "tabelasPreco" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "tabelasPreco" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
