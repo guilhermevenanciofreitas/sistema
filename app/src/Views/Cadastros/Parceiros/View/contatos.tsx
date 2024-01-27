@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import { Button, GridView, Modal, TextBox, ViewModal } from "../../../../Utils/Controls";
 import { EventArgs } from "../../../../Utils/EventArgs";
+import { BaseDetails } from "../../../../Utils/Base/details";
 
 const Columns = [
     { selector: (row: any) => row.nome, name: 'Nome' },
@@ -44,13 +45,9 @@ class ViewContato extends ViewModal {
 
 }
 
-export class Contatos extends React.Component<Readonly<{Contatos: any[], OnChange?: Function | any}>> {
+export class Contatos extends BaseDetails<Readonly<{Contatos: any[], OnChange?: Function | any}>> {
 
     protected ViewContato = React.createRef<ViewContato>();
-
-    state = {
-        Selecteds: []
-    }
 
     protected BtnAdicionar_Click = async () => {
 
@@ -60,17 +57,12 @@ export class Contatos extends React.Component<Readonly<{Contatos: any[], OnChang
             telefone: "",
             email: ""
         });
+
         if (contato == null) return;
-        this.props.Contatos.push({index: this.props.Contatos.length + 1, ...contato});
+
+        this.props.Contatos.push({...contato});
         this.props.OnChange(this.props.Contatos);
 
-    }
-
-    protected BtnRemover_Click = async () => {
-        console.log(this.state.Selecteds);
-        for (const contato of this.state.Selecteds) {
-            console.log(contato);
-        }
     }
 
     protected GridView_OnItem = async (args: any) =>
@@ -85,13 +77,17 @@ export class Contatos extends React.Component<Readonly<{Contatos: any[], OnChang
        
     }
 
+    protected BtnRemover_Click = () => this.props.OnChange(this.Remover(this.props.Contatos));
+    
+    protected GridView_Selected = (args: any) => this.props.OnChange(this.Selected(args.selectedRows, this.props.Contatos));
+
     render(): ReactNode {
         return (
             <>
                 <ViewContato ref={this.ViewContato} />
                 <Button Text='Adicionar' Color='white' BackgroundColor='green' OnClick={this.BtnAdicionar_Click} />
                 {this.state.Selecteds.length >= 1 && <Button Text='Remover' Color='white' BackgroundColor='red' OnClick={this.BtnRemover_Click} />}
-                <GridView Columns={Columns} Rows={this.props.Contatos} OnItem={this.GridView_OnItem} OnSelected={(Args: any) => this.setState({Selecteds: Args.selectedRows})} />
+                <GridView Columns={Columns} Rows={this.props.Contatos} OnItem={this.GridView_OnItem} OnSelected={this.GridView_Selected} />
             </>
         )
     }

@@ -38,7 +38,7 @@ export class ParceiroService {
             } else {
                 ParceiroContato.update(contato, {where: {id: contato.id}, transaction});
             }
-            ParceiroContato.destroy({where: {id: {[Op.notIn]: parceiro?.contatos?.map(c => c.id)}}, transaction})
+            ParceiroContato.destroy({where: {id: {[Op.notIn]: parceiro?.contatos?.filter(c => c.id != "").map(c => c.id)}}, transaction})
         }
 
         await Parceiro.update(parceiro, {where: {id: parceiro.id}, transaction});
