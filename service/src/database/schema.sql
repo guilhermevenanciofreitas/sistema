@@ -34,6 +34,14 @@ ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "isAtivo" BOOLEAN DEFAULT true;
 ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "isBloquearVenda" BOOLEAN DEFAULT false;
 ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "isBloquearCompra" BOOLEAN DEFAULT false;
 
+--parceirosContato
+CREATE TABLE IF NOT EXISTS "parceirosContato"();
+ALTER TABLE "parceirosContato" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "parceirosContato" ADD COLUMN IF NOT EXISTS "parceiroId" UUID;
+ALTER TABLE "parceirosContato" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(80);
+ALTER TABLE "parceirosContato" ADD COLUMN IF NOT EXISTS "telefone" VARCHAR(30);
+ALTER TABLE "parceirosContato" ADD COLUMN IF NOT EXISTS "email" VARCHAR(120);
+
 --produtos
 CREATE TABLE IF NOT EXISTS "produtos"();
 ALTER TABLE "produtos" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
@@ -43,6 +51,14 @@ ALTER TABLE "produtos" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
 CREATE TABLE IF NOT EXISTS "servicos"();
 ALTER TABLE "servicos" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "servicos" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+
+--tabelasPreco
+CREATE TABLE IF NOT EXISTS "contratos"();
+ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "clienteId" UUID;
+ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "inicio" DATE;
+ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "termino" DATE;
+ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "isCancelado" BOOLEAN DEFAULT false;
 
 --tabelasPreco
 CREATE TABLE IF NOT EXISTS "tabelasPreco"();

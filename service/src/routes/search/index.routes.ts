@@ -11,6 +11,7 @@ class SearchRoutes {
 
   intializeRoutes() {
     this.router.post("/tabelasPreco", (req, res) => this.controller.tabelasPreco(req, res));
+    this.router.post("/cliente", (req, res) => this.controller.cliente(req, res));
   }
 }
 

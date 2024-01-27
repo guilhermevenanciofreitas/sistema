@@ -24,8 +24,6 @@ export class UsuarioService {
 
     public static Update = async (usuario: Usuario, transaction: Transaction | undefined) => {
 
-        const id = usuario.id ? await Usuario.findOne({where: {id: usuario.id}, transaction}) : undefined;
-
         await Usuario.update(usuario, {where: {id: usuario.id}, transaction});
 
     }

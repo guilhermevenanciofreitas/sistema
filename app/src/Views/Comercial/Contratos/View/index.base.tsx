@@ -3,31 +3,15 @@ import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
 
-export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: string}>> {
+export class ViewContratoBase extends ViewModal<Readonly<{Title: string}>> {
 
     state = {
         open: false,
-        tipo: "CPF",
-        cpfCnpj: "",
-        nome: "",
-        apelido: "",
-        isCliente: false,
-        isFornecedor: false,
-        isTransportadora: false,
-        isFuncionario: false,
-        nascimento: null,
-        sexo: null,
-        estadoCivil: "",
-        rg: "",
-        ie: "",
-        im: "",
-        escolaridade: null,
-        profissao: "",
-        tabelaPreco: null,
-        isAtivo: true,
-        isBloquearVenda: true,
-        isBloquearCompra: true,
-        contatos: []
+        id: "",
+        cliente: null,
+        inicio: null,
+        prazo: null,
+        termino: null
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -37,7 +21,7 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: s
 
         if (id) {
             Loading.Show();
-            const r = await Service.Post("cliente/findOne", {id});
+            const r = await Service.Post("usuario/findOne", {id});
             Loading.Hide();
             this.setState(r?.data);
         }
@@ -67,7 +51,7 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: s
 
             Loading.Show();
 
-            let r = await Service.Post("cliente/save", this.state);
+            let r = await Service.Post("usuario/save", this.state);
     
             Loading.Hide();
     
@@ -91,27 +75,10 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: s
     {
         this.setState({
             id: "",
-            tipo: "CPF",
-            cpfCnpj: "",
-            nome: "",
-            apelido: "",
-            isCliente: this.props.Tipo == "Cliente",
-            isFornecedor: this.props.Tipo == "Fornecedor",
-            isTransportadora: this.props.Tipo == "Transportadora",
-            isFuncionario: this.props.Tipo == "Funcionario",
-            nascimento: null,
-            sexo: null,
-            estadoCivil: null,
-            rg: "",
-            ie: "",
-            im: "",
-            escolaridade: null,
-            profissao: "",
-            tabelaPreco: null,
-            isAtivo: true,
-            isBloquearVenda: true,
-            isBloquearCompra: true,
-            contatos: [],
+            cliente: null,
+            inicio: null,
+            prazo: null,
+            termino: null
         });
     }
 

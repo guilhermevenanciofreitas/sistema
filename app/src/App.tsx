@@ -11,6 +11,8 @@ import Usuarios from "./Views/Cadastros/Usuarios/index";
 import Produtos from "./Views/Cadastros/Produtos";
 import Servicos from "./Views/Cadastros/Servicos";
 
+import Contratos from "./Views/Comercial/Contratos";
+
 import { Login } from "./Views/Login";
 
 
@@ -31,6 +33,8 @@ export default class App extends React.Component {
                 <Route path="/usuarios" element={<Usuarios />} />
                 <Route path="/produtos" element={<Produtos />} />
                 <Route path="/servicos" element={<Servicos />} />
+
+                <Route path="/contratos" element={<RequireLogin><Contratos /></RequireLogin>} />
 
                 <Route path="*" element={<div>Página não encontrada!</div>} />
             </Route>

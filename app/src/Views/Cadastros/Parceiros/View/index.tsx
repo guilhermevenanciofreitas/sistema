@@ -1,12 +1,13 @@
 
 import { ViewParceiroBase } from './index.base';
-import { Button, CheckBox, Form, Modal, Tab, TabItem, TextBox, DropDownList, DropDownListItem, AutoComplete, DatePicker } from '../../../../Utils/Controls';
+import { Button, CheckBox, Form, Modal, Tab, TabItem, TextBox, DropDownList, DropDownListItem, AutoComplete, DatePicker, GridView } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
 
 import { Search } from '../../../../Search';
 import { TabelaPrecoTemplate } from '../../../../Search/Templates/TabelaPreco';
+import { Contatos } from './contatos';
 
 export class ViewParceiro extends ViewParceiroBase {
 
@@ -115,7 +116,7 @@ export class ViewParceiro extends ViewParceiroBase {
                                     </Grid>
                                 </TabItem>
                                 <TabItem Title='Contatos' Visible={true}>
-                                    Contatos
+                                    <Contatos Contatos={this.state.contatos} OnChange={(contatos: any[]) => this.setState({contatos})} />
                                 </TabItem>
                                 <TabItem Title='Endereços' Visible={true}>
                                     Endereços

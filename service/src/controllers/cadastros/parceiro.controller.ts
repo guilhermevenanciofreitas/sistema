@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Parceiro, TabelaPreco, Usuario } from "../../database";
+import { Parceiro, ParceiroContato, TabelaPreco, Usuario } from "../../database";
 import { ParceiroService } from "../../services/parceiro.service";
 import {Op} from "sequelize";
 
@@ -88,7 +88,8 @@ export default class ParceiroController {
                     "isBloquearCompra"
                 ],
                 include: [
-                    {model: TabelaPreco, attributes: ["id", "descricao"]}
+                    {model: TabelaPreco, attributes: ["id", "descricao"]},
+                    {model: ParceiroContato, attributes: ["id", "nome", "telefone", "email"]}
                 ],
                 where,
                 transaction
@@ -122,7 +123,7 @@ export default class ParceiroController {
                 Parceiro.tabelaPrecoId = req.body.tabelaPreco?.id || null;
 
                 console.log("@".repeat(30));
-                console.log(Parceiro.tabelaPrecoId);
+                console.log(Parceiro.contatos);
                 console.log("@".repeat(30));
                 
                 const valid = ParceiroService.IsValid(Parceiro);

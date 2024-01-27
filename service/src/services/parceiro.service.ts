@@ -1,6 +1,7 @@
 import { Transaction } from "sequelize";
-import { Parceiro } from "../database";
+import { Parceiro, ParceiroContato } from "../database";
 import crypto from "crypto";
+import {Op} from "sequelize";
 
 export class ParceiroService {
 
@@ -17,14 +18,28 @@ export class ParceiroService {
     public static Create = async (parceiro: Parceiro, transaction: Transaction | undefined) => {
 
         parceiro.id = crypto.randomUUID();
-        
+
+        for (let contato of parceiro?.contatos || []) {
+            contato.id = crypto.randomUUID();
+            contato.parceiroId = parceiro.id;
+        }
+
         await Parceiro.create({...parceiro}, {transaction});
 
     }
 
     public static Update = async (parceiro: Parceiro, transaction: Transaction | undefined) => {
 
-        const id = parceiro.id ? await Parceiro.findOne({where: {id: parceiro.id}, transaction}) : undefined;
+        for (let contato of parceiro?.contatos || []) {
+            if (!contato.id) {
+                contato.id = crypto.randomUUID();
+                contato.parceiroId = parceiro.id;
+                ParceiroContato.create({...contato}, {transaction});
+            } else {
+                ParceiroContato.update(contato, {where: {id: contato.id}, transaction});
+            }
+            ParceiroContato.destroy({where: {id: {[Op.notIn]: parceiro?.contatos?.map(c => c.id)}}, transaction})
+        }
 
         await Parceiro.update(parceiro, {where: {id: parceiro.id}, transaction});
 
