@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Parceiro, ParceiroContato, TabelaPreco, Usuario } from "../../database";
+import { Parceiro, ParceiroContato, ParceiroEndereco, TabelaPreco, Usuario } from "../../database";
 import { ParceiroService } from "../../services/parceiro.service";
 import {Op} from "sequelize";
 
@@ -89,7 +89,8 @@ export default class ParceiroController {
                 ],
                 include: [
                     {model: TabelaPreco, attributes: ["id", "descricao"]},
-                    {model: ParceiroContato, attributes: ["id", "nome", "telefone", "email"]}
+                    {model: ParceiroContato, attributes: ["id", "nome", "telefone", "email"]},
+                    {model: ParceiroEndereco, attributes: ["id", "cep", "logradouro", "numero", "complemento", "bairro"]}
                 ],
                 where,
                 transaction

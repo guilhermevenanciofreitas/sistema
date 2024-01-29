@@ -42,6 +42,26 @@ ALTER TABLE "parceirosContato" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(80);
 ALTER TABLE "parceirosContato" ADD COLUMN IF NOT EXISTS "telefone" VARCHAR(30);
 ALTER TABLE "parceirosContato" ADD COLUMN IF NOT EXISTS "email" VARCHAR(120);
 
+--parceirosEndereco
+CREATE TABLE IF NOT EXISTS "parceirosEndereco"();
+ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "parceiroId" UUID;
+ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "cep" VARCHAR(8);
+ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "logradouro" VARCHAR(100);
+ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "numero" VARCHAR(20);
+ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "complemento" VARCHAR(50);
+ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "bairro" VARCHAR(50);
+ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "estadoId" UUID;
+
+--estados
+CREATE TABLE IF NOT EXISTS "estados"();
+ALTER TABLE "estados" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "estados" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(60);
+ALTER TABLE "estados" ADD COLUMN IF NOT EXISTS "uf" VARCHAR(2);
+ALTER TABLE "estados" ADD COLUMN IF NOT EXISTS "ibge" INT;
+ALTER TABLE "estados" ADD COLUMN IF NOT EXISTS "pais" INT;
+ALTER TABLE "estados" ADD COLUMN IF NOT EXISTS "ddd" JSON;
+
 --produtos
 CREATE TABLE IF NOT EXISTS "produtos"();
 ALTER TABLE "produtos" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;

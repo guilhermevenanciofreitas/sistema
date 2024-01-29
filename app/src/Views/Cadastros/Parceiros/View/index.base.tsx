@@ -27,7 +27,8 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: s
         isAtivo: true,
         isBloquearVenda: true,
         isBloquearCompra: true,
-        contatos: []
+        contatos: [],
+        enderecos: []
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -112,6 +113,7 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: s
             isBloquearVenda: true,
             isBloquearCompra: true,
             contatos: [],
+            enderecos: []
         });
     }
 

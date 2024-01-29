@@ -1,6 +1,7 @@
 import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-typescript";
 import { TabelaPreco } from "./tabelaPreco.model";
 import { ParceiroContato } from "./parceiroContato.model";
+import { ParceiroEndereco } from "./parceiroEndereco.model";
 
 @Table({tableName: "parceiros"})
 export class Parceiro extends Model {
@@ -70,5 +71,8 @@ export class Parceiro extends Model {
 
   @HasMany(() => ParceiroContato, 'parceiroId')
   contatos?: ParceiroContato[];
+
+  @HasMany(() => ParceiroEndereco, 'parceiroId')
+  enderecos?: ParceiroEndereco[];
 
 }

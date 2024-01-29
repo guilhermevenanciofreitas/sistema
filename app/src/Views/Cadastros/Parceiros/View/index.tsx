@@ -8,6 +8,7 @@ import { Grid } from '@mui/joy';
 import { Search } from '../../../../Search';
 import { TabelaPrecoTemplate } from '../../../../Search/Templates/TabelaPreco';
 import { Contatos } from './contatos';
+import { Enderecos } from './enderecos';
 
 export class ViewParceiro extends ViewParceiroBase {
 
@@ -119,7 +120,7 @@ export class ViewParceiro extends ViewParceiroBase {
                                     <Contatos Contatos={this.state.contatos} OnChange={(contatos: any[]) => this.setState({contatos})} />
                                 </TabItem>
                                 <TabItem Title='Endereços' Visible={true}>
-                                    Endereços
+                                    <Enderecos Enderecos={this.state.enderecos} OnChange={(enderecos: any[]) => this.setState({enderecos})} />
                                 </TabItem>
                                 <TabItem Title='Vendedores' Visible={this.state.isCliente}>
                                     Vendedores

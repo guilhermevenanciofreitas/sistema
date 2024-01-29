@@ -5,7 +5,7 @@ import { BaseDetails } from "../../../../Utils/Base/details";
 
 const Columns = [
     { selector: (row: any) => row.nome, name: 'Nome' },
-    { selector: (row: any) => row.telefone, sname: 'Telefone' },
+    { selector: (row: any) => row.telefone, name: 'Telefone' },
     { selector: (row: any) => row.email, name: 'Email' },
 ];
 
