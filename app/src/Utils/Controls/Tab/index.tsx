@@ -7,7 +7,7 @@ import Typography from '@mui/joy/Typography';
 import { TabItem } from '..';
 import { ControlTabItem } from './TabItem';
 
-export class ControlTab extends React.Component<Readonly<{children: any}>> {
+export class ControlTab extends React.Component<Readonly<{children?: any}>> {
 
     render(): React.ReactNode {
         return (

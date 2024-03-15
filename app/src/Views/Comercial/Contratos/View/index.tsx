@@ -40,11 +40,20 @@ export class ViewContrato extends ViewContratoBase {
                             <DatePicker Label='Termino' Text={this.state.termino} OnChange={(args: EventArgs) => this.setState({termino: args.Value})} />
                         </Grid>
 
+                        <Grid md={4}>
+                            <AutoComplete Label='Tipo de contrato' Pesquisa={async(Text: string) => await Search.Cliente(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.cliente} OnChange={(args: any) => this.setState({cliente: args})}>
+                                <ClienteTemplate />
+                            </AutoComplete>
+                        </Grid>
+
                         <Tab>
                             <TabItem Title='Serviços' Visible={true}>
                                 <></>
                             </TabItem>
                             <TabItem Title='Itens' Visible={true}>
+                                <></>
+                            </TabItem>
+                            <TabItem Title='Pagamento' Visible={true}>
                                 <></>
                             </TabItem>
                             <TabItem Title='Arquivos' Visible={true}>

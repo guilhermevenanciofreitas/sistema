@@ -62,10 +62,21 @@ ALTER TABLE "estados" ADD COLUMN IF NOT EXISTS "ibge" INT;
 ALTER TABLE "estados" ADD COLUMN IF NOT EXISTS "pais" INT;
 ALTER TABLE "estados" ADD COLUMN IF NOT EXISTS "ddd" JSON;
 
+--estados
+CREATE TABLE IF NOT EXISTS "municipio"();
+ALTER TABLE "municipio" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "municipio" ADD COLUMN IF NOT EXISTS "estadoId" UUID;
+ALTER TABLE "municipio" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(60);
+
 --produtos
 CREATE TABLE IF NOT EXISTS "produtos"();
 ALTER TABLE "produtos" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "produtos" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+
+--produtoCombinacao
+CREATE TABLE IF NOT EXISTS "produtoCombinacao"();
+ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
 
 --servicos
 CREATE TABLE IF NOT EXISTS "servicos"();
@@ -78,9 +89,33 @@ ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uu
 ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "clienteId" UUID;
 ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "inicio" DATE;
 ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "termino" DATE;
-ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "isCancelado" BOOLEAN DEFAULT false;
+ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "rescisaoId" UUID;
+
+--pedidoVenda
+CREATE TABLE IF NOT EXISTS "pedidoVenda"();
+ALTER TABLE "pedidoVenda" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "pedidoVenda" ADD COLUMN IF NOT EXISTS "clienteId" UUID;
+ALTER TABLE "pedidoVenda" ADD COLUMN IF NOT EXISTS "entrega" JSONB;
+
+
+--pedidoVendaItem
+CREATE TABLE IF NOT EXISTS "pedidoVendaItem"();
+ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID;
+ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "produtoId" UUID;
+ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "quantidade" DECIMAL(10, 3);
 
 --tabelasPreco
 CREATE TABLE IF NOT EXISTS "tabelasPreco"();
 ALTER TABLE "tabelasPreco" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "tabelasPreco" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+
+--contasPagar
+CREATE TABLE IF NOT EXISTS "contasPagar"();
+ALTER TABLE "contasPagar" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "contasPagar" ADD COLUMN IF NOT EXISTS "numeroDocumento" VARCHAR(100);
+ALTER TABLE "contasPagar" ADD COLUMN IF NOT EXISTS "recebedorId" UUID;
+ALTER TABLE "contasPagar" ADD COLUMN IF NOT EXISTS "emissao" DATE;
+ALTER TABLE "contasPagar" ADD COLUMN IF NOT EXISTS "vencimento" DATE;
+ALTER TABLE "contasPagar" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
+ALTER TABLE "contasPagar" ADD COLUMN IF NOT EXISTS "pagamentoId" UUID;

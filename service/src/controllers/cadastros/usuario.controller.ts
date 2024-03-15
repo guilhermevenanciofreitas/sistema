@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
 import { Usuario } from "../../database";
-import { UsuarioService } from "../../services/usuario.service";
+import { UsuarioService } from "../../services/cadastros/usuario.service";
 import {Op} from "sequelize";
 
 export default class UsuarioController {

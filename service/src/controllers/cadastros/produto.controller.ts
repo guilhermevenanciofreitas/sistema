@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
 import { Produto } from "../../database";
-import { ProdutoService } from "../../services/produto.service";
+import { ProdutoService } from "../../services/cadastros/produto.service";
 import {Op} from "sequelize";
 
 export default class ProdutoController {

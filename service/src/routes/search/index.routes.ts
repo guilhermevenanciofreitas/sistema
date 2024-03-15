@@ -12,6 +12,8 @@ class SearchRoutes {
   intializeRoutes() {
     this.router.post("/tabelasPreco", (req, res) => this.controller.tabelasPreco(req, res));
     this.router.post("/cliente", (req, res) => this.controller.cliente(req, res));
+    this.router.post("/produto", (req, res) => this.controller.produto(req, res));
+    this.router.post("/municipio", (req, res) => this.controller.municipio(req, res));
   }
 }
 

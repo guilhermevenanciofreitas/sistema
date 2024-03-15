@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { Produto } from "../database";
+import { Produto } from "../../database";
 import crypto from "crypto";
 
 export class ProdutoService {

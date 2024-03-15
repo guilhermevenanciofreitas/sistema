@@ -5,8 +5,8 @@ import React, { Component } from "react";
 }*/
 
 class Parameters {
-    Columns?: any[];
-    Rows?: any[];
+    Columns?: any;
+    Rows?: any;
     Loading?: boolean;
     OnItem?: Function | any;
     OnSort?: Function | any;

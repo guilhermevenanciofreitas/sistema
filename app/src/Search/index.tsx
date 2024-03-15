@@ -11,6 +11,16 @@ export const Search = {
     {
         return (await Service.Post("search/tabelasPreco", {Search}))?.data;
     },
+
+    Produto: async (Search: string) =>
+    {
+        return (await Service.Post("search/produto", {Search}))?.data;
+    },
+
+    Municipio: async (Search: string, estadoId: string) =>
+    {
+        return (await Service.Post("search/municipio", {Search, estadoId}))?.data;
+    },
     
     
 }

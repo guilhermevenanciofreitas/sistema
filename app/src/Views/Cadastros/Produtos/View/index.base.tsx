@@ -9,6 +9,7 @@ export class ViewProdutoBase extends ViewModal<Readonly<{Title: string}>> {
         open: false,
         id: "",
         descricao: "",
+        isCombinacao: false,
     }
 
     public Show = async (id?: string): Promise<any> =>

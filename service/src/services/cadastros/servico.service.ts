@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { Servico } from "../database";
+import { Servico } from "../../database";
 import crypto from "crypto";
 
 export class ServicoService {

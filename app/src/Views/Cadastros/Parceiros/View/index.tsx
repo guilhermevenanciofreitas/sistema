@@ -103,7 +103,7 @@ export class ViewParceiro extends ViewParceiroBase {
                                     )}
                                     <div style={{display: 'flex'}}>
                                         <Grid md={3}>
-                                            <AutoComplete Label='Tabela de preço' Pesquisa={async(Text: string) => await Search.TabelaPreco(Text)} Text={(Item: any) => `${Item.descricao}` } Value={this.state.tabelaPreco} OnChange={(args: any) => this.setState({tabelaPreco: args})}>
+                                            <AutoComplete Label='Tabela de preço' Pesquisa={async (Text: string) => await Search.TabelaPreco(Text)} Text={(Item: any) => `${Item.descricao}` } Value={this.state.tabelaPreco} OnChange={(args: any) => this.setState({tabelaPreco: args})}>
                                                 <TabelaPrecoTemplate />
                                             </AutoComplete>
                                         </Grid>

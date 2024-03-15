@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { Button, GridView, Modal, TextBox, ViewModal } from "../../../../Utils/Controls";
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
+import { Divider } from "@mui/joy";
 
 const Columns = [
     { selector: (row: any) => row.nome, name: 'Nome' },

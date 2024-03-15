@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
 import { Parceiro, ParceiroContato, ParceiroEndereco, TabelaPreco, Usuario } from "../../database";
-import { ParceiroService } from "../../services/parceiro.service";
+import { ParceiroService } from "../../services/cadastros/parceiro.service";
 import {Op} from "sequelize";
 
 export default class ParceiroController {
@@ -123,10 +123,6 @@ export default class ParceiroController {
                 Parceiro.cpfCnpj = req.body.cpfCnpj?.replace(/[^0-9]/g,'');
                 Parceiro.tabelaPrecoId = req.body.tabelaPreco?.id || null;
 
-                console.log("@".repeat(30));
-                console.log(Parceiro.contatos);
-                console.log("@".repeat(30));
-                
                 const valid = ParceiroService.IsValid(Parceiro);
     
                 if (!valid.success) {

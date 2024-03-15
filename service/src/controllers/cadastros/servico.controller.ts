@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
 import { Servico } from "../../database";
-import { ServicoService } from "../../services/servico.service";
+import { ServicoService } from "../../services/cadastros/servico.service";
 import {Op} from "sequelize";
 
 export default class ServicoController {

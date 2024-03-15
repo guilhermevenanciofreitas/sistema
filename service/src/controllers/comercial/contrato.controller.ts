@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
 import { Contrato } from "../../database";
-import { ContratoService } from "../../services/contrato.service";
+import { ContratoService } from "../../services/comercial/contrato.service";
 import {Op} from "sequelize";
 
 export default class ContratoController {

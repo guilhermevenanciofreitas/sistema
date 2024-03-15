@@ -10,6 +10,9 @@ import servicoRoutes from "./cadastros/servico.routes";
 
 import searchRoutes from "./search/index.routes";
 import contratoRoutes from "./comercial/contrato.routes";
+import contaPagarRoutes from "./financeiro/contaPagar.routes";
+
+import pedidoVendaRoutes from "./comercial/pedidoVenda.routes";
 
 export default class Routes {
   constructor(app: Application) {
@@ -26,6 +29,10 @@ export default class Routes {
 
 
     app.use("/api/contrato", contratoRoutes);
+    
+    app.use("/api/pedidovenda", pedidoVendaRoutes);
+
+    app.use("/api/contaPagar", contaPagarRoutes);
 
     app.use("/api/search", searchRoutes);
 

@@ -1,8 +1,9 @@
 
 import { ViewProdutoBase } from './index.base';
-import { Button, Form, Modal, TextBox } from '../../../../Utils/Controls';
+import { Button, CheckBox, Form, Modal, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
+import { Grid } from '@mui/joy';
 
 export class ViewProduto extends ViewProdutoBase {
 
@@ -19,6 +20,12 @@ export class ViewProduto extends ViewProdutoBase {
 
                     <TextBox Label='Descrição' TextTransform='UpperCase' Text={this.state.descricao} OnChange={(args: EventArgs) => this.setState({descricao: args.Value})} />
                     
+                    <Grid md={12}>
+                        <div style={{display: 'flex'}}>
+                            <CheckBox Label='Combinação' Checked={this.state.isCombinacao} OnChange={(args: EventArgs) => this.setState({isCombinacao: args.Value})} />
+                        </div>
+                    </Grid>
+                        
                 </Form>
             </Modal>
         );

@@ -1,6 +1,7 @@
 import { Sequelize as sequelize } from "sequelize-typescript";
 
 import { Contrato } from "./models/contrato.model";
+import { PedidoVenda } from "./models/pedidoVenda.model";
 import { TabelaPreco } from "./models/tabelaPreco.model";
 import { Usuario } from "./models/usuario.model";
 import { Parceiro } from "./models/parceiro.model";
@@ -9,9 +10,15 @@ import { ParceiroEndereco } from "./models/parceiroEndereco.model";
 import { Produto } from "./models/produto.model";
 import { Servico } from "./models/servico.model";
 import { Empresa } from "./models/empresa.model";
+import { ContaPagar } from "./models/contaPagar.model";
+import { pedidoVendaItem } from "./models/pedidoVendaItem.model";
+import { Municipio } from "./models/municipio.model";
 
 
+export { ContaPagar } from "./models/contaPagar.model";
 export { Contrato } from "./models/contrato.model";
+export { PedidoVenda } from "./models/pedidoVenda.model";
+export { pedidoVendaItem } from "./models/pedidoVendaItem.model";
 export { TabelaPreco } from "./models/tabelaPreco.model";
 export { Parceiro } from "./models/parceiro.model";
 export { ParceiroContato } from "./models/parceiroContato.model";
@@ -20,6 +27,7 @@ export { Produto } from "./models/produto.model";
 export { Servico } from "./models/servico.model";
 export { Empresa } from "./models/empresa.model";
 export { Usuario } from "./models/usuario.model";
+export { Municipio } from "./models/municipio.model";
 
 export default class Sequelize {
   
@@ -31,7 +39,7 @@ export default class Sequelize {
       
       dialect: "postgres",
       define: {timestamps: false},
-      models: [Contrato, Empresa, Parceiro, ParceiroContato, ParceiroEndereco, Produto, Servico, Usuario, TabelaPreco],
+      models: [ContaPagar, Contrato, PedidoVenda, pedidoVendaItem, Empresa, Parceiro, ParceiroContato, ParceiroEndereco, Produto, Servico, Usuario, TabelaPreco, Municipio],
       pool: {
         max: 5,
         min: 0,

@@ -12,10 +12,11 @@ import Produtos from "./Views/Cadastros/Produtos";
 import Servicos from "./Views/Cadastros/Servicos";
 
 import Contratos from "./Views/Comercial/Contratos";
+import PedidoVenda from "./Views/Comercial/Vendas";
 
 import { Login } from "./Views/Login";
-
-
+import NotasFiscais from "./Views/Fiscal/NotaFiscal";
+import ContasPagar from "./Views/Financeiro/ContasPagar";
 
 export default class App extends React.Component {
     render(): React.ReactNode {
@@ -35,6 +36,14 @@ export default class App extends React.Component {
                 <Route path="/servicos" element={<Servicos />} />
 
                 <Route path="/contratos" element={<RequireLogin><Contratos /></RequireLogin>} />
+
+                <Route path="/notasfiscais" element={<RequireLogin><NotasFiscais /></RequireLogin>} />
+
+                <Route path="/contaspagar" element={<RequireLogin><ContasPagar /></RequireLogin>} />
+                <Route path="/contasreceber" element={<RequireLogin><ContasPagar /></RequireLogin>} />
+
+                
+                <Route path="/pedidos" element={<RequireLogin><PedidoVenda /></RequireLogin>} />
 
                 <Route path="*" element={<div>Página não encontrada!</div>} />
             </Route>
