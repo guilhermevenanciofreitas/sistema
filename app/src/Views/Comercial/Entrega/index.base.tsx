@@ -5,7 +5,7 @@ import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 import { ViewPedidoVenda } from "../Vendas/View";
 
-export default class BaseAndamento extends BaseIndex {
+export default class BaseEntrega extends BaseIndex {
  
     protected ViewPedidoVenda = React.createRef<ViewPedidoVenda>();
 
@@ -16,7 +16,7 @@ export default class BaseAndamento extends BaseIndex {
         Loading: true,
         Selecteds: [],
         Data: {
-            status: [],
+            entregadores: [],
             rows: [],
             count: 0,
             offset: 1,
@@ -102,50 +102,58 @@ export default class BaseAndamento extends BaseIndex {
     protected Pesquisar = async(Data: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("pedidovenda/progressList", Data);
+        var r = await Service.Post("pedidovenda/deliveryList", Data);
 
-        let status = [];
+        let entregadores = [];
 
-        status.push({id: null, descricao: "SEM STATUS"});
+        entregadores.push({id: null, nome: "SEM ENTREGADOR"});
 
-        for (let item of r?.data.status) {
-            status.push(item);
+        for (let item of r?.data.entregadores) {
+            entregadores.push(item);
         }
 
-        this.setState({Loading: false, Data: {...r?.data, status}});
+        this.setState({Loading: false, Data: {...r?.data, entregadores}});
 
     }
 
-    protected onDragStart = (ev: any, id: any, statusId: any) => {
+    protected onDragStart = (ev: any, id: any, entregadorId: any) => {
         ev.dataTransfer.setData("id", id);
-        ev.dataTransfer.setData("statusId", statusId);
+        ev.dataTransfer.setData("entregadorId", entregadorId);
     }
 
     protected onDragOver = (ev: any) => {
         ev.preventDefault();
     }
 
-    protected onDragDrop = async (ev: any, status: any) => {
+    protected onDragDrop = async (ev: any, entregador: any) => {
 
         let id = ev.dataTransfer.getData("id");
-        let statusId = ev.dataTransfer.getData("statusId");
+        let entregadorId = ev.dataTransfer.getData("entregadorId");
         
-        if (status.id == statusId) {
+        if (entregador.id == entregadorId) {
             return;
         }
 
         const rows = this.state.Data.rows.filter((item: any) => {
             if (item.id == id) {
-                item.status = status; 
+                item.entregador = entregador; 
             }
             return item;
         });
 
-        let r = await Service.Post("pedidovenda/progress", {id: id, statusId: status?.id});
+        let r = await Service.Post("pedidovenda/deliveryman", {id: id, entregadorId: entregador?.id});
 
         if (r?.status == 200) {
             this.setState({Data: {...this.state.Data, rows: rows}});
         }
+
+    }
+
+    protected BtnDelivery_Click = async(entregadorId: string) => {
+
+        const ids = this.state.Data.rows.filter((item: any) => item.entregador?.id == entregadorId).map((c: any) => c.id);
+
+        const r = await Service.Post("pedidovenda/delivery", {ids, entregadorId});
 
     }
 

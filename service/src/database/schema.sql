@@ -4,6 +4,7 @@ ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uui
 ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "razaoSocial" VARCHAR(100);
 ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "nomeFantasia" VARCHAR(100);
 ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "cpfCnpj" VARCHAR(14);
+ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "endereco" JSONB;
 
 --usuarios
 CREATE TABLE IF NOT EXISTS "usuarios"();
@@ -132,6 +133,25 @@ ALTER TABLE "pedidoVendaPagamento" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT ge
 ALTER TABLE "pedidoVendaPagamento" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID;
 ALTER TABLE "pedidoVendaPagamento" ADD COLUMN IF NOT EXISTS "formaPagamentoId" UUID;
 ALTER TABLE "pedidoVendaPagamento" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
+
+--pedidoVendaDeliveryRoute
+CREATE TABLE IF NOT EXISTS "pedidoVendaDeliveryRoute"();
+ALTER TABLE "pedidoVendaDeliveryRoute" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "pedidoVendaDeliveryRoute" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID;
+ALTER TABLE "pedidoVendaDeliveryRoute" ADD COLUMN IF NOT EXISTS "deliveryRouteId" UUID;
+
+--delivery
+CREATE TABLE IF NOT EXISTS "delivery"();
+ALTER TABLE "delivery" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "delivery" ADD COLUMN IF NOT EXISTS "entregadorId" UUID;
+ALTER TABLE "delivery" ADD COLUMN IF NOT EXISTS "saiuParaEntrega" TIMESTAMP WITHOUT TIME ZONE;
+
+--deliveryRoute
+CREATE TABLE IF NOT EXISTS "deliveryRoute"();
+ALTER TABLE "deliveryRoute" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "deliveryRoute" ADD COLUMN IF NOT EXISTS "deliveryId" UUID;
+ALTER TABLE "deliveryRoute" ADD COLUMN IF NOT EXISTS "ordem" INTEGER;
+ALTER TABLE "deliveryRoute" ADD COLUMN IF NOT EXISTS "entregue" TIMESTAMP WITHOUT TIME ZONE;
 
 --formaPagamento
 CREATE TABLE IF NOT EXISTS "formaPagamento"();

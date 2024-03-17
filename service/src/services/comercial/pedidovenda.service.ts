@@ -90,6 +90,18 @@ export class PedidoVendaService {
 
     }
 
+    public static Deliveryman = async (id: string, entregadorId: string, transaction: Transaction) => {
+
+        await PedidoVenda.update({entregadorId: entregadorId}, {where: {id}, transaction});
+
+    }
+
+    public static Delivery = async (id: string, entregadorId: string, transaction: Transaction) => {
+
+        await PedidoVenda.update({entregadorId: entregadorId}, {where: {id}, transaction});
+
+    }
+
     public static Delete = async (id: string, transaction: Transaction) => {
         await PedidoVenda.update({ativo: false}, {where: {id: id}, transaction});
     }

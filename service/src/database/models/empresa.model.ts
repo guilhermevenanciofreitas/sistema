@@ -15,4 +15,7 @@ export class Empresa extends Model {
   @Column({type: DataType.STRING(14), field: "cpfCnpj"})
   cpfCnpj?: string;
 
+  @Column({type: DataType.JSONB, field: "endereco"})
+  endereco?: any;
+
 }

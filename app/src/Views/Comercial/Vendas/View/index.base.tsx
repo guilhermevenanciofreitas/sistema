@@ -10,6 +10,9 @@ export class ViewContratoBase extends ViewModal<Readonly<{Title: string}>> {
         id: "",
         cliente: null,
         tipoEntrega: null,
+        status: {
+            descricao: null
+        },
         itens: [],
         pagamentos: [],
 

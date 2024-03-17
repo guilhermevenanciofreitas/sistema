@@ -18,6 +18,9 @@ import { PedidoVendaPagamento } from "./models/pedidoVendaPagamento.model";
 import { PedidoVendaStatus } from "./models/pedidoVendaStatus.model";
 import { PedidoVendaAndamento } from "./models/pedidoVendaAndamento.model";
 import { PedidoVendaTipoEntrega } from "./models/pedidoVendaTipoEntrega.model";
+import { Delivery } from "./models/delivery.model";
+import { DeliveryRoute } from "./models/deliveryRoute.model";
+import { PedidoVendaDeliveryRoute } from "./models/pedidoVendaDeliveryRoute.model";
 
 
 export { ContaPagar } from "./models/contaPagar.model";
@@ -38,6 +41,9 @@ export { PedidoVendaPagamento } from "./models/pedidoVendaPagamento.model";
 export { PedidoVendaStatus } from "./models/pedidoVendaStatus.model";
 export { PedidoVendaAndamento } from "./models/pedidoVendaAndamento.model";
 export { PedidoVendaTipoEntrega } from "./models/pedidoVendaTipoEntrega.model";
+export { Delivery } from "./models/delivery.model";
+export { DeliveryRoute } from "./models/deliveryRoute.model";
+export { PedidoVendaDeliveryRoute } from "./models/pedidoVendaDeliveryRoute.model";
 
 
 export default class Sequelize {
@@ -50,7 +56,7 @@ export default class Sequelize {
       
       dialect: "postgres",
       define: {timestamps: false},
-      models: [ContaPagar, Contrato, PedidoVendaStatus, PedidoVendaTipoEntrega, PedidoVendaAndamento, PedidoVenda, FormaPagamento, PedidoVendaItem, PedidoVendaPagamento, Empresa, Parceiro, ParceiroContato, ParceiroEndereco, Produto, Servico, Usuario, TabelaPreco, Municipio],
+      models: [ContaPagar, Contrato, Delivery, DeliveryRoute, PedidoVendaStatus, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, PedidoVendaAndamento, PedidoVenda, FormaPagamento, PedidoVendaItem, PedidoVendaPagamento, Empresa, Parceiro, ParceiroContato, ParceiroEndereco, Produto, Servico, Usuario, TabelaPreco, Municipio],
       pool: {
         max: 5,
         min: 0,

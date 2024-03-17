@@ -3,7 +3,7 @@ import { ViewContratoBase } from './index.base';
 import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, Modal, Tab, TabItem, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
-import { Grid } from '@mui/joy';
+import { Alert, Grid } from '@mui/joy';
 import { Search } from '../../../../Search';
 import { ClienteTemplate } from '../../../../Search/Templates/Cliente';
 import { Itens } from './itens';
@@ -36,6 +36,9 @@ export class ViewPedidoVenda extends ViewContratoBase {
                                 <TipoEntregaTemplate />
                             </AutoComplete>
                         </Grid>
+                        <Grid md={4}>
+                            <Alert variant="soft">{this.state.status?.descricao}</Alert>
+                        </Grid>
 
                         <Tab>
                             <TabItem Title='Itens' Visible={true}>
@@ -43,14 +46,6 @@ export class ViewPedidoVenda extends ViewContratoBase {
                             </TabItem>
                             <TabItem Title='Entrega' Visible={this.state.tipoEntrega != null}>
                                 <>
-                                    <Grid container spacing={1} sx={{ flexGrow: 1 }}>
-                                        <Grid md={4}>
-                                            <AutoComplete Label='Entregador' Pesquisa={async(Text: string) => await Search.Funcionario(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.entregador} OnChange={(args: any) => this.setState({entregador: args})}>
-                                                <ClienteTemplate />
-                                            </AutoComplete>
-                                        </Grid>
-                                    </Grid>
-                                    <br></br>
                                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                                         <Grid md={2}>
                                             <TextBox Label='CEP' TextTransform='UpperCase' Text={this.state.entrega.cep} OnChange={(args: EventArgs) => this.setState({entrega: {...this.state.entrega, cep: args.Value}})} />
@@ -79,6 +74,14 @@ export class ViewPedidoVenda extends ViewContratoBase {
                                         <Grid md={5}>
                                             <AutoComplete Label='Municipio' Pesquisa={async(Text: string) => await Search.Municipio(Text, this.state.entrega.estadoId)} Text={(Item: any) => `${Item.nome}` } Value={this.state.entrega.municipio} OnChange={(args: EventArgs) => this.setState({entrega: {...this.state.entrega, municipio: args}})}>
                                                 <MunicipioTemplate />
+                                            </AutoComplete>
+                                        </Grid>
+                                    </Grid>
+                                    <br></br>
+                                    <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+                                        <Grid md={4}>
+                                            <AutoComplete Label='Entregador' Pesquisa={async(Text: string) => await Search.Funcionario(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.entregador} OnChange={(args: any) => this.setState({entregador: args})}>
+                                                <ClienteTemplate />
                                             </AutoComplete>
                                         </Grid>
                                     </Grid>
