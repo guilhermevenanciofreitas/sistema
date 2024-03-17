@@ -7,6 +7,11 @@ export const Search = {
         return (await Service.Post("search/cliente", {Search}))?.data;
     },
 
+    Funcionario: async (Search: string) =>
+    {
+        return (await Service.Post("search/funcionario", {Search}))?.data;
+    },
+
     TabelaPreco: async (Search: string) =>
     {
         return (await Service.Post("search/tabelasPreco", {Search}))?.data;
@@ -22,5 +27,14 @@ export const Search = {
         return (await Service.Post("search/municipio", {Search, estadoId}))?.data;
     },
     
+    FormaPagamento: async (Search: string) =>
+    {
+        return (await Service.Post("search/formaPagamento", {Search}))?.data;
+    },
+
+    TipoEntrega: async (Search: string) =>
+    {
+        return (await Service.Post("search/tipoEntrega", {Search}))?.data;
+    },
     
 }

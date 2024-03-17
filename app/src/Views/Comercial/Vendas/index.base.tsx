@@ -1,6 +1,6 @@
 import React from "react";
 import { Service } from "../../../Service";
-import { ViewItem } from "./View/index";
+import { ViewPedidoVenda } from "./View/index";
 import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
@@ -10,7 +10,7 @@ import queryString from "query-string";
 
 export default class BasePedidoVenda extends BaseIndex {
  
-    protected ViewItem = React.createRef<ViewItem>();
+    protected ViewPedidoVenda = React.createRef<ViewPedidoVenda>();
 
     protected ViewImportar = React.createRef<ViewImportar>();
     protected ViewFiltro = React.createRef<ViewFiltro>();
@@ -70,7 +70,7 @@ export default class BasePedidoVenda extends BaseIndex {
         try
         {
 
-            const r = await this.ViewItem.current?.Show(undefined);
+            const r = await this.ViewPedidoVenda.current?.Show(undefined);
 
             if (r) this.Pesquisar(this.state.Data);
             
@@ -188,7 +188,7 @@ export default class BasePedidoVenda extends BaseIndex {
     private OpenContrato = async (id: string) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewItem.current?.Show(id);
+        const r = await this.ViewPedidoVenda.current?.Show(id);
         history.back();
         return r;
     }

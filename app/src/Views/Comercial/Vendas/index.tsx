@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
 import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
-import { ViewItem } from "./View/index";
+import { ViewPedidoVenda } from "./View/index";
 import BasePedidoVenda from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
@@ -11,8 +11,8 @@ import { ViewFiltro } from "./filtro";
 
 const Columns = [
     { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
-    { selector: (row: any) => row.nome, sort: 'nome', name: 'Nome', sortable: true },
-    { selector: (row: any) => row.email, sort: 'email', name: 'E-mail', sortable: true },
+    { selector: (row: any) => row.cliente.nome, sort: 'nome', name: 'Nome', sortable: true },
+    { selector: (row: any) => row.status?.descricao, sort: '$status.descricao', name: 'Status', sortable: true },
 ];
 
 export default class PedidoVenda extends BasePedidoVenda {
@@ -22,7 +22,7 @@ export default class PedidoVenda extends BasePedidoVenda {
         return (
             <>
 
-                <ViewItem ref={this.ViewItem} Title="Item" />
+                <ViewPedidoVenda ref={this.ViewPedidoVenda} Title="Pedido" />
 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />

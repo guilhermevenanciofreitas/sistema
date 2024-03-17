@@ -1,8 +1,8 @@
 import { Model, Table, Column, DataType, BelongsTo } from "sequelize-typescript";
-import { Produto } from "./produto.model";
+import { FormaPagamento } from "./formaPagamento.model";
 
-@Table({tableName: "pedidoVendaItem"})
-export class PedidoVendaItem extends Model {
+@Table({tableName: "pedidoVendaPagamento"})
+export class PedidoVendaPagamento extends Model {
   
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
   id?: string;
@@ -10,16 +10,13 @@ export class PedidoVendaItem extends Model {
   @Column({type: DataType.UUID, field: "pedidoVendaId"})
   pedidoVendaId?: string;
 
-  @Column({type: DataType.UUID, field: "produtoId"})
-  produtoId?: string;
-
-  @Column({type: DataType.DECIMAL(10, 3), field: "quantidade"})
-  quantidade?: number;
+  @Column({type: DataType.UUID, field: "formaPagamentoId"})
+  formaPagamentoId?: string;
 
   @Column({type: DataType.DECIMAL(10, 2), field: "valor"})
   valor?: number;
 
-  @BelongsTo(() => Produto, 'produtoId')
-  produto?: Produto;
+  @BelongsTo(() => FormaPagamento, 'formaPagamentoId')
+  formaPagamento?: FormaPagamento;
 
 }

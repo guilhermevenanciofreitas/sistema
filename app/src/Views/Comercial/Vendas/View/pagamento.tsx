@@ -4,25 +4,23 @@ import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
 import { ProdutoTemplate } from "../../../../Search/Templates/Produto";
+import { FormaPagamentoTemplate } from "../../../../Search/Templates/FormaPagamento";
 
 const Columns = [
-    { selector: (row: any) => row.produto.descricao, name: 'Item' },
-    { selector: (row: any) => row.quantidade, name: 'Quantidade' },
+    { selector: (row: any) => row.formaPagamento?.descricao, name: 'Forma de pagamento' },
+    { selector: (row: any) => "", name: 'Vencimento' },
     { selector: (row: any) => row.valor, name: 'Valor' },
-    { selector: (row: any) => "0.00", name: 'Desconto' },
-    { selector: (row: any) => row.valor, name: 'Total' },
 ];
 
-class ViewItens extends ViewModal {
+class ViewPagamento extends ViewModal {
 
     public Close = (endereco: any) => this.setState({open: false});
 
     state = {
         open: false,
         id: "",
-        produto: null,
-        quantidade: "1.000",
-        valor: "0.00"
+        formaPagamento: null,
+        valor: "0,00",
     }
 
     public Show = async (item?: any): Promise<any> =>
@@ -38,13 +36,12 @@ class ViewItens extends ViewModal {
 
     render(): React.ReactNode {
         return (
-            <Modal Open={this.state.open} Title='Item' Width={600} Close={this.Close}>
+            <Modal Open={this.state.open} Title='Forma de pagamento' Width={600} Close={this.Close}>
                 
-                <AutoComplete Label='Item' Pesquisa={async(Text: string) => await Search.Produto(Text)} Text={(Item: any) => `${Item.descricao}` } Value={this.state.produto} OnChange={(args: any) => this.setState({produto: args})}>
-                    <ProdutoTemplate />
+                <AutoComplete Label='Forma de pagamento' Pesquisa={async(Text: string) => await Search.FormaPagamento(Text)} Text={(Item: any) => `${Item?.descricao}` } Value={this.state.formaPagamento} OnChange={(args: any) => this.setState({formaPagamento: args})}>
+                    <FormaPagamentoTemplate />
                 </AutoComplete>
 
-                <TextBox Label='Quantidade' TextTransform='UpperCase' Text={this.state.quantidade} OnChange={(args: EventArgs) => this.setState({quantidade: args.Value})} />
                 <TextBox Label='Valor' TextTransform='UpperCase' Text={this.state.valor} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} />
 
                 <Button Text='Confirmar' Type='Submit' Color='white' BackgroundColor='green' OnClick={this.BtnConfirmar_Click} />
@@ -54,16 +51,17 @@ class ViewItens extends ViewModal {
 
 }
 
-export class Itens extends BaseDetails<Readonly<{Itens: any[], OnChange?: Function | any}>> {
+export class Pagamento extends BaseDetails<Readonly<{Itens: any[], OnChange?: Function | any}>> {
 
-    protected ViewContato = React.createRef<ViewItens>();
+    protected ViewContato = React.createRef<ViewPagamento>();
 
     protected BtnAdicionar_Click = async () => {
 
         const item: any = await this.ViewContato.current?.Show({
             id: "",
-            produto: null,
             quantidade: "1",
+            valor: "",
+            formaPagamento: null,
         });
 
         if (item == null) return;
@@ -78,9 +76,9 @@ export class Itens extends BaseDetails<Readonly<{Itens: any[], OnChange?: Functi
 
         const item = await this.ViewContato.current?.Show({...args});
         if (item == null) return;
-        args.produto = item.produto;
         args.quantidade = item.quantidade;
         args.valor = item.valor;
+        args.formaPagamento = item.formaPagamento;
         this.props.OnChange(this.props.Itens);
        
     }
@@ -92,7 +90,7 @@ export class Itens extends BaseDetails<Readonly<{Itens: any[], OnChange?: Functi
     render(): ReactNode {
         return (
             <>
-                <ViewItens ref={this.ViewContato} />
+                <ViewPagamento ref={this.ViewContato} />
                 <Button Text='Adicionar' Color='white' BackgroundColor='green' OnClick={this.BtnAdicionar_Click} />
                 {this.state.Selecteds.length >= 1 && <Button Text='Remover' Color='white' BackgroundColor='red' OnClick={this.BtnRemover_Click} />}
                 <GridView Columns={Columns} Rows={this.props.Itens} OnItem={this.GridView_OnItem} OnSelected={this.GridView_Selected} />

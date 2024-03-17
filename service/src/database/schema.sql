@@ -91,12 +91,32 @@ ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "inicio" DATE;
 ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "termino" DATE;
 ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "rescisaoId" UUID;
 
+--pedidoVendaStatus
+CREATE TABLE IF NOT EXISTS "pedidoVendaStatus"();
+ALTER TABLE "pedidoVendaStatus" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "pedidoVendaStatus" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+ALTER TABLE "pedidoVendaStatus" ADD COLUMN IF NOT EXISTS "ordem" INTEGER;
+
 --pedidoVenda
 CREATE TABLE IF NOT EXISTS "pedidoVenda"();
 ALTER TABLE "pedidoVenda" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "pedidoVenda" ADD COLUMN IF NOT EXISTS "clienteId" UUID;
+ALTER TABLE "pedidoVenda" ADD COLUMN IF NOT EXISTS "tipoEntregaId" UUID;
+ALTER TABLE "pedidoVenda" ADD COLUMN IF NOT EXISTS "pedidoVendaStatusId" UUID;
+ALTER TABLE "pedidoVenda" ADD COLUMN IF NOT EXISTS "entregadorId" UUID;
 ALTER TABLE "pedidoVenda" ADD COLUMN IF NOT EXISTS "entrega" JSONB;
 
+--pedidoVendaTipoEntrega
+CREATE TABLE IF NOT EXISTS "pedidoVendaTipoEntrega"();
+ALTER TABLE "pedidoVendaTipoEntrega" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "pedidoVendaTipoEntrega" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+
+--pedidoVendaAndamento
+CREATE TABLE IF NOT EXISTS "pedidoVendaAndamento"();
+ALTER TABLE "pedidoVendaAndamento" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "pedidoVendaAndamento" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID;
+ALTER TABLE "pedidoVendaAndamento" ADD COLUMN IF NOT EXISTS "data" TIMESTAMP WITHOUT TIME ZONE;
+ALTER TABLE "pedidoVendaAndamento" ADD COLUMN IF NOT EXISTS "statusId" UUID;
 
 --pedidoVendaItem
 CREATE TABLE IF NOT EXISTS "pedidoVendaItem"();
@@ -104,6 +124,19 @@ ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_ran
 ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID;
 ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "produtoId" UUID;
 ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "quantidade" DECIMAL(10, 3);
+ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
+
+--pedidoVendaItem
+CREATE TABLE IF NOT EXISTS "pedidoVendaPagamento"();
+ALTER TABLE "pedidoVendaPagamento" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "pedidoVendaPagamento" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID;
+ALTER TABLE "pedidoVendaPagamento" ADD COLUMN IF NOT EXISTS "formaPagamentoId" UUID;
+ALTER TABLE "pedidoVendaPagamento" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
+
+--formaPagamento
+CREATE TABLE IF NOT EXISTS "formaPagamento"();
+ALTER TABLE "formaPagamento" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "formaPagamento" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
 
 --tabelasPreco
 CREATE TABLE IF NOT EXISTS "tabelasPreco"();

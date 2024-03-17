@@ -12,8 +12,11 @@ class SearchRoutes {
   intializeRoutes() {
     this.router.post("/tabelasPreco", (req, res) => this.controller.tabelasPreco(req, res));
     this.router.post("/cliente", (req, res) => this.controller.cliente(req, res));
+    this.router.post("/funcionario", (req, res) => this.controller.funcionario(req, res));
     this.router.post("/produto", (req, res) => this.controller.produto(req, res));
     this.router.post("/municipio", (req, res) => this.controller.municipio(req, res));
+    this.router.post("/formaPagamento", (req, res) => this.controller.formaPagamento(req, res));
+    this.router.post("/tipoEntrega", (req, res) => this.controller.tipoEntrega(req, res));
   }
 }
 

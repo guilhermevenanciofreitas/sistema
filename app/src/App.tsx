@@ -17,6 +17,7 @@ import PedidoVenda from "./Views/Comercial/Vendas";
 import { Login } from "./Views/Login";
 import NotasFiscais from "./Views/Fiscal/NotaFiscal";
 import ContasPagar from "./Views/Financeiro/ContasPagar";
+import Andamento from "./Views/Comercial/Andamento";
 
 export default class App extends React.Component {
     render(): React.ReactNode {
@@ -44,6 +45,7 @@ export default class App extends React.Component {
 
                 
                 <Route path="/pedidos" element={<RequireLogin><PedidoVenda /></RequireLogin>} />
+                <Route path="/andamento" element={<RequireLogin><Andamento /></RequireLogin>} />
 
                 <Route path="*" element={<div>Página não encontrada!</div>} />
             </Route>

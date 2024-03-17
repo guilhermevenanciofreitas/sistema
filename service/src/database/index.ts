@@ -11,14 +11,19 @@ import { Produto } from "./models/produto.model";
 import { Servico } from "./models/servico.model";
 import { Empresa } from "./models/empresa.model";
 import { ContaPagar } from "./models/contaPagar.model";
-import { pedidoVendaItem } from "./models/pedidoVendaItem.model";
+import { PedidoVendaItem } from "./models/pedidoVendaItem.model";
 import { Municipio } from "./models/municipio.model";
+import { FormaPagamento } from "./models/formaPagamento.model";
+import { PedidoVendaPagamento } from "./models/pedidoVendaPagamento.model";
+import { PedidoVendaStatus } from "./models/pedidoVendaStatus.model";
+import { PedidoVendaAndamento } from "./models/pedidoVendaAndamento.model";
+import { PedidoVendaTipoEntrega } from "./models/pedidoVendaTipoEntrega.model";
 
 
 export { ContaPagar } from "./models/contaPagar.model";
 export { Contrato } from "./models/contrato.model";
 export { PedidoVenda } from "./models/pedidoVenda.model";
-export { pedidoVendaItem } from "./models/pedidoVendaItem.model";
+export { PedidoVendaItem } from "./models/pedidoVendaItem.model";
 export { TabelaPreco } from "./models/tabelaPreco.model";
 export { Parceiro } from "./models/parceiro.model";
 export { ParceiroContato } from "./models/parceiroContato.model";
@@ -28,6 +33,12 @@ export { Servico } from "./models/servico.model";
 export { Empresa } from "./models/empresa.model";
 export { Usuario } from "./models/usuario.model";
 export { Municipio } from "./models/municipio.model";
+export { FormaPagamento } from "./models/formaPagamento.model";
+export { PedidoVendaPagamento } from "./models/pedidoVendaPagamento.model";
+export { PedidoVendaStatus } from "./models/pedidoVendaStatus.model";
+export { PedidoVendaAndamento } from "./models/pedidoVendaAndamento.model";
+export { PedidoVendaTipoEntrega } from "./models/pedidoVendaTipoEntrega.model";
+
 
 export default class Sequelize {
   
@@ -39,7 +50,7 @@ export default class Sequelize {
       
       dialect: "postgres",
       define: {timestamps: false},
-      models: [ContaPagar, Contrato, PedidoVenda, pedidoVendaItem, Empresa, Parceiro, ParceiroContato, ParceiroEndereco, Produto, Servico, Usuario, TabelaPreco, Municipio],
+      models: [ContaPagar, Contrato, PedidoVendaStatus, PedidoVendaTipoEntrega, PedidoVendaAndamento, PedidoVenda, FormaPagamento, PedidoVendaItem, PedidoVendaPagamento, Empresa, Parceiro, ParceiroContato, ParceiroEndereco, Produto, Servico, Usuario, TabelaPreco, Municipio],
       pool: {
         max: 5,
         min: 0,

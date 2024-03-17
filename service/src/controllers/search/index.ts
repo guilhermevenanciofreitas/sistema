@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Municipio, Parceiro, Produto, TabelaPreco } from "../../database";
+import { FormaPagamento, Municipio, Parceiro, PedidoVendaTipoEntrega, Produto, TabelaPreco } from "../../database";
 import { Op } from "sequelize";
 
 export default class SearchController {
@@ -43,6 +43,36 @@ export default class SearchController {
                 let where: any = {};
    
                 where = {"isCliente": true};
+
+                if (req.body?.Search) {
+                    where = {"nome": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+        
+                const clientes = await Parceiro.findAll({attributes: ["id", "cpfCnpj", "nome"], where, order: [["nome", "asc"]], transaction});
+        
+                sequelize.close();
+
+                res.status(200).json(clientes);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async funcionario(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+   
+                where = {"isFuncionario": true};
 
                 if (req.body?.Search) {
                     where = {"nome": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
@@ -115,6 +145,62 @@ export default class SearchController {
                 sequelize.close();
 
                 res.status(200).json(municipios);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async formaPagamento(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+
+                if (req.body?.Search) {
+                    where = {"descricao": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+
+                const formaPagamentos = await FormaPagamento.findAll({attributes: ["id", "descricao"], where, order: [["descricao", "asc"]], transaction});
+        
+                sequelize.close();
+
+                res.status(200).json(formaPagamentos);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async tipoEntrega(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+
+                if (req.body?.Search) {
+                    where = {"descricao": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+
+                const tipoEntregas = await PedidoVendaTipoEntrega.findAll({attributes: ["id", "descricao"], where, order: [["descricao", "asc"]], transaction});
+        
+                sequelize.close();
+
+                res.status(200).json(tipoEntregas);
 
             }
             catch (err) {

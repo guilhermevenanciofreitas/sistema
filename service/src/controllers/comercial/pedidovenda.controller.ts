@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Parceiro, PedidoVenda, Produto } from "../../database";
+import { FormaPagamento, Parceiro, PedidoVenda, Produto, PedidoVendaPagamento, PedidoVendaStatus, PedidoVendaTipoEntrega } from "../../database";
 import { PedidoVendaService } from "../../services/comercial/pedidovenda.service";
 import {Op} from "sequelize";
-import { pedidoVendaItem } from "../../database/models/pedidoVendaItem.model";
+import { PedidoVendaItem } from "../../database/models/pedidoVendaItem.model";
 
 export default class PedidoVendaController {
 
@@ -29,13 +29,16 @@ export default class PedidoVendaController {
                 const pedidoVenda = await PedidoVenda.findAndCountAll({
                     attributes: ["id"],
                     include: [
-                        {model: Parceiro, attributes: ["id", "nome"]},
+                        {model: Parceiro, as: "cliente", attributes: ["id", "nome"]},
+                        {model: PedidoVendaStatus, attributes: ["id", "descricao"]}
                     ],
                     where, order, limit, offset, transaction});
+
+                const status = await PedidoVendaStatus.findAll({order: [["ordem", "ASC"]], transaction});
         
                 sequelize.close();
 
-                res.status(200).json({...pedidoVenda, limit, offset: req.body.offset, filter, sort});
+                res.status(200).json({...pedidoVenda, status, limit, offset: req.body.offset, filter, sort});
 
             }
             catch (err) {
@@ -53,18 +56,21 @@ export default class PedidoVendaController {
             {
                 const transaction = await sequelize.transaction();
 
-                const contrato = await PedidoVenda.findOne({
+                const pedidoVenda = await PedidoVenda.findOne({
                     attributes: ["id", "entrega"], 
                     include: [
-                        {model: Parceiro, attributes: ["id", "nome"]},
-                        {model: pedidoVendaItem, attributes: ["id"], include: [{model: Produto, attributes: ["id", "descricao"]}]},
+                        {model: Parceiro, as: "cliente", attributes: ["id", "nome"]},
+                        {model: Parceiro, as: "entregador", attributes: ["id", "nome"]},
+                        {model: PedidoVendaTipoEntrega, attributes: ["id", "descricao"]},
+                        {model: PedidoVendaItem, attributes: ["id", "quantidade", "valor"], include: [{model: Produto, attributes: ["id", "descricao"]}]},
+                        {model: PedidoVendaPagamento, attributes: ["id", "valor"], include: [{model: FormaPagamento, attributes: ["id", "descricao"]}]},
                     ],
                     where: {id: req.body.id}, transaction}
                 );
     
                 sequelize.close();
     
-                res.status(200).json(contrato);
+                res.status(200).json(pedidoVenda);
     
             }
             catch (err) {
@@ -111,6 +117,30 @@ export default class PedidoVendaController {
             res.status(401).json(err);
         });
 
+    }
+
+    async progress(req: Request, res: Response) {
+        Auth(req, res).then(async ({sequelize}) => {
+            try
+            {
+
+                const transaction = await sequelize.transaction();
+
+                await PedidoVendaService.Progress(req.body?.id, req.body?.statusId, transaction);
+
+                await transaction?.commit();
+                
+                sequelize.close();
+
+                res.status(200).json({success: true});
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err) => {
+            res.status(401).json(err);
+        });
     }
 
     async delete(req: Request, res: Response) {

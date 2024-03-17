@@ -9,9 +9,11 @@ export class ViewContratoBase extends ViewModal<Readonly<{Title: string}>> {
         open: false,
         id: "",
         cliente: null,
+        tipoEntrega: null,
         itens: [],
+        pagamentos: [],
 
-
+        entregador: null,
         entrega: {
             cep: "",
             logradouro: "",
@@ -20,7 +22,7 @@ export class ViewContratoBase extends ViewModal<Readonly<{Title: string}>> {
             estadoId: "",
             bairro: "",
             municipio: null,
-        }
+        },
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -85,7 +87,10 @@ export class ViewContratoBase extends ViewModal<Readonly<{Title: string}>> {
         this.setState({
             id: "",
             cliente: null,
+            tipoEntrega: null,
             itens: [],
+            pagamentos: [],
+            entregador: null,
             entrega: {},
         });
     }
