@@ -1,9 +1,10 @@
 
 import { ViewProdutoBase } from './index.base';
-import { Button, CheckBox, Form, Modal, TextBox } from '../../../../Utils/Controls';
+import { Button, CheckBox, Form, Modal, Tab, TabItem, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
+import { Combinacao } from './combinacao';
 
 export class ViewProduto extends ViewProdutoBase {
 
@@ -20,11 +21,19 @@ export class ViewProduto extends ViewProdutoBase {
 
                     <TextBox Label='Descrição' TextTransform='UpperCase' Text={this.state.descricao} OnChange={(args: EventArgs) => this.setState({descricao: args.Value})} />
                     
-                    <Grid md={12}>
-                        <div style={{display: 'flex'}}>
-                            <CheckBox Label='Combinação' Checked={this.state.isCombinacao} OnChange={(args: EventArgs) => this.setState({isCombinacao: args.Value})} />
-                        </div>
+                    <Grid>
+                        <Grid md={12}>
+                            <div style={{display: 'flex'}}>
+                                <CheckBox Label='Combinação' Checked={this.state.isCombinacao} OnChange={(args: EventArgs) => this.setState({isCombinacao: args.Value})} />
+                            </div>
+                        </Grid>
                     </Grid>
+
+                    <Tab>
+                        <TabItem Title='Combinações' Visible={true}>
+                            <Combinacao Itens={this.state.combinacoes} OnChange={(itens: any[]) => this.setState({itens})} />
+                        </TabItem>
+                    </Tab>
                         
                 </Form>
             </Modal>

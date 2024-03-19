@@ -10,6 +10,7 @@ export class ViewProdutoBase extends ViewModal<Readonly<{Title: string}>> {
         id: "",
         descricao: "",
         isCombinacao: false,
+        combinacoes: []
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -71,7 +72,7 @@ export class ViewProdutoBase extends ViewModal<Readonly<{Title: string}>> {
 
     private Limpar = () =>
     {
-        this.setState({id: "", descricao: ""});
+        this.setState({id: "", descricao: "", isCombinacao: false, combinacoes: []});
     }
 
 }

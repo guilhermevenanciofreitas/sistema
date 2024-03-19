@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/joy";
 import React from "react";
 
-export class Title extends React.Component<Readonly<{children: string}>> {
+export class Title extends React.Component<Readonly<{children: any}>> {
 
     render(): React.ReactNode {
 

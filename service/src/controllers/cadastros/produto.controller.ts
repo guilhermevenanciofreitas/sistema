@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Produto } from "../../database";
+import { Produto, ProdutoCombinacao } from "../../database";
 import { ProdutoService } from "../../services/cadastros/produto.service";
 import {Op} from "sequelize";
 
@@ -22,18 +22,16 @@ export default class ProdutoController {
                 let order: any = [];
         
                 if (filter?.nome) {
-                    where = {"nome": {[Op.iLike]: `%${filter?.nome.replace(' ', "%")}%`}};
-                }
-        
-                if (filter?.email) {
-                    where = {"email": {[Op.iLike]: `%${filter?.email}%`}};
+                    where = {"descricao": {[Op.iLike]: `%${filter?.descricao.replace(' ', "%")}%`}};
                 }
         
                 if (sort) {
                     order = [[sort.column, sort.direction]]
                 }
         
-                const produtos = await Produto.findAndCountAll({attributes: ["id", "descricao"], where, order, limit, offset, transaction});
+                const produtos = await Produto.findAndCountAll({attributes: ["id", "descricao"],
+                    where, order, limit, offset, transaction
+                });
         
                 sequelize.close();
 
@@ -55,7 +53,10 @@ export default class ProdutoController {
             {
                 const transaction = await sequelize.transaction();
 
-                const produto = await Produto.findOne({attributes: ["id", "descricao"], where: {id: req.body.id}, transaction});
+                const produto = await Produto.findOne({attributes: ["id", "descricao"], 
+                    include: [{model: ProdutoCombinacao, attributes: ["id"]}],
+                    where: {id: req.body.id}, transaction
+                });
     
                 sequelize.close();
     

@@ -1,4 +1,5 @@
-import { Model, Table, Column, DataType } from "sequelize-typescript";
+import { Model, Table, Column, DataType, HasMany } from "sequelize-typescript";
+import { ProdutoCombinacao } from "./produtoCombinacao.model";
 
 @Table({tableName: "produtos"})
 export class Produto extends Model {
@@ -8,5 +9,11 @@ export class Produto extends Model {
 
   @Column({type: DataType.STRING(100), field: "descricao"})
   descricao?: string;
+
+  @Column({type: DataType.BOOLEAN, field: "isCombinacao"})
+  isCombinacao?: string;
+
+  @HasMany(() => ProdutoCombinacao, 'produtoId')
+  combinacoes?: ProdutoCombinacao[];
 
 }

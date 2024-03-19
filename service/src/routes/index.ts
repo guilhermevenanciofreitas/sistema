@@ -14,6 +14,7 @@ import contaPagarRoutes from "./financeiro/contaPagar.routes";
 
 import pedidoVendaRoutes from "./comercial/pedidoVenda.routes";
 import funcionarioRoutes from "./cadastros/funcionario.routes";
+import transportadoraRoutes from "./cadastros/transportadora.routes";
 
 export default class Routes {
   constructor(app: Application) {
@@ -22,7 +23,7 @@ export default class Routes {
 
     app.use("/api/cliente", clienteRoutes);
     app.use("/api/fornecedor", fornecedorRoutes);
-    app.use("/api/transportadora", clienteRoutes);
+    app.use("/api/transportadora", transportadoraRoutes);
     app.use("/api/funcionario", funcionarioRoutes);
 
     app.use("/api/produto", produtoRoutes);

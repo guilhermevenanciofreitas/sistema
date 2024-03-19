@@ -11,6 +11,8 @@ import BaseEntrega from "./index.base";
 //import { ViewImportar } from "./importar";
 //import { ViewFiltro } from "./filtro";
 
+import _ from "lodash";
+
 export default class Entrega extends BaseEntrega {
 
     render() {
@@ -21,7 +23,7 @@ export default class Entrega extends BaseEntrega {
 
                 <JoyLayout>
 
-                    <Title>Entrega</Title>
+                    <Title>Entregadores</Title>
 
                     <Container>
                             <Left>
@@ -42,7 +44,7 @@ export default class Entrega extends BaseEntrega {
                                     
                                         <Typography level="title-lg">{c.nome}</Typography>
 
-                                        {this.state.Data.rows.filter((item: any) => item.entregador?.id == c.id).map((item: any) => (
+                                        {_.filter(this.state.Data.rows, (item: any) => item.entregador?.id == c.id && _.size(_.filter(item.deliveryRoutes, (c1: any) => c1.deliveryRoute.cancelado == null)) == 0).map((item: any) => (
                                             <div style={{cursor: 'move'}} draggable onDragStart={(e) => this.onDragStart(e, item.id, item.entregador.id)}>
                                                 <Card sx={{ width: '100%', height: '100%' }}>
                                                     <Typography>{item.cliente.nome}</Typography>
@@ -54,7 +56,7 @@ export default class Entrega extends BaseEntrega {
                                         <IconButton  variant="plain" color="neutral" size="sm" sx={{ position: 'absolute', top: '0.875rem', right: '0.5rem' }} onClick={() => this.BtnDelivery_Click(c.id)}>
                                             <Check />
                                         </IconButton>
-
+                                    
                                     </Card>
                                 </div>
                             ))}

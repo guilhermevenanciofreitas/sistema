@@ -37,7 +37,7 @@ export class ViewPedidoVenda extends ViewContratoBase {
                             </AutoComplete>
                         </Grid>
                         <Grid md={4}>
-                            <Alert variant="soft">{this.state.status?.descricao}</Alert>
+                            <Alert variant="soft">{this.state.status?.descricao || "SEM STATUS"}</Alert>
                         </Grid>
 
                         <Tab>

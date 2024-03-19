@@ -73,11 +73,27 @@ ALTER TABLE "municipio" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(60);
 CREATE TABLE IF NOT EXISTS "produtos"();
 ALTER TABLE "produtos" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "produtos" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+ALTER TABLE "produtos" ADD COLUMN IF NOT EXISTS "isCombinacao" BOOLEAN;
+
+--produtoCombinacaoGrupo
+CREATE TABLE IF NOT EXISTS "produtoCombinacaoGrupo"();
+ALTER TABLE "produtoCombinacaoGrupo" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "produtoCombinacaoGrupo" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+ALTER TABLE "produtoCombinacaoGrupo" ADD COLUMN IF NOT EXISTS "isObrigatorio" BOOLEAN;
+ALTER TABLE "produtoCombinacaoGrupo" ADD COLUMN IF NOT EXISTS "minimo" INTEGER;
+ALTER TABLE "produtoCombinacaoGrupo" ADD COLUMN IF NOT EXISTS "maximo" INTEGER;
+
+--produtoCombinacaoItem
+CREATE TABLE IF NOT EXISTS "produtoCombinacaoItem"();
+ALTER TABLE "produtoCombinacaoItem" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "produtoCombinacaoItem" ADD COLUMN IF NOT EXISTS "combinacaoId" UUID;
+ALTER TABLE "produtoCombinacaoItem" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
 
 --produtoCombinacao
 CREATE TABLE IF NOT EXISTS "produtoCombinacao"();
 ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "produtoId" UUID;
+ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "combinacaoId" UUID;
 
 --servicos
 CREATE TABLE IF NOT EXISTS "servicos"();
@@ -145,6 +161,7 @@ CREATE TABLE IF NOT EXISTS "delivery"();
 ALTER TABLE "delivery" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "delivery" ADD COLUMN IF NOT EXISTS "entregadorId" UUID;
 ALTER TABLE "delivery" ADD COLUMN IF NOT EXISTS "saiuParaEntrega" TIMESTAMP WITHOUT TIME ZONE;
+ALTER TABLE "delivery" ADD COLUMN IF NOT EXISTS "finalizado" TIMESTAMP WITHOUT TIME ZONE;
 
 --deliveryRoute
 CREATE TABLE IF NOT EXISTS "deliveryRoute"();
@@ -152,6 +169,7 @@ ALTER TABLE "deliveryRoute" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_rando
 ALTER TABLE "deliveryRoute" ADD COLUMN IF NOT EXISTS "deliveryId" UUID;
 ALTER TABLE "deliveryRoute" ADD COLUMN IF NOT EXISTS "ordem" INTEGER;
 ALTER TABLE "deliveryRoute" ADD COLUMN IF NOT EXISTS "entregue" TIMESTAMP WITHOUT TIME ZONE;
+ALTER TABLE "deliveryRoute" ADD COLUMN IF NOT EXISTS "cancelado" TIMESTAMP WITHOUT TIME ZONE;
 
 --formaPagamento
 CREATE TABLE IF NOT EXISTS "formaPagamento"();

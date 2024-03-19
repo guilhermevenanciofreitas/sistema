@@ -21,6 +21,9 @@ import { PedidoVendaTipoEntrega } from "./models/pedidoVendaTipoEntrega.model";
 import { Delivery } from "./models/delivery.model";
 import { DeliveryRoute } from "./models/deliveryRoute.model";
 import { PedidoVendaDeliveryRoute } from "./models/pedidoVendaDeliveryRoute.model";
+import { ProdutoCombinacao } from "./models/produtoCombinacao.model";
+import { ProdutoCombinacaoGrupo } from "./models/produtoCombinacaoGrupo.model";
+import { ProdutoCombinacaoItem } from "./models/produtoCombinacaoItem.model";
 
 
 export { ContaPagar } from "./models/contaPagar.model";
@@ -44,6 +47,9 @@ export { PedidoVendaTipoEntrega } from "./models/pedidoVendaTipoEntrega.model";
 export { Delivery } from "./models/delivery.model";
 export { DeliveryRoute } from "./models/deliveryRoute.model";
 export { PedidoVendaDeliveryRoute } from "./models/pedidoVendaDeliveryRoute.model";
+export { ProdutoCombinacao } from "./models/produtoCombinacao.model";
+export { ProdutoCombinacaoGrupo } from "./models/produtoCombinacaoGrupo.model";
+export { ProdutoCombinacaoItem } from "./models/produtoCombinacaoItem.model";
 
 
 export default class Sequelize {
@@ -56,7 +62,7 @@ export default class Sequelize {
       
       dialect: "postgres",
       define: {timestamps: false},
-      models: [ContaPagar, Contrato, Delivery, DeliveryRoute, PedidoVendaStatus, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, PedidoVendaAndamento, PedidoVenda, FormaPagamento, PedidoVendaItem, PedidoVendaPagamento, Empresa, Parceiro, ParceiroContato, ParceiroEndereco, Produto, Servico, Usuario, TabelaPreco, Municipio],
+      models: [ContaPagar, Contrato, Delivery, DeliveryRoute, PedidoVendaStatus, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, PedidoVendaAndamento, PedidoVenda, FormaPagamento, PedidoVendaItem, PedidoVendaPagamento, Empresa, Parceiro, ParceiroContato, ParceiroEndereco, Produto, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, Servico, Usuario, TabelaPreco, Municipio],
       pool: {
         max: 5,
         min: 0,

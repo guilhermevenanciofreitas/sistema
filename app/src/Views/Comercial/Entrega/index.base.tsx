@@ -4,6 +4,9 @@ import { BaseIndex } from "../../../Utils/Base";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 import { ViewPedidoVenda } from "../Vendas/View";
+import _ from "lodash";
+import { MessageBox } from "../../../Utils/Controls";
+import { Loading } from "../../../Utils/Loading";
 
 export default class BaseEntrega extends BaseIndex {
  
@@ -151,9 +154,22 @@ export default class BaseEntrega extends BaseIndex {
 
     protected BtnDelivery_Click = async(entregadorId: string) => {
 
-        const ids = this.state.Data.rows.filter((item: any) => item.entregador?.id == entregadorId).map((c: any) => c.id);
+        const ids = _.filter(this.state.Data.rows, (item: any) => item.entregador?.id == entregadorId && _.size(_.filter(item.deliveryRoutes, (c1: any) => c1.deliveryRoute.cancelado == null)) == 0).map((item: any) => item.id);
 
-        const r = await Service.Post("pedidovenda/delivery", {ids, entregadorId});
+        if (_.size(ids) == 0) {
+            await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Nenhum pedido para o entregador!", buttons: [{ Text: "OK" }]});
+            return;
+        }
+
+        Loading.Show();
+
+        await Service.Post("pedidovenda/delivery", {ids, entregadorId});
+
+        await this.Pesquisar(this.state.Data);
+
+        Loading.Hide();
+
+        await MessageBox.Show({title: "Info", width: 400, type: "Success", content: "Pedidos enviados ao entregador!", buttons: [{ Text: "OK" }]});
 
     }
 

@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { FormaPagamento, Parceiro, PedidoVenda, Produto, PedidoVendaPagamento, PedidoVendaStatus, PedidoVendaTipoEntrega, Empresa } from "../../database";
+import { FormaPagamento, Parceiro, PedidoVenda, Produto, PedidoVendaPagamento, PedidoVendaStatus, PedidoVendaTipoEntrega, Empresa, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute } from "../../database";
 import { PedidoVendaService } from "../../services/comercial/pedidovenda.service";
 import { PedidoVendaItem } from "../../database/models/pedidoVendaItem.model";
+import {Op, Sequelize} from "sequelize";
+import axios from "axios";
 
 export default class PedidoVendaController {
 
@@ -98,7 +100,8 @@ export default class PedidoVendaController {
                 const filter = req.body.filter || undefined;
                 const sort = req.body.sort || undefined;
         
-                let where: any = {};
+                let where: any = {}; //Sequelize.literal(`deliveryRoutes.deliveryRoute.delivery.finalizado IS NULL`);
+
                 let order: any = [];
         
                 if (sort) {
@@ -110,6 +113,10 @@ export default class PedidoVendaController {
                     include: [
                         {model: Parceiro, as: "cliente", attributes: ["id", "nome"]},
                         {model: Parceiro, as: "entregador", attributes: ["id", "nome"]},
+                        {model: PedidoVendaDeliveryRoute, attributes: ["id"],
+                            include: [{model: DeliveryRoute, attributes: ["id", "entregue", "cancelado"],
+                                include: [{model: Delivery, attributes: ["id"]}]}]
+                        },
                     ],
                     where, order, limit, offset, transaction});
 
@@ -253,16 +260,79 @@ export default class PedidoVendaController {
             {
 
                 const transaction = await sequelize.transaction();
-
+               
                 const ids = req.body?.ids;
                 const entregadorId = req.body?.entregadorId;
 
-                const empresa = await Empresa.findOne({attributes: ["endereco"], where: {id: empresaId}});
+                const empresa = await Empresa.findOne({attributes: ["endereco"], where: {id: empresaId}, transaction});
                 
-                //const pedidoVenda = await PedidoVenda.findAll({attributes: ["id", "entrega"], where: {id: ids}, transaction});
+                const pedidoVenda = await PedidoVenda.findAll({attributes: ["id", "entrega"], where: {id: ids}, transaction});
 
-                await PedidoVendaService.Delivery(req.body?.id, req.body?.entregadorId, transaction);
+                let waypoints: any = pedidoVenda.map((c: any) => ({id: c.id, latitude: c.entrega.latitude, longitude: c.entrega.longitude}));
 
+                let params = empresa?.endereco.longitude + "," + empresa?.endereco.latitude + ";";
+
+                var waypoint_index = 1;
+
+                for (let item of waypoints) {
+                    item.waypoint_index = waypoint_index;
+                    params += item.longitude + "," + item.latitude + ";";
+                    waypoint_index++;
+                }
+                
+                params = params.substring(0, params.length - 1);
+
+                let config = {
+                    method: 'get',
+                    maxBodyLength: Infinity,
+                    url: 'https://api.mapbox.com/optimized-trips/v1/mapbox/driving/' + params + '?access_token=pk.eyJ1IjoiZ3VpdmVuYW5jaW8iLCJhIjoiY2x0dndjemo3MXBrZTJscXE2aWQ4a3RnOSJ9.NcSagSrZhTT7pR4DxyTIKg',
+                    headers: {}
+                };
+
+                var delivery = new Delivery();
+
+                delivery.entregadorId = entregadorId;
+
+                await PedidoVendaService.Delivery(delivery.dataValues, transaction);
+
+                axios.request(config).then(async (response: any) => {
+
+                    let data = [];
+
+                    for (let item of response.data.waypoints) {
+                        const r = waypoints.filter((c: any) => c.waypoint_index == item.waypoint_index);
+                        if (r[0] != undefined) {
+                            data.push({id: r[0].id});
+                        }
+                    }
+
+                    let ordem = 1;
+                    for (let item of data) {
+                        
+                        var deliveryRoute = new DeliveryRoute();
+                        deliveryRoute.deliveryId = delivery.id;
+                        deliveryRoute.ordem = ordem;
+                        await PedidoVendaService.DeliveryRoute(deliveryRoute.dataValues, transaction);
+                        
+                        var pedidoVendaDeliveryRoute = new PedidoVendaDeliveryRoute();
+                        pedidoVendaDeliveryRoute.pedidoVendaId = item.id;
+                        pedidoVendaDeliveryRoute.deliveryRouteId = deliveryRoute.id;
+                        await PedidoVendaService.PedidoVendaDeliveryRoute(pedidoVendaDeliveryRoute.dataValues, transaction);
+
+                        ordem++;
+                    }
+
+                    transaction.commit();
+
+                    res.status(200).json({success: true});
+
+                }).catch((err: any) => {
+                    res.status(500).json(err);
+                });
+                
+                
+                //res.status(200).json({success: true});
+                //await PedidoVendaService.Delivery(req.body?.id, req.body?.entregadorId, transaction);
 
             }
             catch (err) {

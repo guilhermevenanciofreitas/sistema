@@ -13,9 +13,9 @@ const Columns = [
     { selector: (row: any) => row.valor, name: 'Total' },
 ];
 
-class ViewItens extends ViewModal {
+class ViewItem extends ViewModal {
 
-    public Close = (endereco: any) => this.setState({open: false});
+    public Close = (item: any) => this.setState({open: false});
 
     state = {
         open: false,
@@ -56,11 +56,11 @@ class ViewItens extends ViewModal {
 
 export class Itens extends BaseDetails<Readonly<{Itens: any[], OnChange?: Function | any}>> {
 
-    protected ViewContato = React.createRef<ViewItens>();
+    protected ViewItem = React.createRef<ViewItem>();
 
     protected BtnAdicionar_Click = async () => {
 
-        const item: any = await this.ViewContato.current?.Show({
+        const item: any = await this.ViewItem.current?.Show({
             id: "",
             produto: null,
             quantidade: "1",
@@ -76,7 +76,7 @@ export class Itens extends BaseDetails<Readonly<{Itens: any[], OnChange?: Functi
     protected GridView_OnItem = async (args: any) =>
     {
 
-        const item = await this.ViewContato.current?.Show({...args});
+        const item = await this.ViewItem.current?.Show({...args});
         if (item == null) return;
         args.produto = item.produto;
         args.quantidade = item.quantidade;
@@ -92,7 +92,7 @@ export class Itens extends BaseDetails<Readonly<{Itens: any[], OnChange?: Functi
     render(): ReactNode {
         return (
             <>
-                <ViewItens ref={this.ViewContato} />
+                <ViewItem ref={this.ViewItem} />
                 <Button Text='Adicionar' Color='white' BackgroundColor='green' OnClick={this.BtnAdicionar_Click} />
                 {this.state.Selecteds.length >= 1 && <Button Text='Remover' Color='white' BackgroundColor='red' OnClick={this.BtnRemover_Click} />}
                 <GridView Columns={Columns} Rows={this.props.Itens} OnItem={this.GridView_OnItem} OnSelected={this.GridView_Selected} />

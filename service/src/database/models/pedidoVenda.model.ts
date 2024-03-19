@@ -4,6 +4,7 @@ import { PedidoVendaItem } from "./pedidoVendaItem.model";
 import { PedidoVendaPagamento } from "./pedidoVendaPagamento.model";
 import { PedidoVendaStatus } from "./pedidoVendaStatus.model";
 import { PedidoVendaTipoEntrega } from "./pedidoVendaTipoEntrega.model";
+import { PedidoVendaDeliveryRoute } from "./pedidoVendaDeliveryRoute.model";
 
 @Table({tableName: "pedidoVenda"})
 export class PedidoVenda extends Model {
@@ -21,7 +22,7 @@ export class PedidoVenda extends Model {
   tipoEntregaId?: string;
 
   @Column({type: DataType.JSONB, field: "entrega"})
-  entrega?: object;
+  entrega?: any;
 
   @Column({type: DataType.UUID, field: "entregadorId"})
   entregadorId?: string;
@@ -44,5 +45,8 @@ export class PedidoVenda extends Model {
 
   @BelongsTo(() => Parceiro, 'entregadorId')
   entregador?: Parceiro;
+
+  @HasMany(() => PedidoVendaDeliveryRoute, 'pedidoVendaId')
+  deliveryRoutes?: PedidoVendaDeliveryRoute[];
 
 }

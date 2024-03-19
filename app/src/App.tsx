@@ -28,14 +28,14 @@ export default class App extends React.Component {
                 <Route path="/" element={<RequireLogin><Usuarios /></RequireLogin>} />
                 <Route path="/login" element={<Login />} />
 
-                <Route path="/clientes" element={<RequireLogin><Clientes /></RequireLogin>} />
-                <Route path="/fornecedores" element={<RequireLogin><Fornecedores /></RequireLogin>} />
-                <Route path="/funcionarios" element={<RequireLogin><Funcionarios /></RequireLogin>} />
-                <Route path="/transporadoras" element={<RequireLogin><Transporadoras /></RequireLogin>} />
+                <Route path="/cadastros/clientes" element={<RequireLogin><Clientes /></RequireLogin>} />
+                <Route path="/cadastros/fornecedores" element={<RequireLogin><Fornecedores /></RequireLogin>} />
+                <Route path="/cadastros/funcionarios" element={<RequireLogin><Funcionarios /></RequireLogin>} />
+                <Route path="/cadastros/transportadoras" element={<RequireLogin><Transporadoras /></RequireLogin>} />
 
-                <Route path="/usuarios" element={<Usuarios />} />
-                <Route path="/produtos" element={<Produtos />} />
-                <Route path="/servicos" element={<Servicos />} />
+                <Route path="/cadastros/usuarios" element={<Usuarios />} />
+                <Route path="/cadastros/produtos" element={<Produtos />} />
+                <Route path="/cadastros/servicos" element={<Servicos />} />
 
                 <Route path="/contratos" element={<RequireLogin><Contratos /></RequireLogin>} />
 
@@ -45,9 +45,10 @@ export default class App extends React.Component {
                 <Route path="/contasreceber" element={<RequireLogin><ContasPagar /></RequireLogin>} />
 
                 
-                <Route path="/pedidos" element={<RequireLogin><PedidoVenda /></RequireLogin>} />
-                <Route path="/andamento" element={<RequireLogin><Andamento /></RequireLogin>} />
-                <Route path="/entrega" element={<RequireLogin><Entrega /></RequireLogin>} />
+                <Route path="/vendas/pedidos" element={<RequireLogin><PedidoVenda /></RequireLogin>} />
+                <Route path="/vendas/andamento" element={<RequireLogin><Andamento /></RequireLogin>} />
+
+                <Route path="/vendas/delivery" element={<RequireLogin><Entrega /></RequireLogin>} />
 
                 <Route path="*" element={<div>Página não encontrada!</div>} />
                 

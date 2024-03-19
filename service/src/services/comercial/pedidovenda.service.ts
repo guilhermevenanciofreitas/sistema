@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { PedidoVenda, PedidoVendaPagamento, PedidoVendaItem, PedidoVendaAndamento } from "../../database";
+import { PedidoVenda, PedidoVendaPagamento, PedidoVendaItem, PedidoVendaAndamento, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute } from "../../database";
 import crypto from "crypto";
 import {Op} from "sequelize";
 
@@ -96,10 +96,23 @@ export class PedidoVendaService {
 
     }
 
-    public static Delivery = async (id: string, entregadorId: string, transaction: Transaction) => {
+    public static Delivery = async (delivery: Delivery, transaction: Transaction) => {
 
-        await PedidoVenda.update({entregadorId: entregadorId}, {where: {id}, transaction});
+        delivery.id = crypto.randomUUID();
+        await Delivery.create({...delivery}, {transaction});
 
+    }
+
+    public static PedidoVendaDeliveryRoute = async (pedidoVendaDeliveryRoute: PedidoVendaDeliveryRoute, transaction: Transaction) => {
+        pedidoVendaDeliveryRoute.id = crypto.randomUUID();
+        await PedidoVendaDeliveryRoute.create({...pedidoVendaDeliveryRoute}, {transaction});
+    }
+
+    public static DeliveryRoute = async (deliveryRoute: DeliveryRoute, transaction: Transaction) => {
+
+        deliveryRoute.id = crypto.randomUUID();
+        await DeliveryRoute.create({...deliveryRoute}, {transaction});
+        
     }
 
     public static Delete = async (id: string, transaction: Transaction) => {
