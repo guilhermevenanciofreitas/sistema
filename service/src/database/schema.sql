@@ -94,6 +94,9 @@ CREATE TABLE IF NOT EXISTS "produtoCombinacao"();
 ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "produtoId" UUID;
 ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "combinacaoId" UUID;
+ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "isObrigatorio" BOOLEAN;
+ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "minimo" INTEGER;
+ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "maximo" INTEGER;
 
 --servicos
 CREATE TABLE IF NOT EXISTS "servicos"();

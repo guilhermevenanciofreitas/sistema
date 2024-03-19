@@ -19,22 +19,33 @@ export class ViewProduto extends ViewProdutoBase {
                     <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' Enable={this.state.descricao != ''} />
                     <Button Text='Limpar' Type='Reset' Color='white' BackgroundColor='gray' />
 
-                    <TextBox Label='Descrição' TextTransform='UpperCase' Text={this.state.descricao} OnChange={(args: EventArgs) => this.setState({descricao: args.Value})} />
-                    
-                    <Grid>
+                    <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+
+                        <Grid md={12}>
+                            <TextBox Label='Descrição' TextTransform='UpperCase' Text={this.state.descricao} OnChange={(args: EventArgs) => this.setState({descricao: args.Value})} />
+                        </Grid>
+                        
                         <Grid md={12}>
                             <div style={{display: 'flex'}}>
                                 <CheckBox Label='Combinação' Checked={this.state.isCombinacao} OnChange={(args: EventArgs) => this.setState({isCombinacao: args.Value})} />
                             </div>
                         </Grid>
+    
+                        <Grid md={12}>
+                            
+                            <Tab>
+                                <TabItem Title='Combinação' Visible={this.state.isCombinacao}>
+                                    <Combinacao Itens={this.state.combinacoes} OnChange={(combinacoes: any[]) => this.setState({combinacoes})} />
+                                </TabItem>
+                                <TabItem Title='Composição' Visible={true}>
+                                    <></>
+                                </TabItem>
+                            </Tab>
+                           
+                        </Grid>
+                        
                     </Grid>
 
-                    <Tab>
-                        <TabItem Title='Combinações' Visible={true}>
-                            <Combinacao Itens={this.state.combinacoes} OnChange={(itens: any[]) => this.setState({itens})} />
-                        </TabItem>
-                    </Tab>
-                        
                 </Form>
             </Modal>
         );

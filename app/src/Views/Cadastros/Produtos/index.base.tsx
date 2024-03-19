@@ -37,8 +37,10 @@ export default class BaseProdutos extends BaseIndex {
 
             const { id } = queryString.parse(window.location.search);
             if (id) {
-                await this.OpenProduto(id.toString());
+                await this.OpenProduto(id.toString(), false);
             }
+
+            history.pushState(null, "", `${window.location.origin}${window.location.pathname}`);
 
             await this.Pesquisar(this.state.Data);
 
@@ -185,11 +187,11 @@ export default class BaseProdutos extends BaseIndex {
         }
     }
 
-    private OpenProduto = async (id: string) =>
+    private OpenProduto = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
         const r = await this.ViewProduto.current?.Show(id);
-        history.back();
+        if (isHitoryBack) history.back();
         return r;
     }
 

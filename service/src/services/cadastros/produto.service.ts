@@ -1,6 +1,7 @@
 import { Transaction } from "sequelize";
-import { Produto } from "../../database";
+import { Produto, ProdutoCombinacao } from "../../database";
 import crypto from "crypto";
+import {Op} from "sequelize";
 
 export class ProdutoService {
 
@@ -18,11 +19,29 @@ export class ProdutoService {
 
         produto.id = crypto.randomUUID();
         
+        for (let item of produto?.combinacoes || []) {
+            item.id = crypto.randomUUID();
+            item.produtoId = produto.id;
+            item.combinacaoId = item.combinacao?.id;
+        }
+
         await Produto.create({...produto}, {transaction});
 
     }
 
     public static Update = async (produto: Produto, transaction: Transaction | undefined) => {
+
+        for (let item of produto?.combinacoes || []) {
+            if (!item.id) {
+                item.id = crypto.randomUUID();
+                item.produtoId = produto.id;
+                item.combinacaoId = item.combinacao?.id;
+                ProdutoCombinacao.create({...item}, {transaction});
+            } else {
+                ProdutoCombinacao.update(item, {where: {id: item.id}, transaction});
+            }
+            ProdutoCombinacao.destroy({where: {id: {[Op.notIn]: produto?.combinacoes?.filter(c => c.id != "").map(c => c.id)}}, transaction})
+        }
 
         await Produto.update(produto, {where: {id: produto.id}, transaction});
 

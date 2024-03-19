@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Produto, ProdutoCombinacao } from "../../database";
+import { Produto, ProdutoCombinacao, ProdutoCombinacaoGrupo } from "../../database";
 import { ProdutoService } from "../../services/cadastros/produto.service";
 import {Op} from "sequelize";
 
@@ -53,8 +53,10 @@ export default class ProdutoController {
             {
                 const transaction = await sequelize.transaction();
 
-                const produto = await Produto.findOne({attributes: ["id", "descricao"], 
-                    include: [{model: ProdutoCombinacao, attributes: ["id"]}],
+                const produto = await Produto.findOne({attributes: ["id", "descricao", "isCombinacao"], 
+                    include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
+                        include: [{model: ProdutoCombinacaoGrupo, attributes: ["descricao"]}]    
+                    }],
                     where: {id: req.body.id}, transaction
                 });
     
