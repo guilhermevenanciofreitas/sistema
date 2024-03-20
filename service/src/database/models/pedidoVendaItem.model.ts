@@ -1,5 +1,6 @@
-import { Model, Table, Column, DataType, BelongsTo } from "sequelize-typescript";
+import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-typescript";
 import { Produto } from "./produto.model";
+import { PedidoVendaItemCombinacao } from "./pedidoVendaItemCombinacao.model";
 
 @Table({tableName: "pedidoVendaItem"})
 export class PedidoVendaItem extends Model {
@@ -21,5 +22,8 @@ export class PedidoVendaItem extends Model {
 
   @BelongsTo(() => Produto, 'produtoId')
   produto?: Produto;
+
+  @HasMany(() => PedidoVendaItemCombinacao, 'pedidoVendaItemId')
+  itemCombinacoes?: PedidoVendaItemCombinacao[];
 
 }

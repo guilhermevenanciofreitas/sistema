@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { FormaPagamento, Municipio, Parceiro, PedidoVendaTipoEntrega, Produto, ProdutoCombinacao, ProdutoCombinacaoGrupo, TabelaPreco } from "../../database";
+import { FormaPagamento, Municipio, Parceiro, PedidoVendaTipoEntrega, Produto, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco } from "../../database";
 import { Op } from "sequelize";
 
 export default class SearchController {
@@ -110,7 +110,9 @@ export default class SearchController {
         
                 const produtos = await Produto.findAll({attributes: ["id", "descricao"],
                     include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
-                        include: [{model: ProdutoCombinacaoGrupo, attributes: ["id", "descricao"]}]
+                        include: [{model: ProdutoCombinacaoGrupo, attributes: ["id", "descricao"],
+                            include: [{model: ProdutoCombinacaoItem, attributes: ["id", "descricao"]}]    
+                        }]
                     }],
                     where, order: [["descricao", "asc"]], transaction
                 });

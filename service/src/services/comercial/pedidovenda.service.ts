@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { PedidoVenda, PedidoVendaPagamento, PedidoVendaItem, PedidoVendaAndamento, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute } from "../../database";
+import { PedidoVenda, PedidoVendaPagamento, PedidoVendaItem, PedidoVendaAndamento, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
 import crypto from "crypto";
 import {Op} from "sequelize";
 
@@ -60,7 +60,37 @@ export class PedidoVendaService {
             } else {
                 PedidoVendaItem.update(item, {where: {id: item.id}, transaction});
             }
-            PedidoVendaItem.destroy({where: {pedidoVendaId: pedidoVenda.id, id: {[Op.notIn]: pedidoVenda?.itens?.filter(c => c.id != "").map(c => c.id)}}, transaction})
+            PedidoVendaItem.destroy({where: {pedidoVendaId: pedidoVenda.id, id: {[Op.notIn]: pedidoVenda?.itens?.filter(c => c.id != "").map(c => c.id)}}, transaction});
+
+            //Combinacoes
+            for (let combinacao of item?.itemCombinacoes || []) {
+                
+                combinacao.pedidoVendaItemId = item.id;
+
+                if (!combinacao.id) {
+                    combinacao.id = crypto.randomUUID();
+                    PedidoVendaItemCombinacao.create({...combinacao}, {transaction});
+                } else {
+                    PedidoVendaItemCombinacao.update(combinacao, {where: {id: combinacao.id}, transaction});
+                }
+                PedidoVendaItemCombinacao.destroy({where: {pedidoVendaItemId: item.id, id: {[Op.notIn]: item?.itemCombinacoes?.filter(c => c.id != "").map(c => c.id)}}, transaction});
+
+                for (let combinacaoItem of combinacao?.combinacaoItems || []) {
+
+                    combinacaoItem.pedidoVendaItemCombinacaoId = combinacao.id;
+
+                    if (!combinacaoItem.id) {
+                        combinacaoItem.id = crypto.randomUUID();
+                        PedidoVendaItemCombinacaoItem.create({...combinacaoItem}, {transaction});
+                    } else {
+                        PedidoVendaItemCombinacaoItem.update(combinacaoItem, {where: {id: combinacaoItem.id}, transaction});
+                    }
+                    PedidoVendaItemCombinacaoItem.destroy({where: {pedidoVendaItemCombinacaoId: combinacao.pedidoVendaItemId, id: {[Op.notIn]: combinacao?.combinacaoItems?.filter(c => c.id != "").map(c => c.id)}}, transaction});    
+
+                }
+
+            }
+
         }
 
         for (let item of pedidoVenda?.pagamentos || []) {

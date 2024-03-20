@@ -36,6 +36,7 @@ export class ViewContratoBase extends ViewModal<Readonly<{Title: string}>> {
         if (id) {
             Loading.Show();
             const r = await Service.Post("pedidovenda/findOne", {id});
+            console.log(r);
             Loading.Hide();
             this.setState(r?.data);
         }

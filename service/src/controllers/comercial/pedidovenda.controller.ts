@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { FormaPagamento, Parceiro, PedidoVenda, Produto, PedidoVendaPagamento, PedidoVendaStatus, PedidoVendaTipoEntrega, Empresa, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute } from "../../database";
+import { FormaPagamento, Parceiro, PedidoVenda, Produto, PedidoVendaPagamento, PedidoVendaStatus, PedidoVendaTipoEntrega, Empresa, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
 import { PedidoVendaService } from "../../services/comercial/pedidovenda.service";
 import { PedidoVendaItem } from "../../database/models/pedidoVendaItem.model";
 import {Op, Sequelize} from "sequelize";
@@ -149,7 +149,18 @@ export default class PedidoVendaController {
                         {model: Parceiro, as: "entregador", attributes: ["id", "nome"]},
                         {model: PedidoVendaStatus, attributes: ["id", "descricao"]},
                         {model: PedidoVendaTipoEntrega, attributes: ["id", "descricao"]},
-                        {model: PedidoVendaItem, attributes: ["id", "quantidade", "valor"], include: [{model: Produto, attributes: ["id", "descricao"]}]},
+                        {model: PedidoVendaItem, attributes: ["id", "quantidade", "valor"], 
+                            include: [{model: Produto, attributes: ["id", "descricao"],
+                                include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
+                                    include: [{model: ProdutoCombinacaoGrupo, attributes: ["id", "descricao"],
+                                        include: [{model: ProdutoCombinacaoItem, attributes: ["id", "descricao"]}]
+                                    }]    
+                                }],
+                            },
+                            {model: PedidoVendaItemCombinacao, attributes: ["id", "pedidoVendaItemId", "combinacaoId"],
+                                include: [{model: PedidoVendaItemCombinacaoItem, attributes: ["id", "pedidoVendaItemCombinacaoId", "itemCombinacaoId", "quantidade"]}]
+                            }]
+                        },
                         {model: PedidoVendaPagamento, attributes: ["id", "valor"], include: [{model: FormaPagamento, attributes: ["id", "descricao"]}]},
                     ],
                     where: {id: req.body.id}, transaction}
@@ -175,26 +186,26 @@ export default class PedidoVendaController {
             {
                 const transaction = await sequelize.transaction();
 
-                const Contrato = req.body as PedidoVenda;
+                const PedidoVenda = req.body as PedidoVenda;
 
-                const valid = PedidoVendaService.IsValid(Contrato);
+                const valid = PedidoVendaService.IsValid(PedidoVenda);
 
                 if (!valid.success) {
                     res.status(201).json(valid);
                     return;
                 }
 
-                if (!Contrato.id) {
-                    await PedidoVendaService.Create(Contrato, transaction);
+                if (!PedidoVenda.id) {
+                    await PedidoVendaService.Create(PedidoVenda, transaction);
                 } else {
-                    await PedidoVendaService.Update(Contrato, transaction);
+                    await PedidoVendaService.Update(PedidoVenda, transaction);
                 }
 
                 await transaction?.commit();
                 
                 sequelize.close();
 
-                res.status(200).json(Contrato);
+                res.status(200).json(PedidoVenda);
 
             }
             catch (err) {

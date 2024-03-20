@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Produto, ProdutoCombinacao, ProdutoCombinacaoGrupo } from "../../database";
+import { Produto, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem } from "../../database";
 import { ProdutoService } from "../../services/cadastros/produto.service";
 import {Op} from "sequelize";
 
@@ -59,6 +59,14 @@ export default class ProdutoController {
                     }],
                     where: {id: req.body.id}, transaction
                 });
+
+                /*
+include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
+                        include: [{model: ProdutoCombinacaoGrupo, attributes: ["id", "descricao"],
+                            include: [{model: ProdutoCombinacaoItem, attributes: ["id", "descricao"]}]    
+                        }]
+                    }],
+                */
     
                 sequelize.close();
     

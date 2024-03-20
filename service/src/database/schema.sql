@@ -146,6 +146,19 @@ ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "produtoId" UUID;
 ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "quantidade" DECIMAL(10, 3);
 ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
 
+--pedidoVendaItemCombinacao
+CREATE TABLE IF NOT EXISTS "pedidoVendaItemCombinacao"();
+ALTER TABLE "pedidoVendaItemCombinacao" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "pedidoVendaItemCombinacao" ADD COLUMN IF NOT EXISTS "pedidoVendaItemId" UUID;
+ALTER TABLE "pedidoVendaItemCombinacao" ADD COLUMN IF NOT EXISTS "combinacaoId" UUID;
+
+--pedidoVendaItemCombinacaoItem
+CREATE TABLE IF NOT EXISTS "pedidoVendaItemCombinacaoItem"();
+ALTER TABLE "pedidoVendaItemCombinacaoItem" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "pedidoVendaItemCombinacaoItem" ADD COLUMN IF NOT EXISTS "pedidoVendaItemCombinacaoId" UUID;
+ALTER TABLE "pedidoVendaItemCombinacaoItem" ADD COLUMN IF NOT EXISTS "itemCombinacaoId" UUID;
+ALTER TABLE "pedidoVendaItemCombinacaoItem" ADD COLUMN IF NOT EXISTS "quantidade" DECIMAL(10, 3);
+
 --pedidoVendaItem
 CREATE TABLE IF NOT EXISTS "pedidoVendaPagamento"();
 ALTER TABLE "pedidoVendaPagamento" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;

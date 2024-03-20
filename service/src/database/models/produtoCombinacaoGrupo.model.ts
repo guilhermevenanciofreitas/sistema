@@ -1,4 +1,5 @@
-import { Model, Table, Column, DataType } from "sequelize-typescript";
+import { Model, Table, Column, DataType, HasMany } from "sequelize-typescript";
+import { ProdutoCombinacaoItem } from "./produtoCombinacaoItem.model";
 
 @Table({tableName: "produtoCombinacaoGrupo"})
 export class ProdutoCombinacaoGrupo extends Model {
@@ -17,5 +18,8 @@ export class ProdutoCombinacaoGrupo extends Model {
 
   @Column({type: DataType.INTEGER, field: "maximo"})
   maximo?: number;
+
+  @HasMany(() => ProdutoCombinacaoItem, 'combinacaoId')
+  combinacaoItems?: ProdutoCombinacaoItem[];
 
 }

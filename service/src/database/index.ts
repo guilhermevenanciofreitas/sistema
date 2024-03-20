@@ -24,6 +24,8 @@ import { PedidoVendaDeliveryRoute } from "./models/pedidoVendaDeliveryRoute.mode
 import { ProdutoCombinacao } from "./models/produtoCombinacao.model";
 import { ProdutoCombinacaoGrupo } from "./models/produtoCombinacaoGrupo.model";
 import { ProdutoCombinacaoItem } from "./models/produtoCombinacaoItem.model";
+import { PedidoVendaItemCombinacao } from "./models/pedidoVendaItemCombinacao.model";
+import { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinacaoItem.model";
 
 
 export { ContaPagar } from "./models/contaPagar.model";
@@ -50,6 +52,8 @@ export { PedidoVendaDeliveryRoute } from "./models/pedidoVendaDeliveryRoute.mode
 export { ProdutoCombinacao } from "./models/produtoCombinacao.model";
 export { ProdutoCombinacaoGrupo } from "./models/produtoCombinacaoGrupo.model";
 export { ProdutoCombinacaoItem } from "./models/produtoCombinacaoItem.model";
+export { PedidoVendaItemCombinacao } from "./models/pedidoVendaItemCombinacao.model";
+export { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinacaoItem.model";
 
 
 export default class Sequelize {
@@ -62,7 +66,7 @@ export default class Sequelize {
       
       dialect: "postgres",
       define: {timestamps: false},
-      models: [ContaPagar, Contrato, Delivery, DeliveryRoute, PedidoVendaStatus, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, PedidoVendaAndamento, PedidoVenda, FormaPagamento, PedidoVendaItem, PedidoVendaPagamento, Empresa, Parceiro, ParceiroContato, ParceiroEndereco, Produto, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, Servico, Usuario, TabelaPreco, Municipio],
+      models: [ContaPagar, Contrato, Delivery, DeliveryRoute, PedidoVendaStatus, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, PedidoVendaAndamento, PedidoVenda, FormaPagamento, PedidoVendaItem, PedidoVendaPagamento, Empresa, Parceiro, ParceiroContato, ParceiroEndereco, Produto, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, Servico, Usuario, TabelaPreco, Municipio],
       pool: {
         max: 5,
         min: 0,
