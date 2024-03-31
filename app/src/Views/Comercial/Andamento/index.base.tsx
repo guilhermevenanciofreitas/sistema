@@ -36,7 +36,8 @@ export default class BaseAndamento extends BaseIndex {
 
             const { id } = queryString.parse(window.location.search);
             if (id) {
-                await this.OpenPedidoVenda(id.toString());
+                await this.OpenPedidoVenda(id.toString(), false);
+                history.pushState(null, "", `${window.location.origin}${window.location.pathname}`);
             }
 
             await this.Pesquisar(this.state.Data);
@@ -91,11 +92,11 @@ export default class BaseAndamento extends BaseIndex {
         }
     }
 
-    private OpenPedidoVenda = async (id: string) =>
+    private OpenPedidoVenda = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
         const r = await this.ViewPedidoVenda.current?.Show(id);
-        history.back();
+        if (isHitoryBack) history.back();
         return r;
     }
 

@@ -38,9 +38,8 @@ export default class BaseProdutos extends BaseIndex {
             const { id } = queryString.parse(window.location.search);
             if (id) {
                 await this.OpenProduto(id.toString(), false);
+                history.pushState(null, "", `${window.location.origin}${window.location.pathname}`);
             }
-
-            history.pushState(null, "", `${window.location.origin}${window.location.pathname}`);
 
             await this.Pesquisar(this.state.Data);
 

@@ -110,8 +110,8 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: s
             profissao: "",
             tabelaPreco: null,
             isAtivo: true,
-            isBloquearVenda: true,
-            isBloquearCompra: true,
+            isBloquearVenda: false,
+            isBloquearCompra: false,
             contatos: [],
             enderecos: []
         });

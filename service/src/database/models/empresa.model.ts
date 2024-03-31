@@ -17,5 +17,8 @@ export class Empresa extends Model {
 
   @Column({type: DataType.JSONB, field: "endereco"})
   endereco?: any;
+  
+  @Column({type: DataType.JSONB, field: "pedidoDigital"})
+  pedidoDigital?: any;
 
 }

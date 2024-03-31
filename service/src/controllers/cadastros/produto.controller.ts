@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Produto, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem } from "../../database";
+import { Produto, ProdutoCategoria, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem } from "../../database";
 import { ProdutoService } from "../../services/cadastros/produto.service";
 import {Op} from "sequelize";
 
@@ -22,14 +22,15 @@ export default class ProdutoController {
                 let order: any = [];
         
                 if (filter?.nome) {
-                    where = {"descricao": {[Op.iLike]: `%${filter?.descricao.replace(' ', "%")}%`}};
+                    where = {"nome": {[Op.iLike]: `%${filter?.nome.replace(' ', "%")}%`}};
                 }
         
                 if (sort) {
                     order = [[sort.column, sort.direction]]
                 }
         
-                const produtos = await Produto.findAndCountAll({attributes: ["id", "descricao"],
+                const produtos = await Produto.findAndCountAll({attributes: ["id", "nome"],
+                    include: [{model: ProdutoCategoria, attributes: ["id", "descricao"]}],
                     where, order, limit, offset, transaction
                 });
         
@@ -53,8 +54,8 @@ export default class ProdutoController {
             {
                 const transaction = await sequelize.transaction();
 
-                const produto = await Produto.findOne({attributes: ["id", "descricao", "isCombinacao"], 
-                    include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
+                const produto = await Produto.findOne({attributes: ["id", "nome", "descricao", "isCombinacao"], 
+                    include: [{model: ProdutoCategoria, attributes: ["id", "descricao"]}, {model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
                         include: [{model: ProdutoCombinacaoGrupo, attributes: ["descricao"]}]    
                     }],
                     where: {id: req.body.id}, transaction

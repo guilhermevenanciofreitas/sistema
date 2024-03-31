@@ -26,9 +26,6 @@ export default class Entrega extends BaseEntrega {
                     <Title>Entregadores</Title>
 
                     <Container>
-                            <Left>
-                                <DatePicker Label='Data' OnChange={(args: EventArgs) => this.setState({inicio: args.Value})} />
-                            </Left>
                             <Right>
                                 <IconButton size='sm' variant="outlined" style={{backgroundColor: '#0d6efd'}} onClick={this.BtnFiltro_Click}>
                                     <FilterAlt style={{color: 'white'}} />
@@ -44,8 +41,8 @@ export default class Entrega extends BaseEntrega {
                                     
                                         <Typography level="title-lg">{c.nome}</Typography>
 
-                                        {_.filter(this.state.Data.rows, (item: any) => item.entregador?.id == c.id && _.size(_.filter(item.deliveryRoutes, (c1: any) => c1.deliveryRoute.cancelado == null)) == 0).map((item: any) => (
-                                            <div style={{cursor: 'move'}} draggable onDragStart={(e) => this.onDragStart(e, item.id, item.entregador.id)}>
+                                        {_.filter(this.state.Data.rows, (item: any) => item.entregador?.id == c?.id && _.size(_.filter(item.deliveryRoutes, (c1: any) => c1.deliveryRoute.cancelado == null)) == 0).map((item: any) => (
+                                            <div style={{cursor: 'move'}} draggable onDragStart={(e) => this.onDragStart(e, item?.id, item.entregador?.id)}>
                                                 <Card sx={{ width: '100%', height: '100%' }}>
                                                     <Typography>{item.cliente.nome}</Typography>
                                                     <IconButton size="sm" sx={{ position: 'absolute', top: '0.875rem', right: '0.5rem' }} onClick={() => this.BtnEdit_Click(item.id)}><Edit /></IconButton>

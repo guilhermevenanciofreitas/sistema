@@ -8,7 +8,9 @@ export class ViewProdutoBase extends ViewModal<Readonly<{Title: string}>> {
     state = {
         open: false,
         id: "",
+        nome: "",
         descricao: "",
+        categoria: null,
         isCombinacao: false,
         combinacoes: []
     }

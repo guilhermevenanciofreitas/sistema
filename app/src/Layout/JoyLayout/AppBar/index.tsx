@@ -22,12 +22,8 @@ export default class AppBar extends Component {
           backgroundColor: '#007bff'
         }}
       >
-        
-        <IconButton variant="outlined" color="neutral" size="sm" sx={{color: '#ffffff', marginLeft: { xs: '0px', md: 'var(--Sidebar-width)'}}}>
-          <MenuIcon sx={{color: '#ffffff'}} />
-        </IconButton>
-  
-        <Typography sx={{ marginLeft: '12px', flexGrow: 1, color: '#ffffff' }}>GK Sistemas<span style={{fontSize: 10}}> v1.2.102</span></Typography>
+
+        <Typography sx={{flexGrow: 1, color: '#ffffff', marginLeft: { xs: '0px', md: 'var(--Sidebar-width)'}}}>GK Sistemas<span style={{fontSize: 10}}> v1.2.102</span></Typography>
         <Typography sx={{color: '#ffffff'}}>{JSON.parse(localStorage.getItem("Session") || "null")?.usuario?.nome} | {JSON.parse(localStorage.getItem("Session") || "null")?.empresa?.nomeFantasia}</Typography>
         
       </Sheet>

@@ -30,9 +30,6 @@ export default class Andamento extends BasePedidoVenda {
                     <Title>Andamento</Title>
 
                     <Container>
-                            <Left>
-                                <DatePicker Label='Data' OnChange={(args: EventArgs) => this.setState({inicio: args.Value})} />
-                            </Left>
                             <Right>
                                 <IconButton size='sm' variant="outlined" style={{backgroundColor: '#0d6efd'}} onClick={this.BtnFiltro_Click}>
                                     <FilterAlt style={{color: 'white'}} />
@@ -46,10 +43,10 @@ export default class Andamento extends BasePedidoVenda {
                                 <div onDragOver={(e)=>this.onDragOver(e)} onDrop={(e)=>{this.onDragDrop(e, c)}}>
                                     <Card sx={{ width: 280, height: '100%', marginLeft: '2px', marginRight: '2px', backgroundColor: c.id == null ? '#e9e9e9' : 'white'}}>
                                     
-                                        <Typography level="title-lg">{c.descricao}</Typography>
+                                        <Typography level="title-lg">{c?.descricao}</Typography>
 
-                                        {this.state.Data.rows.filter((item: any) => item.status?.id == c.id).map((item: any) => (
-                                            <div style={{cursor: 'move'}} draggable onDragStart={(e) => this.onDragStart(e, item.id, item.status.id)}>
+                                        {this.state.Data.rows.filter((item: any) => item?.status?.id == c?.id).map((item: any) => (
+                                            <div style={{cursor: 'move'}} draggable onDragStart={(e) => this.onDragStart(e, item?.id, item?.status?.id)}>
                                                 <Card sx={{ width: '100%', height: '100%' }}>
                                                     <Typography>{item.cliente.nome}</Typography>
                                                     <IconButton size="sm" sx={{ position: 'absolute', top: '0.875rem', right: '0.5rem' }} onClick={() => this.BtnEdit_Click(item.id)}><Edit /></IconButton>

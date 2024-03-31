@@ -17,6 +17,7 @@ class SearchRoutes {
     this.router.post("/municipio", (req, res) => this.controller.municipio(req, res));
     this.router.post("/formaPagamento", (req, res) => this.controller.formaPagamento(req, res));
     this.router.post("/tipoEntrega", (req, res) => this.controller.tipoEntrega(req, res));
+    this.router.post("/produtoCategoria", (req, res) => this.controller.produtoCategoria(req, res));
     this.router.post("/produtoCombinacaoGrupo", (req, res) => this.controller.produtoCombinacaoGrupo(req, res));
   }
 }

@@ -39,7 +39,8 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
             const { id } = queryString.parse(window.location.search);
 
             if (id) {
-                await this.OpenParceiro(id.toString());
+                await this.OpenParceiro(id.toString(), false);
+                history.pushState(null, "", `${window.location.origin}${window.location.pathname}`);
             }
 
             await this.Pesquisar(this.state.Data);
@@ -187,11 +188,11 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
         }
     }
 
-    private OpenParceiro = async (id: string) =>
+    private OpenParceiro = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
         const r = await this.ViewParceiro.current?.Show(id);
-        history.back();
+        if (isHitoryBack) history.back();
         return r;
     }
 

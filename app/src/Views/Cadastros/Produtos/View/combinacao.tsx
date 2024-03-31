@@ -42,7 +42,7 @@ class ViewCombinacao extends ViewModal {
         return (
             <Modal Open={this.state.open} Title='Combinação' Width={450} Close={this.Close}>
                 
-                <Grid>
+                <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                     <Grid md={12}>
                         <AutoComplete Label='Item' Pesquisa={async(Text: string) => await Search.ProdutoCombinacaoGrupo(Text)} Text={(Item: any) => `${Item.descricao}` } Value={this.state.combinacao} OnChange={(args: any) => this.setState({combinacao: args})}>
                             <ProdutoCombinacaoGrupoTemplate />

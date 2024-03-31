@@ -1,9 +1,9 @@
 
 import { ViewContratoBase } from './index.base';
-import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, Modal, Tab, TabItem, TextBox } from '../../../../Utils/Controls';
+import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, MessageBox, Modal, Tab, TabItem, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
-import { Alert, Grid } from '@mui/joy';
+import { Alert, FormLabel, Grid } from '@mui/joy';
 import { Search } from '../../../../Search';
 import { ClienteTemplate } from '../../../../Search/Templates/Cliente';
 import { Itens } from './itens';
@@ -27,7 +27,13 @@ export class ViewPedidoVenda extends ViewContratoBase {
 
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                         <Grid md={5}>
-                            <AutoComplete Label='Cliente' Pesquisa={async(Text: string) => await Search.Cliente(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.cliente} OnChange={(args: any) => this.setState({cliente: args})}>
+                            <AutoComplete Label='Cliente' Pesquisa={async(Text: string) => await Search.Cliente(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.cliente} OnChange={async (args: any) => {
+                                if (args?.isBloquearVenda) {
+                                    await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Cliente bloqueado para venda!", buttons: [{ Text: "OK" }]});
+                                    return;
+                                }
+                                this.setState({cliente: args})
+                            }}>
                                 <ClienteTemplate />
                             </AutoComplete>
                         </Grid>
@@ -37,6 +43,7 @@ export class ViewPedidoVenda extends ViewContratoBase {
                             </AutoComplete>
                         </Grid>
                         <Grid md={4}>
+                            <FormLabel>Status</FormLabel>
                             <Alert variant="soft">{this.state.status?.descricao || "SEM STATUS"}</Alert>
                         </Grid>
 

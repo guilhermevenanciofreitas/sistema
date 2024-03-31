@@ -1,10 +1,12 @@
 
 import { ViewProdutoBase } from './index.base';
-import { Button, CheckBox, Form, Modal, Tab, TabItem, TextBox } from '../../../../Utils/Controls';
+import { AutoComplete, Button, CheckBox, Form, Modal, Tab, TabItem, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
 import { Combinacao } from './combinacao';
+import { ProdutoCategoriaTemplate } from '../../../../Search/Templates/ProdutoCategoria';
+import { Search } from '../../../../Search';
 
 export class ViewProduto extends ViewProdutoBase {
 
@@ -21,8 +23,17 @@ export class ViewProduto extends ViewProdutoBase {
 
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
 
+                        <Grid md={8}>
+                            <TextBox Label='Nome' TextTransform='UpperCase' Text={this.state.nome} OnChange={(args: EventArgs) => this.setState({nome: args.Value})} />
+                        </Grid>
+                        <Grid md={4}>
+                            <AutoComplete Label='Categoria' Pesquisa={async (Text: string) => await Search.ProdutoCategoria(Text)} Text={(Item: any) => `${Item.descricao}` } Value={this.state.categoria} OnChange={(args: any) => this.setState({categoria: args})}>
+                                <ProdutoCategoriaTemplate />
+                            </AutoComplete>
+                        </Grid>
+
                         <Grid md={12}>
-                            <TextBox Label='Descrição' TextTransform='UpperCase' Text={this.state.descricao} OnChange={(args: EventArgs) => this.setState({descricao: args.Value})} />
+                            <TextBox Label='Descrição' TextTransform='Normal' Text={this.state.descricao} OnChange={(args: EventArgs) => this.setState({descricao: args.Value})} />
                         </Grid>
                         
                         <Grid md={12}>

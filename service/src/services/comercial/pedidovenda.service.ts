@@ -29,7 +29,22 @@ export class PedidoVendaService {
             item.pedidoVendaId = pedidoVenda.id;
             item.produtoId = item.produto?.id;
             PedidoVendaItem.create({...item}, {transaction});
+
+            for (let combinacao of item?.itemCombinacoes || []) {
+                combinacao.id = crypto.randomUUID();
+                combinacao.pedidoVendaItemId = item.id;
+                PedidoVendaItemCombinacao.create({...combinacao}, {transaction});
+
+                for (let combinacaoItem of combinacao?.combinacaoItems || []) {
+                    combinacaoItem.id = crypto.randomUUID();
+                    combinacaoItem.pedidoVendaItemCombinacaoId = combinacao.id;
+                    PedidoVendaItemCombinacaoItem.create({...combinacaoItem}, {transaction});
+                }
+
+            }
+
         }
+        
 
         for (let item of pedidoVenda?.pagamentos || []) {
             item.id = crypto.randomUUID();
@@ -44,10 +59,16 @@ export class PedidoVendaService {
 
     public static Update = async (pedidoVenda: PedidoVenda, transaction: Transaction) => {
 
+        let where: any = [];
+
         pedidoVenda.clientId = pedidoVenda.cliente?.id;
         pedidoVenda.tipoEntregaId = pedidoVenda.tipoEntrega?.id;
         pedidoVenda.statusId = pedidoVenda.status?.id;
         pedidoVenda.entregadorId = pedidoVenda.entregador?.id;
+
+        if (pedidoVenda?.itens?.length == 0) {
+            PedidoVendaItemCombinacao.destroy({where: {pedidoVendaId: pedidoVenda.id}, transaction});
+        }
 
         for (let item of pedidoVenda?.itens || []) {
 
@@ -62,34 +83,41 @@ export class PedidoVendaService {
             }
             PedidoVendaItem.destroy({where: {pedidoVendaId: pedidoVenda.id, id: {[Op.notIn]: pedidoVenda?.itens?.filter(c => c.id != "").map(c => c.id)}}, transaction});
 
-            //Combinacoes
-            for (let combinacao of item?.itemCombinacoes || []) {
-                
-                combinacao.pedidoVendaItemId = item.id;
+            if (item?.itemCombinacoes?.length == 0) {
+                PedidoVendaItemCombinacao.destroy({where: {pedidoVendaItemId: item.id}, transaction});
+            }
 
+            //PedidoVendaItemCombinacao
+            where['PedidoVendaItemCombinacao'] = {pedidoVendaItemId: item.id};
+            for (let combinacao of item?.itemCombinacoes || []) {
+                combinacao.pedidoVendaItemId = item.id;
                 if (!combinacao.id) {
                     combinacao.id = crypto.randomUUID();
                     PedidoVendaItemCombinacao.create({...combinacao}, {transaction});
                 } else {
                     PedidoVendaItemCombinacao.update(combinacao, {where: {id: combinacao.id}, transaction});
                 }
-                PedidoVendaItemCombinacao.destroy({where: {pedidoVendaItemId: item.id, id: {[Op.notIn]: item?.itemCombinacoes?.filter(c => c.id != "").map(c => c.id)}}, transaction});
+                where['PedidoVendaItemCombinacao'] = {id: {[Op.notIn]: item?.itemCombinacoes?.filter(c => c.id != "").map(c => c.id)}};
+            }
+            PedidoVendaItemCombinacao.destroy({where: where['PedidoVendaItemCombinacao'], transaction});
+            //PedidoVendaItemCombinacao
 
+            //PedidoVendaItemCombinacao.PedidoVendaItemCombinacaoItem
+            for (let combinacao of item?.itemCombinacoes || []) {
+                where['PedidoVendaItemCombinacaoItem'] = {pedidoVendaItemCombinacaoId: combinacao.id};
                 for (let combinacaoItem of combinacao?.combinacaoItems || []) {
-
                     combinacaoItem.pedidoVendaItemCombinacaoId = combinacao.id;
-
                     if (!combinacaoItem.id) {
                         combinacaoItem.id = crypto.randomUUID();
                         PedidoVendaItemCombinacaoItem.create({...combinacaoItem}, {transaction});
                     } else {
                         PedidoVendaItemCombinacaoItem.update(combinacaoItem, {where: {id: combinacaoItem.id}, transaction});
                     }
-                    PedidoVendaItemCombinacaoItem.destroy({where: {pedidoVendaItemCombinacaoId: combinacao.pedidoVendaItemId, id: {[Op.notIn]: combinacao?.combinacaoItems?.filter(c => c.id != "").map(c => c.id)}}, transaction});    
-
+                    where['PedidoVendaItemCombinacaoItem'] = {id: {[Op.notIn]: combinacao?.combinacaoItems?.filter(c => c.id != "").map(c => c.id)}};
                 }
-
+                PedidoVendaItemCombinacaoItem.destroy({where: where['PedidoVendaItemCombinacaoItem'], transaction});
             }
+            //PedidoVendaItemCombinacao.PedidoVendaItemCombinacaoItem
 
         }
 

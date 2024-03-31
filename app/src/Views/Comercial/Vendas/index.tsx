@@ -11,7 +11,7 @@ import { ViewFiltro } from "./filtro";
 
 const Columns = [
     { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
-    { selector: (row: any) => row.cliente.nome, sort: 'nome', name: 'Nome', sortable: true },
+    { selector: (row: any) => row.cliente?.nome, sort: 'nome', name: 'Nome', sortable: true },
     { selector: (row: any) => row.status?.descricao, sort: '$status.descricao', name: 'Status', sortable: true },
 ];
 

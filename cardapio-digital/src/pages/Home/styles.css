@@ -1,0 +1,161 @@
+
+/*
+    interface CategoryItemProps {
+        isSelected?: boolean;
+    }
+*/
+
+.Search {
+  width: 100%;
+  position: relative;
+  display: flex;
+}
+
+.SearchInput {
+  width: 100%;
+  border: 3px solid rgb(27, 34, 40);
+  border-right: none;
+  padding: 5px;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+  color: #9DBFAF;
+  height: 50px;
+}
+
+.SearchButton {
+  width: 50px;
+  border: 1px solid rgb(27, 34, 40);
+  background: rgb(27, 34, 40);
+  align-content: center;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 5px 5px 0;
+  font-size: 20px;
+}
+
+.Container {
+    flex: 1;
+    background: #fff;
+}
+
+.Header {
+    padding: 60px 24px 60px;
+    background: #c72828;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.FilterContainer {
+    padding: 0 24px;
+    margin-top: -28px;
+}
+
+.Title {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    color: #3d3d4d;
+    padding: 0 10px;
+}
+
+.CategorySlider {
+    padding-top: 10px;
+    overflow-x: scroll;
+    display: flex;
+    padding-bottom: 4px;
+}
+
+.CategoryItem {
+  cursor: pointer;
+  background-color: #f0f0f5;
+  border: 2px;
+  border-color: #f0f0f5;
+  height: 100px;
+  width: 120px;
+  min-width: 120px;
+  border-radius: 8px;
+  padding-top: 5px;
+  margin-right: 8px;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  /*
+  ${props =>
+    props.isSelected &&
+    css`
+      border-color: #c72828;
+      background-color: #ffebeb;
+    `}
+  `;
+  */
+}
+
+.CategoryItemTitle {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 15px;
+  text-align: center;
+  color: #6c6c80;
+  padding-top: 7px;
+}
+
+.FoodsContainer {
+  margin-top: 10px;
+}
+
+.FoodList {
+  flex: 1;
+  margin-top: 16px;
+}
+
+.Food {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: #f0f0f5;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.FoodImageContainer {
+  background: #ffb84d;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  padding: 16px;
+  height: 100%;
+}
+
+.FoodContent {
+  flex: 1;
+  padding: 16px;
+}
+
+.FoodTitle {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 22px;
+  color: #3d3d4d;
+}
+
+.FoodDescription {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  margin-top: 6px;
+  color: #3d3d4d;
+}
+
+.FoodPricing {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 21px;
+  margin-top: 8px;
+  font-weight: 600;
+  color: #39b100;
+}

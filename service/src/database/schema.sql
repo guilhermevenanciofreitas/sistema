@@ -5,6 +5,7 @@ ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "razaoSocial" VARCHAR(100);
 ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "nomeFantasia" VARCHAR(100);
 ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "cpfCnpj" VARCHAR(14);
 ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "endereco" JSONB;
+ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "pedidoDigital" JSONB;
 
 --usuarios
 CREATE TABLE IF NOT EXISTS "usuarios"();
@@ -72,8 +73,16 @@ ALTER TABLE "municipio" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(60);
 --produtos
 CREATE TABLE IF NOT EXISTS "produtos"();
 ALTER TABLE "produtos" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "produtos" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(100);
 ALTER TABLE "produtos" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+ALTER TABLE "produtos" ADD COLUMN IF NOT EXISTS "categoriaId" UUID;
 ALTER TABLE "produtos" ADD COLUMN IF NOT EXISTS "isCombinacao" BOOLEAN;
+
+--produtoCategoria
+CREATE TABLE IF NOT EXISTS "produtoCategoria"();
+ALTER TABLE "produtoCategoria" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "produtoCategoria" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+ALTER TABLE "produtoCategoria" ADD COLUMN IF NOT EXISTS "imagem" BYTEA;
 
 --produtoCombinacaoGrupo
 CREATE TABLE IF NOT EXISTS "produtoCombinacaoGrupo"();
@@ -87,6 +96,7 @@ ALTER TABLE "produtoCombinacaoGrupo" ADD COLUMN IF NOT EXISTS "maximo" INTEGER;
 CREATE TABLE IF NOT EXISTS "produtoCombinacaoItem"();
 ALTER TABLE "produtoCombinacaoItem" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "produtoCombinacaoItem" ADD COLUMN IF NOT EXISTS "combinacaoId" UUID;
+ALTER TABLE "produtoCombinacaoItem" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(100);
 ALTER TABLE "produtoCombinacaoItem" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
 
 --produtoCombinacao

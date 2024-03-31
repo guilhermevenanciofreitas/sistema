@@ -11,7 +11,8 @@ import { ViewFiltro } from "./filtro";
 
 const Columns = [
     { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
-    { selector: (row: any) => row.descricao, sort: 'descricao', name: 'Descrição', sortable: true },
+    { selector: (row: any) => row.nome, sort: 'nome', name: 'Nome', sortable: true },
+    { selector: (row: any) => row.categoria?.descricao, sort: 'descricao', name: 'Categoria', sortable: true },
 ];
 
 export default class Produtos extends BaseProdutos {

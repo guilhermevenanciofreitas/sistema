@@ -18,6 +18,7 @@ export class ProdutoService {
     public static Create = async (produto: Produto, transaction: Transaction | undefined) => {
 
         produto.id = crypto.randomUUID();
+        produto.categoriaId = produto.categoria?.id;
         
         for (let item of produto?.combinacoes || []) {
             item.id = crypto.randomUUID();
@@ -30,6 +31,8 @@ export class ProdutoService {
     }
 
     public static Update = async (produto: Produto, transaction: Transaction | undefined) => {
+
+        produto.categoriaId = produto.categoria?.id;
 
         for (let item of produto?.combinacoes || []) {
             if (!item.id) {

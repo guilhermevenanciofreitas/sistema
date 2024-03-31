@@ -37,6 +37,11 @@ export const Search = {
         return (await Service.Post("search/tipoEntrega", {Search}))?.data;
     },
 
+    ProdutoCategoria: async (Search: string) =>
+    {
+        return (await Service.Post("search/produtoCategoria", {Search}))?.data;
+    },
+
     ProdutoCombinacaoGrupo: async (Search: string) =>
     {
         return (await Service.Post("search/produtoCombinacaoGrupo", {Search}))?.data;
