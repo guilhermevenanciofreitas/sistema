@@ -4,7 +4,7 @@ import { Servico } from "../../database";
 import { ServicoService } from "../../services/registrations/servico.service";
 import {Op} from "sequelize";
 
-export default class ServicoController {
+export default class ServiceController {
 
     async findAll(req: Request, res: Response) {
 

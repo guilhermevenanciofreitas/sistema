@@ -2,23 +2,34 @@ import React, { useEffect } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 //Registrations
-import Clientes from "./views/registrations/Parceiros/Clientes";
-import Fornecedores from "./views/registrations/Parceiros/Fornecedores";
-import Funcionarios from "./views/registrations/Parceiros/Funcionarios";
+import Products from "./views/registrations/products";
+import Services from "./views/registrations/services";
+import Customers from "./views/registrations/Parceiros/customers";
+import Suppliers from "./views/registrations/Parceiros/suppliers";
+import Employees from "./views/registrations/Parceiros/employees";
 import Transporadoras from "./views/registrations/Parceiros/Transportadoras";
 
 import Usuarios from "./views/registrations/Usuarios/index";
-import Produtos from "./views/registrations/Produtos";
-import Servicos from "./views/registrations/Servicos";
 
-import Contratos from "./views/Comercial/Contratos";
-import PedidoVenda from "./views/Comercial/Vendas";
+
+
+
+
+import Contratos from "./views/sales/Contratos";
+import PedidoVenda from "./views/sales/Vendas";
 
 import { Login } from "./views/Login";
-import NotasFiscais from "./views/Fiscal/NotaFiscal";
-import ContasPagar from "./views/Financeiro/ContasPagar";
-import Andamento from "./views/Comercial/Andamento";
-import Entrega from "./views/Comercial/Entrega";
+
+
+import NotasFiscais from "./views/fiscal/nfes";
+
+
+
+import Receipts from "./views/financial/receipts";
+import Andamento from "./views/sales/Andamento";
+import Entrega from "./views/sales/Entrega";
+import ShippingsOrders from "./views/logistics/shippingsOrders";
+import Payments from "./views/financial/payments";
 
 export default class App extends React.Component {
     render(): React.ReactNode {
@@ -30,26 +41,31 @@ export default class App extends React.Component {
 
                 {/* Registrations */}
                 <Route path="/registrations/users" element={<Usuarios />} />
-                <Route path="/registrations/products" element={<RequireLogin><Produtos /></RequireLogin>} />
-                <Route path="/registrations/services" element={<Servicos />} />
-                <Route path="/registrations/vehicles" element={<Servicos />} />
-                <Route path="/registrations/customers" element={<RequireLogin><Clientes /></RequireLogin>} />
-                <Route path="/registrations/suppliers" element={<RequireLogin><Fornecedores /></RequireLogin>} />
-                <Route path="/registrations/employees" element={<RequireLogin><Funcionarios /></RequireLogin>} />
+                <Route path="/registrations/products" element={<RequireLogin><Products /></RequireLogin>} />
+                <Route path="/registrations/services" element={<RequireLogin><Services /></RequireLogin>} />
+                <Route path="/registrations/vehicles" element={<RequireLogin><Services /></RequireLogin>} />
+                <Route path="/registrations/customers" element={<RequireLogin><Customers /></RequireLogin>} />
+                <Route path="/registrations/suppliers" element={<RequireLogin><Suppliers /></RequireLogin>} />
+                <Route path="/registrations/employees" element={<RequireLogin><Employees /></RequireLogin>} />
                 <Route path="/registrations/shippings-company" element={<RequireLogin><Transporadoras /></RequireLogin>} />
+
+                {/* Sales */}
+                <Route path="/sales/orders" element={<RequireLogin><PedidoVenda /></RequireLogin>} />
+                <Route path="/sales/progress" element={<RequireLogin><Andamento /></RequireLogin>} />
+
+                {/* Logistics */}
+                <Route path="/logistic/shippings-orders" element={<RequireLogin><ShippingsOrders /></RequireLogin>} />
+
+                {/* Financial */}
+                <Route path="/financial/receipts" element={<RequireLogin><Receipts /></RequireLogin>} />
+                <Route path="/financial/payments" element={<RequireLogin><Payments /></RequireLogin>} />
+
+                {/* Fiscal */}
+                <Route path="/fiscal/nfes" element={<RequireLogin><NotasFiscais /></RequireLogin>} />
+
 
 
                 <Route path="/contratos" element={<RequireLogin><Contratos /></RequireLogin>} />
-
-                <Route path="/notasfiscais" element={<RequireLogin><NotasFiscais /></RequireLogin>} />
-
-                <Route path="/contaspagar" element={<RequireLogin><ContasPagar /></RequireLogin>} />
-                <Route path="/contasreceber" element={<RequireLogin><ContasPagar /></RequireLogin>} />
-
-                
-                <Route path="/vendas/pedidos" element={<RequireLogin><PedidoVenda /></RequireLogin>} />
-                <Route path="/vendas/andamento" element={<RequireLogin><Andamento /></RequireLogin>} />
-
                 <Route path="/vendas/delivery" element={<RequireLogin><Entrega /></RequireLogin>} />
 
                 <Route path="*" element={<div>Página não encontrada!</div>} />

@@ -1,17 +1,16 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Usuario } from "../../database";
-import { UserService } from "../../services/registrations/usuario.service";
+import { Payment, Parceiro } from "../../database";
 import {Op} from "sequelize";
+import { PaymentService } from "../../services/financial/payment.service";
 
-export default class UserController {
+export default class PaymentController {
 
     async findAll(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try {
 
-                
                 const transaction = await sequelize.transaction();
 
                 const limit = req.body.limit || undefined;
@@ -34,11 +33,14 @@ export default class UserController {
                     order = [[sort.column, sort.direction]]
                 }
         
-                const usuarios = await Usuario.findAndCountAll({attributes: ["id", "nome", "email"], where, order, limit, offset, transaction});
-        
+                const contasPagar = await Payment.findAndCountAll({attributes: 
+                    ["id", "numeroDocumento", "valor", "emissao", "vencimento"],
+                    //include: [{model: Parceiro, attributes: ["id", "nome"]}],
+                    where, order, limit, offset, transaction});
+
                 sequelize.close();
 
-                res.status(200).json({rows: usuarios.rows, count: usuarios.count, limit, offset: req.body.offset, filter, sort});
+                res.status(200).json({rows: contasPagar.rows, count: contasPagar.count, limit, offset: req.body.offset, filter, sort});
 
             }
             catch (err) {
@@ -56,11 +58,14 @@ export default class UserController {
             {
                 const transaction = await sequelize.transaction();
 
-                const usuario = await Usuario.findOne({attributes: ["id", "nome", "email"], where: {id: req.body.id}, transaction});
+                const contaPagar = await Payment.findOne({
+                    attributes: ["id", "numeroDocumento", "valor", "emissao", "vencimento"],
+                    include: [{model: Parceiro, attributes: ["id", "nome"]}],
+                    where: {id: req.body.id}, transaction});
     
                 sequelize.close();
     
-                res.status(200).json(usuario);
+                res.status(200).json(contaPagar);
     
             }
             catch (err) {
@@ -78,26 +83,28 @@ export default class UserController {
             {
                 const transaction = await sequelize.transaction();
 
-                const Usuario = req.body as Usuario;
+                const ContaPagar = req.body as Payment;
 
-                const valid = UserService.IsValid(Usuario);
+                ContaPagar.recebedorId = req.body.recebedor?.id || null;
+
+                const valid = PaymentService.IsValid(ContaPagar);
 
                 if (!valid.success) {
                     res.status(201).json(valid);
                     return;
                 }
 
-                if (!Usuario.id) {
-                    await UserService.Create(Usuario, transaction);
+                if (!ContaPagar.id) {
+                    await PaymentService.Create(ContaPagar, transaction);
                 } else {
-                    await UserService.Update(Usuario, transaction);
+                    await PaymentService.Update(ContaPagar, transaction);
                 }
 
                 await transaction?.commit();
                 
                 sequelize.close();
 
-                res.status(200).json(Usuario);
+                res.status(200).json(ContaPagar);
 
             }
             catch (err) {
@@ -144,7 +151,7 @@ export default class UserController {
 
                 const transaction = await sequelize.transaction();
 
-                await UserService.Delete(req.body.id, transaction);
+                await PaymentService.Delete(req.body.id, transaction);
 
                 await transaction?.commit();
 

@@ -10,7 +10,7 @@ import { ParceiroEndereco } from "./models/parceiroEndereco.model";
 import { Product } from "./models/product.model";
 import { Servico } from "./models/servico.model";
 import { Company } from "./models/company.model";
-import { ContaPagar } from "./models/contaPagar.model";
+import { Payment } from "./models/payment.model";
 import { PedidoVendaItem } from "./models/pedidoVendaItem.model";
 import { Municipio } from "./models/municipio.model";
 import { FormaPagamento } from "./models/formaPagamento.model";
@@ -28,9 +28,10 @@ import { PedidoVendaItemCombinacao } from "./models/pedidoVendaItemCombinacao.mo
 import { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinacaoItem.model";
 import { ProductCategory } from "./models/productCategory.model";
 import { Nfe } from "./models/nfe.model";
+import { ShippingOrder } from "./models/shippingOrder.model";
 
 
-export { ContaPagar } from "./models/contaPagar.model";
+export { Payment } from "./models/payment.model";
 export { Contrato } from "./models/contrato.model";
 export { PedidoVenda } from "./models/pedidoVenda.model";
 export { PedidoVendaItem } from "./models/pedidoVendaItem.model";
@@ -58,6 +59,7 @@ export { PedidoVendaItemCombinacao } from "./models/pedidoVendaItemCombinacao.mo
 export { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinacaoItem.model";
 export { ProductCategory } from "./models/productCategory.model";
 export { Nfe } from "./models/nfe.model";
+export { ShippingOrder } from "./models/shippingOrder.model";
 
 
 export default class Sequelize {
@@ -70,7 +72,7 @@ export default class Sequelize {
       
       dialect: "postgres",
       define: {timestamps: false},
-      models: [ContaPagar, Contrato, Delivery, DeliveryRoute, PedidoVendaStatus, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, PedidoVendaAndamento, PedidoVenda, FormaPagamento, PedidoVendaItem, PedidoVendaPagamento, Company, Parceiro, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, Servico, Usuario, TabelaPreco, Municipio, Nfe],
+      models: [Payment, Contrato, Delivery, DeliveryRoute, PedidoVendaStatus, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, PedidoVendaAndamento, PedidoVenda, FormaPagamento, PedidoVendaItem, PedidoVendaPagamento, Company, Parceiro, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, Servico, ShippingOrder, Usuario, TabelaPreco, Municipio, Nfe],
       pool: {
         max: 5,
         min: 0,

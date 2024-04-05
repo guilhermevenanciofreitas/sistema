@@ -1,17 +1,16 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Usuario } from "../../database";
-import { UserService } from "../../services/registrations/usuario.service";
-import {Op} from "sequelize";
+import { Nfe, ShippingOrder } from "../../database";
+import { ShippingOrderService } from "../../services/logistic/shippingOrder.service";
+import { Op } from "sequelize";
 
-export default class UserController {
+export default class ShippingOrderController {
 
     async findAll(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try {
 
-                
                 const transaction = await sequelize.transaction();
 
                 const limit = req.body.limit || undefined;
@@ -22,30 +21,26 @@ export default class UserController {
                 let where: any = {};
                 let order: any = [];
         
-                if (filter?.nome) {
-                    where = {"nome": {[Op.iLike]: `%${filter?.nome.replace(' ', "%")}%`}};
-                }
-        
-                if (filter?.email) {
-                    where = {"email": {[Op.iLike]: `%${filter?.email}%`}};
-                }
-        
                 if (sort) {
                     order = [[sort.column, sort.direction]]
                 }
         
-                const usuarios = await Usuario.findAndCountAll({attributes: ["id", "nome", "email"], where, order, limit, offset, transaction});
+                const produtos = await ShippingOrder.findAndCountAll({attributes: [
+                    "id",
+                ],
+                    where, order, limit, offset, transaction
+                });
         
                 sequelize.close();
 
-                res.status(200).json({rows: usuarios.rows, count: usuarios.count, limit, offset: req.body.offset, filter, sort});
+                res.status(200).json({rows: produtos.rows, count: produtos.count, limit, offset: req.body.offset, filter, sort});
 
             }
             catch (err) {
                 res.status(500).json(err);
             }
         }).catch((err: any) => {
-            res.status(401).json({message: err.message})
+            res.status(401).json({message: err.message});
         });
     }
 
@@ -56,18 +51,40 @@ export default class UserController {
             {
                 const transaction = await sequelize.transaction();
 
-                const usuario = await Usuario.findOne({attributes: ["id", "nome", "email"], where: {id: req.body.id}, transaction});
-    
+                const nfes = await Nfe.findOne({attributes: ["id"], 
+                    where: {id: req.body.id}, transaction
+                });
+
                 sequelize.close();
     
-                res.status(200).json(usuario);
+                res.status(200).json(nfes);
     
             }
             catch (err) {
                 res.status(500).json(err);
             }
         }).catch((err) => {
-            res.status(401).json(err);
+            res.status(401).json({message: err.message});
+        });
+    }
+
+    async upload(req: Request, res: Response) {
+        
+        Auth(req, res).then(async ({sequelize}) => {
+            try
+            {
+                const transaction = await sequelize.transaction();
+
+                //const nfes = await NfeService.Update(undefined, transaction);
+    
+                //res.status(200).json(nfes);
+    
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err) => {
+            res.status(401).json({message: err.message});
         });
     }
 
@@ -78,63 +95,36 @@ export default class UserController {
             {
                 const transaction = await sequelize.transaction();
 
-                const Usuario = req.body as Usuario;
+                const Nfe = req.body as Nfe;
 
-                const valid = UserService.IsValid(Usuario);
+                const valid = ShippingOrderService.IsValid(Nfe);
 
                 if (!valid.success) {
                     res.status(201).json(valid);
                     return;
                 }
 
-                if (!Usuario.id) {
-                    await UserService.Create(Usuario, transaction);
+                if (!Nfe.id) {
+                    await ShippingOrderService.Create(Nfe, transaction);
                 } else {
-                    await UserService.Update(Usuario, transaction);
+                    await ShippingOrderService.Update(Nfe, transaction);
                 }
 
                 await transaction?.commit();
                 
                 sequelize.close();
 
-                res.status(200).json(Usuario);
+                res.status(200).json(Nfe);
 
             }
             catch (err) {
                 res.status(500).json(err);
             }
         }).catch((err) => {
-            res.status(401).json(err);
+            res.status(401).json({message: err.message});
         });
 
     }
-
-    /*
-    async update(req: Request, res: Response) {
-        
-        Auth(req, res).then(async ({transaction}) => {
-
-            const Usuario = req.body as Usuario;
-
-            const valid = UsuarioService.IsValid(Usuario);
-
-            if (!valid.success) {
-                res.status(201).json(valid);
-                return;
-            }
-
-            await UsuarioService.Update(Usuario, transaction);
-
-            await transaction?.commit();
-            
-            res.status(200).json(Usuario);
-            
-        }).catch((err) => {
-            res.status(500).json(err);
-        });
-       
-    }
-    */
 
     async delete(req: Request, res: Response) {
         
@@ -144,7 +134,7 @@ export default class UserController {
 
                 const transaction = await sequelize.transaction();
 
-                await UserService.Delete(req.body.id, transaction);
+                await ShippingOrderService.Delete(req.body.id, transaction);
 
                 await transaction?.commit();
 
@@ -157,7 +147,7 @@ export default class UserController {
                 res.status(500).json(err);
             }
         }).catch((err) => {
-            res.status(401).json(err);
+            res.status(401).json({message: err.message});
         });
     }
 

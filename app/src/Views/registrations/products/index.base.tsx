@@ -1,17 +1,16 @@
-import React, { ComponentClass } from "react";
+import React from "react";
 import { Service } from "../../../Service";
-import { ViewParceiro } from "./View/index";
+import { ViewProduto } from "./View/index";
 import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
 import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
-import { useParams } from "react-router-dom";
 
-export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Tipo: "Customer" | "Supplier" | "Transportadora" | "Funcionario", ViewParceiro: React.ReactElement}>> {
-
-    protected ViewParceiro = React.createRef<ViewParceiro>();
+export default class BaseProdutos extends BaseIndex {
+ 
+    protected ViewProduto = React.createRef<ViewProduto>();
 
     protected ViewImportar = React.createRef<ViewImportar>();
     protected ViewFiltro = React.createRef<ViewFiltro>();
@@ -29,7 +28,7 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
         },
     }
 
-    public componentDidMount = async () =>
+    componentDidMount = async () =>
     {
         try
         {
@@ -37,9 +36,8 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
             if (this.Finish) return;
 
             const { id } = queryString.parse(window.location.search);
-
             if (id) {
-                await this.OpenParceiro(id.toString(), false);
+                await this.OpenProduto(id.toString(), false);
                 history.pushState(null, "", `${window.location.origin}${window.location.pathname}`);
             }
 
@@ -57,7 +55,7 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
         try
         {
 
-            const r = await this.OpenParceiro(id);
+            const r = await this.OpenProduto(id);
 
             if (r) this.Pesquisar(this.state.Data);
        
@@ -73,7 +71,7 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
         try
         {
 
-            const r = await this.ViewParceiro.current?.Show(undefined);
+            const r = await this.ViewProduto.current?.Show(undefined);
 
             if (r) this.Pesquisar(this.state.Data);
             
@@ -188,39 +186,19 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
         }
     }
 
-    private OpenParceiro = async (id: string, isHitoryBack: boolean = true) =>
+    private OpenProduto = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewParceiro.current?.Show(id);
+        const r = await this.ViewProduto.current?.Show(id);
         if (isHitoryBack) history.back();
         return r;
     }
 
-    private Pesquisar = async(Data: any): Promise<void> =>
+    protected Pesquisar = async(Data: any): Promise<void> =>
     {
         this.setState({Loading: true});
-
-        let tipo = "";
-
-        switch (this.props.Tipo)
-        {
-            case "Customer":
-                tipo = "customer";
-                break;
-            case "Supplier":
-                tipo = "supplier";
-                break;
-            case "Transportadora":
-                tipo = "transportadora";
-                break;
-            case "Funcionario":
-                tipo = "funcionario";
-                break;
-        }
-        
-        var r = await Service.Post(`registrations/${tipo}/findAll`, Data);
+        var r = await Service.Post("registrations/product/findAll", Data);
         this.setState({Loading: false, Data: r?.data});
-
     }
 
 }

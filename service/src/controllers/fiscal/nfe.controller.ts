@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Produto, ProdutoCategoria, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem } from "../../database";
-import { ProdutoService } from "../../services/registrations/product.service";
-import {Op} from "sequelize";
+import { Nfe } from "../../database";
+import { NfeService } from "../../services/fiscal/nfe.service";
+import { Op } from "sequelize";
 
 export default class NfeController {
 
@@ -21,16 +21,18 @@ export default class NfeController {
                 let where: any = {};
                 let order: any = [];
         
-                if (filter?.nome) {
-                    where = {"nome": {[Op.iLike]: `%${filter?.nome.replace(' ', "%")}%`}};
-                }
-        
                 if (sort) {
                     order = [[sort.column, sort.direction]]
                 }
         
-                const produtos = await Produto.findAndCountAll({attributes: ["id", "nome"],
-                    include: [{model: ProdutoCategoria, attributes: ["id", "descricao"]}],
+                const produtos = await Nfe.findAndCountAll({attributes: [
+                    "id",
+                    [sequelize.json('ide.nNF'), 'numero'],
+                    [sequelize.json('ide.serie'), 'serie'],
+                    [sequelize.json('emit.xFant'), 'emitente'],
+                    [sequelize.json('dest.xNome'), 'destinatario'],
+                    [sequelize.json('total.ICMSTot.vNF'), 'valor'],
+                ],
                     where, order, limit, offset, transaction
                 });
         
@@ -54,24 +56,33 @@ export default class NfeController {
             {
                 const transaction = await sequelize.transaction();
 
-                const produto = await Produto.findOne({attributes: ["id", "nome", "descricao", "isCombinacao", "valor"], 
-                    include: [{model: ProdutoCategoria, attributes: ["id", "descricao"]}, {model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
-                        include: [{model: ProdutoCombinacaoGrupo, attributes: ["descricao"]}]    
-                    }],
+                const nfes = await Nfe.findOne({attributes: ["id"], 
                     where: {id: req.body.id}, transaction
                 });
 
-                /*
-include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
-                        include: [{model: ProdutoCombinacaoGrupo, attributes: ["id", "descricao"],
-                            include: [{model: ProdutoCombinacaoItem, attributes: ["id", "descricao"]}]    
-                        }]
-                    }],
-                */
-    
                 sequelize.close();
     
-                res.status(200).json(produto);
+                res.status(200).json(nfes);
+    
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err) => {
+            res.status(401).json({message: err.message});
+        });
+    }
+
+    async upload(req: Request, res: Response) {
+        
+        Auth(req, res).then(async ({sequelize}) => {
+            try
+            {
+                const transaction = await sequelize.transaction();
+
+                //const nfes = await NfeService.Update(undefined, transaction);
+    
+                //res.status(200).json(nfes);
     
             }
             catch (err) {
@@ -89,26 +100,26 @@ include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo
             {
                 const transaction = await sequelize.transaction();
 
-                const Produto = req.body as Produto;
+                const Nfe = req.body as Nfe;
 
-                const valid = ProdutoService.IsValid(Produto);
+                const valid = NfeService.IsValid(Nfe);
 
                 if (!valid.success) {
                     res.status(201).json(valid);
                     return;
                 }
 
-                if (!Produto.id) {
-                    await ProdutoService.Create(Produto, transaction);
+                if (!Nfe.id) {
+                    await NfeService.Create(Nfe, transaction);
                 } else {
-                    await ProdutoService.Update(Produto, transaction);
+                    await NfeService.Update(Nfe, transaction);
                 }
 
                 await transaction?.commit();
                 
                 sequelize.close();
 
-                res.status(200).json(Produto);
+                res.status(200).json(Nfe);
 
             }
             catch (err) {
@@ -120,33 +131,6 @@ include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo
 
     }
 
-    /*
-    async update(req: Request, res: Response) {
-        
-        Auth(req, res).then(async ({transaction}) => {
-
-            const Usuario = req.body as Usuario;
-
-            const valid = UsuarioService.IsValid(Usuario);
-
-            if (!valid.success) {
-                res.status(201).json(valid);
-                return;
-            }
-
-            await UsuarioService.Update(Usuario, transaction);
-
-            await transaction?.commit();
-            
-            res.status(200).json(Usuario);
-            
-        }).catch((err) => {
-            res.status(500).json(err);
-        });
-       
-    }
-    */
-
     async delete(req: Request, res: Response) {
         
         Auth(req, res).then(async ({sequelize}) => {
@@ -155,7 +139,7 @@ include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo
 
                 const transaction = await sequelize.transaction();
 
-                await ProdutoService.Delete(req.body.id, transaction);
+                await NfeService.Delete(req.body.id, transaction);
 
                 await transaction?.commit();
 

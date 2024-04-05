@@ -23,10 +23,10 @@ const MenuItems = [
   {title: "Atendimento", icon: <Diversity3 />, items: [{title: "Agenda", link: "/atendimento/agenda"}, {title: "Chamados", link: "/atendimento/chamados"}]},
   {title: "Estoque", icon: <Inventory />, items: [{title: "Entrada", link: "/estoque/entrada"}]},
   {title: "Compras", icon: <AddShoppingCart />, items: [{title: "Cotação", link: "/compras/cotação"}, {title: "Pedidos", link: "/compras/pedidos"}]},
-  {title: "Vendas", icon: <LocalOffer />, items: [{title: "Pedidos", link: "/vendas/pedidos"}, {title: "Andamento", link: "/vendas/andamento"}, {title: "Faturamento", link: "/vendas/faturamento"}, {title: "Produção", link: "/vendas/producao"}, {title: "Separação", link: "/vendas/separacao"}, {title: "Conferência", link: "/vendas/conferencia"}, {title: "Entrega", link: "/vendas/delivery"}]},
-  {title: "Logistica", icon: <LocalShipping />, items: [{title: "Ordem de carga", link: "/logistica/ordem-carga"}, {title: "Viagens", link: "/logistica/viagens"}]},
-  {title: "Financeiro", icon: <PaidRounded />, items: [{title: "Contas a pagar", link: "/financeiro/contas-pagar"}, {title: "Contas a receber", link: "/financeiro/contas-receber"}, {title: "Contas bancárias", link: "/financeiro/contas-bancarias"}, {title: "Remessas", link: "/financeiro/remessas"}, {title: "Retornos", link: "/financeiro/retornos"}, {title: "Fluxo de caixa", link: "/financeiro/fluxo-caixa"}]},
-  {title: "Fiscal", icon: <TableView />, items: [{title: "Nota fiscais", link: "/fiscal/nota-fiscais"}, {title: "Conhecimentos", link: "/fiscal/conhecimentos"}, {title: "Manifestos", link: "/fiscal/manifestos"}]},
+  {title: "Vendas", icon: <LocalOffer />, items: [{title: "Pedidos", link: "/sales/orders"}, {title: "Andamento", link: "/sales/progress"}, {title: "Faturamento", link: "/sales/faturamento"}, {title: "Produção", link: "/sales/producao"}, {title: "Separação", link: "/sales/separacao"}, {title: "Conferência", link: "/sales/conferencia"}, {title: "Entrega", link: "/sales/delivery"}]},
+  {title: "Logistica", icon: <LocalShipping />, items: [{title: "Ordem de carga", link: "/logistic/shippings-orders"}, {title: "Viagens", link: "/logistic/trips"}]},
+  {title: "Financeiro", icon: <PaidRounded />, items: [{title: "Contas a pagar", link: "/financial/payments"}, {title: "Contas a receber", link: "/financial/receipts"}, {title: "Contas bancárias", link: "/financial/bank-accounts"}, {title: "Remessas", link: "/financial/shippings"}, {title: "Retornos", link: "/financeiro/retornos"}, {title: "Fluxo de caixa", link: "/financial/cash-flow"}]},
+  {title: "Fiscal", icon: <TableView />, items: [{title: "Notas fiscais", link: "/fiscal/nfes"}, {title: "Conhecimentos", link: "/fiscal/conhecimentos"}, {title: "Manifestos", link: "/fiscal/manifestos"}]},
 ]
 
 export const SidebarWidth = {

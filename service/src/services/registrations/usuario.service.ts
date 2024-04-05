@@ -2,7 +2,7 @@ import { Transaction } from "sequelize";
 import { Usuario } from "../../database";
 import crypto from "crypto";
 
-export class UsuarioService {
+export class UserService {
 
     public static IsValid = (usuario: Usuario) => {
 
