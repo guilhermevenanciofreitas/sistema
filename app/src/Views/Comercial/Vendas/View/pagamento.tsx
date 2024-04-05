@@ -3,7 +3,6 @@ import { AutoComplete, Button, GridView, Modal, TextBox, ViewModal } from "../..
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
-import { ProdutoTemplate } from "../../../../Search/Templates/Produto";
 import { FormaPagamentoTemplate } from "../../../../Search/Templates/FormaPagamento";
 
 const Columns = [

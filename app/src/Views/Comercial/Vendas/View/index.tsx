@@ -44,7 +44,7 @@ export class ViewPedidoVenda extends ViewContratoBase {
                         </Grid>
                         <Grid md={4}>
                             <FormLabel>Status</FormLabel>
-                            <Alert variant="soft">{this.state.status?.descricao || "SEM STATUS"}</Alert>
+                            <Alert variant="soft" style={{height: '36px'}}>{this.state.status?.descricao || "SEM STATUS"}</Alert>
                         </Grid>
 
                         <Tab>

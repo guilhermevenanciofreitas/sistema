@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { PedidoVenda, PedidoVendaPagamento, PedidoVendaItem, PedidoVendaAndamento, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
+import { PedidoVenda, PedidoVendaPagamento, PedidoVendaItem, PedidoVendaAndamento, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, ProdutoCombinacaoItem } from "../../database";
 import crypto from "crypto";
 import {Op} from "sequelize";
 
@@ -98,8 +98,8 @@ export class PedidoVendaService {
                     PedidoVendaItemCombinacao.update(combinacao, {where: {id: combinacao.id}, transaction});
                 }
                 where['PedidoVendaItemCombinacao'] = {id: {[Op.notIn]: item?.itemCombinacoes?.filter(c => c.id != "").map(c => c.id)}};
+                PedidoVendaItemCombinacao.destroy({where: where['PedidoVendaItemCombinacao'], cascade: true, transaction});
             }
-            PedidoVendaItemCombinacao.destroy({where: where['PedidoVendaItemCombinacao'], transaction});
             //PedidoVendaItemCombinacao
 
             //PedidoVendaItemCombinacao.PedidoVendaItemCombinacaoItem
@@ -113,8 +113,10 @@ export class PedidoVendaService {
                     } else {
                         PedidoVendaItemCombinacaoItem.update(combinacaoItem, {where: {id: combinacaoItem.id}, transaction});
                     }
-                    where['PedidoVendaItemCombinacaoItem'] = {id: {[Op.notIn]: combinacao?.combinacaoItems?.filter(c => c.id != "").map(c => c.id)}};
                 }
+
+                const r = await ProdutoCombinacaoItem.findAll({attributes: ["id"], where: {combinacaoId: combinacao.combinacaoId}});
+                where['PedidoVendaItemCombinacaoItem'] = {itemCombinacaoId: {[Op.in]: r.map(c => c.id)}, id: {[Op.notIn]: combinacao?.combinacaoItems?.filter(c => c.id != "").map(c => c.id)}};
                 PedidoVendaItemCombinacaoItem.destroy({where: where['PedidoVendaItemCombinacaoItem'], transaction});
             }
             //PedidoVendaItemCombinacao.PedidoVendaItemCombinacaoItem

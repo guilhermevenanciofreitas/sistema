@@ -7,7 +7,7 @@ import { Usuario } from "./models/usuario.model";
 import { Parceiro } from "./models/parceiro.model";
 import { ParceiroContato } from "./models/parceiroContato.model";
 import { ParceiroEndereco } from "./models/parceiroEndereco.model";
-import { Produto } from "./models/produto.model";
+import { Product } from "./models/product.model";
 import { Servico } from "./models/servico.model";
 import { Empresa } from "./models/empresa.model";
 import { ContaPagar } from "./models/contaPagar.model";
@@ -27,6 +27,7 @@ import { ProdutoCombinacaoItem } from "./models/produtoCombinacaoItem.model";
 import { PedidoVendaItemCombinacao } from "./models/pedidoVendaItemCombinacao.model";
 import { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinacaoItem.model";
 import { ProdutoCategoria } from "./models/produtoCategoria.model";
+import { Nfe } from "./models/nfe.model";
 
 
 export { ContaPagar } from "./models/contaPagar.model";
@@ -37,7 +38,7 @@ export { TabelaPreco } from "./models/tabelaPreco.model";
 export { Parceiro } from "./models/parceiro.model";
 export { ParceiroContato } from "./models/parceiroContato.model";
 export { ParceiroEndereco } from "./models/parceiroEndereco.model";
-export { Produto } from "./models/produto.model";
+export { Product } from "./models/product.model";
 export { Servico } from "./models/servico.model";
 export { Empresa } from "./models/empresa.model";
 export { Usuario } from "./models/usuario.model";
@@ -56,11 +57,12 @@ export { ProdutoCombinacaoItem } from "./models/produtoCombinacaoItem.model";
 export { PedidoVendaItemCombinacao } from "./models/pedidoVendaItemCombinacao.model";
 export { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinacaoItem.model";
 export { ProdutoCategoria } from "./models/produtoCategoria.model";
+export { Nfe } from "./models/nfe.model";
 
 
 export default class Sequelize {
   
-  public sequelize: sequelize | undefined;
+  public sequelize?: sequelize;
 
   constructor(options: any) {
     this.sequelize = new sequelize({
@@ -68,7 +70,7 @@ export default class Sequelize {
       
       dialect: "postgres",
       define: {timestamps: false},
-      models: [ContaPagar, Contrato, Delivery, DeliveryRoute, PedidoVendaStatus, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, PedidoVendaAndamento, PedidoVenda, FormaPagamento, PedidoVendaItem, PedidoVendaPagamento, Empresa, Parceiro, ParceiroContato, ParceiroEndereco, Produto, ProdutoCategoria, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, Servico, Usuario, TabelaPreco, Municipio],
+      models: [ContaPagar, Contrato, Delivery, DeliveryRoute, PedidoVendaStatus, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, PedidoVendaAndamento, PedidoVenda, FormaPagamento, PedidoVendaItem, PedidoVendaPagamento, Empresa, Parceiro, ParceiroContato, ParceiroEndereco, Product, ProdutoCategoria, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, Servico, Usuario, TabelaPreco, Municipio, Nfe],
       pool: {
         max: 5,
         min: 0,

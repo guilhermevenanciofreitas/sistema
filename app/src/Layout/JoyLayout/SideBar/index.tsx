@@ -8,7 +8,6 @@ import ListItemContent from '@mui/joy/ListItemContent';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 
-import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
 import SupportRoundedIcon from '@mui/icons-material/SupportRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -17,16 +16,17 @@ import { CssVarsProvider, extendTheme } from '@mui/joy';
 import { Link } from "react-router-dom";
 import { ViewConfiguracao } from '../../../Views/Configuracao';
 import { render } from 'react-dom';
+import { GroupRounded, Diversity3, Inventory, AddShoppingCart, LocalOffer, LocalShipping, PaidRounded, TableView } from '@mui/icons-material';
 
 const MenuItems = [
-  {title: "Cadastros", items: [{title: "Usuários", link: "/cadastros/usuarios"}, {title: "Produtos", link: "/cadastros/produtos"}, {title: "Serviços", link: "/cadastros/servicos"}, {title: "Clientes", link: "/cadastros/clientes"}, {title: "Fornecedores", link: "/cadastros/fornecedores"}, {title: "Funcionários", link: "/cadastros/funcionarios"}, {title: "Transportadoras", link: "/cadastros/transportadoras"}]},
-  {title: "Atendimento", items: [{title: "Agenda", link: "/atendimento/agenda"}, {title: "Chamados", link: "/atendimento/chamados"}]},
-  {title: "Estoque", items: [{title: "Entrada", link: "/estoque/entrada"}]},
-  {title: "Compras", items: [{title: "Cotação", link: "/compras/cotação"}, {title: "Pedidos", link: "/compras/pedidos"}]},
-  {title: "Vendas", items: [{title: "Pedidos", link: "/vendas/pedidos"}, {title: "Andamento", link: "/vendas/andamento"}, {title: "Faturamento", link: "/vendas/faturamento"}, {title: "Produção", link: "/vendas/producao"}, {title: "Separação", link: "/vendas/separacao"}, {title: "Conferência", link: "/vendas/conferencia"}, {title: "Delivery", link: "/vendas/delivery"}]},
-  {title: "Logistica", items: [{title: "Ordem de carga", link: "/logistica/ordem-carga"}, {title: "Viagens", link: "/logistica/viagens"}]},
-  {title: "Financeiro", items: [{title: "Contas a pagar", link: "/financeiro/contas-pagar"}, {title: "Contas a receber", link: "/financeiro/contas-receber"}, {title: "Contas bancárias", link: "/financeiro/contas-bancarias"}, {title: "Remessas", link: "/financeiro/remessas"}, {title: "Retornos", link: "/financeiro/retornos"}, {title: "Fluxo de caixa", link: "/financeiro/fluxo-caixa"}]},
-  {title: "Fiscal", items: [{title: "Nota fiscais", link: "/fiscal/nota-fiscais"}, {title: "Conhecimentos", link: "/fiscal/conhecimentos"}, {title: "Manifestos", link: "/fiscal/manifestos"}]},
+  {title: "Cadastros", icon: <GroupRounded/>, items: [{title: "Usuários", link: "/registrations/users"}, {title: "Produtos", link: "/registrations/products"}, {title: "Serviços", link: "/registrations/services"}, {title: "Veículos", link: "/registrations/vehicles"}, {title: "Clientes", link: "/registrations/customers"}, {title: "Fornecedores", link: "/registrations/suppliers"}, {title: "Funcionários", link: "/registrations/employees"}, {title: "Transportadoras", link: "/registrations/shippings-company"}]},
+  {title: "Atendimento", icon: <Diversity3 />, items: [{title: "Agenda", link: "/atendimento/agenda"}, {title: "Chamados", link: "/atendimento/chamados"}]},
+  {title: "Estoque", icon: <Inventory />, items: [{title: "Entrada", link: "/estoque/entrada"}]},
+  {title: "Compras", icon: <AddShoppingCart />, items: [{title: "Cotação", link: "/compras/cotação"}, {title: "Pedidos", link: "/compras/pedidos"}]},
+  {title: "Vendas", icon: <LocalOffer />, items: [{title: "Pedidos", link: "/vendas/pedidos"}, {title: "Andamento", link: "/vendas/andamento"}, {title: "Faturamento", link: "/vendas/faturamento"}, {title: "Produção", link: "/vendas/producao"}, {title: "Separação", link: "/vendas/separacao"}, {title: "Conferência", link: "/vendas/conferencia"}, {title: "Entrega", link: "/vendas/delivery"}]},
+  {title: "Logistica", icon: <LocalShipping />, items: [{title: "Ordem de carga", link: "/logistica/ordem-carga"}, {title: "Viagens", link: "/logistica/viagens"}]},
+  {title: "Financeiro", icon: <PaidRounded />, items: [{title: "Contas a pagar", link: "/financeiro/contas-pagar"}, {title: "Contas a receber", link: "/financeiro/contas-receber"}, {title: "Contas bancárias", link: "/financeiro/contas-bancarias"}, {title: "Remessas", link: "/financeiro/remessas"}, {title: "Retornos", link: "/financeiro/retornos"}, {title: "Fluxo de caixa", link: "/financeiro/fluxo-caixa"}]},
+  {title: "Fiscal", icon: <TableView />, items: [{title: "Nota fiscais", link: "/fiscal/nota-fiscais"}, {title: "Conhecimentos", link: "/fiscal/conhecimentos"}, {title: "Manifestos", link: "/fiscal/manifestos"}]},
 ]
 
 export const SidebarWidth = {
@@ -136,7 +136,7 @@ export default class Sidebar extends React.Component {
                         <div key={Key}>
 
                             <ListItemButton onClick={() => this.Open(Item.title)}>
-                                <ListItemButton><GroupRoundedIcon/></ListItemButton>
+                                <ListItemButton>{Item.icon}</ListItemButton>
                                 {this.state.Status == 'Opened' &&
                                   <>
                                     <ListItemContent >

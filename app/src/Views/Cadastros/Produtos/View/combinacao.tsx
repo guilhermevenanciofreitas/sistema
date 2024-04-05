@@ -3,7 +3,6 @@ import { AutoComplete, Button, CheckBox, GridView, Modal, TextBox, ViewModal } f
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
-import { ProdutoTemplate } from "../../../../Search/Templates/Produto";
 import { ProdutoCombinacaoGrupoTemplate } from "../../../../Search/Templates/ProdutoCombinacaoGrupo";
 import { Grid } from "@mui/joy";
 

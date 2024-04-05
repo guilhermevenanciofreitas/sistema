@@ -1,5 +1,5 @@
 import { Router } from "express";
-import UsuarioController from "../../controllers/cadastros/usuario.controller";
+import UsuarioController from "../../controllers/registrations/usuario.controller";
 
 class UsuarioRoutes {
   router = Router();

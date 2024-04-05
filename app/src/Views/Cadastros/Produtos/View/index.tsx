@@ -45,6 +45,11 @@ export class ViewProduto extends ViewProdutoBase {
                         <Grid md={12}>
                             
                             <Tab>
+                                <TabItem Title='Principal' Visible={this.state.isCombinacao}>
+                                    <Grid md={12}>
+                                        <TextBox Label='Valor' TextTransform='Normal' Text={this.state.valor} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} />
+                                    </Grid>
+                                </TabItem>
                                 <TabItem Title='Combinação' Visible={this.state.isCombinacao}>
                                     <Combinacao Itens={this.state.combinacoes} OnChange={(combinacoes: any[]) => this.setState({combinacoes})} />
                                 </TabItem>

@@ -1,6 +1,7 @@
 import _ from "lodash";
 import React from "react";
-import { Service } from "../../service";
+import { Service } from "../service";
+import ProductDetail from "./productDetail";
 
 export default class HomeBase extends React.Component {
 
@@ -20,6 +21,14 @@ export default class HomeBase extends React.Component {
         
         searchText: '',
         categoriaId: undefined,
+
+    }
+
+    protected ProductDetail = React.createRef<ProductDetail>();
+
+    protected ProductDetail_Click = (produto: any) => {
+
+        this.ProductDetail.current?.Show(produto);
 
     }
 

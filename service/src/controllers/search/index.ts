@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { FormaPagamento, Municipio, Parceiro, PedidoVendaTipoEntrega, Produto, ProdutoCategoria, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco } from "../../database";
+import { FormaPagamento, Municipio, Parceiro, PedidoVendaTipoEntrega, Product, ProdutoCategoria, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco } from "../../database";
 import { Op } from "sequelize";
 
 export default class SearchController {
@@ -93,7 +93,7 @@ export default class SearchController {
         });
     }
 
-    async produto(req: Request, res: Response) {
+    async product(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try {
@@ -102,19 +102,18 @@ export default class SearchController {
 
                 let where: any = {};
    
-                //where = {"isCliente": true};
-
                 if (req.body?.Search) {
                     where = {"descricao": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
         
-                const produtos = await Produto.findAll({attributes: ["id", "descricao"],
-                    include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
+                const produtos = await Product.findAll({attributes: ["id", "nome"],
+                    include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo", "ordem"],
                         include: [{model: ProdutoCombinacaoGrupo, attributes: ["id", "descricao"],
-                            include: [{model: ProdutoCombinacaoItem, attributes: ["id", "descricao"]}]    
+                            include: [{model: ProdutoCombinacaoItem, attributes: ["id", "nome"]}]    
                         }]
                     }],
-                    where, order: [["descricao", "asc"]], transaction
+                    where,
+                    order: [["nome", "asc"]], transaction
                 });
         
                 sequelize.close();

@@ -1,5 +1,5 @@
 import { Model, Table, Column, DataType, HasMany } from "sequelize-typescript";
-import { Produto } from "./produto.model";
+import { Product } from "./product.model";
 
 @Table({tableName: "produtoCategoria"})
 export class ProdutoCategoria extends Model {
@@ -13,7 +13,10 @@ export class ProdutoCategoria extends Model {
   @Column({type: DataType.BLOB, field: "imagem"})
   imagem?: string;
 
-  @HasMany(() => Produto, 'categoriaId')
-  produtos?: Produto[];
+  @Column({type: DataType.INTEGER, field: "ordem"})
+  ordem?: number;
+
+  @HasMany(() => Product, 'categoriaId')
+  produtos?: Product[];
 
 }

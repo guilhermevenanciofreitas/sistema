@@ -2,8 +2,8 @@ import { Model, Table, Column, DataType, HasMany, BelongsTo } from "sequelize-ty
 import { ProdutoCombinacao } from "./produtoCombinacao.model";
 import { ProdutoCategoria } from "./produtoCategoria.model";
 
-@Table({tableName: "produtos"})
-export class Produto extends Model {
+@Table({tableName: "product"})
+export class Product extends Model {
   
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
   id?: string;
@@ -19,6 +19,9 @@ export class Produto extends Model {
 
   @Column({type: DataType.BOOLEAN, field: "isCombinacao"})
   isCombinacao?: string;
+
+  @Column({type: DataType.DECIMAL(10, 2), field: "valor"})
+  valor?: number;
 
   @BelongsTo(() => ProdutoCategoria, 'categoriaId')
   categoria?: ProdutoCategoria;

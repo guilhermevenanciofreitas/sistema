@@ -3,6 +3,7 @@ import axios, { AxiosResponse } from "axios";
 export class Service {
 
     private static url: string = "http://localhost:4000/api/";
+    //private static url: string = "http://10.0.0.130:4000/api/";
 
     static Post = async (path: string, data: any): Promise<AxiosResponse|undefined> => {
 

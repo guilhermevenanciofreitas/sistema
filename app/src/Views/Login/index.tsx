@@ -1,60 +1,60 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { Form, TextBox, Button, DropDownList, DropDownListItem } from "../../Utils/Controls";
+import { Form, TextBox, Button, DropDownList, DropDownListItem, MessageBox } from "../../Utils/Controls";
 import { EventArgs } from "../../Utils/EventArgs";
 import { Service } from "../../Service";
+import { Layout } from "./layout";
+import { Box, Checkbox, FormControl, Link, Stack } from "@mui/joy";
 
-export function Login() {
+//const navigate = useNavigate();
+//const location = useLocation();
+//const from = (location.state?.from?.pathname || "/") + (location.state?.from?.search || "");
 
-  if (localStorage.getItem("Session")) {
-    return <Navigate to="/" replace />
+export class ViewLogin extends React.Component<Readonly<{from: string}>> {
+
+  state = {
+
+    step: "login",
+
+    email: "",
+    password: "",
+    accountId: "",
+    empresaId: "",
+
+    accounts: [],
+    empresas: []
   }
 
-  let [email, setEmail] = React.useState("guilherme9180@gmail.com");
-  let [password, setPassword] = React.useState("@Rped94ft");
-  let [accountId, setAccount] = React.useState("");
-  let [empresaId, setEmpresa] = React.useState("");
-
-  let [step, setStep] = React.useState('login');
-
-  let [accounts, setAccounts] = React.useState([]);
-  let [empresas, setEmpresas] = React.useState([]);
-  
-
-  let navigate = useNavigate();
-  let location = useLocation();
-
-  let from = (location.state?.from?.pathname || "/") + (location.state?.from?.search || "");
-
-  async function DplAccount_Change(accountId: string) {
-    setAccount(accountId);
-    setEmpresas([]);
-    await Signin(email, password, accountId, empresaId)
+  protected DplAccount_Change = async (accountId: string) => {
+    this.setState({accountId, empresas: []});
+    await this.Signin(this.state.email, this.state.password, accountId, this.state.empresaId)
   }
 
-  async function DplEmpresa_Change(empresaId: string) {
-    setEmpresa(empresaId);
-    await Signin(email, password, accountId, empresaId)
+  protected DplEmpresa_Change = async (empresaId: string) => {
+    this.setState({empresaId, empresas: []});
+    await this.Signin(this.state.email, this.state.password, this.state.accountId, empresaId);
   }
 
-  async function Signin(email: string, password: string, accountId: string, empresaId: string) {
+  protected Signin = async (email: string, password: string, accountId: string, empresaId: string) => {
     try {
       
       const signin = await Service.Post("login/signin", {email: email, password: password, accountId: accountId, empresaId: empresaId});
 
+      if (signin?.status == 203) {
+        await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: signin.data.message, buttons: [{ Text: "OK" }]});
+      }
+
       if (signin?.status == 200) {
         localStorage.setItem("Session", JSON.stringify(signin?.data));
-        navigate(from, { replace: true });
+        window.location.href = `${this.props.from}`;
       }
 
       if (signin?.status == 201) {
-        setStep('account');
-        setAccounts(signin?.data);
+        this.setState({step: 'account', accounts: signin?.data});
       }
 
       if (signin?.status == 202) {
-        setStep('empresa');
-        setEmpresas(signin?.data);
+        this.setState({step: 'empresa', empresas: signin?.data});
       }
       
     } catch (err: any) {
@@ -62,44 +62,81 @@ export function Login() {
     }
   }
 
-  return (
-    <div>
+  render(): React.ReactNode {
+    
+    return (
+      <Layout>
 
-      <p>Step: {step}</p>
+        <Form OnSubmit={() => this.Signin(this.state.email, this.state.password, this.state.accountId, this.state.empresaId)}>
 
-      <p>You must log in to view the page at {from}</p>
-
-        <Form OnSubmit={() => Signin(email, password, accountId, empresaId)}>
-
-          {step == "login" &&
+          {this.state.step == "login" &&
           <>
-            <TextBox Label='E-mail' TextTransform='Normal' Text={email} OnChange={(args: EventArgs) => setEmail(args.Value)} />
-            <TextBox Label='Senha' TextTransform='Normal' Text={password} OnChange={(args: EventArgs) => setPassword(args.Value)} />
+            <FormControl>
+              <TextBox Label='E-mail' TextTransform='Normal' Text={this.state.email} OnChange={(args: EventArgs) => this.setState({email: args.Value})} />
+            </FormControl>
+            
+            <FormControl>
+              <TextBox Label='Senha' TextTransform='Normal' Text={this.state.password} OnChange={(args: EventArgs) => this.setState({password: args.Value})} />
+            </FormControl>
           </>
           }
 
-          {(accounts?.length || 0) >= 1 &&
-            <DropDownList Label='Conta' SelectedValue={accountId} OnChange={(args: any) => DplAccount_Change(args.Value)}>
+          {(this.state.accounts?.length || 0) >= 1 &&
+            <DropDownList Label='Conta' SelectedValue={this.state.accountId} OnChange={(args: any) => this.DplAccount_Change(args.Value)}>
               <DropDownListItem Label="[Selecione]" Value="" />
-              {accounts.map((Item: any, Key) => {
+              {this.state.accounts.map((Item: any, Key) => {
                 return <DropDownListItem Label={Item.name} Value={Item.id} key={Key} />
               })}
             </DropDownList>
           }
-          {(empresas?.length || 0) >= 1 &&
-            <DropDownList Label='Empresa' SelectedValue={empresaId} OnChange={(args: any) => DplEmpresa_Change(args.Value)}>
+          {(this.state.empresas?.length || 0) >= 1 &&
+            <DropDownList Label='Empresa' SelectedValue={this.state.empresaId} OnChange={(args: any) => this.DplEmpresa_Change(args.Value)}>
               <DropDownListItem Label="[Selecione]" Value="" />
-              {empresas.map((Item: any, Key) => {
+              {this.state.empresas.map((Item: any, Key) => {
                 return <DropDownListItem Label={Item.nomeFantasia} Value={Item.id} key={Key} />
               })}
             </DropDownList>
           }
 
-          {step == "login" && <Button Type="Submit" Text="Entrar" />}
+          {this.state.step == "login" && (
+            <Stack gap={4} sx={{ mt: 2 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <Checkbox size="sm" label="Lembrar" name="persistent" />
+                <Link level="title-sm" href="#replace-with-a-link">
+                  Esqueceu sua senha?
+                </Link>
+              </Box>
+              <Button Type="Submit" Text="Entrar" />
+            </Stack>
+          )}
           
         </Form>
-      
-    </div>
+
+      </Layout>
+    );
+
+  }
+
+}
+
+export function Login() {
+
+  const location = useLocation();
+  const from = (location.state?.from?.pathname || "/") + (location.state?.from?.search || "");
+
+  if (localStorage.getItem("Session")) {
+    return <Navigate to="/" replace />
+  }
+
+  return (
+    <ViewLogin from={from}></ViewLogin>
   );
 
 }
+

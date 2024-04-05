@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { FormaPagamento, Parceiro, PedidoVenda, Produto, PedidoVendaPagamento, PedidoVendaStatus, PedidoVendaTipoEntrega, Empresa, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
+import { FormaPagamento, Parceiro, PedidoVenda, Product, PedidoVendaPagamento, PedidoVendaStatus, PedidoVendaTipoEntrega, Empresa, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
 import { PedidoVendaService } from "../../services/comercial/pedidovenda.service";
 import { PedidoVendaItem } from "../../database/models/pedidoVendaItem.model";
 import {Op, Sequelize} from "sequelize";
@@ -150,10 +150,10 @@ export default class PedidoVendaController {
                         {model: PedidoVendaStatus, attributes: ["id", "descricao"]},
                         {model: PedidoVendaTipoEntrega, attributes: ["id", "descricao"]},
                         {model: PedidoVendaItem, attributes: ["id", "quantidade", "valor"], 
-                            include: [{model: Produto, attributes: ["id", "descricao"],
+                            include: [{model: Product, attributes: ["id", "nome", "descricao"],
                                 include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
                                     include: [{model: ProdutoCombinacaoGrupo, attributes: ["id", "descricao"],
-                                        include: [{model: ProdutoCombinacaoItem, attributes: ["id", "descricao"]}]
+                                        include: [{model: ProdutoCombinacaoItem, attributes: ["id", "nome"]}]
                                     }]    
                                 }],
                             },

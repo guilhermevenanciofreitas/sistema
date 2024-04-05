@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
 import { Parceiro, ParceiroContato, ParceiroEndereco, TabelaPreco, Usuario } from "../../database";
-import { ParceiroService } from "../../services/cadastros/parceiro.service";
+import { ParceiroService } from "../../services/registrations/parceiro.service";
 import {Op} from "sequelize";
 
 export default class ParceiroController {

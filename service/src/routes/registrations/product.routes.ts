@@ -1,9 +1,9 @@
 import { Router } from "express";
-import ServicoController from "../../controllers/cadastros/servico.controller";
+import ProductController from "../../controllers/registrations/product.controller";
 
-class ServicoRoutes {
+class ProductRoutes {
   router = Router();
-  controller = new ServicoController();
+  controller = new ProductController();
 
   constructor() {
     this.intializeRoutes();
@@ -17,4 +17,4 @@ class ServicoRoutes {
   }
 }
 
-export default new ServicoRoutes().router;
+export default new ProductRoutes().router;

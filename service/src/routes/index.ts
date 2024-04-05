@@ -4,19 +4,19 @@ import loginRoutes from "./login/login.routes";
 
 import configuracaoRoutes from "./configuracao/index.routes"
 
-import usuarioRoutes from "./cadastros/usuario.routes";
-import clienteRoutes from "./cadastros/cliente.routes";
-import fornecedorRoutes from "./cadastros/fornecedor.routes";
-import produtoRoutes from "./cadastros/produto.routes";
-import servicoRoutes from "./cadastros/servico.routes";
+import usuarioRoutes from "./registrations/usuario.routes";
+import clienteRoutes from "./registrations/cliente.routes";
+import fornecedorRoutes from "./registrations/fornecedor.routes";
+import produtoRoutes from "./registrations/product.routes";
+import servicoRoutes from "./registrations/servico.routes";
 
 import searchRoutes from "./search/index.routes";
 import contratoRoutes from "./comercial/contrato.routes";
 import contaPagarRoutes from "./financeiro/contaPagar.routes";
 
 import pedidoVendaRoutes from "./comercial/pedidoVenda.routes";
-import funcionarioRoutes from "./cadastros/funcionario.routes";
-import transportadoraRoutes from "./cadastros/transportadora.routes";
+import funcionarioRoutes from "./registrations/funcionario.routes";
+import transportadoraRoutes from "./registrations/transportadora.routes";
 
 import pedidoEletronicoRoutes from "./pedido-eletronico/index.routes";
 

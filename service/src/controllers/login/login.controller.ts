@@ -21,9 +21,13 @@ export default class LoginController {
 
       const accountTransaction = await sequelize?.transaction();
 
-      const user = await User.findOne({attributes: ["id", "email", "password"], where: {email: req.body.email, password: req.body.password}, transaction: accountTransaction});
+      const user: any = await User.findOne({attributes: ["id", "email", "password"], where: {email: req.body.email, password: req.body.password}, transaction: accountTransaction});
 
-      
+      if (user == null) {
+        res.status(203).json({message: "E-mail/senha incorreto!"});
+        return;
+      }
+
       if (accountId == "") {
   
         const accountsUsers = await AccountUser.findAll({attributes: ["accountId"], include: [{attributes: ["id", "name"], model: Account}], where: {userId: user?.id}, transaction: accountTransaction});
@@ -41,8 +45,7 @@ export default class LoginController {
         
       }
 
-      const account = await Account.findOne({include: [{attributes: ["host", "username", "password", "database"], model: Database}], where: {id: accountId}, transaction: accountTransaction});
-
+      const account: any = await Account.findOne({include: [{attributes: ["host", "username", "password", "database"], model: Database}], where: {id: accountId}, transaction: accountTransaction});
 
       const transaction = await new Sequelize({
         host: account?.Database?.host,

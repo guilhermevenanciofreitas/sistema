@@ -19,6 +19,9 @@ export class ProdutoCombinacaoGrupo extends Model {
   @Column({type: DataType.INTEGER, field: "maximo"})
   maximo?: number;
 
+  @Column({type: DataType.INTEGER, field: "ordem"})
+  ordem?: number;
+
   @HasMany(() => ProdutoCombinacaoItem, 'combinacaoId')
   combinacaoItems?: ProdutoCombinacaoItem[];
 

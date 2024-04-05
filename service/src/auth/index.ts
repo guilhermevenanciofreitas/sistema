@@ -17,6 +17,10 @@ export const minutes = 60;
 
 export default async function Auth(req: Request, res: Response): Promise<any> {
 
+    if (req.headers.authorization == undefined) {
+        throw new Error("E necessário fazer o login!");
+    }
+
     const sequelize = await new Accounts().sequelize;
 
     const transaction = await sequelize?.transaction();

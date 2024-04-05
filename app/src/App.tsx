@@ -28,14 +28,16 @@ export default class App extends React.Component {
                 <Route path="/" element={<RequireLogin><Usuarios /></RequireLogin>} />
                 <Route path="/login" element={<Login />} />
 
-                <Route path="/cadastros/clientes" element={<RequireLogin><Clientes /></RequireLogin>} />
-                <Route path="/cadastros/fornecedores" element={<RequireLogin><Fornecedores /></RequireLogin>} />
-                <Route path="/cadastros/funcionarios" element={<RequireLogin><Funcionarios /></RequireLogin>} />
-                <Route path="/cadastros/transportadoras" element={<RequireLogin><Transporadoras /></RequireLogin>} />
+                {/* Registrations */}
+                <Route path="/registrations/users" element={<Usuarios />} />
+                <Route path="/registrations/products" element={<RequireLogin><Produtos /></RequireLogin>} />
+                <Route path="/registrations/services" element={<Servicos />} />
+                <Route path="/registrations/vehicles" element={<Servicos />} />
+                <Route path="/registrations/customers" element={<RequireLogin><Clientes /></RequireLogin>} />
+                <Route path="/registrations/suppliers" element={<RequireLogin><Fornecedores /></RequireLogin>} />
+                <Route path="/registrations/employees" element={<RequireLogin><Funcionarios /></RequireLogin>} />
+                <Route path="/registrations/shippings-company" element={<RequireLogin><Transporadoras /></RequireLogin>} />
 
-                <Route path="/cadastros/usuarios" element={<Usuarios />} />
-                <Route path="/cadastros/produtos" element={<Produtos />} />
-                <Route path="/cadastros/servicos" element={<Servicos />} />
 
                 <Route path="/contratos" element={<RequireLogin><Contratos /></RequireLogin>} />
 

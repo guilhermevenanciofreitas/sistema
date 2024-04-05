@@ -13,7 +13,7 @@ export class PedidoVendaItemCombinacao extends Model {
   @Column({type: DataType.UUID, field: "combinacaoId"})
   combinacaoId?: string;
 
-  @HasMany(() => PedidoVendaItemCombinacaoItem, 'pedidoVendaItemCombinacaoId')
+  @HasMany(() => PedidoVendaItemCombinacaoItem, { onDelete: 'cascade', foreignKey: 'pedidoVendaItemCombinacaoId' })
   combinacaoItems?: PedidoVendaItemCombinacaoItem[];
 
 }

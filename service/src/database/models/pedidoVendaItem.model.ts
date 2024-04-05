@@ -1,5 +1,5 @@
 import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-typescript";
-import { Produto } from "./produto.model";
+import { Product } from "./product.model";
 import { PedidoVendaItemCombinacao } from "./pedidoVendaItemCombinacao.model";
 
 @Table({tableName: "pedidoVendaItem"})
@@ -20,8 +20,8 @@ export class PedidoVendaItem extends Model {
   @Column({type: DataType.DECIMAL(10, 2), field: "valor"})
   valor?: number;
 
-  @BelongsTo(() => Produto, 'produtoId')
-  produto?: Produto;
+  @BelongsTo(() => Product, 'produtoId')
+  produto?: Product;
 
   @HasMany(() => PedidoVendaItemCombinacao, 'pedidoVendaItemId')
   itemCombinacoes?: PedidoVendaItemCombinacao[];

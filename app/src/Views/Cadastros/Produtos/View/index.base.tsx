@@ -12,6 +12,7 @@ export class ViewProdutoBase extends ViewModal<Readonly<{Title: string}>> {
         descricao: "",
         categoria: null,
         isCombinacao: false,
+        valor: "",
         combinacoes: []
     }
 
@@ -74,7 +75,7 @@ export class ViewProdutoBase extends ViewModal<Readonly<{Title: string}>> {
 
     private Limpar = () =>
     {
-        this.setState({id: "", descricao: "", isCombinacao: false, combinacoes: []});
+        this.setState({id: "", nome: "", descricao: "", categoria: null, isCombinacao: false, valor: null, combinacoes: []});
     }
 
 }

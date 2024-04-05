@@ -23,10 +23,13 @@ export class ProdutoCombinacao extends Model {
   @Column({type: DataType.INTEGER, field: "maximo"})
   maximo?: number;
 
+  @Column({type: DataType.INTEGER, field: "ordem"})
+  ordem?: number;
+
   @BelongsTo(() => ProdutoCombinacaoGrupo, 'combinacaoId')
   combinacao?: ProdutoCombinacaoGrupo;
 
-  @HasMany(() => ProdutoCombinacaoItem, 'combinacaoId')
+  @HasMany(() => ProdutoCombinacaoItem, {onDelete: 'cascade', foreignKey: 'combinacaoId'})
   combinacaoItems?: ProdutoCombinacaoItem[];
 
 }

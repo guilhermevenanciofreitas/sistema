@@ -8,7 +8,7 @@ export class ControlAutoComplete extends AutoCompleteBase {
   private Search = async (Text: string) =>
   {
     this.setState({Loading: true});
-    const Result = await this.props.Pesquisa?.call(null, Text);
+    let Result = await this.props.Pesquisa?.call(null, Text);
     this.setState(({Loading: false, Result: Result}));
   }
 
@@ -27,8 +27,9 @@ export class ControlAutoComplete extends AutoCompleteBase {
           }}
 
           popupIcon={<Search />}
+
           sx={{
-            [`& .${autocompleteClasses.popupIndicator}`]: {
+            [`& .css-1o5f876-JoyAutocomplete-popupIndicator.MuiAutocomplete-popupIndicatorOpen`]: {
               transform: "none"
             }
           }}

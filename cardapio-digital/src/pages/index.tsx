@@ -1,6 +1,7 @@
 import HomeBase from "./index.base";
 import _ from "lodash";
 import './styles.css';
+import ProductDetail from "./productDetail";
 
 export class Home extends HomeBase {
 
@@ -25,7 +26,7 @@ export class Home extends HomeBase {
                             const src = !categoria.imagem?.data ? "https://static-00.iconduck.com/assets.00/no-image-icon-512x512-lfoanl0w.png" : `data:image/png;base64,${btoa(new Uint8Array(categoria.imagem?.data).reduce((data, byte) => data + String.fromCharCode(byte), ''))}`;
 
                             return (
-                                <div className='CategoryItem' key={categoria.id} onClick={() => this.setState({categoriaId: categoria.id})}>
+                                <div key={categoria.id} className='CategoryItem' onClick={() => this.setState({categoriaId: categoria.id})}>
                                     <img style={{ width: 56, height: 56 }} src={src} />
                                     <div className='CategoryItemTitle'>{categoria.descricao.toLowerCase().replace(/(?:^|\s)\S/g, (text: any) => text.toUpperCase())}</div>
                                 </div>
@@ -59,7 +60,7 @@ export class Home extends HomeBase {
         return (
             <div className='FoodsContainer'>
                 {_.map(categorias, (categoria: any) => (
-                    <>
+                    <div key={categoria.id}>
 
                         <div className='Title'>{categoria.descricao.toLowerCase().replace(/(?:^|\s)\S/g, (text: any) => text.toUpperCase())}</div>
                         <div className='FoodList'>
@@ -68,7 +69,7 @@ export class Home extends HomeBase {
                                 const src = `https://static-00.iconduck.com/assets.00/no-image-icon-512x512-lfoanl0w.png`;
 
                                 return (
-                                    <div className='Food' key={produto.id}>
+                                    <div key={produto.id} className='Food' onClick={() => this.ProductDetail_Click(produto)}>
                                         <div className='FoodImageContainer'>
                                             <img
                                                 style={{ width: 88, height: 88 }}
@@ -78,14 +79,14 @@ export class Home extends HomeBase {
                                         <div className='FoodContent'>
                                             <div className='FoodTitle'><h5 className="itemName mb-0">{produto.nome.toLowerCase().replace(/(?:^|\s)\S/g, (text: any) => text.toUpperCase())}</h5></div>
                                             <div className='FoodDescription'>{produto.descricao}</div>
-                                            <div className='FoodPricing'><h5>R$ 5,00</h5></div>
+                                            <div className='FoodPricing'><h5>R$ {produto.valor}</h5></div>
                                         </div>
                                     </div>
                                 );
 
                             })}
                         </div>
-                    </>
+                    </div>
                 ))}
             </div>
         )
@@ -96,7 +97,9 @@ export class Home extends HomeBase {
 
         return (
             <>
-                
+            
+                <ProductDetail ref={this.ProductDetail} />
+
                 <div className="container-fluid nopadding">
                     <div className="container-fluid nopadding" style={{ backgroundColor: 'rgb(8, 8, 8)', paddingTop: '0px' }}>
                         <div className="row nopadding logo-left" style={{ width: '100%', backgroundImage: 'url(https://instadelivery-public.nyc3.cdn.digitaloceanspaces.com/stores/background/169877355565413a33ddf2c.png)', backgroundPosition: 'center center', backgroundRepeat: 'no-repeat', backgroundSize: 'contain', height: '250px' }}>
