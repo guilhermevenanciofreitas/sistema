@@ -1,7 +1,7 @@
 import React from 'react';
 import { ResultContext } from '../../Utils/Controls/Form/AutoComplete/base';
 
-export class ProdutoCategoriaTemplate extends React.Component {
+export class ProductCategoryTemplate extends React.Component {
 
     render() {
         return <>

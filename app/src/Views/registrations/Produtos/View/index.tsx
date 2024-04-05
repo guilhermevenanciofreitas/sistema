@@ -5,7 +5,7 @@ import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
 import { Combinacao } from './combinacao';
-import { ProdutoCategoriaTemplate } from '../../../../Search/Templates/ProdutoCategoria';
+import { ProductCategoryTemplate } from '../../../../Search/Templates/ProductCategory';
 import { Search } from '../../../../Search';
 
 export class ViewProduto extends ViewProdutoBase {
@@ -27,8 +27,8 @@ export class ViewProduto extends ViewProdutoBase {
                             <TextBox Label='Nome' TextTransform='UpperCase' Text={this.state.nome} OnChange={(args: EventArgs) => this.setState({nome: args.Value})} />
                         </Grid>
                         <Grid md={4}>
-                            <AutoComplete Label='Categoria' Pesquisa={async (Text: string) => await Search.ProdutoCategoria(Text)} Text={(Item: any) => `${Item.descricao}` } Value={this.state.categoria} OnChange={(args: any) => this.setState({categoria: args})}>
-                                <ProdutoCategoriaTemplate />
+                            <AutoComplete Label='Categoria' Pesquisa={async (Text: string) => await Search.ProductCategory(Text)} Text={(Item: any) => `${Item.descricao}` } Value={this.state.categoria} OnChange={(args: any) => this.setState({categoria: args})}>
+                                <ProductCategoryTemplate />
                             </AutoComplete>
                         </Grid>
 

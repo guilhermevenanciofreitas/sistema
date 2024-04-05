@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Product, ProdutoCategoria, ProdutoCombinacao, ProdutoCombinacaoGrupo } from "../../database";
+import { Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo } from "../../database";
 import { ProductService } from "../../services/registrations/product.service";
 import { Op } from "sequelize";
 
@@ -30,7 +30,7 @@ export default class ProductController {
                 }
         
                 const produtos = await Product.findAndCountAll({attributes: ["id", "nome"],
-                    include: [{model: ProdutoCategoria, attributes: ["id", "descricao"]}],
+                    include: [{model: ProductCategory, attributes: ["id", "descricao"]}],
                     where, order, limit, offset, transaction
                 });
         
@@ -55,20 +55,12 @@ export default class ProductController {
                 const transaction = await sequelize.transaction();
 
                 const produto = await Product.findOne({attributes: ["id", "nome", "descricao", "isCombinacao", "valor"], 
-                    include: [{model: ProdutoCategoria, attributes: ["id", "descricao"]}, {model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
+                    include: [{model: ProductCategory, attributes: ["id", "descricao"]}, {model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
                         include: [{model: ProdutoCombinacaoGrupo, attributes: ["descricao"]}]    
                     }],
                     where: {id: req.body.id}, transaction
                 });
 
-                /*
-include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
-                        include: [{model: ProdutoCombinacaoGrupo, attributes: ["id", "descricao"],
-                            include: [{model: ProdutoCombinacaoItem, attributes: ["id", "descricao"]}]    
-                        }]
-                    }],
-                */
-    
                 sequelize.close();
     
                 res.status(200).json(produto);

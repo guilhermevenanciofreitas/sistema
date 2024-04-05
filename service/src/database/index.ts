@@ -9,7 +9,7 @@ import { ParceiroContato } from "./models/parceiroContato.model";
 import { ParceiroEndereco } from "./models/parceiroEndereco.model";
 import { Product } from "./models/product.model";
 import { Servico } from "./models/servico.model";
-import { Empresa } from "./models/empresa.model";
+import { Company } from "./models/company.model";
 import { ContaPagar } from "./models/contaPagar.model";
 import { PedidoVendaItem } from "./models/pedidoVendaItem.model";
 import { Municipio } from "./models/municipio.model";
@@ -26,7 +26,7 @@ import { ProdutoCombinacaoGrupo } from "./models/produtoCombinacaoGrupo.model";
 import { ProdutoCombinacaoItem } from "./models/produtoCombinacaoItem.model";
 import { PedidoVendaItemCombinacao } from "./models/pedidoVendaItemCombinacao.model";
 import { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinacaoItem.model";
-import { ProdutoCategoria } from "./models/produtoCategoria.model";
+import { ProductCategory } from "./models/productCategory.model";
 import { Nfe } from "./models/nfe.model";
 
 
@@ -40,7 +40,7 @@ export { ParceiroContato } from "./models/parceiroContato.model";
 export { ParceiroEndereco } from "./models/parceiroEndereco.model";
 export { Product } from "./models/product.model";
 export { Servico } from "./models/servico.model";
-export { Empresa } from "./models/empresa.model";
+export { Company } from "./models/company.model";
 export { Usuario } from "./models/usuario.model";
 export { Municipio } from "./models/municipio.model";
 export { FormaPagamento } from "./models/formaPagamento.model";
@@ -56,7 +56,7 @@ export { ProdutoCombinacaoGrupo } from "./models/produtoCombinacaoGrupo.model";
 export { ProdutoCombinacaoItem } from "./models/produtoCombinacaoItem.model";
 export { PedidoVendaItemCombinacao } from "./models/pedidoVendaItemCombinacao.model";
 export { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinacaoItem.model";
-export { ProdutoCategoria } from "./models/produtoCategoria.model";
+export { ProductCategory } from "./models/productCategory.model";
 export { Nfe } from "./models/nfe.model";
 
 
@@ -70,7 +70,7 @@ export default class Sequelize {
       
       dialect: "postgres",
       define: {timestamps: false},
-      models: [ContaPagar, Contrato, Delivery, DeliveryRoute, PedidoVendaStatus, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, PedidoVendaAndamento, PedidoVenda, FormaPagamento, PedidoVendaItem, PedidoVendaPagamento, Empresa, Parceiro, ParceiroContato, ParceiroEndereco, Product, ProdutoCategoria, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, Servico, Usuario, TabelaPreco, Municipio, Nfe],
+      models: [ContaPagar, Contrato, Delivery, DeliveryRoute, PedidoVendaStatus, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, PedidoVendaAndamento, PedidoVenda, FormaPagamento, PedidoVendaItem, PedidoVendaPagamento, Company, Parceiro, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, Servico, Usuario, TabelaPreco, Municipio, Nfe],
       pool: {
         max: 5,
         min: 0,

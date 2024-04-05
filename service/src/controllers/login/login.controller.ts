@@ -4,7 +4,7 @@ import Accounts from "../../auth/accounts";
 import crypto from "crypto";
 
 import { AccountUser, Account, Session, User, Database, minutes } from "../../auth/index";
-import Sequelize, { Empresa, Usuario } from "../../database";
+import Sequelize, { Company, Usuario } from "../../database";
 
 export default class LoginController {
 
@@ -56,7 +56,7 @@ export default class LoginController {
 
       if (empresaId == "") {
 
-        const empresas = await Empresa.findAll({attributes: ["id", "nomeFantasia"], transaction: transaction});
+        const empresas = await Company.findAll({attributes: ["id", "nomeFantasia"], transaction: transaction});
 
         if (empresas.length > 1) {
           res.status(202).json(empresas);
@@ -71,7 +71,7 @@ export default class LoginController {
       accountTransaction?.commit();
       
       const usuario = await Usuario.findOne({attributes: ["id", "nome"], where: {id: user?.id}, transaction: transaction});
-      const empresa = await Empresa.findOne({attributes: ["id", "nomeFantasia"], where: {id: empresaId}, transaction: transaction});
+      const empresa = await Company.findOne({attributes: ["id", "nomeFantasia"], where: {id: empresaId}, transaction: transaction});
       
       sequelize?.close();
 

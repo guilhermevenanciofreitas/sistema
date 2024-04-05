@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 import { Accounts, Database } from "../../auth";
-import Sequelize, { Empresa, Product, ProdutoCategoria, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem } from "../../database";
+import Sequelize, { Company, Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem } from "../../database";
 
 async function Auth(id: string): Promise<any> {
 
@@ -29,9 +29,9 @@ export default class IndexController {
 
             const transaction = await sequelize.transaction();
         
-            const empresa = await Empresa.findOne({attributes: ["id", "pedidoDigital"], transaction});
+            const empresa = await Company.findOne({attributes: ["id", "pedidoDigital"], transaction});
 
-            const categorias = await ProdutoCategoria.findAll({attributes: ["id", "descricao", "imagem"], 
+            const categorias = await ProductCategory.findAll({attributes: ["id", "descricao", "imagem"], 
                 include: [{model: Product, attributes: ["id", "nome", "descricao", "valor"],
                     include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo", "ordem"],
                         include: [{model: ProdutoCombinacaoGrupo, attributes: ["id", "descricao"],

@@ -1,24 +1,24 @@
 import React, { useEffect } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
-//Cadastros
-import Clientes from "./Views/Cadastros/Parceiros/Clientes";
-import Fornecedores from "./Views/Cadastros/Parceiros/Fornecedores";
-import Funcionarios from "./Views/Cadastros/Parceiros/Funcionarios";
-import Transporadoras from "./Views/Cadastros/Parceiros/Transportadoras";
+//Registrations
+import Clientes from "./views/registrations/Parceiros/Clientes";
+import Fornecedores from "./views/registrations/Parceiros/Fornecedores";
+import Funcionarios from "./views/registrations/Parceiros/Funcionarios";
+import Transporadoras from "./views/registrations/Parceiros/Transportadoras";
 
-import Usuarios from "./Views/Cadastros/Usuarios/index";
-import Produtos from "./Views/Cadastros/Produtos";
-import Servicos from "./Views/Cadastros/Servicos";
+import Usuarios from "./views/registrations/Usuarios/index";
+import Produtos from "./views/registrations/Produtos";
+import Servicos from "./views/registrations/Servicos";
 
-import Contratos from "./Views/Comercial/Contratos";
-import PedidoVenda from "./Views/Comercial/Vendas";
+import Contratos from "./views/Comercial/Contratos";
+import PedidoVenda from "./views/Comercial/Vendas";
 
-import { Login } from "./Views/Login";
-import NotasFiscais from "./Views/Fiscal/NotaFiscal";
-import ContasPagar from "./Views/Financeiro/ContasPagar";
-import Andamento from "./Views/Comercial/Andamento";
-import Entrega from "./Views/Comercial/Entrega";
+import { Login } from "./views/Login";
+import NotasFiscais from "./views/Fiscal/NotaFiscal";
+import ContasPagar from "./views/Financeiro/ContasPagar";
+import Andamento from "./views/Comercial/Andamento";
+import Entrega from "./views/Comercial/Entrega";
 
 export default class App extends React.Component {
     render(): React.ReactNode {

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { FormaPagamento, Parceiro, PedidoVenda, Product, PedidoVendaPagamento, PedidoVendaStatus, PedidoVendaTipoEntrega, Empresa, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
+import { FormaPagamento, Parceiro, PedidoVenda, Product, PedidoVendaPagamento, PedidoVendaStatus, PedidoVendaTipoEntrega, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
 import { PedidoVendaService } from "../../services/comercial/pedidovenda.service";
 import { PedidoVendaItem } from "../../database/models/pedidoVendaItem.model";
 import {Op, Sequelize} from "sequelize";
@@ -275,7 +275,7 @@ export default class PedidoVendaController {
                 const ids = req.body?.ids;
                 const entregadorId = req.body?.entregadorId;
 
-                const empresa = await Empresa.findOne({attributes: ["endereco"], where: {id: empresaId}, transaction});
+                const empresa = await Company.findOne({attributes: ["endereco"], where: {id: empresaId}, transaction});
                 
                 const pedidoVenda = await PedidoVenda.findAll({attributes: ["id", "entrega"], where: {id: ids}, transaction});
 

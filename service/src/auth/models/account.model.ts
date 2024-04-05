@@ -2,7 +2,7 @@ import { Model, Table, Column, DataType, BelongsTo } from "sequelize-typescript"
 import { Database } from "../index";
 
 
-@Table({tableName: "accounts"})
+@Table({tableName: "account"})
 export class Account extends Model {
   
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})

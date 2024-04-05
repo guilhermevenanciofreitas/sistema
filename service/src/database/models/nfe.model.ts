@@ -1,6 +1,4 @@
 import { Model, Table, Column, DataType, HasMany, BelongsTo } from "sequelize-typescript";
-import { ProdutoCombinacao } from "./produtoCombinacao.model";
-import { ProdutoCategoria } from "./produtoCategoria.model";
 
 @Table({tableName: "nfe"})
 export class Nfe extends Model {

@@ -1,6 +1,6 @@
 import { Model, Table, Column, DataType } from "sequelize-typescript";
 
-@Table({tableName: "databases"})
+@Table({tableName: "database"})
 export class Database extends Model {
   
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})

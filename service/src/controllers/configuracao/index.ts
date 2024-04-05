@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 import Auth, { Accounts, Database } from "../../auth";
-import Sequelize, { Empresa } from "../../database";
+import Sequelize, { Company } from "../../database";
 import { EmpresaService } from "../../services/configuracao/index.service";
 
 export default class ConfiguracaoController {
@@ -15,7 +15,7 @@ export default class ConfiguracaoController {
 
                 const transaction = await sequelize.transaction();
 
-                const empresa = await Empresa.findOne({attributes: [
+                const empresa = await Company.findOne({attributes: [
                     "id",
                     "cpfCnpj",
                     "razaoSocial",
@@ -48,7 +48,7 @@ export default class ConfiguracaoController {
         
                 const transaction = await sequelize.transaction();
 
-                const Empresa = req.body as Empresa;
+                const Empresa = req.body as Company;
 
                 Empresa.cpfCnpj = req.body.cpfCnpj?.replace(/[^0-9]/g,'');
                 

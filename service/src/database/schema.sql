@@ -1,11 +1,11 @@
---empresas
-CREATE TABLE IF NOT EXISTS "empresas"();
-ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "razaoSocial" VARCHAR(100);
-ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "nomeFantasia" VARCHAR(100);
-ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "cpfCnpj" VARCHAR(14);
-ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "endereco" JSONB;
-ALTER TABLE "empresas" ADD COLUMN IF NOT EXISTS "pedidoDigital" JSONB;
+--company
+CREATE TABLE IF NOT EXISTS "company"();
+ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "razaoSocial" VARCHAR(100);
+ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "nomeFantasia" VARCHAR(100);
+ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "cpfCnpj" VARCHAR(14);
+ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "endereco" JSONB;
+ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "pedidoDigital" JSONB;
 
 --usuarios
 CREATE TABLE IF NOT EXISTS "usuarios"();
@@ -79,12 +79,12 @@ ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "categoriaId" UUID;
 ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "isCombinacao" BOOLEAN;
 ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
 
---produtoCategoria
-CREATE TABLE IF NOT EXISTS "produtoCategoria"();
-ALTER TABLE "produtoCategoria" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "produtoCategoria" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
-ALTER TABLE "produtoCategoria" ADD COLUMN IF NOT EXISTS "imagem" BYTEA;
-ALTER TABLE "produtoCategoria" ADD COLUMN IF NOT EXISTS "ordem" INTEGER;
+--productCategory
+CREATE TABLE IF NOT EXISTS "productCategory"();
+ALTER TABLE "productCategory" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "productCategory" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+ALTER TABLE "productCategory" ADD COLUMN IF NOT EXISTS "imagem" BYTEA;
+ALTER TABLE "productCategory" ADD COLUMN IF NOT EXISTS "ordem" INTEGER;
 
 --produtoCombinacaoGrupo
 CREATE TABLE IF NOT EXISTS "produtoCombinacaoGrupo"();

@@ -37,9 +37,9 @@ export const Search = {
         return (await Service.Post("search/tipoEntrega", {Search}))?.data;
     },
 
-    ProdutoCategoria: async (Search: string) =>
+    ProductCategory: async (Search: string) =>
     {
-        return (await Service.Post("search/produtoCategoria", {Search}))?.data;
+        return (await Service.Post("search/product-category", {Search}))?.data;
     },
 
     ProdutoCombinacaoGrupo: async (Search: string) =>

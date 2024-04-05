@@ -1,6 +1,6 @@
 import { Model, Table, Column, DataType, HasMany, BelongsTo } from "sequelize-typescript";
 import { ProdutoCombinacao } from "./produtoCombinacao.model";
-import { ProdutoCategoria } from "./produtoCategoria.model";
+import { ProductCategory } from "./productCategory.model";
 
 @Table({tableName: "product"})
 export class Product extends Model {
@@ -23,8 +23,8 @@ export class Product extends Model {
   @Column({type: DataType.DECIMAL(10, 2), field: "valor"})
   valor?: number;
 
-  @BelongsTo(() => ProdutoCategoria, 'categoriaId')
-  categoria?: ProdutoCategoria;
+  @BelongsTo(() => ProductCategory, 'categoriaId')
+  categoria?: ProductCategory;
 
   @HasMany(() => ProdutoCombinacao, 'produtoId')
   combinacoes?: ProdutoCombinacao[];

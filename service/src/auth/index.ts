@@ -25,7 +25,7 @@ export default async function Auth(req: Request, res: Response): Promise<any> {
 
     const transaction = await sequelize?.transaction();
 
-    const session = await Session.findOne({attributes: ["id", "empresaId", "lastAcess"], include: [{attributes: ["id"], model: Account, include: [{attributes: ["host", "username", "password", "database"], model: Database}]}], where: {id: req.headers.authorization}, transaction});
+    const session = await Session.findOne({attributes: ["id", "companyId", "lastAcess"], include: [{attributes: ["id"], model: Account, include: [{attributes: ["host", "username", "password", "database"], model: Database}]}], where: {id: req.headers.authorization}, transaction});
 
     //Verificar se token ainda e válido
     if (!session?.lastAcess || new Date(session?.lastAcess?.getTime() + minutes * 60000) <= new Date()) {
@@ -48,7 +48,7 @@ export default async function Auth(req: Request, res: Response): Promise<any> {
     return { 
         sequelize: await new Sequelize({host: config?.host, username: config?.username, password: config?.password, database: config?.database}).sequelize,
         usuarioId: session?.userId,
-        empresaId: session?.empresaId,
+        companyId: session?.companyId,
     };
 
 }

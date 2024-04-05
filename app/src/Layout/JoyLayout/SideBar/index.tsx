@@ -14,7 +14,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { CssVarsProvider, extendTheme } from '@mui/joy';
 import { Link } from "react-router-dom";
-import { ViewConfiguracao } from '../../../Views/Configuracao';
+import { ViewConfiguracao } from '../../../views/Configuracao';
 import { render } from 'react-dom';
 import { GroupRounded, Diversity3, Inventory, AddShoppingCart, LocalOffer, LocalShipping, PaidRounded, TableView } from '@mui/icons-material';
 

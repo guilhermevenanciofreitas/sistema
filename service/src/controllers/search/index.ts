@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { FormaPagamento, Municipio, Parceiro, PedidoVendaTipoEntrega, Product, ProdutoCategoria, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco } from "../../database";
+import { FormaPagamento, Municipio, Parceiro, PedidoVendaTipoEntrega, Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco } from "../../database";
 import { Op } from "sequelize";
 
 export default class SearchController {
@@ -217,7 +217,7 @@ export default class SearchController {
         });
     }
 
-    async produtoCategoria(req: Request, res: Response) {
+    async productCategory(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try {
@@ -230,7 +230,7 @@ export default class SearchController {
                     where = {"descricao": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
 
-                const produtoCategoria = await ProdutoCategoria.findAll({attributes: ["id", "descricao"], where, order: [["descricao", "asc"]], transaction});
+                const produtoCategoria = await ProductCategory.findAll({attributes: ["id", "descricao"], where, order: [["descricao", "asc"]], transaction});
         
                 sequelize.close();
 
