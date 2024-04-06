@@ -1,9 +1,9 @@
 import { Router } from "express";
-import PaymentController from "../../controllers/financial/payment.controller";
+import BankAccountController from "../../controllers/financial/bankAccount.controller";
 
 class BankAccountRoutes {
   router = Router();
-  controller = new PaymentController();
+  controller = new BankAccountController();
 
   constructor() {
     this.intializeRoutes();

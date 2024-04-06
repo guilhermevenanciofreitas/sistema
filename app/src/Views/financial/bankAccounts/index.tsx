@@ -7,12 +7,6 @@ import { AspectRatio, Card, CardContent, IconButton, Typography } from "@mui/joy
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
 import { ViewBankAccount } from "./View";
 
-const Columns = [
-    { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
-    { selector: (row: any) => row.cliente.nome, sort: 'nome', name: 'Nome', sortable: true },
-    { selector: (row: any) => row.status?.descricao, sort: '$status.descricao', name: 'Status', sortable: true },
-];
-
 export default class BankAccount extends BankAccountBase {
 
     render() {
@@ -39,20 +33,21 @@ export default class BankAccount extends BankAccountBase {
                     </Container>
 
                     <div style={{width: '100%', height: '100%', border: '1px solid rgba(0,0,0,.12)', overflow: 'auto', display: 'flex'}}>
-                        {this.state.Data.status.map((c: any) => (
+                        {this.state.Data.bankAccounts.map((c: any) => (
                             <div onDragOver={(e)=>this.onDragOver(e)} onDrop={(e)=>{this.onDragDrop(e, c)}}>
                                 <Card sx={{ width: 280, height: '100%', marginLeft: '2px', marginRight: '2px', backgroundColor: c.id == null ? '#e9e9e9' : 'white'}}>
                                 
-                                    <Typography level="title-lg">{c?.descricao}</Typography>
+                                    <Typography level="title-lg">{c?.bank?.description}</Typography>
 
-                                    {this.state.Data.rows.filter((item: any) => item?.status?.id == c?.id).map((item: any) => (
+
+                                    {/*this.state.Data.rows.filter((item: any) => item?.status?.id == c?.id).map((item: any) => (
                                         <div style={{cursor: 'move'}} draggable onDragStart={(e) => this.onDragStart(e, item?.id, item?.status?.id)}>
                                             <Card sx={{ width: '100%', height: '100%' }}>
                                                 <Typography>{item.cliente.nome}</Typography>
                                                 <IconButton size="sm" sx={{ position: 'absolute', top: '0.875rem', right: '0.5rem' }} onClick={() => this.BtnEdit_Click(item.id)}><Edit /></IconButton>
                                             </Card>
                                         </div>
-                                    ))}
+                                    ))*/}
                                 </Card>
                             </div>
                         ))}

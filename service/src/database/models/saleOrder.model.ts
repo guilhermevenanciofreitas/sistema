@@ -1,13 +1,13 @@
 import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-typescript";
 import { Parceiro } from "./parceiro.model";
-import { PedidoVendaItem } from "./pedidoVendaItem.model";
+import { SaleOrderItem } from "./saleOrderItem.model";
 import { PedidoVendaPagamento } from "./pedidoVendaPagamento.model";
-import { PedidoVendaStatus } from "./pedidoVendaStatus.model";
+import { SaleOrderStatus } from "./saleOrderStatus.model";
 import { PedidoVendaTipoEntrega } from "./pedidoVendaTipoEntrega.model";
 import { PedidoVendaDeliveryRoute } from "./pedidoVendaDeliveryRoute.model";
 
-@Table({tableName: "pedidoVenda"})
-export class PedidoVenda extends Model {
+@Table({tableName: "saleOrder"})
+export class SaleOrder extends Model {
   
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
   id?: string;
@@ -34,11 +34,11 @@ export class PedidoVenda extends Model {
   @BelongsTo(() => PedidoVendaTipoEntrega, 'tipoEntregaId')
   tipoEntrega?: PedidoVendaTipoEntrega;
 
-  @BelongsTo(() => PedidoVendaStatus, 'statusId')
-  status?: PedidoVendaStatus;
+  @BelongsTo(() => SaleOrderStatus, 'statusId')
+  status?: SaleOrderStatus;
 
-  @HasMany(() => PedidoVendaItem, 'pedidoVendaId')
-  itens?: PedidoVendaItem[];
+  @HasMany(() => SaleOrderItem, 'pedidoVendaId')
+  itens?: SaleOrderItem[];
 
   @HasMany(() => PedidoVendaPagamento, 'pedidoVendaId')
   pagamentos?: PedidoVendaPagamento[];

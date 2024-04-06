@@ -13,7 +13,7 @@ export default class BankAccountBase extends BaseIndex {
         Loading: true,
         Selecteds: [],
         Data: {
-            status: [],
+            bankAccounts: [],
             rows: [],
             count: 0,
             offset: 1,
@@ -105,17 +105,17 @@ export default class BankAccountBase extends BaseIndex {
     protected Pesquisar = async(Data: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("pedidovenda/progressList", Data);
+        var r = await Service.Post("financial/bank-account/findAll", Data);
 
-        let status = [];
+        let bankAccounts = [];
 
-        status.push({id: null, descricao: "SEM STATUS"});
+        bankAccounts.push({id: null, bank: {description: "SEM CONTA"}});
 
-        for (let item of r?.data.status) {
-            status.push(item);
+        for (let item of r?.data.bankAccounts) {
+            bankAccounts.push(item);
         }
 
-        this.setState({Loading: false, Data: {...r?.data, status}});
+        this.setState({Loading: false, Data: {...r?.data, bankAccounts}});
 
     }
 

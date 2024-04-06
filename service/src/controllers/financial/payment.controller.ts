@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Payment, Parceiro, FormOfPayment } from "../../database";
+import { Payment, Parceiro, FormOfPayment, BankAccount } from "../../database";
 import {Op} from "sequelize";
 import { PaymentService } from "../../services/financial/payment.service";
+import { Bank } from "../../database/models/bank.model";
 
 export default class PaymentController {
 
@@ -37,6 +38,9 @@ export default class PaymentController {
                     ["id", "numeroDocumento", "valor", "emissao", "vencimento"],
                     include: [
                         {model: Parceiro, attributes: ["id", "nome"]},
+                        {model: BankAccount, attributes: ["id", "agency", "agencyDigit", "account", "accountDigit"],
+                            include: [{model: Bank, attributes: ["id", "description"]}],
+                        }
                     ],
                     where, order, limit, offset, transaction});
 

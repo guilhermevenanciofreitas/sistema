@@ -14,6 +14,9 @@ class SearchRoutes {
     this.router.post("/cliente", (req, res) => this.controller.cliente(req, res));
     this.router.post("/funcionario", (req, res) => this.controller.funcionario(req, res));
     
+    
+    this.router.post("/bank-account", (req, res) => this.controller.bankAccount(req, res));
+
     this.router.post("/municipio", (req, res) => this.controller.municipio(req, res));
     this.router.post("/form-of-payment", (req, res) => this.controller.formOfPayment(req, res));
     this.router.post("/tipoEntrega", (req, res) => this.controller.tipoEntrega(req, res));

@@ -12,6 +12,7 @@ export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
         emissao: "",
         vencimento: "",
         recebedor: null,
+        bankAccount: null,
         formOfPayment: null,
         valor: "0.00",
         juros: "0.00",

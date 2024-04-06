@@ -124,20 +124,26 @@ ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "inicio" DATE;
 ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "termino" DATE;
 ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "rescisaoId" UUID;
 
---pedidoVendaStatus
-CREATE TABLE IF NOT EXISTS "pedidoVendaStatus"();
-ALTER TABLE "pedidoVendaStatus" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "pedidoVendaStatus" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
-ALTER TABLE "pedidoVendaStatus" ADD COLUMN IF NOT EXISTS "ordem" INTEGER;
+--saleOrderStatus
+CREATE TABLE IF NOT EXISTS "saleOrderStatus"();
+ALTER TABLE "saleOrderStatus" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "saleOrderStatus" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+ALTER TABLE "saleOrderStatus" ADD COLUMN IF NOT EXISTS "ordem" INTEGER;
 
---pedidoVenda
-CREATE TABLE IF NOT EXISTS "pedidoVenda"();
-ALTER TABLE "pedidoVenda" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "pedidoVenda" ADD COLUMN IF NOT EXISTS "clienteId" UUID;
-ALTER TABLE "pedidoVenda" ADD COLUMN IF NOT EXISTS "tipoEntregaId" UUID;
-ALTER TABLE "pedidoVenda" ADD COLUMN IF NOT EXISTS "pedidoVendaStatusId" UUID;
-ALTER TABLE "pedidoVenda" ADD COLUMN IF NOT EXISTS "entregadorId" UUID;
-ALTER TABLE "pedidoVenda" ADD COLUMN IF NOT EXISTS "entrega" JSONB;
+--saleOrderStatusByFrom
+CREATE TABLE IF NOT EXISTS "saleOrderStatusByFrom"();
+ALTER TABLE "saleOrderStatusByFrom" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "saleOrderStatusByFrom" ADD COLUMN IF NOT EXISTS "statusById" UUID;
+ALTER TABLE "saleOrderStatusByFrom" ADD COLUMN IF NOT EXISTS "statusFromId" UUID;
+
+--saleOrder
+CREATE TABLE IF NOT EXISTS "saleOrder"();
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "clienteId" UUID;
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "tipoEntregaId" UUID;
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "pedidoVendaStatusId" UUID;
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "entregadorId" UUID;
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "entrega" JSONB;
 
 --pedidoVendaTipoEntrega
 CREATE TABLE IF NOT EXISTS "pedidoVendaTipoEntrega"();
@@ -151,13 +157,13 @@ ALTER TABLE "pedidoVendaAndamento" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID
 ALTER TABLE "pedidoVendaAndamento" ADD COLUMN IF NOT EXISTS "data" TIMESTAMP WITHOUT TIME ZONE;
 ALTER TABLE "pedidoVendaAndamento" ADD COLUMN IF NOT EXISTS "statusId" UUID;
 
---pedidoVendaItem
-CREATE TABLE IF NOT EXISTS "pedidoVendaItem"();
-ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID;
-ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "produtoId" UUID;
-ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "quantidade" DECIMAL(10, 3);
-ALTER TABLE "pedidoVendaItem" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
+--SaleOrderItem
+CREATE TABLE IF NOT EXISTS "SaleOrderItem"();
+ALTER TABLE "SaleOrderItem" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "SaleOrderItem" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID;
+ALTER TABLE "SaleOrderItem" ADD COLUMN IF NOT EXISTS "produtoId" UUID;
+ALTER TABLE "SaleOrderItem" ADD COLUMN IF NOT EXISTS "quantidade" DECIMAL(10, 3);
+ALTER TABLE "SaleOrderItem" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
 
 --pedidoVendaItemCombinacao
 CREATE TABLE IF NOT EXISTS "pedidoVendaItemCombinacao"();
@@ -215,6 +221,10 @@ CREATE TABLE IF NOT EXISTS "bankAccount"();
 ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
 ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "bankId" UUID;
+ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "agency" VARCHAR(4);
+ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "agencyDigit" VARCHAR(1);
+ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "account" VARCHAR(20);
+ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "accountDigit" VARCHAR(1);
 
 --payment
 CREATE TABLE IF NOT EXISTS "payment"();
@@ -225,6 +235,7 @@ ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "emissao" DATE;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "vencimento" DATE;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "formOfPaymentId" UUID;
+ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "bankAccountId" UUID;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "pagamentoId" UUID;
 
 --nfe

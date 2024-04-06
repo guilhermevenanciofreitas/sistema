@@ -7,6 +7,7 @@ import { Grid } from '@mui/joy';
 import { ClienteTemplate } from '../../../../Search/Templates/Cliente';
 import { Search } from '../../../../Search';
 import { FormOfPaymentTemplate } from '../../../../Search/Templates/FormOfPayment';
+import { BankAccountTemplate } from '../../../../Search/Templates/BankAccount';
 
 export class ViewContaPagar extends ViewContaPagarBase {
 
@@ -37,6 +38,12 @@ export class ViewContaPagar extends ViewContaPagarBase {
                             </AutoComplete>
                         </Grid>
 
+                        <Grid md={4}>
+                            <AutoComplete Label='Conta bancária' Pesquisa={async(Text: string) => await Search.BankAccount(Text)} Text={(Item: any) => `${Item.bank?.description} Ag. ${Item.agency}-${Item.agencyDigit} / ${Item.account}-${Item.accountDigit}` } Value={this.state.bankAccount} OnChange={(bankAccount: any) => this.setState({bankAccount})}>
+                                <BankAccountTemplate />
+                            </AutoComplete>
+                        </Grid>
+                        
                         <Grid md={4}>
                             <AutoComplete Label='Forma de pagamento' Pesquisa={async(Text: string) => await Search.FormOfPayment(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.formOfPayment} OnChange={(formOfPayment: any) => this.setState({formOfPayment})}>
                                 <FormOfPaymentTemplate />

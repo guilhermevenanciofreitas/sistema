@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { FormOfPayment, Parceiro, PedidoVenda, Product, PedidoVendaPagamento, PedidoVendaStatus, PedidoVendaTipoEntrega, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
+import { FormOfPayment, Parceiro, SaleOrder, Product, PedidoVendaPagamento, SaleOrderStatus, PedidoVendaTipoEntrega, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
 import { PedidoVendaService } from "../../services/sales/pedidovenda.service";
-import { PedidoVendaItem } from "../../database/models/pedidoVendaItem.model";
+import { SaleOrderItem } from "../../database/models/saleOrderItem.model";
 import {Op, Sequelize} from "sequelize";
 import axios from "axios";
+import { DisplayError } from "../../errors/DisplayError";
+import { Error } from "../../errors";
 
 export default class PedidoVendaController {
 
@@ -27,11 +29,11 @@ export default class PedidoVendaController {
                     order = [[sort.column, sort.direction]]
                 }
         
-                const pedidoVenda = await PedidoVenda.findAndCountAll({
+                const pedidoVenda = await SaleOrder.findAndCountAll({
                     attributes: ["id"],
                     include: [
                         {model: Parceiro, as: "cliente", attributes: ["id", "nome"]},
-                        {model: PedidoVendaStatus, attributes: ["id", "descricao"]}
+                        {model: SaleOrderStatus, attributes: ["id", "descricao"]}
                     ],
                     where, order, limit, offset, transaction});
 
@@ -40,8 +42,8 @@ export default class PedidoVendaController {
                 res.status(200).json({...pedidoVenda, limit, offset: req.body.offset, filter, sort});
 
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err: any) => {
             res.status(401).json({message: err.message})
@@ -66,23 +68,23 @@ export default class PedidoVendaController {
                     order = [[sort.column, sort.direction]]
                 }
         
-                const pedidoVenda = await PedidoVenda.findAndCountAll({
+                const pedidoVenda = await SaleOrder.findAndCountAll({
                     attributes: ["id"],
                     include: [
                         {model: Parceiro, as: "cliente", attributes: ["id", "nome"]},
-                        {model: PedidoVendaStatus, attributes: ["id", "descricao"]}
+                        {model: SaleOrderStatus, attributes: ["id", "descricao"]}
                     ],
                     where, order, limit, offset, transaction});
 
-                const status = await PedidoVendaStatus.findAll({order: [["ordem", "ASC"]], transaction});
+                const status = await SaleOrderStatus.findAll({order: [["ordem", "ASC"]], transaction});
 
                 sequelize.close();
 
                 res.status(200).json({...pedidoVenda, status, limit, offset: req.body.offset, filter, sort});
 
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err: any) => {
             res.status(401).json({message: err.message})
@@ -108,7 +110,7 @@ export default class PedidoVendaController {
                     order = [[sort.column, sort.direction]]
                 }
         
-                const pedidoVenda = await PedidoVenda.findAndCountAll({
+                const pedidoVenda = await SaleOrder.findAndCountAll({
                     attributes: ["id"],
                     include: [
                         {model: Parceiro, as: "cliente", attributes: ["id", "nome"]},
@@ -127,8 +129,8 @@ export default class PedidoVendaController {
                 res.status(200).json({...pedidoVenda, entregadores, limit, offset: req.body.offset, filter, sort});
 
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err: any) => {
             res.status(401).json({message: err.message})
@@ -142,14 +144,14 @@ export default class PedidoVendaController {
             {
                 const transaction = await sequelize.transaction();
 
-                const pedidoVenda = await PedidoVenda.findOne({
+                const pedidoVenda = await SaleOrder.findOne({
                     attributes: ["id", "entrega"], 
                     include: [
                         {model: Parceiro, as: "cliente", attributes: ["id", "nome"]},
                         {model: Parceiro, as: "entregador", attributes: ["id", "nome"]},
-                        {model: PedidoVendaStatus, attributes: ["id", "descricao"]},
+                        {model: SaleOrderStatus, attributes: ["id", "descricao"]},
                         {model: PedidoVendaTipoEntrega, attributes: ["id", "descricao"]},
-                        {model: PedidoVendaItem, attributes: ["id", "quantidade", "valor"], 
+                        {model: SaleOrderItem, attributes: ["id", "quantidade", "valor"], 
                             include: [{model: Product, attributes: ["id", "nome", "descricao"],
                                 include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
                                     include: [{model: ProdutoCombinacaoGrupo, attributes: ["id", "descricao"],
@@ -161,7 +163,7 @@ export default class PedidoVendaController {
                                 include: [{model: PedidoVendaItemCombinacaoItem, attributes: ["id", "pedidoVendaItemCombinacaoId", "itemCombinacaoId", "quantidade"]}]
                             }]
                         },
-                        {model: PedidoVendaPagamento, attributes: ["id", "valor"], include: [{model: FormOfPayment, attributes: ["id", "descricao"]}]},
+                        {model: PedidoVendaPagamento, attributes: ["id", "valor"], include: [{model: FormOfPayment, attributes: ["id", "description"]}]},
                     ],
                     where: {id: req.body.id}, transaction}
                 );
@@ -171,8 +173,8 @@ export default class PedidoVendaController {
                 res.status(200).json(pedidoVenda);
     
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err) => {
             res.status(401).json(err);
@@ -186,7 +188,7 @@ export default class PedidoVendaController {
             {
                 const transaction = await sequelize.transaction();
 
-                const PedidoVenda = req.body as PedidoVenda;
+                const PedidoVenda = req.body as SaleOrder;
 
                 const valid = PedidoVendaService.IsValid(PedidoVenda);
 
@@ -208,8 +210,8 @@ export default class PedidoVendaController {
                 res.status(200).json(PedidoVenda);
 
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err) => {
             res.status(401).json(err);
@@ -233,8 +235,8 @@ export default class PedidoVendaController {
                 res.status(200).json({success: true});
 
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err) => {
             res.status(401).json(err);
@@ -257,8 +259,8 @@ export default class PedidoVendaController {
                 res.status(200).json({success: true});
 
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err) => {
             res.status(401).json(err);
@@ -277,7 +279,7 @@ export default class PedidoVendaController {
 
                 const empresa = await Company.findOne({attributes: ["endereco"], where: {id: empresaId}, transaction});
                 
-                const pedidoVenda = await PedidoVenda.findAll({attributes: ["id", "entrega"], where: {id: ids}, transaction});
+                const pedidoVenda = await SaleOrder.findAll({attributes: ["id", "entrega"], where: {id: ids}, transaction});
 
                 let waypoints: any = pedidoVenda.map((c: any) => ({id: c.id, latitude: c.entrega.latitude, longitude: c.entrega.longitude}));
 
@@ -346,8 +348,8 @@ export default class PedidoVendaController {
                 //await PedidoVendaService.Delivery(req.body?.id, req.body?.entregadorId, transaction);
 
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err) => {
             res.status(401).json(err);

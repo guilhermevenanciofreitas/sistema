@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { FormOfPayment, Municipio, Parceiro, PedidoVendaTipoEntrega, Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco } from "../../database";
+import { BankAccount, FormOfPayment, Municipio, Parceiro, PedidoVendaTipoEntrega, Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco } from "../../database";
 import { Op } from "sequelize";
+import { Bank } from "../../database/models/bank.model";
 
 export default class SearchController {
 
@@ -151,6 +152,38 @@ export default class SearchController {
                 sequelize.close();
 
                 res.status(200).json(municipios);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async bankAccount(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+
+                if (req.body?.Search) {
+                //    where = {"bank.description": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+
+                const formaPagamentos = await BankAccount.findAll({attributes: ["id", "agency", "agencyDigit", "account", "accountDigit"], 
+                include: [{model: Bank, attributes: ["id", "description"]}],
+                where,
+                //order: [["bank.description", "asc"]],
+                transaction});
+        
+                sequelize.close();
+
+                res.status(200).json(formaPagamentos);
 
             }
             catch (err) {

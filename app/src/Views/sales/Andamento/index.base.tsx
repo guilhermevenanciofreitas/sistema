@@ -4,6 +4,8 @@ import { BaseIndex } from "../../../Utils/Base";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 import { ViewPedidoVenda } from "../Vendas/View";
+import _ from "lodash";
+import { MessageBox } from "../../../Utils/Controls";
 
 export default class BaseAndamento extends BaseIndex {
  
@@ -135,16 +137,21 @@ export default class BaseAndamento extends BaseIndex {
             return;
         }
 
-        const rows = this.state.Data.rows.filter((item: any) => {
+        const rows = _.cloneDeep(this.state.Data.rows).filter((item: any) => {
             if (item.id == id) {
                 item.status = status; 
             }
             return item;
         });
 
-        let r = await Service.Post("pedidovenda/progress", {id: id, statusId: status?.id});
+        let response = await Service.Post("pedidovenda/progress", {id: id, statusId: status?.id});
 
-        if (r?.status == 200) {
+        if (response?.status == 201) {
+            await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: response?.data.message, buttons: [{ Text: "OK" }]});
+            return;
+        }
+
+        if (response?.status == 200) {
             this.setState({Data: {...this.state.Data, rows: rows}});
         }
 

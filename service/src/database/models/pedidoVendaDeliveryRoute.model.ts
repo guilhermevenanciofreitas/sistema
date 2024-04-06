@@ -1,5 +1,5 @@
 import { Model, Table, Column, DataType, BelongsTo } from "sequelize-typescript";
-import { PedidoVenda } from "./pedidoVenda.model";
+import { SaleOrder } from "./saleOrder.model";
 import { DeliveryRoute } from "./deliveryRoute.model";
 
 @Table({tableName: "pedidoVendaDeliveryRoute"})
@@ -14,8 +14,8 @@ export class PedidoVendaDeliveryRoute extends Model {
   @Column({type: DataType.UUID, field: "deliveryRouteId"})
   deliveryRouteId?: string;
 
-  @BelongsTo(() => PedidoVenda, 'pedidoVendaId')
-  pedidoVenda?: PedidoVenda;
+  @BelongsTo(() => SaleOrder, 'pedidoVendaId')
+  pedidoVenda?: SaleOrder;
 
   @BelongsTo(() => DeliveryRoute, 'deliveryRouteId')
   deliveryRoute?: DeliveryRoute;

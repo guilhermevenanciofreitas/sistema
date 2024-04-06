@@ -2,8 +2,8 @@ import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-ty
 import { Product } from "./product.model";
 import { PedidoVendaItemCombinacao } from "./pedidoVendaItemCombinacao.model";
 
-@Table({tableName: "pedidoVendaItem"})
-export class PedidoVendaItem extends Model {
+@Table({tableName: "saleOrderItem"})
+export class SaleOrderItem extends Model {
   
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
   id?: string;

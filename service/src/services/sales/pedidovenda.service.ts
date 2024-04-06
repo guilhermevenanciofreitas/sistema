@@ -1,11 +1,14 @@
 import { Transaction } from "sequelize";
-import { PedidoVenda, PedidoVendaPagamento, PedidoVendaItem, PedidoVendaAndamento, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, ProdutoCombinacaoItem } from "../../database";
+import { SaleOrder, PedidoVendaPagamento, SaleOrderItem, PedidoVendaAndamento, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, ProdutoCombinacaoItem, SaleOrderStatus } from "../../database";
 import crypto from "crypto";
 import {Op} from "sequelize";
+import { SaleOrderStatusByFrom } from "../../database/models/saleOrderStatusByFrom.model";
+import _ from "lodash";
+import { DisplayError } from "../../errors/DisplayError";
 
 export class PedidoVendaService {
 
-    public static IsValid = (pedidoVenda: PedidoVenda) => {
+    public static IsValid = (pedidoVenda: SaleOrder) => {
 
         //if (pedidoVenda.cliente?.id == null) {
         //    return { success: false, message: 'Informe o cliente!' };
@@ -15,7 +18,7 @@ export class PedidoVendaService {
 
     }
 
-    public static Create = async (pedidoVenda: PedidoVenda, transaction: Transaction) => {
+    public static Create = async (pedidoVenda: SaleOrder, transaction: Transaction) => {
 
         pedidoVenda.id = crypto.randomUUID();
 
@@ -28,7 +31,7 @@ export class PedidoVendaService {
             item.id = crypto.randomUUID();
             item.pedidoVendaId = pedidoVenda.id;
             item.produtoId = item.produto?.id;
-            PedidoVendaItem.create({...item}, {transaction});
+            SaleOrderItem.create({...item}, {transaction});
 
             for (let combinacao of item?.itemCombinacoes || []) {
                 combinacao.id = crypto.randomUUID();
@@ -53,11 +56,11 @@ export class PedidoVendaService {
             PedidoVendaPagamento.create({...item}, {transaction})
         }
 
-        await PedidoVenda.create({...pedidoVenda}, {transaction});
+        await SaleOrder.create({...pedidoVenda}, {transaction});
 
     }
 
-    public static Update = async (pedidoVenda: PedidoVenda, transaction: Transaction) => {
+    public static Update = async (pedidoVenda: SaleOrder, transaction: Transaction) => {
 
         let where: any = [];
 
@@ -77,11 +80,11 @@ export class PedidoVendaService {
             
             if (!item.id) {
                 item.id = crypto.randomUUID();
-                PedidoVendaItem.create({...item}, {transaction});
+                SaleOrderItem.create({...item}, {transaction});
             } else {
-                PedidoVendaItem.update(item, {where: {id: item.id}, transaction});
+                SaleOrderItem.update(item, {where: {id: item.id}, transaction});
             }
-            PedidoVendaItem.destroy({where: {pedidoVendaId: pedidoVenda.id, id: {[Op.notIn]: pedidoVenda?.itens?.filter(c => c.id != "").map(c => c.id)}}, transaction});
+            SaleOrderItem.destroy({where: {pedidoVendaId: pedidoVenda.id, id: {[Op.notIn]: pedidoVenda?.itens?.filter(c => c.id != "").map(c => c.id)}}, transaction});
 
             if (item?.itemCombinacoes?.length == 0) {
                 PedidoVendaItemCombinacao.destroy({where: {pedidoVendaItemId: item.id}, transaction});
@@ -137,14 +140,32 @@ export class PedidoVendaService {
             PedidoVendaPagamento.destroy({where: {pedidoVendaId: pedidoVenda.id, id: {[Op.notIn]: pedidoVenda?.pagamentos?.filter(c => c.id != "").map(c => c.id)}}, transaction})
         }
 
-        await PedidoVenda.update(pedidoVenda, {where: {id: pedidoVenda.id}, transaction});
+        await SaleOrder.update(pedidoVenda, {where: {id: pedidoVenda.id}, transaction});
 
     }
 
     
     public static Progress = async (id: string, statusId: string, transaction: Transaction) => {
 
-        await PedidoVenda.update({statusId: statusId}, {where: {id}, transaction});
+        const saleOrder = await SaleOrder.findOne({
+            attributes: ["statusId"],
+            include: [{model: SaleOrderStatus, attributes: ["descricao"]}],
+            where: {id},
+            transaction
+        });
+
+        const saleOrderStatus = await SaleOrderStatus.findOne({attributes: ["descricao"], where: {id: statusId}, transaction})
+
+        const saleOrderStatusByFrom = await SaleOrderStatusByFrom.count({
+            where: {statusById: saleOrder?.statusId, statusFromId: statusId},
+            transaction
+        });
+
+        if (saleOrderStatusByFrom == 0) {
+            throw new DisplayError(`${saleOrder?.status?.descricao} => ${saleOrderStatus?.descricao} Não configurado!`, 201);
+        }
+
+        await SaleOrder.update({statusId: statusId}, {where: {id}, transaction});
 
         await PedidoVendaAndamento.create({id: crypto.randomUUID(), pedidoVendaId: id, data: new Date(), statusId}, {transaction})
 
@@ -152,7 +173,7 @@ export class PedidoVendaService {
 
     public static Deliveryman = async (id: string, entregadorId: string, transaction: Transaction) => {
 
-        await PedidoVenda.update({entregadorId: entregadorId}, {where: {id}, transaction});
+        await SaleOrder.update({entregadorId: entregadorId}, {where: {id}, transaction});
 
     }
 
@@ -176,7 +197,7 @@ export class PedidoVendaService {
     }
 
     public static Delete = async (id: string, transaction: Transaction) => {
-        await PedidoVenda.update({ativo: false}, {where: {id: id}, transaction});
+        await SaleOrder.update({ativo: false}, {where: {id: id}, transaction});
     }
 
 }

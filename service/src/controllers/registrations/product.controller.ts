@@ -3,6 +3,7 @@ import Auth from "../../auth";
 import { Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo } from "../../database";
 import { ProductService } from "../../services/registrations/product.service";
 import { Op } from "sequelize";
+import { Error } from "../../errors";
 
 export default class ProductController {
 
@@ -39,8 +40,8 @@ export default class ProductController {
                 res.status(200).json({rows: produtos.rows, count: produtos.count, limit, offset: req.body.offset, filter, sort});
 
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err: any) => {
             res.status(401).json({message: err.message});
@@ -66,8 +67,8 @@ export default class ProductController {
                 res.status(200).json(produto);
     
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err) => {
             res.status(401).json({message: err.message});
@@ -103,8 +104,8 @@ export default class ProductController {
                 res.status(200).json(Produto);
 
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err) => {
             res.status(401).json({message: err.message});
@@ -156,8 +157,8 @@ export default class ProductController {
                 res.status(200).json({success: true});
 
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err) => {
             res.status(401).json({message: err.message});

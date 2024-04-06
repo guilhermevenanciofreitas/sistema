@@ -3,6 +3,7 @@ import Auth from "../../auth";
 import { Usuario } from "../../database";
 import { UserService } from "../../services/registrations/user.service";
 import {Op} from "sequelize";
+import { Error } from "../../errors";
 
 export default class UserController {
 
@@ -41,8 +42,8 @@ export default class UserController {
                 res.status(200).json({rows: usuarios.rows, count: usuarios.count, limit, offset: req.body.offset, filter, sort});
 
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err: any) => {
             res.status(401).json({message: err.message})
@@ -63,8 +64,8 @@ export default class UserController {
                 res.status(200).json(usuario);
     
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err) => {
             res.status(401).json(err);
@@ -100,8 +101,8 @@ export default class UserController {
                 res.status(200).json(Usuario);
 
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err) => {
             res.status(401).json(err);
@@ -153,8 +154,8 @@ export default class UserController {
                 res.status(200).json({success: true});
 
             }
-            catch (err) {
-                res.status(500).json(err);
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err) => {
             res.status(401).json(err);

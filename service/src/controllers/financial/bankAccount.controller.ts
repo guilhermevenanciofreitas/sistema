@@ -14,7 +14,7 @@ export default class BankAccountController {
 
                 const transaction = await sequelize.transaction();
 
-                const bankAccounts = await BankAccount.findAndCountAll({attributes: ["id"],
+                const bankAccounts = await BankAccount.findAll({attributes: ["id"],
                     include: [
                         {model: Bank, attributes: ["id", "description"]},
                     ],
@@ -23,7 +23,7 @@ export default class BankAccountController {
 
                 sequelize.close();
 
-                res.status(200).json({bankAccounts});
+                res.status(200).json({bankAccounts, rows: []});
 
             }
             catch (err) {
