@@ -196,7 +196,7 @@ export default class BaseContasPagar extends BaseIndex {
     protected Pesquisar = async(Data: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("contaPagar/findAll", Data);
+        var r = await Service.Post("financial/payment/findAll", Data);
         this.setState({Loading: false, Data: r?.data});
     }
 

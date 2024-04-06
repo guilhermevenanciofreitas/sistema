@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ParceiroController from "../../controllers/registrations/parceiro.controller";
 
-class SuppliersRoutes {
+class SupplierRoutes {
   router = Router();
   controller = new ParceiroController();
 
@@ -17,4 +17,4 @@ class SuppliersRoutes {
   }
 }
 
-export default new SuppliersRoutes().router;
+export default new SupplierRoutes().router;

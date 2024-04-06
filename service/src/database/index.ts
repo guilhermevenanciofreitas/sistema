@@ -8,12 +8,11 @@ import { Parceiro } from "./models/parceiro.model";
 import { ParceiroContato } from "./models/parceiroContato.model";
 import { ParceiroEndereco } from "./models/parceiroEndereco.model";
 import { Product } from "./models/product.model";
-import { Servico } from "./models/servico.model";
+import { Service } from "./models/service.model";
 import { Company } from "./models/company.model";
 import { Payment } from "./models/payment.model";
 import { PedidoVendaItem } from "./models/pedidoVendaItem.model";
 import { Municipio } from "./models/municipio.model";
-import { FormaPagamento } from "./models/formaPagamento.model";
 import { PedidoVendaPagamento } from "./models/pedidoVendaPagamento.model";
 import { PedidoVendaStatus } from "./models/pedidoVendaStatus.model";
 import { PedidoVendaAndamento } from "./models/pedidoVendaAndamento.model";
@@ -29,6 +28,9 @@ import { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinaca
 import { ProductCategory } from "./models/productCategory.model";
 import { Nfe } from "./models/nfe.model";
 import { ShippingOrder } from "./models/shippingOrder.model";
+import { FormOfPayment } from "./models/formOfPayment.model";
+import { BankAccount } from "./models/bankAccount.model";
+import { Bank } from "./models/bank.model";
 
 
 export { Payment } from "./models/payment.model";
@@ -40,11 +42,10 @@ export { Parceiro } from "./models/parceiro.model";
 export { ParceiroContato } from "./models/parceiroContato.model";
 export { ParceiroEndereco } from "./models/parceiroEndereco.model";
 export { Product } from "./models/product.model";
-export { Servico } from "./models/servico.model";
+export { Service } from "./models/service.model";
 export { Company } from "./models/company.model";
 export { Usuario } from "./models/usuario.model";
 export { Municipio } from "./models/municipio.model";
-export { FormaPagamento } from "./models/formaPagamento.model";
 export { PedidoVendaPagamento } from "./models/pedidoVendaPagamento.model";
 export { PedidoVendaStatus } from "./models/pedidoVendaStatus.model";
 export { PedidoVendaAndamento } from "./models/pedidoVendaAndamento.model";
@@ -60,6 +61,8 @@ export { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinaca
 export { ProductCategory } from "./models/productCategory.model";
 export { Nfe } from "./models/nfe.model";
 export { ShippingOrder } from "./models/shippingOrder.model";
+export { FormOfPayment } from "./models/formOfPayment.model";
+export { BankAccount } from "./models/bankAccount.model";
 
 
 export default class Sequelize {
@@ -72,7 +75,7 @@ export default class Sequelize {
       
       dialect: "postgres",
       define: {timestamps: false},
-      models: [Payment, Contrato, Delivery, DeliveryRoute, PedidoVendaStatus, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, PedidoVendaAndamento, PedidoVenda, FormaPagamento, PedidoVendaItem, PedidoVendaPagamento, Company, Parceiro, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, Servico, ShippingOrder, Usuario, TabelaPreco, Municipio, Nfe],
+      models: [Bank, BankAccount, Payment, Contrato, Delivery, DeliveryRoute, PedidoVendaStatus, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, PedidoVendaAndamento, PedidoVenda, FormOfPayment, PedidoVendaItem, PedidoVendaPagamento, Company, Parceiro, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, Usuario, TabelaPreco, Municipio, Nfe],
       pool: {
         max: 5,
         min: 0,

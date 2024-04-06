@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { FormaPagamento, Parceiro, PedidoVenda, Product, PedidoVendaPagamento, PedidoVendaStatus, PedidoVendaTipoEntrega, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
+import { FormOfPayment, Parceiro, PedidoVenda, Product, PedidoVendaPagamento, PedidoVendaStatus, PedidoVendaTipoEntrega, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
 import { PedidoVendaService } from "../../services/sales/pedidovenda.service";
 import { PedidoVendaItem } from "../../database/models/pedidoVendaItem.model";
 import {Op, Sequelize} from "sequelize";
@@ -161,7 +161,7 @@ export default class PedidoVendaController {
                                 include: [{model: PedidoVendaItemCombinacaoItem, attributes: ["id", "pedidoVendaItemCombinacaoId", "itemCombinacaoId", "quantidade"]}]
                             }]
                         },
-                        {model: PedidoVendaPagamento, attributes: ["id", "valor"], include: [{model: FormaPagamento, attributes: ["id", "descricao"]}]},
+                        {model: PedidoVendaPagamento, attributes: ["id", "valor"], include: [{model: FormOfPayment, attributes: ["id", "descricao"]}]},
                     ],
                     where: {id: req.body.id}, transaction}
                 );

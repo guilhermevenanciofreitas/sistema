@@ -1,9 +1,9 @@
 import { Router } from "express";
-import UsuarioController from "../../controllers/registrations/usuario.controller";
+import UserController from "../../controllers/registrations/user.controller";
 
 class UserRoutes {
   router = Router();
-  controller = new UsuarioController();
+  controller = new UserController();
 
   constructor() {
     this.intializeRoutes();

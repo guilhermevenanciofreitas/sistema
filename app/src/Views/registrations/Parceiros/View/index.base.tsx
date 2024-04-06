@@ -3,7 +3,7 @@ import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
 
-export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: string}>> {
+export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: "customer" | "supplier" | "shipping-company" | "employee"}>> {
 
     state = {
         open: false,
@@ -38,7 +38,7 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: s
 
         if (id) {
             Loading.Show();
-            const r = await Service.Post("cliente/findOne", {id});
+            const r = await Service.Post(`registrations/${this.props.Tipo}/findOne`, {id});
             Loading.Hide();
             this.setState(r?.data);
         }
@@ -68,7 +68,7 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: s
 
             Loading.Show();
 
-            let r = await Service.Post("cliente/save", this.state);
+            let r = await Service.Post(`registrations/${this.props.Tipo}/save`, this.state);
     
             Loading.Hide();
     
@@ -96,10 +96,10 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: s
             cpfCnpj: "",
             nome: "",
             apelido: "",
-            isCliente: this.props.Tipo == "Cliente",
-            isFornecedor: this.props.Tipo == "Fornecedor",
-            isTransportadora: this.props.Tipo == "Transportadora",
-            isFuncionario: this.props.Tipo == "Funcionario",
+            isCliente: this.props.Tipo == "customer",
+            isFornecedor: this.props.Tipo == "supplier",
+            isTransportadora: this.props.Tipo == "shipping-company",
+            isFuncionario: this.props.Tipo == "employee",
             nascimento: null,
             sexo: null,
             estadoCivil: null,

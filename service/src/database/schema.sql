@@ -111,10 +111,10 @@ ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "isObrigatorio" BOOLEAN
 ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "minimo" INTEGER;
 ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "maximo" INTEGER;
 
---servicos
-CREATE TABLE IF NOT EXISTS "servicos"();
-ALTER TABLE "servicos" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "servicos" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+--service
+CREATE TABLE IF NOT EXISTS "service"();
+ALTER TABLE "service" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "service" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
 
 --tabelasPreco
 CREATE TABLE IF NOT EXISTS "contratos"();
@@ -200,15 +200,21 @@ ALTER TABLE "deliveryRoute" ADD COLUMN IF NOT EXISTS "ordem" INTEGER;
 ALTER TABLE "deliveryRoute" ADD COLUMN IF NOT EXISTS "entregue" TIMESTAMP WITHOUT TIME ZONE;
 ALTER TABLE "deliveryRoute" ADD COLUMN IF NOT EXISTS "cancelado" TIMESTAMP WITHOUT TIME ZONE;
 
---formaPagamento
-CREATE TABLE IF NOT EXISTS "formaPagamento"();
-ALTER TABLE "formaPagamento" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "formaPagamento" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
-
 --tabelasPreco
 CREATE TABLE IF NOT EXISTS "tabelasPreco"();
 ALTER TABLE "tabelasPreco" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "tabelasPreco" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+
+--bank
+CREATE TABLE IF NOT EXISTS "bank"();
+ALTER TABLE "bank" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "bank" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
+
+--bankAccount
+CREATE TABLE IF NOT EXISTS "bankAccount"();
+ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
+ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "bankId" UUID;
 
 --payment
 CREATE TABLE IF NOT EXISTS "payment"();
@@ -218,6 +224,7 @@ ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "recebedorId" UUID;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "emissao" DATE;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "vencimento" DATE;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
+ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "formOfPaymentId" UUID;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "pagamentoId" UUID;
 
 --nfe
@@ -239,8 +246,11 @@ ALTER TABLE "nfe" ADD COLUMN IF NOT EXISTS "infRespTec" JSON;
 ALTER TABLE "nfe" ADD COLUMN IF NOT EXISTS "signature" JSON;
 ALTER TABLE "nfe" ADD COLUMN IF NOT EXISTS "protNFe" JSON;
 
-
-
 --shippingOrder
 CREATE TABLE IF NOT EXISTS "shippingOrder"();
 ALTER TABLE "shippingOrder" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+
+--formOfPayment
+CREATE TABLE IF NOT EXISTS "formOfPayment"();
+ALTER TABLE "formOfPayment" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "formOfPayment" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);

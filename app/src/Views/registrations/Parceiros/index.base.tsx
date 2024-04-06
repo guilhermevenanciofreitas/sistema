@@ -7,9 +7,8 @@ import { MessageBox } from "../../../Utils/Controls";
 import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
-import { useParams } from "react-router-dom";
 
-export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Tipo: "Customer" | "Supplier" | "Transportadora" | "Funcionario", ViewParceiro: React.ReactElement}>> {
+export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Tipo: "customer" | "supplier" | "shipping-company" | "employee", ViewParceiro: React.ReactElement}>> {
 
     protected ViewParceiro = React.createRef<ViewParceiro>();
 
@@ -199,28 +198,8 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
     private Pesquisar = async(Data: any): Promise<void> =>
     {
         this.setState({Loading: true});
-
-        let tipo = "";
-
-        switch (this.props.Tipo)
-        {
-            case "Customer":
-                tipo = "customer";
-                break;
-            case "Supplier":
-                tipo = "supplier";
-                break;
-            case "Transportadora":
-                tipo = "transportadora";
-                break;
-            case "Funcionario":
-                tipo = "funcionario";
-                break;
-        }
-        
-        var r = await Service.Post(`registrations/${tipo}/findAll`, Data);
+        var r = await Service.Post(`registrations/${this.props.Tipo}/findAll`, Data);
         this.setState({Loading: false, Data: r?.data});
-
     }
 
 }

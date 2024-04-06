@@ -15,7 +15,7 @@ const Columns = [
     { selector: (row: any) => row.valor, sort: 'valor', name: 'Valor', sortable: true },
     { selector: (row: any) => row.emissao, sort: 'emissao', name: 'Emissão', sortable: true },
     { selector: (row: any) => row.vencimento, sort: 'vencimento', name: 'Vencimento', sortable: true },
-    { selector: (row: any) => row.recebedor, sort: 'recebedor', name: 'Recebedor', sortable: true },
+    { selector: (row: any) => row.recebedor?.nome, sort: 'recebedor', name: 'Recebedor', sortable: true },
 ];
 
 export default class Payments extends BaseContasPagar {

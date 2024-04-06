@@ -1,17 +1,16 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Usuario } from "../../database";
-import { UserService } from "../../services/registrations/usuario.service";
+import { Service } from "../../database";
+import { ServiceService } from "../../services/registrations/service.service";
 import {Op} from "sequelize";
 
-export default class UserController {
+export default class ServiceController {
 
     async findAll(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try {
 
-                
                 const transaction = await sequelize.transaction();
 
                 const limit = req.body.limit || undefined;
@@ -34,11 +33,11 @@ export default class UserController {
                     order = [[sort.column, sort.direction]]
                 }
         
-                const usuarios = await Usuario.findAndCountAll({attributes: ["id", "nome", "email"], where, order, limit, offset, transaction});
+                const services = await Service.findAndCountAll({attributes: ["id", "descricao"], where, order, limit, offset, transaction});
         
                 sequelize.close();
 
-                res.status(200).json({rows: usuarios.rows, count: usuarios.count, limit, offset: req.body.offset, filter, sort});
+                res.status(200).json({rows: services.rows, count: services.count, limit, offset: req.body.offset, filter, sort});
 
             }
             catch (err) {
@@ -56,11 +55,11 @@ export default class UserController {
             {
                 const transaction = await sequelize.transaction();
 
-                const usuario = await Usuario.findOne({attributes: ["id", "nome", "email"], where: {id: req.body.id}, transaction});
+                const service = await Service.findOne({attributes: ["id", "descricao"], where: {id: req.body.id}, transaction});
     
                 sequelize.close();
     
-                res.status(200).json(usuario);
+                res.status(200).json(service);
     
             }
             catch (err) {
@@ -78,26 +77,26 @@ export default class UserController {
             {
                 const transaction = await sequelize.transaction();
 
-                const Usuario = req.body as Usuario;
+                const Service = req.body as Service;
 
-                const valid = UserService.IsValid(Usuario);
+                const valid = ServiceService.IsValid(Service);
 
                 if (!valid.success) {
                     res.status(201).json(valid);
                     return;
                 }
 
-                if (!Usuario.id) {
-                    await UserService.Create(Usuario, transaction);
+                if (!Service.id) {
+                    await ServiceService.Create(Service, transaction);
                 } else {
-                    await UserService.Update(Usuario, transaction);
+                    await ServiceService.Update(Service, transaction);
                 }
 
                 await transaction?.commit();
                 
                 sequelize.close();
 
-                res.status(200).json(Usuario);
+                res.status(200).json(Service);
 
             }
             catch (err) {
@@ -144,7 +143,7 @@ export default class UserController {
 
                 const transaction = await sequelize.transaction();
 
-                await UserService.Delete(req.body.id, transaction);
+                await ServiceService.Delete(req.body.id, transaction);
 
                 await transaction?.commit();
 

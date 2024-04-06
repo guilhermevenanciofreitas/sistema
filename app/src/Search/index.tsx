@@ -27,9 +27,9 @@ export const Search = {
         return (await Service.Post("search/municipio", {Search, estadoId}))?.data;
     },
     
-    FormaPagamento: async (Search: string) =>
+    FormOfPayment: async (Search: string) =>
     {
-        return (await Service.Post("search/formaPagamento", {Search}))?.data;
+        return (await Service.Post("search/form-of-payment", {Search}))?.data;
     },
 
     TipoEntrega: async (Search: string) =>

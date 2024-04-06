@@ -6,7 +6,7 @@ export default class Fornecedores extends React.Component {
 
     render(): React.ReactNode {
         return (
-            <Parceiros Title='Fornecedores' Tipo='Supplier' ViewParceiro={<ViewParceiro Title='Fornecedor' Tipo='Supplier' />} />
+            <Parceiros Title='Fornecedores' Tipo='supplier' ViewParceiro={<ViewParceiro Title='Fornecedor' Tipo='supplier' />} />
         );
     }
 

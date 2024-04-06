@@ -7,7 +7,7 @@ import Services from "./views/registrations/services";
 import Customers from "./views/registrations/Parceiros/customers";
 import Suppliers from "./views/registrations/Parceiros/suppliers";
 import Employees from "./views/registrations/Parceiros/employees";
-import Transporadoras from "./views/registrations/Parceiros/Transportadoras";
+import Transporadoras from "./views/registrations/Parceiros/shippingsCompany";
 
 import Usuarios from "./views/registrations/Usuarios/index";
 
@@ -30,6 +30,7 @@ import Andamento from "./views/sales/Andamento";
 import Entrega from "./views/sales/Entrega";
 import ShippingsOrders from "./views/logistics/shippingsOrders";
 import Payments from "./views/financial/payments";
+import BankAccounts from "./views/financial/bankAccounts";
 
 export default class App extends React.Component {
     render(): React.ReactNode {
@@ -59,6 +60,7 @@ export default class App extends React.Component {
                 {/* Financial */}
                 <Route path="/financial/receipts" element={<RequireLogin><Receipts /></RequireLogin>} />
                 <Route path="/financial/payments" element={<RequireLogin><Payments /></RequireLogin>} />
+                <Route path="/financial/bank-accounts" element={<RequireLogin><BankAccounts /></RequireLogin>} />
 
                 {/* Fiscal */}
                 <Route path="/fiscal/nfes" element={<RequireLogin><NotasFiscais /></RequireLogin>} />

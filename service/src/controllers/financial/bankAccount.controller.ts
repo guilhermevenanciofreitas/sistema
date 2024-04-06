@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Payment, Parceiro, FormOfPayment } from "../../database";
+import { Payment, Parceiro, FormOfPayment, BankAccount } from "../../database";
 import {Op} from "sequelize";
-import { PaymentService } from "../../services/financial/payment.service";
+import { Bank } from "../../database/models/bank.model";
+import { BankAccountService } from "../../services/financial/bankAccount.service";
 
-export default class PaymentController {
+export default class BankAccountController {
 
     async findAll(req: Request, res: Response) {
 
@@ -13,36 +14,16 @@ export default class PaymentController {
 
                 const transaction = await sequelize.transaction();
 
-                const limit = req.body.limit || undefined;
-                const offset = ((req.body.offset - 1) * limit) || undefined;
-                const filter = req.body.filter || undefined;
-                const sort = req.body.sort || undefined;
-        
-                let where: any = {};
-                let order: any = [];
-        
-                if (filter?.nome) {
-                    where = {"nome": {[Op.iLike]: `%${filter?.nome.replace(' ', "%")}%`}};
-                }
-        
-                if (filter?.email) {
-                    where = {"email": {[Op.iLike]: `%${filter?.email}%`}};
-                }
-        
-                if (sort) {
-                    order = [[sort.column, sort.direction]]
-                }
-        
-                const contasPagar = await Payment.findAndCountAll({attributes: 
-                    ["id", "numeroDocumento", "valor", "emissao", "vencimento"],
+                const bankAccounts = await BankAccount.findAndCountAll({attributes: ["id"],
                     include: [
-                        {model: Parceiro, attributes: ["id", "nome"]},
+                        {model: Bank, attributes: ["id", "description"]},
                     ],
-                    where, order, limit, offset, transaction});
+                    transaction
+                });
 
                 sequelize.close();
 
-                res.status(200).json({rows: contasPagar.rows, count: contasPagar.count, limit, offset: req.body.offset, filter, sort});
+                res.status(200).json({bankAccounts});
 
             }
             catch (err) {
@@ -88,28 +69,26 @@ export default class PaymentController {
             {
                 const transaction = await sequelize.transaction();
 
-                const ContaPagar = req.body as Payment;
+                const bankAccount = req.body as BankAccount;
 
-                ContaPagar.recebedorId = req.body.recebedor?.id || null;
-
-                const valid = PaymentService.IsValid(ContaPagar);
+                const valid = BankAccountService.IsValid(bankAccount);
 
                 if (!valid.success) {
                     res.status(201).json(valid);
                     return;
                 }
 
-                if (!ContaPagar.id) {
-                    await PaymentService.Create(ContaPagar, transaction);
+                if (!bankAccount.id) {
+                    await BankAccountService.Create(bankAccount, transaction);
                 } else {
-                    await PaymentService.Update(ContaPagar, transaction);
+                    await BankAccountService.Update(bankAccount, transaction);
                 }
 
                 await transaction?.commit();
                 
                 sequelize.close();
 
-                res.status(200).json(ContaPagar);
+                res.status(200).json(bankAccount);
 
             }
             catch (err) {
@@ -156,7 +135,7 @@ export default class PaymentController {
 
                 const transaction = await sequelize.transaction();
 
-                await PaymentService.Delete(req.body.id, transaction);
+                await BankAccountService.Delete(req.body.id, transaction);
 
                 await transaction?.commit();
 

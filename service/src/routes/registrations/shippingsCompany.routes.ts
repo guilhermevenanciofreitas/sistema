@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ParceiroController from "../../controllers/registrations/parceiro.controller";
 
-class TransportadoraRoutes {
+class shippingCompanyRoutes {
   router = Router();
   controller = new ParceiroController();
 
@@ -17,4 +17,4 @@ class TransportadoraRoutes {
   }
 }
 
-export default new TransportadoraRoutes().router;
+export default new shippingCompanyRoutes().router;

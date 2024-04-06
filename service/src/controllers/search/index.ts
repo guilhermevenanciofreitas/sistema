@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { FormaPagamento, Municipio, Parceiro, PedidoVendaTipoEntrega, Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco } from "../../database";
+import { FormOfPayment, Municipio, Parceiro, PedidoVendaTipoEntrega, Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco } from "../../database";
 import { Op } from "sequelize";
 
 export default class SearchController {
@@ -161,7 +161,7 @@ export default class SearchController {
         });
     }
 
-    async formaPagamento(req: Request, res: Response) {
+    async formOfPayment(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try {
@@ -171,10 +171,10 @@ export default class SearchController {
                 let where: any = {};
 
                 if (req.body?.Search) {
-                    where = {"descricao": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                    where = {"description": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
 
-                const formaPagamentos = await FormaPagamento.findAll({attributes: ["id", "descricao"], where, order: [["descricao", "asc"]], transaction});
+                const formaPagamentos = await FormOfPayment.findAll({attributes: ["id", "description"], where, order: [["description", "asc"]], transaction});
         
                 sequelize.close();
 

@@ -15,7 +15,7 @@ class SearchRoutes {
     this.router.post("/funcionario", (req, res) => this.controller.funcionario(req, res));
     
     this.router.post("/municipio", (req, res) => this.controller.municipio(req, res));
-    this.router.post("/formaPagamento", (req, res) => this.controller.formaPagamento(req, res));
+    this.router.post("/form-of-payment", (req, res) => this.controller.formOfPayment(req, res));
     this.router.post("/tipoEntrega", (req, res) => this.controller.tipoEntrega(req, res));
 
     this.router.post("/product", (req, res) => this.controller.product(req, res));

@@ -1,5 +1,5 @@
 
-import { ViewContaPagarBase } from './index.base';
+import { ViewBankAccountBase } from './index.base';
 import { AutoComplete, Button, DatePicker, Form, Modal, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
@@ -8,7 +8,7 @@ import { ClienteTemplate } from '../../../../Search/Templates/Cliente';
 import { Search } from '../../../../Search';
 import { FormOfPaymentTemplate } from '../../../../Search/Templates/FormOfPayment';
 
-export class ViewContaPagar extends ViewContaPagarBase {
+export class ViewBankAccount extends ViewBankAccountBase {
 
     public Close = () => this.setState({open: false});
     

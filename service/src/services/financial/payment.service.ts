@@ -14,12 +14,15 @@ export class PaymentService {
     public static Create = async (payment: Payment, transaction: Transaction | undefined) => {
 
         payment.id = crypto.randomUUID();
+        payment.formOfPaymentId = payment.formOfPayment?.id;
         
         await Payment.create({...payment}, {transaction});
 
     }
 
     public static Update = async (payment: Payment, transaction: Transaction | undefined) => {
+
+        payment.formOfPaymentId = payment.formOfPayment?.id;
 
         await Payment.update(payment, {where: {id: payment.id}, transaction});
 

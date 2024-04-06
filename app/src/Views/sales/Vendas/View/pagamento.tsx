@@ -3,7 +3,7 @@ import { AutoComplete, Button, GridView, Modal, TextBox, ViewModal } from "../..
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
-import { FormaPagamentoTemplate } from "../../../../Search/Templates/FormaPagamento";
+import { FormOfPaymentTemplate } from "../../../../Search/Templates/FormOfPayment";
 
 const Columns = [
     { selector: (row: any) => row.formaPagamento?.descricao, name: 'Forma de pagamento' },
@@ -37,8 +37,8 @@ class ViewPagamento extends ViewModal {
         return (
             <Modal Open={this.state.open} Title='Forma de pagamento' Width={600} Close={this.Close}>
                 
-                <AutoComplete Label='Forma de pagamento' Pesquisa={async(Text: string) => await Search.FormaPagamento(Text)} Text={(Item: any) => `${Item?.descricao}` } Value={this.state.formaPagamento} OnChange={(args: any) => this.setState({formaPagamento: args})}>
-                    <FormaPagamentoTemplate />
+                <AutoComplete Label='Forma de pagamento' Pesquisa={async(Text: string) => await Search.FormOfPayment(Text)} Text={(Item: any) => `${Item?.descricao}` } Value={this.state.formaPagamento} OnChange={(args: any) => this.setState({formaPagamento: args})}>
+                    <FormOfPaymentTemplate />
                 </AutoComplete>
 
                 <TextBox Label='Valor' TextTransform='UpperCase' Text={this.state.valor} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} />
