@@ -7,34 +7,34 @@ ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "cpfCnpj" VARCHAR(14);
 ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "endereco" JSONB;
 ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "pedidoDigital" JSONB;
 
---usuarios
-CREATE TABLE IF NOT EXISTS "usuarios"();
-ALTER TABLE "usuarios" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "usuarios" ADD COLUMN IF NOT EXISTS "email" VARCHAR(100);
-ALTER TABLE "usuarios" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(80);
+--user
+CREATE TABLE IF NOT EXISTS "user"();
+ALTER TABLE "user" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "user" ADD COLUMN IF NOT EXISTS "email" VARCHAR(100);
+ALTER TABLE "user" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(80);
 
---parceiros
-CREATE TABLE IF NOT EXISTS "parceiros"();
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "isCliente" BOOLEAN;
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "isFornecedor" BOOLEAN;
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "isTransportadora" BOOLEAN;
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "isFuncionario" BOOLEAN;
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "cpfCnpj" VARCHAR(14);
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(100);
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "apelido" VARCHAR(100);
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "nascimento" DATE;
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "sexo" SMALLINT;
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "estadoCivil" SMALLINT;
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "rg" VARCHAR(20);
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "ie" VARCHAR(30);
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "im" VARCHAR(30);
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "escolaridade" SMALLINT;
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "profissao" VARCHAR(80);
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "tabelaPrecoId" UUID;
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "isAtivo" BOOLEAN DEFAULT true;
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "isBloquearVenda" BOOLEAN DEFAULT false;
-ALTER TABLE "parceiros" ADD COLUMN IF NOT EXISTS "isBloquearCompra" BOOLEAN DEFAULT false;
+--partner
+CREATE TABLE IF NOT EXISTS "partner"();
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isCliente" BOOLEAN;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isFornecedor" BOOLEAN;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isTransportadora" BOOLEAN;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isFuncionario" BOOLEAN;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "cpfCnpj" VARCHAR(14);
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(100);
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "apelido" VARCHAR(100);
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "nascimento" DATE;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "sexo" SMALLINT;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "estadoCivil" SMALLINT;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "rg" VARCHAR(20);
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "ie" VARCHAR(30);
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "im" VARCHAR(30);
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "escolaridade" SMALLINT;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "profissao" VARCHAR(80);
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "tabelaPrecoId" UUID;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isAtivo" BOOLEAN DEFAULT true;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isBloquearVenda" BOOLEAN DEFAULT false;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isBloquearCompra" BOOLEAN DEFAULT false;
 
 --parceirosContato
 CREATE TABLE IF NOT EXISTS "parceirosContato"();
@@ -135,6 +135,7 @@ CREATE TABLE IF NOT EXISTS "saleOrderStatusByFrom"();
 ALTER TABLE "saleOrderStatusByFrom" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "saleOrderStatusByFrom" ADD COLUMN IF NOT EXISTS "statusById" UUID;
 ALTER TABLE "saleOrderStatusByFrom" ADD COLUMN IF NOT EXISTS "statusFromId" UUID;
+ALTER TABLE "saleOrderStatusByFrom" ADD COLUMN IF NOT EXISTS "finished" BOOLEAN;
 
 --saleOrder
 CREATE TABLE IF NOT EXISTS "saleOrder"();
@@ -144,18 +145,19 @@ ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "tipoEntregaId" UUID;
 ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "pedidoVendaStatusId" UUID;
 ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "entregadorId" UUID;
 ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "entrega" JSONB;
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "finished" BOOLEAN;
 
 --pedidoVendaTipoEntrega
 CREATE TABLE IF NOT EXISTS "pedidoVendaTipoEntrega"();
 ALTER TABLE "pedidoVendaTipoEntrega" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "pedidoVendaTipoEntrega" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
 
---pedidoVendaAndamento
-CREATE TABLE IF NOT EXISTS "pedidoVendaAndamento"();
-ALTER TABLE "pedidoVendaAndamento" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "pedidoVendaAndamento" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID;
-ALTER TABLE "pedidoVendaAndamento" ADD COLUMN IF NOT EXISTS "data" TIMESTAMP WITHOUT TIME ZONE;
-ALTER TABLE "pedidoVendaAndamento" ADD COLUMN IF NOT EXISTS "statusId" UUID;
+--saleOrderProgress
+CREATE TABLE IF NOT EXISTS "saleOrderProgress"();
+ALTER TABLE "saleOrderProgress" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "saleOrderProgress" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID;
+ALTER TABLE "saleOrderProgress" ADD COLUMN IF NOT EXISTS "data" TIMESTAMP WITHOUT TIME ZONE;
+ALTER TABLE "saleOrderProgress" ADD COLUMN IF NOT EXISTS "statusId" UUID;
 
 --SaleOrderItem
 CREATE TABLE IF NOT EXISTS "SaleOrderItem"();
@@ -178,12 +180,13 @@ ALTER TABLE "pedidoVendaItemCombinacaoItem" ADD COLUMN IF NOT EXISTS "pedidoVend
 ALTER TABLE "pedidoVendaItemCombinacaoItem" ADD COLUMN IF NOT EXISTS "itemCombinacaoId" UUID;
 ALTER TABLE "pedidoVendaItemCombinacaoItem" ADD COLUMN IF NOT EXISTS "quantidade" DECIMAL(10, 3);
 
---pedidoVendaItem
-CREATE TABLE IF NOT EXISTS "pedidoVendaPagamento"();
-ALTER TABLE "pedidoVendaPagamento" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "pedidoVendaPagamento" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID;
-ALTER TABLE "pedidoVendaPagamento" ADD COLUMN IF NOT EXISTS "formaPagamentoId" UUID;
-ALTER TABLE "pedidoVendaPagamento" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
+--saleOrderRecieve
+CREATE TABLE IF NOT EXISTS "saleOrderRecieve"();
+ALTER TABLE "saleOrderRecieve" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "saleOrderRecieve" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID;
+ALTER TABLE "saleOrderRecieve" ADD COLUMN IF NOT EXISTS "formaPagamentoId" UUID;
+ALTER TABLE "saleOrderRecieve" ADD COLUMN IF NOT EXISTS "vencimento" DATE;
+ALTER TABLE "saleOrderRecieve" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
 
 --pedidoVendaDeliveryRoute
 CREATE TABLE IF NOT EXISTS "pedidoVendaDeliveryRoute"();
@@ -215,6 +218,7 @@ ALTER TABLE "tabelasPreco" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
 CREATE TABLE IF NOT EXISTS "bank"();
 ALTER TABLE "bank" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "bank" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
+ALTER TABLE "bank" ADD COLUMN IF NOT EXISTS "logo" BYTEA;
 
 --bankAccount
 CREATE TABLE IF NOT EXISTS "bankAccount"();
@@ -226,17 +230,32 @@ ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "agencyDigit" VARCHAR(1);
 ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "account" VARCHAR(20);
 ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "accountDigit" VARCHAR(1);
 
+--bankAccountFormOfPayment
+CREATE TABLE IF NOT EXISTS "bankAccountFormOfPayment"();
+ALTER TABLE "bankAccountFormOfPayment" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "bankAccountFormOfPayment" ADD COLUMN IF NOT EXISTS "bankAccountId" UUID;
+ALTER TABLE "bankAccountFormOfPayment" ADD COLUMN IF NOT EXISTS "formOfPaymentId" UUID;
+
 --payment
 CREATE TABLE IF NOT EXISTS "payment"();
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "companyId" UUID;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "numeroDocumento" VARCHAR(100);
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "recebedorId" UUID;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "emissao" DATE;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "vencimento" DATE;
+ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "ourNumber" VARCHAR(20);
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "formOfPaymentId" UUID;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "bankAccountId" UUID;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "pagamentoId" UUID;
+ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "status" VARCHAR(20);
+
+--paymentCarried
+CREATE TABLE IF NOT EXISTS "paymentCarried"();
+ALTER TABLE "paymentCarried" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "paymentCarried" ADD COLUMN IF NOT EXISTS "paymentId" UUID;
+ALTER TABLE "paymentCarried" ADD COLUMN IF NOT EXISTS "valor" UUID;
 
 --nfe
 CREATE TABLE IF NOT EXISTS "nfe"();
@@ -265,3 +284,4 @@ ALTER TABLE "shippingOrder" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_rando
 CREATE TABLE IF NOT EXISTS "formOfPayment"();
 ALTER TABLE "formOfPayment" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "formOfPayment" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
+ALTER TABLE "formOfPayment" ADD COLUMN IF NOT EXISTS "type" VARCHAR(20);

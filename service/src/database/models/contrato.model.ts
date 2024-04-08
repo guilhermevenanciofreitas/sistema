@@ -1,5 +1,5 @@
 import { Model, Table, Column, DataType, BelongsTo } from "sequelize-typescript";
-import { Parceiro } from "./parceiro.model";
+import { Partner } from "./partner.model";
 
 @Table({tableName: "contratos"})
 export class Contrato extends Model {
@@ -19,7 +19,7 @@ export class Contrato extends Model {
   @Column({type: DataType.BOOLEAN, field: "isCancelado"})
   isCancelado?: boolean;
 
-  @BelongsTo(() => Parceiro, 'clienteId')
-  cliente?: Parceiro;
+  @BelongsTo(() => Partner, 'clienteId')
+  cliente?: Partner;
 
 }

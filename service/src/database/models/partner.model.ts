@@ -3,8 +3,8 @@ import { TabelaPreco } from "./tabelaPreco.model";
 import { ParceiroContato } from "./parceiroContato.model";
 import { ParceiroEndereco } from "./parceiroEndereco.model";
 
-@Table({tableName: "parceiros"})
-export class Parceiro extends Model {
+@Table({tableName: "partner"})
+export class Partner extends Model {
   
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
   id?: string;

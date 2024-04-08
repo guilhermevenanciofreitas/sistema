@@ -196,7 +196,7 @@ export default class BaseUsuarios extends BaseIndex {
     protected Pesquisar = async(Data: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("usuario/findAll", Data);
+        var r = await Service.Post("registrations/user/findAll", Data);
         this.setState({Loading: false, Data: r?.data});
     }
 

@@ -2,6 +2,11 @@ import { Service } from "../Service"
 
 export const Search = {
 
+    Company: async (Search: string) =>
+    {
+        return (await Service.Post("search/company", {Search}))?.data;
+    },
+    
     Cliente: async (Search: string) =>
     {
         return (await Service.Post("search/cliente", {Search}))?.data;
@@ -25,6 +30,11 @@ export const Search = {
     Municipio: async (Search: string, estadoId: string) =>
     {
         return (await Service.Post("search/municipio", {Search, estadoId}))?.data;
+    },
+
+    Bank: async (Search: string) =>
+    {
+        return (await Service.Post("search/bank", {Search}))?.data;
     },
 
     BankAccount: async (Search: string) =>

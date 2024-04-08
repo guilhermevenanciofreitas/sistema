@@ -105,7 +105,7 @@ export default class BaseAndamento extends BaseIndex {
     protected Pesquisar = async(Data: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("pedidovenda/progressList", Data);
+        var r = await Service.Post("sales/order/progressList", Data);
 
         let status = [];
 
@@ -144,10 +144,10 @@ export default class BaseAndamento extends BaseIndex {
             return item;
         });
 
-        let response = await Service.Post("pedidovenda/progress", {id: id, statusId: status?.id});
+        let response = await Service.Post("sales/order/progress", {id: id, statusId: status?.id});
 
         if (response?.status == 201) {
-            await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: response?.data.message, buttons: [{ Text: "OK" }]});
+            await MessageBox.Show({title: "Info", width: 500, type: "Warning", content: response?.data.message, buttons: [{ Text: "OK" }]});
             return;
         }
 

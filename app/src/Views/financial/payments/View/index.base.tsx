@@ -8,10 +8,12 @@ export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
     state = {
         open: false,
         id: "",
+        company: null,
         numeroDocumento: "",
         emissao: "",
         vencimento: "",
         recebedor: null,
+        ourNumber: "",
         bankAccount: null,
         formOfPayment: null,
         valor: "0.00",
@@ -80,10 +82,13 @@ export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
     {
         this.setState({
             id: "",
+            company: JSON.parse(localStorage.getItem("Session") || "null")?.empresa,
             numeroDocumento: "",
             emissao: "",
             vencimento: "",
+            bankAccount: null,
             recebedor: null,
+            ourNumber: "null",
             formOfPayment: null,
             valor: "0.00",
             juros: "0.00",

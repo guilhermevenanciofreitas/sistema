@@ -198,7 +198,7 @@ export default class BasePedidoVenda extends BaseIndex {
     protected Pesquisar = async(Data: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("pedidovenda/findAll", Data);
+        var r = await Service.Post("sales/order/findAll", Data);
         this.setState({Loading: false, Data: r?.data});
     }
 

@@ -1,13 +1,14 @@
 import React, { ReactNode } from "react";
-import { AutoComplete, Button, GridView, Modal, TextBox, ViewModal } from "../../../../Utils/Controls";
+import { AutoComplete, Button, DatePicker, GridView, Modal, TextBox, ViewModal } from "../../../../Utils/Controls";
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
 import { FormOfPaymentTemplate } from "../../../../Search/Templates/FormOfPayment";
+import { Grid } from "@mui/joy";
 
 const Columns = [
-    { selector: (row: any) => row.formaPagamento?.descricao, name: 'Forma de pagamento' },
-    { selector: (row: any) => "", name: 'Vencimento' },
+    { selector: (row: any) => row.formaPagamento?.description, name: 'Forma de pagamento' },
+    { selector: (row: any) => row.vencimento, name: 'Vencimento' },
     { selector: (row: any) => row.valor, name: 'Valor' },
 ];
 
@@ -19,6 +20,7 @@ class ViewPagamento extends ViewModal {
         open: false,
         id: "",
         formaPagamento: null,
+        vencimento: null,
         valor: "0,00",
     }
 
@@ -35,15 +37,24 @@ class ViewPagamento extends ViewModal {
 
     render(): React.ReactNode {
         return (
-            <Modal Open={this.state.open} Title='Forma de pagamento' Width={600} Close={this.Close}>
+            <Modal Open={this.state.open} Title='Forma de pagamento' Width={450} Close={this.Close}>
                 
-                <AutoComplete Label='Forma de pagamento' Pesquisa={async(Text: string) => await Search.FormOfPayment(Text)} Text={(Item: any) => `${Item?.descricao}` } Value={this.state.formaPagamento} OnChange={(args: any) => this.setState({formaPagamento: args})}>
-                    <FormOfPaymentTemplate />
-                </AutoComplete>
-
-                <TextBox Label='Valor' TextTransform='UpperCase' Text={this.state.valor} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} />
+                <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+                    <Grid md={12}>
+                        <AutoComplete Label='Forma de pagamento' Pesquisa={async(Text: string) => await Search.FormOfPayment(Text)} Text={(Item: any) => `${Item?.description}` } Value={this.state.formaPagamento} OnChange={(args: any) => this.setState({formaPagamento: args})}>
+                            <FormOfPaymentTemplate />
+                        </AutoComplete>
+                    </Grid>
+                    <Grid md={6}>
+                        <DatePicker Label='Vencimento' Text={this.state.vencimento} OnChange={(args: EventArgs) => this.setState({vencimento: args.Value})} />
+                    </Grid>
+                    <Grid md={6}>
+                        <TextBox Label='Valor' TextTransform='UpperCase' Text={this.state.valor} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} />
+                    </Grid>
+                </Grid>
 
                 <Button Text='Confirmar' Type='Submit' Color='white' BackgroundColor='green' OnClick={this.BtnConfirmar_Click} />
+                
             </Modal>
         );
     }
@@ -61,6 +72,7 @@ export class Pagamento extends BaseDetails<Readonly<{Itens: any[], OnChange?: Fu
             quantidade: "1",
             valor: "",
             formaPagamento: null,
+            vencimento: null
         });
 
         if (item == null) return;
@@ -78,6 +90,7 @@ export class Pagamento extends BaseDetails<Readonly<{Itens: any[], OnChange?: Fu
         args.quantidade = item.quantidade;
         args.valor = item.valor;
         args.formaPagamento = item.formaPagamento;
+        args.vencimento = item.vencimento;
         this.props.OnChange(this.props.Itens);
        
     }

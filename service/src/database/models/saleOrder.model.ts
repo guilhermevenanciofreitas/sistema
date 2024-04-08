@@ -1,7 +1,7 @@
 import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-typescript";
-import { Parceiro } from "./parceiro.model";
+import { Partner } from "./partner.model";
 import { SaleOrderItem } from "./saleOrderItem.model";
-import { PedidoVendaPagamento } from "./pedidoVendaPagamento.model";
+import { SaleOrderRecieve } from "./saleOrderRecieve.model";
 import { SaleOrderStatus } from "./saleOrderStatus.model";
 import { PedidoVendaTipoEntrega } from "./pedidoVendaTipoEntrega.model";
 import { PedidoVendaDeliveryRoute } from "./pedidoVendaDeliveryRoute.model";
@@ -27,9 +27,11 @@ export class SaleOrder extends Model {
   @Column({type: DataType.UUID, field: "entregadorId"})
   entregadorId?: string;
 
-  
-  @BelongsTo(() => Parceiro, 'clienteId')
-  cliente?: Parceiro;
+  @Column({type: DataType.BOOLEAN, field: "finished"})
+  finished?: boolean;
+
+  @BelongsTo(() => Partner, 'clienteId')
+  cliente?: Partner;
 
   @BelongsTo(() => PedidoVendaTipoEntrega, 'tipoEntregaId')
   tipoEntrega?: PedidoVendaTipoEntrega;
@@ -40,11 +42,11 @@ export class SaleOrder extends Model {
   @HasMany(() => SaleOrderItem, 'pedidoVendaId')
   itens?: SaleOrderItem[];
 
-  @HasMany(() => PedidoVendaPagamento, 'pedidoVendaId')
-  pagamentos?: PedidoVendaPagamento[];
+  @HasMany(() => SaleOrderRecieve, 'pedidoVendaId')
+  pagamentos?: SaleOrderRecieve[];
 
-  @BelongsTo(() => Parceiro, 'entregadorId')
-  entregador?: Parceiro;
+  @BelongsTo(() => Partner, 'entregadorId')
+  entregador?: Partner;
 
   @HasMany(() => PedidoVendaDeliveryRoute, 'pedidoVendaId')
   deliveryRoutes?: PedidoVendaDeliveryRoute[];

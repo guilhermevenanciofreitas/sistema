@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { BankAccount } from "../../database";
+import { BankAccount, Payment } from "../../database";
 import crypto from "crypto";
 
 export class BankAccountService {
@@ -25,6 +25,12 @@ export class BankAccountService {
         bankAccount.bankId = bankAccount.bank?.id;
 
         await BankAccount.update(bankAccount, {where: {id: bankAccount.id}, transaction});
+
+    }
+
+    public static ChangeBankAccount = async (id: string, bankAccountId: string, transaction: Transaction) => {
+
+        await Payment.update({bankAccountId: bankAccountId}, {where: {id}, transaction});
 
     }
 

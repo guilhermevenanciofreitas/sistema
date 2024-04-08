@@ -11,9 +11,10 @@ export class PaymentService {
 
     }
 
-    public static Create = async (payment: Payment, transaction: Transaction | undefined) => {
+    public static Create = async (payment: Payment, transaction?: Transaction) => {
 
         payment.id = crypto.randomUUID();
+        payment.companyId = payment.company?.id;
         payment.bankAccountId = payment.bankAccount?.id;
         payment.formOfPaymentId = payment.formOfPayment?.id;
         
@@ -21,8 +22,9 @@ export class PaymentService {
 
     }
 
-    public static Update = async (payment: Payment, transaction: Transaction | undefined) => {
+    public static Update = async (payment: Payment, transaction?: Transaction) => {
 
+        payment.companyId = payment.company?.id;
         payment.bankAccountId = payment.bankAccount?.id;
         payment.formOfPaymentId = payment.formOfPayment?.id;
 
@@ -30,7 +32,7 @@ export class PaymentService {
 
     }
 
-    public static Delete = async (id: string, transaction: Transaction | undefined) => {
+    public static Delete = async (id: string, transaction?: Transaction) => {
         await Payment.update({ativo: false}, {where: {id: id}, transaction});
     }
 

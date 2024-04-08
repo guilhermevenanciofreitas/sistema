@@ -57,7 +57,7 @@ export class ControlTextBox extends TextBoxBase {
     {
         return (
             <>
-                <FormLabel>{this.props.Label}</FormLabel>
+                <FormLabel sx={{fontWeight: 400}}>{this.props.Label}</FormLabel>
                 <Input placeholder={this.props.PlaceHolder} value={this.props.Text} onChange={this.TextBox_Change} slotProps={this.props.Mask ? { input: { component: this.TextMaskAdapter } } : undefined } />
             </>
         );

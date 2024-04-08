@@ -19,7 +19,7 @@ import contratoRoutes from "./sales/contrato.routes";
 //Financial
 import paymentRoutes from "./financial/payment.routes";
 
-import pedidoVendaRoutes from "./sales/pedidoVenda.routes";
+import saleOrderRoutes from "./sales/saleOrder.routes";
 
 
 import pedidoEletronicoRoutes from "./pedido-eletronico/index.routes";
@@ -45,7 +45,8 @@ export default class Routes {
 
     app.use("/api/contrato", contratoRoutes);
     
-    app.use("/api/pedidovenda", pedidoVendaRoutes);
+    //Sales
+    app.use("/api/sales/order", saleOrderRoutes);
 
     
     app.use("/api/nfe", nfeRoutes);

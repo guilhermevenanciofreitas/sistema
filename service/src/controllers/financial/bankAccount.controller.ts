@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Payment, Parceiro, FormOfPayment, BankAccount } from "../../database";
+import { Payment, Partner, FormOfPayment, BankAccount, Company } from "../../database";
 import {Op} from "sequelize";
 import { Bank } from "../../database/models/bank.model";
 import { BankAccountService } from "../../services/financial/bankAccount.service";
+import { Error } from "../../errors";
 
 export default class BankAccountController {
 
@@ -14,16 +15,26 @@ export default class BankAccountController {
 
                 const transaction = await sequelize.transaction();
 
-                const bankAccounts = await BankAccount.findAll({attributes: ["id"],
+                const bankAccounts = await BankAccount.findAll({attributes: ["id", "agency", "agencyDigit", "account", "accountDigit"],
                     include: [
-                        {model: Bank, attributes: ["id", "description"]},
+                        {model: Bank, attributes: ["id", "description", "logo"]},
+                    ],
+                    transaction
+                });
+
+                const payments = await Payment.findAll({
+                    attributes: ["id", "vencimento", "valor"],
+                    include: [
+                        {model: FormOfPayment, attributes: ["id", "description"]},
+                        {model: Partner, attributes: ["id", "nome"]},
+                        {model: BankAccount, attributes: ["id"]},
                     ],
                     transaction
                 });
 
                 sequelize.close();
 
-                res.status(200).json({bankAccounts, rows: []});
+                res.status(200).json({bankAccounts, rows: payments});
 
             }
             catch (err) {
@@ -44,7 +55,7 @@ export default class BankAccountController {
                 const contaPagar = await Payment.findOne({
                     attributes: ["id", "numeroDocumento", "valor", "emissao", "vencimento"],
                     include: [
-                        {model: Parceiro, attributes: ["id", "nome"]},
+                        {model: Partner, attributes: ["id", "nome"]},
                         {model: FormOfPayment, attributes: ["id", "description"]},
                     ],
                     where: {id: req.body.id}, transaction});
@@ -56,6 +67,30 @@ export default class BankAccountController {
             }
             catch (err) {
                 res.status(500).json(err);
+            }
+        }).catch((err) => {
+            res.status(401).json(err);
+        });
+    }
+
+    async changeBankAccountPayment(req: Request, res: Response) {
+        Auth(req, res).then(async ({sequelize}) => {
+            try
+            {
+
+                const transaction = await sequelize.transaction();
+
+                await BankAccountService.ChangeBankAccount(req.body?.id, req.body?.bankAccountId, transaction);
+
+                await transaction?.commit();
+                
+                sequelize.close();
+
+                res.status(200).json({success: true});
+
+            }
+            catch (error: any) {
+                Error.Response(res, error);
             }
         }).catch((err) => {
             res.status(401).json(err);

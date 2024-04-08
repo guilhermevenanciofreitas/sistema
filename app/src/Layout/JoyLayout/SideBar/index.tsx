@@ -21,12 +21,13 @@ import { GroupRounded, Diversity3, HotTub, Inventory, AddShoppingCart, LocalOffe
 const MenuItems = [
   {title: "Cadastros", icon: <GroupRounded/>, items: [{title: "Usuários", link: "/registrations/users"}, {title: "Produtos", link: "/registrations/products"}, {title: "Serviços", link: "/registrations/services"}, {title: "Veículos", link: "/registrations/vehicles"}, {title: "Clientes", link: "/registrations/customers"}, {title: "Fornecedores", link: "/registrations/suppliers"}, {title: "Funcionários", link: "/registrations/employees"}, {title: "Transportadoras", link: "/registrations/shippings-company"}]},
   {title: "Atendimento", icon: <Diversity3 />, items: [{title: "Agenda", link: "/atendimento/agenda"}, {title: "Chamados", link: "/atendimento/chamados"}]},
+  {title: "R.H", icon: <HotTub />, items: [{title: "Folha de pagamento", link: "/human-resources/payroll"}]},
+  {title: "Compras", icon: <AddShoppingCart />, items: [{title: "Cotação", link: "/compras/cotação"}, {title: "Pedidos", link: "/compras/pedidos"}]},
+  {title: "Financeiro", icon: <PaidRounded />, items: [{title: "Contas a pagar", link: "/financial/payments"}, {title: "Contas a receber", link: "/financial/receipts"}, {title: "Contas bancárias", link: "/financial/bank-accounts"}, {title: "Remessas", link: "/financial/shippings"}, {title: "Retornos", link: "/financeiro/retornos"}, {title: "Fluxo de caixa", link: "/financial/cash-flow"}]},
   {title: "Produção", icon: <HotTub />, items: [{title: "Ordens de produção", link: "/production/orders"}]},
   {title: "Estoque", icon: <Inventory />, items: [{title: "Entrada", link: "/estoque/entrada"}]},
-  {title: "Compras", icon: <AddShoppingCart />, items: [{title: "Cotação", link: "/compras/cotação"}, {title: "Pedidos", link: "/compras/pedidos"}]},
   {title: "Vendas", icon: <LocalOffer />, items: [{title: "Pedidos", link: "/sales/orders"}, {title: "Andamento", link: "/sales/progress"}, {title: "Faturamento", link: "/sales/faturamento"}, {title: "Produção", link: "/sales/producao"}, {title: "Separação", link: "/sales/separacao"}, {title: "Conferência", link: "/sales/conferencia"}, {title: "Entrega", link: "/sales/delivery"}]},
   {title: "Logistica", icon: <LocalShipping />, items: [{title: "Ordens de carga", link: "/logistic/shippings-orders"}, {title: "Viagens", link: "/logistic/trips"}]},
-  {title: "Financeiro", icon: <PaidRounded />, items: [{title: "Contas a pagar", link: "/financial/payments"}, {title: "Contas a receber", link: "/financial/receipts"}, {title: "Contas bancárias", link: "/financial/bank-accounts"}, {title: "Remessas", link: "/financial/shippings"}, {title: "Retornos", link: "/financeiro/retornos"}, {title: "Fluxo de caixa", link: "/financial/cash-flow"}]},
   {title: "Fiscal", icon: <TableView />, items: [{title: "Notas fiscais", link: "/fiscal/nfes"}, {title: "Conhecimentos", link: "/fiscal/conhecimentos"}, {title: "Manifestos", link: "/fiscal/manifestos"}]},
 ]
 

@@ -1,21 +1,63 @@
 import React from "react";
-import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
-import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
-import { ViewContaPagar } from "./View/index";
+import { Button, CardStatus, Container, Left, ListView, Right } from "../../../Utils/Controls";
+import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle, AttachMoney } from "@mui/icons-material";
+import { ViewPayment } from "./View/index";
 import BaseContasPagar from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
-import { IconButton } from "@mui/joy";
+import { Badge, Card, CardActions, CardContent, CircularProgress, Grid, IconButton, SvgIcon, Typography } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
 import { ViewImportar } from "./importar";
 import { ViewFiltro } from "./filtro";
+import _ from "lodash";
+
+enum colors {
+    pending = '#a0a0a0',
+    open = '#00ffff',
+    shipping = '#8d23ae',
+    send = '#00aed1',
+    scheduled = '#daa520',
+    paid = '#4ad185'
+}
+
+const CompanyRecipient = ({ row }: any) => {
+    return (
+        <div style={{display: 'flex', height: 'auto'}}>
+            <div style={{width: '5px', backgroundColor: colors[row.status as keyof typeof colors]}}></div>
+            <div data-tag="allowRowEvents" style={{ paddingLeft: '10px', overflow: 'hidden', textOverflow: 'ellipses' }}>
+                {row.company?.nomeFantasia}
+                <br />
+                {row.recebedor?.nome}
+            </div>
+        </div>
+    );
+};
+
+const BankAccount = ({ row }: any) => {
+
+    if (row.bankAccount == null) {
+        return <></>;
+    }
+
+    return (
+        <div style={{display: 'flex', height: 'auto'}}>
+            <img style={{padding: '10px', width: '40px'}} src={`data:image/png;base64,${btoa(new Uint8Array(row.bankAccount?.bank?.logo?.data).reduce((data, byte) => data + String.fromCharCode(byte), ''))}`} />
+            <div data-tag="allowRowEvents" style={{ paddingLeft: '2px', overflow: 'hidden', textOverflow: 'ellipses' }}>
+                {row.bankAccount?.agency}-{row.bankAccount?.agencyDigit}
+                <br />
+                {row.bankAccount?.account}-{row.bankAccount?.accountDigit}
+            </div>
+        </div>
+    );
+};
 
 const Columns = [
-    { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
-    { selector: (row: any) => row.numeroDocumento, sort: 'numeroDocumento', name: 'Nº Doc', sortable: true },
-    { selector: (row: any) => row.valor, sort: 'valor', name: 'Valor', sortable: true },
-    { selector: (row: any) => row.emissao, sort: 'emissao', name: 'Emissão', sortable: true },
-    { selector: (row: any) => row.vencimento, sort: 'vencimento', name: 'Vencimento', sortable: true },
-    { selector: (row: any) => row.recebedor?.nome, sort: 'recebedor', name: 'Recebedor', sortable: true },
+    { selector: (row: any) => <CompanyRecipient row={row} />, sort: 'id', name: 'Empresa / Benificiário', sortable: true },
+    { selector: (row: any) => row.formOfPayment?.description, sort: 'description', name: 'Tipo', sortable: true, maxWidth: "300px" },
+    { selector: (row: any) => row.numeroDocumento, sort: 'numeroDocumento', name: 'Nº Doc', sortable: true, maxWidth:"150px" },
+    { selector: (row: any) => row.vencimento, sort: 'emissao', name: 'Vencimento', sortable: true, maxWidth: "160px" },
+    { selector: (row: any) => row.vencimento, sort: 'vencimento', name: 'Agendamento', sortable: true, maxWidth: "160px" },
+    { selector: (row: any) => row.valor, sort: 'valor', name: 'Valor', sortable: true, right: true, maxWidth:"120px" },
+    { selector: (row: any) => <BankAccount row={row} />, sort: 'recebedor', name: 'Agência / Conta', sortable: true, maxWidth: "250px" },
 ];
 
 export default class Payments extends BaseContasPagar {
@@ -25,7 +67,7 @@ export default class Payments extends BaseContasPagar {
         return (
             <>
 
-                <ViewContaPagar ref={this.ViewContaPagar} Title="Conta a pagar" />
+                <ViewPayment ref={this.ViewPayment} Title="Conta a pagar" />
 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
@@ -58,6 +100,27 @@ export default class Payments extends BaseContasPagar {
                         </Right>
                     </Container>
 
+                    <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+                        <Grid md={2}>
+                            <CardStatus checked={this.state.status == "pending"} status="Pendente" value={_.get(this.state.Data.status, 'pending.ammount') as any} bagde={_.get(this.state.Data.status, 'pending.count') as any} color={colors.pending} OnClick={() => this.CardStatus_Click('pending')} />
+                        </Grid>
+                        <Grid md={2}>
+                            <CardStatus checked={this.state.status == "open"} status="Aberto" value={_.get(this.state.Data.status, 'open.ammount') as any} bagde={_.get(this.state.Data.status, 'open.count') as any} color={colors.open} OnClick={() => this.CardStatus_Click('open')} />
+                        </Grid>
+                        <Grid md={2}>
+                            <CardStatus checked={this.state.status == "shipping"} status="Em remessa" value={_.get(this.state.Data.status, 'shipping.ammount') as any} bagde={_.get(this.state.Data.status, 'shipping.count') as any} color={colors.shipping} OnClick={() => this.CardStatus_Click('shipping')} />
+                        </Grid>
+                        <Grid md={2}>
+                            <CardStatus checked={this.state.status == "send"} status="Enviado" value={_.get(this.state.Data.status, 'send.ammount') as any} bagde={_.get(this.state.Data.status, 'send.count') as any} color={colors.send} OnClick={() => this.CardStatus_Click('send')} />
+                        </Grid>
+                        <Grid md={2}>
+                            <CardStatus checked={this.state.status == "scheduled"} status="Agendado" value={_.get(this.state.Data.status, 'scheduled.ammount') as any} bagde={_.get(this.state.Data.status, 'scheduled.count') as any} color={colors.scheduled} OnClick={() => this.CardStatus_Click('scheduled')} />
+                        </Grid>
+                        <Grid md={2}>
+                            <CardStatus checked={this.state.status == "paid"} status="Pago" value={_.get(this.state.Data.status, 'paid.ammount') as any} bagde={_.get(this.state.Data.status, 'paid.count') as any} color={colors.paid} OnClick={() => this.CardStatus_Click('paid')} />
+                        </Grid>
+                    </Grid>
+                    
                     <ListView
                         Loading={this.state.Loading}
 

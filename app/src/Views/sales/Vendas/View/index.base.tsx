@@ -35,7 +35,7 @@ export class ViewContratoBase extends ViewModal<Readonly<{Title: string}>> {
 
         if (id) {
             Loading.Show();
-            const r = await Service.Post("pedidovenda/findOne", {id});
+            const r = await Service.Post("sales/order/findOne", {id});
             Loading.Hide();
             this.setState(r?.data);
         }
@@ -67,11 +67,10 @@ export class ViewContratoBase extends ViewModal<Readonly<{Title: string}>> {
                 await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Informe o cliente para venda!", buttons: [{ Text: "OK" }]});
                 return;
             }
-            
 
             Loading.Show();
 
-            let r = await Service.Post("pedidovenda/save", this.state);
+            let r = await Service.Post("sales/order/save", this.state);
     
             Loading.Hide();
     

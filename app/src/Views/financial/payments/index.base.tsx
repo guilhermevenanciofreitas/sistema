@@ -1,6 +1,6 @@
 import React from "react";
 import { Service } from "../../../Service";
-import { ViewContaPagar } from "./View/index";
+import { ViewPayment } from "./View/index";
 import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
@@ -10,7 +10,7 @@ import queryString from "query-string";
 
 export default class BaseContasPagar extends BaseIndex {
  
-    protected ViewContaPagar = React.createRef<ViewContaPagar>();
+    protected ViewPayment = React.createRef<ViewPayment>();
 
     protected ViewImportar = React.createRef<ViewImportar>();
     protected ViewFiltro = React.createRef<ViewFiltro>();
@@ -18,7 +18,22 @@ export default class BaseContasPagar extends BaseIndex {
     state = {
         Loading: true,
         Selecteds: [],
+
+        status: null,
+
+        request: {
+            offset: 1,
+            limit: 100,
+            filter: undefined,
+            sort: undefined
+        },
+        response: {
+            rows: [],
+            count: 0
+        },
+
         Data: {
+            status: {},
             rows: [],
             count: 0,
             offset: 1,
@@ -70,7 +85,7 @@ export default class BaseContasPagar extends BaseIndex {
         try
         {
 
-            const r = await this.ViewContaPagar.current?.Show(undefined);
+            const r = await this.ViewPayment.current?.Show(undefined);
 
             if (r) this.Pesquisar(this.state.Data);
             
@@ -145,11 +160,25 @@ export default class BaseContasPagar extends BaseIndex {
         }
     }
 
+    protected CardStatus_Click = async(status: string): Promise<void> =>
+    {
+        try
+        {
+            await this.Pesquisar(this.state.Data, status);
+            this.setState({status});
+        }
+        catch (err: any) 
+        {
+            await DisplayError.Show(err);
+        }
+    }
+    
     protected BtnPesquisar_Click = async(): Promise<void> =>
     {
         try
         {
             await this.Pesquisar(this.state.Data);
+            this.setState({status: null});
         }
         catch (err: any) 
         {
@@ -188,15 +217,15 @@ export default class BaseContasPagar extends BaseIndex {
     private OpenUsuario = async (id: string) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewContaPagar.current?.Show(id);
+        const r = await this.ViewPayment.current?.Show(id);
         history.back();
         return r;
     }
 
-    protected Pesquisar = async(Data: any): Promise<void> =>
+    protected Pesquisar = async(Data: any, status?: string): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("financial/payment/findAll", Data);
+        var r = await Service.Post("financial/payment/findAll", {...Data, status});
         this.setState({Loading: false, Data: r?.data});
     }
 

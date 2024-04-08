@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Parceiro, ParceiroContato, ParceiroEndereco, TabelaPreco, Usuario } from "../../database";
-import { ParceiroService } from "../../services/registrations/parceiro.service";
+import { Partner, ParceiroContato, ParceiroEndereco, TabelaPreco } from "../../database";
+import { PartnerService } from "../../services/registrations/parceiro.service";
 import {Op} from "sequelize";
 
-export default class ParceiroController {
+export default class PartnerController {
 
     async findAll(req: Request, res: Response, column: string) {
 
@@ -40,7 +40,7 @@ export default class ParceiroController {
                     order = [[sort.column, sort.direction]]
                 }
         
-                const parceiros = await Parceiro.findAndCountAll({attributes: ["id", "cpfCnpj", "nome", "apelido"], where, order, limit, offset, transaction});
+                const parceiros = await Partner.findAndCountAll({attributes: ["id", "cpfCnpj", "nome", "apelido"], where, order, limit, offset, transaction});
                 
                 sequelize.close();
 
@@ -66,7 +66,7 @@ export default class ParceiroController {
 
                 const where = {id: req.body.id, [column]: true};
 
-                const parceiro = await Parceiro.findOne({attributes: [
+                const parceiro = await Partner.findOne({attributes: [
                     "id",
                     "cpfCnpj",
                     "nome",
@@ -118,12 +118,12 @@ export default class ParceiroController {
         
                 const transaction = await sequelize.transaction();
 
-                const Parceiro = req.body as Parceiro;
+                const Parceiro = req.body as Partner;
 
                 Parceiro.cpfCnpj = req.body.cpfCnpj?.replace(/[^0-9]/g,'');
                 Parceiro.tabelaPrecoId = req.body.tabelaPreco?.id || null;
 
-                const valid = ParceiroService.IsValid(Parceiro);
+                const valid = PartnerService.IsValid(Parceiro);
     
                 if (!valid.success) {
                     res.status(201).json(valid);
@@ -131,9 +131,9 @@ export default class ParceiroController {
                 }
     
                 if (!Parceiro.id) {
-                    await ParceiroService.Create(Parceiro, transaction);
+                    await PartnerService.Create(Parceiro, transaction);
                 } else {
-                    await ParceiroService.Update(Parceiro, transaction);
+                    await PartnerService.Update(Parceiro, transaction);
                 }
     
                 await transaction?.commit();

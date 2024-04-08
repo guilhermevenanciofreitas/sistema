@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { FormOfPayment, Parceiro, SaleOrder, Product, PedidoVendaPagamento, SaleOrderStatus, PedidoVendaTipoEntrega, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
-import { PedidoVendaService } from "../../services/sales/pedidovenda.service";
+import { FormOfPayment, Partner, SaleOrder, Product, SaleOrderRecieve, SaleOrderStatus, PedidoVendaTipoEntrega, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
+import { SaleOrderService } from "../../services/sales/saleOrder.service";
 import { SaleOrderItem } from "../../database/models/saleOrderItem.model";
 import {Op, Sequelize} from "sequelize";
 import axios from "axios";
 import { DisplayError } from "../../errors/DisplayError";
 import { Error } from "../../errors";
 
-export default class PedidoVendaController {
+export default class SaleOrderController {
 
     async findAll(req: Request, res: Response) {
 
@@ -22,7 +22,7 @@ export default class PedidoVendaController {
                 const filter = req.body.filter || undefined;
                 const sort = req.body.sort || undefined;
         
-                let where: any = {};
+                let where: any = {finished: false};
                 let order: any = [];
         
                 if (sort) {
@@ -32,7 +32,7 @@ export default class PedidoVendaController {
                 const pedidoVenda = await SaleOrder.findAndCountAll({
                     attributes: ["id"],
                     include: [
-                        {model: Parceiro, as: "cliente", attributes: ["id", "nome"]},
+                        {model: Partner, as: "cliente", attributes: ["id", "nome"]},
                         {model: SaleOrderStatus, attributes: ["id", "descricao"]}
                     ],
                     where, order, limit, offset, transaction});
@@ -61,7 +61,7 @@ export default class PedidoVendaController {
                 const filter = req.body.filter || undefined;
                 const sort = req.body.sort || undefined;
         
-                let where: any = {};
+                let where: any = {finished: false};
                 let order: any = [];
         
                 if (sort) {
@@ -71,7 +71,7 @@ export default class PedidoVendaController {
                 const pedidoVenda = await SaleOrder.findAndCountAll({
                     attributes: ["id"],
                     include: [
-                        {model: Parceiro, as: "cliente", attributes: ["id", "nome"]},
+                        {model: Partner, as: "cliente", attributes: ["id", "nome"]},
                         {model: SaleOrderStatus, attributes: ["id", "descricao"]}
                     ],
                     where, order, limit, offset, transaction});
@@ -113,8 +113,8 @@ export default class PedidoVendaController {
                 const pedidoVenda = await SaleOrder.findAndCountAll({
                     attributes: ["id"],
                     include: [
-                        {model: Parceiro, as: "cliente", attributes: ["id", "nome"]},
-                        {model: Parceiro, as: "entregador", attributes: ["id", "nome"]},
+                        {model: Partner, as: "cliente", attributes: ["id", "nome"]},
+                        {model: Partner, as: "entregador", attributes: ["id", "nome"]},
                         {model: PedidoVendaDeliveryRoute, attributes: ["id"],
                             include: [{model: DeliveryRoute, attributes: ["id", "entregue", "cancelado"],
                                 include: [{model: Delivery, attributes: ["id"]}]}]
@@ -122,7 +122,7 @@ export default class PedidoVendaController {
                     ],
                     where, order, limit, offset, transaction});
 
-                const entregadores = await Parceiro.findAll({attributes: ["id", "nome"], where: {isFuncionario: true}, transaction});
+                const entregadores = await Partner.findAll({attributes: ["id", "nome"], where: {isFuncionario: true}, transaction});
 
                 sequelize.close();
 
@@ -147,8 +147,8 @@ export default class PedidoVendaController {
                 const pedidoVenda = await SaleOrder.findOne({
                     attributes: ["id", "entrega"], 
                     include: [
-                        {model: Parceiro, as: "cliente", attributes: ["id", "nome"]},
-                        {model: Parceiro, as: "entregador", attributes: ["id", "nome"]},
+                        {model: Partner, as: "cliente", attributes: ["id", "nome"]},
+                        {model: Partner, as: "entregador", attributes: ["id", "nome"]},
                         {model: SaleOrderStatus, attributes: ["id", "descricao"]},
                         {model: PedidoVendaTipoEntrega, attributes: ["id", "descricao"]},
                         {model: SaleOrderItem, attributes: ["id", "quantidade", "valor"], 
@@ -163,7 +163,7 @@ export default class PedidoVendaController {
                                 include: [{model: PedidoVendaItemCombinacaoItem, attributes: ["id", "pedidoVendaItemCombinacaoId", "itemCombinacaoId", "quantidade"]}]
                             }]
                         },
-                        {model: PedidoVendaPagamento, attributes: ["id", "valor"], include: [{model: FormOfPayment, attributes: ["id", "description"]}]},
+                        {model: SaleOrderRecieve, attributes: ["id", "vencimento", "valor"], include: [{model: FormOfPayment, attributes: ["id", "description"]}]},
                     ],
                     where: {id: req.body.id}, transaction}
                 );
@@ -190,7 +190,7 @@ export default class PedidoVendaController {
 
                 const PedidoVenda = req.body as SaleOrder;
 
-                const valid = PedidoVendaService.IsValid(PedidoVenda);
+                const valid = SaleOrderService.IsValid(PedidoVenda);
 
                 if (!valid.success) {
                     res.status(201).json(valid);
@@ -198,9 +198,9 @@ export default class PedidoVendaController {
                 }
 
                 if (!PedidoVenda.id) {
-                    await PedidoVendaService.Create(PedidoVenda, transaction);
+                    await SaleOrderService.Create(PedidoVenda, transaction);
                 } else {
-                    await PedidoVendaService.Update(PedidoVenda, transaction);
+                    await SaleOrderService.Update(PedidoVenda, transaction);
                 }
 
                 await transaction?.commit();
@@ -226,7 +226,7 @@ export default class PedidoVendaController {
 
                 const transaction = await sequelize.transaction();
 
-                await PedidoVendaService.Progress(req.body?.id, req.body?.statusId, transaction);
+                await SaleOrderService.Progress(req.body?.id, req.body?.statusId, transaction);
 
                 await transaction?.commit();
                 
@@ -250,7 +250,7 @@ export default class PedidoVendaController {
 
                 const transaction = await sequelize.transaction();
 
-                await PedidoVendaService.Deliveryman(req.body?.id, req.body?.entregadorId, transaction);
+                await SaleOrderService.Deliveryman(req.body?.id, req.body?.entregadorId, transaction);
 
                 await transaction?.commit();
                 
@@ -306,7 +306,7 @@ export default class PedidoVendaController {
 
                 delivery.entregadorId = entregadorId;
 
-                await PedidoVendaService.Delivery(delivery.dataValues, transaction);
+                await SaleOrderService.Delivery(delivery.dataValues, transaction);
 
                 axios.request(config).then(async (response: any) => {
 
@@ -325,12 +325,12 @@ export default class PedidoVendaController {
                         var deliveryRoute = new DeliveryRoute();
                         deliveryRoute.deliveryId = delivery.id;
                         deliveryRoute.ordem = ordem;
-                        await PedidoVendaService.DeliveryRoute(deliveryRoute.dataValues, transaction);
+                        await SaleOrderService.DeliveryRoute(deliveryRoute.dataValues, transaction);
                         
                         var pedidoVendaDeliveryRoute = new PedidoVendaDeliveryRoute();
                         pedidoVendaDeliveryRoute.pedidoVendaId = item.id;
                         pedidoVendaDeliveryRoute.deliveryRouteId = deliveryRoute.id;
-                        await PedidoVendaService.PedidoVendaDeliveryRoute(pedidoVendaDeliveryRoute.dataValues, transaction);
+                        await SaleOrderService.PedidoVendaDeliveryRoute(pedidoVendaDeliveryRoute.dataValues, transaction);
 
                         ordem++;
                     }
@@ -364,7 +364,7 @@ export default class PedidoVendaController {
 
                 const transaction = await sequelize.transaction();
 
-                await PedidoVendaService.Delete(req.body.id, transaction);
+                await SaleOrderService.Delete(req.body.id, transaction);
 
                 await transaction?.commit();
 

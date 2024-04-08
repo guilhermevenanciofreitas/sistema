@@ -15,7 +15,7 @@ export class ControlAutoComplete extends AutoCompleteBase {
   render(): React.ReactNode {
     return (
       <>
-        <FormLabel>{this.props.Label}</FormLabel>
+        <FormLabel sx={{fontWeight: 400}}>{this.props.Label}</FormLabel>
         <Autocomplete
  
           loading={this.state.Loading}

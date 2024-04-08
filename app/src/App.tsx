@@ -9,7 +9,7 @@ import Suppliers from "./views/registrations/Parceiros/suppliers";
 import Employees from "./views/registrations/Parceiros/employees";
 import Transporadoras from "./views/registrations/Parceiros/shippingsCompany";
 
-import Usuarios from "./views/registrations/Usuarios/index";
+import Usuarios from "./views/registrations/users/index";
 
 
 

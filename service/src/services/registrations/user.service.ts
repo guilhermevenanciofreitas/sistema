@@ -1,12 +1,12 @@
 import { Transaction } from "sequelize";
-import { Usuario } from "../../database";
+import { User } from "../../database";
 import crypto from "crypto";
 
 export class UserService {
 
-    public static IsValid = (usuario: Usuario) => {
+    public static IsValid = (user: User) => {
 
-        if (usuario.email == '') {
+        if (user.email == '') {
             return { success: false, message: 'Informe o e-mail!' };
         }
 
@@ -14,22 +14,22 @@ export class UserService {
 
     }
 
-    public static Create = async (usuario: Usuario, transaction: Transaction | undefined) => {
+    public static Create = async (user: User, transaction?: Transaction) => {
 
-        usuario.id = crypto.randomUUID();
+        user.id = crypto.randomUUID();
         
-        await Usuario.create({...usuario}, {transaction});
+        await User.create({...user}, {transaction});
 
     }
 
-    public static Update = async (usuario: Usuario, transaction: Transaction | undefined) => {
+    public static Update = async (user: User, transaction?: Transaction) => {
 
-        await Usuario.update(usuario, {where: {id: usuario.id}, transaction});
+        await User.update(user, {where: {id: user.id}, transaction});
 
     }
 
-    public static Delete = async (id: string, transaction: Transaction | undefined) => {
-        await Usuario.update({ativo: false}, {where: {id: id}, transaction});
+    public static Delete = async (id: string, transaction?: Transaction) => {
+        await User.update({ativo: false}, {where: {id: id}, transaction});
     }
 
 }

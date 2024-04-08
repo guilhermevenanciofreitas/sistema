@@ -3,8 +3,8 @@ import { Sequelize as sequelize } from "sequelize-typescript";
 import { Contrato } from "./models/contrato.model";
 import { SaleOrder } from "./models/saleOrder.model";
 import { TabelaPreco } from "./models/tabelaPreco.model";
-import { Usuario } from "./models/usuario.model";
-import { Parceiro } from "./models/parceiro.model";
+import { User } from "./models/user.model";
+import { Partner } from "./models/partner.model";
 import { ParceiroContato } from "./models/parceiroContato.model";
 import { ParceiroEndereco } from "./models/parceiroEndereco.model";
 import { Product } from "./models/product.model";
@@ -13,9 +13,9 @@ import { Company } from "./models/company.model";
 import { Payment } from "./models/payment.model";
 import { SaleOrderItem } from "./models/saleOrderItem.model";
 import { Municipio } from "./models/municipio.model";
-import { PedidoVendaPagamento } from "./models/pedidoVendaPagamento.model";
+import { SaleOrderRecieve } from "./models/saleOrderRecieve.model";
 import { SaleOrderStatus } from "./models/saleOrderStatus.model";
-import { PedidoVendaAndamento } from "./models/pedidoVendaAndamento.model";
+import { SaleOrderProgress } from "./models/saleOrderProgress.model";
 import { PedidoVendaTipoEntrega } from "./models/pedidoVendaTipoEntrega.model";
 import { Delivery } from "./models/delivery.model";
 import { DeliveryRoute } from "./models/deliveryRoute.model";
@@ -32,6 +32,8 @@ import { FormOfPayment } from "./models/formOfPayment.model";
 import { BankAccount } from "./models/bankAccount.model";
 import { Bank } from "./models/bank.model";
 import { SaleOrderStatusByFrom } from "./models/saleOrderStatusByFrom.model";
+import { BankAccountFormOfPayment } from "./models/bankAccountFormOfPayment.model";
+import { PaymentCarried } from "./models/paymentCarried.model";
 
 
 export { Payment } from "./models/payment.model";
@@ -39,17 +41,17 @@ export { Contrato } from "./models/contrato.model";
 export { SaleOrder } from "./models/saleOrder.model";
 export { SaleOrderItem } from "./models/saleOrderItem.model";
 export { TabelaPreco } from "./models/tabelaPreco.model";
-export { Parceiro } from "./models/parceiro.model";
+export { Partner } from "./models/partner.model";
 export { ParceiroContato } from "./models/parceiroContato.model";
 export { ParceiroEndereco } from "./models/parceiroEndereco.model";
 export { Product } from "./models/product.model";
 export { Service } from "./models/service.model";
 export { Company } from "./models/company.model";
-export { Usuario } from "./models/usuario.model";
+export { User } from "./models/user.model";
 export { Municipio } from "./models/municipio.model";
-export { PedidoVendaPagamento } from "./models/pedidoVendaPagamento.model";
+export { SaleOrderRecieve } from "./models/saleOrderRecieve.model";
 export { SaleOrderStatus } from "./models/saleOrderStatus.model";
-export { PedidoVendaAndamento } from "./models/pedidoVendaAndamento.model";
+export { SaleOrderProgress } from "./models/saleOrderProgress.model";
 export { PedidoVendaTipoEntrega } from "./models/pedidoVendaTipoEntrega.model";
 export { Delivery } from "./models/delivery.model";
 export { DeliveryRoute } from "./models/deliveryRoute.model";
@@ -65,6 +67,8 @@ export { ShippingOrder } from "./models/shippingOrder.model";
 export { FormOfPayment } from "./models/formOfPayment.model";
 export { BankAccount } from "./models/bankAccount.model";
 export { SaleOrderStatusByFrom } from "./models/saleOrderStatusByFrom.model";
+export { BankAccountFormOfPayment } from "./models/bankAccountFormOfPayment.model";
+export { PaymentCarried } from "./models/paymentCarried.model";
 
 
 export default class Sequelize {
@@ -77,7 +81,7 @@ export default class Sequelize {
       
       dialect: "postgres",
       define: {timestamps: false},
-      models: [Bank, BankAccount, Payment, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, PedidoVendaAndamento, SaleOrder, FormOfPayment, SaleOrderItem, PedidoVendaPagamento, Company, Parceiro, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, Usuario, TabelaPreco, Municipio, Nfe],
+      models: [Bank, BankAccount, BankAccountFormOfPayment, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, FormOfPayment, SaleOrderItem, SaleOrderRecieve, Company, Partner, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, User, TabelaPreco, Municipio, Nfe],
       pool: {
         max: 5,
         min: 0,

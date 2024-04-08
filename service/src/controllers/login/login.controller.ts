@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 import Accounts from "../../auth/accounts";
 import crypto from "crypto";
 
-import { AccountUser, Account, Session, User, Database, minutes } from "../../auth/index";
-import Sequelize, { Company, Usuario } from "../../database";
+import { AccountUser, Account, Session, User as User1, Database, minutes } from "../../auth/index";
+import Sequelize, { Company, User as User2 } from "../../database";
 
 export default class LoginController {
 
@@ -21,7 +21,7 @@ export default class LoginController {
 
       const accountTransaction = await sequelize?.transaction();
 
-      const user: any = await User.findOne({attributes: ["id", "email", "password"], where: {email: req.body.email, password: req.body.password}, transaction: accountTransaction});
+      const user: any = await User1.findOne({attributes: ["id", "email", "password"], where: {email: req.body.email, password: req.body.password}, transaction: accountTransaction});
 
       if (user == null) {
         res.status(203).json({message: "E-mail/senha incorreto!"});
@@ -70,7 +70,7 @@ export default class LoginController {
       const session = await Session.create({id: crypto.randomUUID(), userId: user?.id, accountId: accountId, empresaId: empresaId, lastAcess: new Date()}, {transaction: accountTransaction});
       accountTransaction?.commit();
       
-      const usuario = await Usuario.findOne({attributes: ["id", "nome"], where: {id: user?.id}, transaction: transaction});
+      const usuario = await User2.findOne({attributes: ["id", "nome"], where: {id: user?.id}, transaction: transaction});
       const empresa = await Company.findOne({attributes: ["id", "nomeFantasia"], where: {id: empresaId}, transaction: transaction});
       
       sequelize?.close();

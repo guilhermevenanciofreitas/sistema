@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { Company, Parceiro, ParceiroContato } from "../../database";
+import { Company } from "../../database";
 import crypto from "crypto";
 import {Op} from "sequelize";
 

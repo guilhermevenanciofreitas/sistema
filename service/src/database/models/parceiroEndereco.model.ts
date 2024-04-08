@@ -1,5 +1,5 @@
 import { Model, Table, Column, DataType, BelongsTo } from "sequelize-typescript";
-import { Parceiro } from "./parceiro.model";
+import { Partner } from "./partner.model";
 
 @Table({tableName: "parceirosEndereco"})
 export class ParceiroEndereco extends Model {
@@ -28,7 +28,7 @@ export class ParceiroEndereco extends Model {
   @Column({type: DataType.UUID, field: "estadoId"})
   estadoId?: string;
 
-  @BelongsTo(() => Parceiro, 'parceiroId')
-  parceiro?: Parceiro;
+  @BelongsTo(() => Partner, 'parceiroId')
+  parceiro?: Partner;
 
 }

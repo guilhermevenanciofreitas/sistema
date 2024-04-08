@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Usuario } from "../../database";
+import { User } from "../../database";
 import { UserService } from "../../services/registrations/user.service";
 import {Op} from "sequelize";
 import { Error } from "../../errors";
@@ -35,11 +35,11 @@ export default class UserController {
                     order = [[sort.column, sort.direction]]
                 }
         
-                const usuarios = await Usuario.findAndCountAll({attributes: ["id", "nome", "email"], where, order, limit, offset, transaction});
+                const users = await User.findAndCountAll({attributes: ["id", "nome", "email"], where, order, limit, offset, transaction});
         
                 sequelize.close();
 
-                res.status(200).json({rows: usuarios.rows, count: usuarios.count, limit, offset: req.body.offset, filter, sort});
+                res.status(200).json({rows: users.rows, count: users.count, limit, offset: req.body.offset, filter, sort});
 
             }
             catch (error: any) {
@@ -57,7 +57,7 @@ export default class UserController {
             {
                 const transaction = await sequelize.transaction();
 
-                const usuario = await Usuario.findOne({attributes: ["id", "nome", "email"], where: {id: req.body.id}, transaction});
+                const usuario = await User.findOne({attributes: ["id", "nome", "email"], where: {id: req.body.id}, transaction});
     
                 sequelize.close();
     
@@ -79,26 +79,26 @@ export default class UserController {
             {
                 const transaction = await sequelize.transaction();
 
-                const Usuario = req.body as Usuario;
+                const User = req.body as User;
 
-                const valid = UserService.IsValid(Usuario);
+                const valid = UserService.IsValid(User);
 
                 if (!valid.success) {
                     res.status(201).json(valid);
                     return;
                 }
 
-                if (!Usuario.id) {
-                    await UserService.Create(Usuario, transaction);
+                if (!User.id) {
+                    await UserService.Create(User, transaction);
                 } else {
-                    await UserService.Update(Usuario, transaction);
+                    await UserService.Update(User, transaction);
                 }
 
                 await transaction?.commit();
                 
                 sequelize.close();
 
-                res.status(200).json(Usuario);
+                res.status(200).json(User);
 
             }
             catch (error: any) {

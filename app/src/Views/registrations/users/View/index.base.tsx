@@ -19,7 +19,7 @@ export class ViewUsuarioBase extends ViewModal<Readonly<{Title: string}>> {
 
         if (id) {
             Loading.Show();
-            const r = await Service.Post("usuario/findOne", {id});
+            const r = await Service.Post("registrations/user/findOne", {id});
             Loading.Hide();
             this.setState(r?.data);
         }
@@ -49,7 +49,7 @@ export class ViewUsuarioBase extends ViewModal<Readonly<{Title: string}>> {
 
             Loading.Show();
 
-            let r = await Service.Post("usuario/save", this.state);
+            let r = await Service.Post("registrations/user/save", this.state);
     
             Loading.Hide();
     

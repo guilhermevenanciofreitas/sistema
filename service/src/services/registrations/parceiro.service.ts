@@ -1,13 +1,13 @@
 import { Transaction } from "sequelize";
-import { Parceiro, ParceiroContato } from "../../database";
+import { Partner, ParceiroContato } from "../../database";
 import crypto from "crypto";
 import {Op} from "sequelize";
 
-export class ParceiroService {
+export class PartnerService {
 
-    public static IsValid = (parceiro: Parceiro) => {
+    public static IsValid = (partner: Partner) => {
 
-        if (parceiro.nome == '') {
+        if (partner.nome == '') {
             return { success: false, message: 'Informe o e-mail!' };
         }
 
@@ -15,38 +15,38 @@ export class ParceiroService {
 
     }
 
-    public static Create = async (parceiro: Parceiro, transaction: Transaction | undefined) => {
+    public static Create = async (partner: Partner, transaction: Transaction | undefined) => {
 
-        parceiro.id = crypto.randomUUID();
+        partner.id = crypto.randomUUID();
 
-        for (let contato of parceiro?.contatos || []) {
+        for (let contato of partner?.contatos || []) {
             contato.id = crypto.randomUUID();
-            contato.parceiroId = parceiro.id;
+            contato.parceiroId = partner.id;
         }
 
-        await Parceiro.create({...parceiro}, {transaction});
+        await Partner.create({...partner}, {transaction});
 
     }
 
-    public static Update = async (parceiro: Parceiro, transaction: Transaction | undefined) => {
+    public static Update = async (partner: Partner, transaction: Transaction | undefined) => {
 
-        for (let contato of parceiro?.contatos || []) {
+        for (let contato of partner?.contatos || []) {
             if (!contato.id) {
                 contato.id = crypto.randomUUID();
-                contato.parceiroId = parceiro.id;
+                contato.parceiroId = partner.id;
                 ParceiroContato.create({...contato}, {transaction});
             } else {
                 ParceiroContato.update(contato, {where: {id: contato.id}, transaction});
             }
-            ParceiroContato.destroy({where: {id: {[Op.notIn]: parceiro?.contatos?.filter(c => c.id != "").map(c => c.id)}}, transaction})
+            ParceiroContato.destroy({where: {parceiroId: partner.id, id: {[Op.notIn]: partner?.contatos?.filter(c => c.id != "").map(c => c.id)}}, transaction})
         }
 
-        await Parceiro.update(parceiro, {where: {id: parceiro.id}, transaction});
+        await Partner.update(partner, {where: {id: partner.id}, transaction});
 
     }
 
     public static Delete = async (id: string, transaction: Transaction | undefined) => {
-        await Parceiro.update({ativo: false}, {where: {id: id}, transaction});
+        await Partner.update({ativo: false}, {where: {id: id}, transaction});
     }
 
 }

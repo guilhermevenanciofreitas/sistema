@@ -1,10 +1,38 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { BankAccount, FormOfPayment, Municipio, Parceiro, PedidoVendaTipoEntrega, Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco } from "../../database";
+import { BankAccount, Company, FormOfPayment, Municipio, Partner, PedidoVendaTipoEntrega, Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco } from "../../database";
 import { Op } from "sequelize";
 import { Bank } from "../../database/models/bank.model";
 
 export default class SearchController {
+
+    async company(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+   
+                if (req.body?.Search) {
+                    where = {"nomeFantasia": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+        
+                const companies = await Company.findAll({attributes: ["id", "cpfCnpj", "nomeFantasia"], where, order: [["nomeFantasia", "asc"]], transaction});
+        
+                sequelize.close();
+
+                res.status(200).json(companies);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
 
     async tabelasPreco(req: Request, res: Response) {
 
@@ -49,7 +77,7 @@ export default class SearchController {
                     where = {"nome": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
         
-                const clientes = await Parceiro.findAll({attributes: ["id", "cpfCnpj", "nome", "isBloquearVenda"], where, order: [["nome", "asc"]], transaction});
+                const clientes = await Partner.findAll({attributes: ["id", "cpfCnpj", "nome", "isBloquearVenda"], where, order: [["nome", "asc"]], transaction});
         
                 sequelize.close();
 
@@ -79,7 +107,7 @@ export default class SearchController {
                     where = {"nome": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
         
-                const clientes = await Parceiro.findAll({attributes: ["id", "cpfCnpj", "nome"], where, order: [["nome", "asc"]], transaction});
+                const clientes = await Partner.findAll({attributes: ["id", "cpfCnpj", "nome"], where, order: [["nome", "asc"]], transaction});
         
                 sequelize.close();
 
@@ -162,6 +190,37 @@ export default class SearchController {
         });
     }
 
+    async bank(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+
+                if (req.body?.Search) {
+                    where = {"description": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+
+                const formaPagamentos = await Bank.findAll({attributes: ["id", "description"], 
+                where,
+                order: [["description", "asc"]],
+                transaction});
+        
+                sequelize.close();
+
+                res.status(200).json(formaPagamentos);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
     async bankAccount(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
@@ -207,7 +266,7 @@ export default class SearchController {
                     where = {"description": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
 
-                const formaPagamentos = await FormOfPayment.findAll({attributes: ["id", "description"], where, order: [["description", "asc"]], transaction});
+                const formaPagamentos = await FormOfPayment.findAll({attributes: ["id", "description", "type"], where, order: [["description", "asc"]], transaction});
         
                 sequelize.close();
 
