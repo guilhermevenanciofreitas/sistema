@@ -23,7 +23,7 @@ import { PedidoVendaDeliveryRoute } from "./models/pedidoVendaDeliveryRoute.mode
 import { ProdutoCombinacao } from "./models/produtoCombinacao.model";
 import { ProdutoCombinacaoGrupo } from "./models/produtoCombinacaoGrupo.model";
 import { ProdutoCombinacaoItem } from "./models/produtoCombinacaoItem.model";
-import { PedidoVendaItemCombinacao } from "./models/pedidoVendaItemCombinacao.model";
+import { SaleOrderItemCombination } from "./models/saleOrderItemCombination.model";
 import { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinacaoItem.model";
 import { ProductCategory } from "./models/productCategory.model";
 import { Nfe } from "./models/nfe.model";
@@ -61,7 +61,7 @@ export { PedidoVendaDeliveryRoute } from "./models/pedidoVendaDeliveryRoute.mode
 export { ProdutoCombinacao } from "./models/produtoCombinacao.model";
 export { ProdutoCombinacaoGrupo } from "./models/produtoCombinacaoGrupo.model";
 export { ProdutoCombinacaoItem } from "./models/produtoCombinacaoItem.model";
-export { PedidoVendaItemCombinacao } from "./models/pedidoVendaItemCombinacao.model";
+export { SaleOrderItemCombination } from "./models/saleOrderItemCombination.model";
 export { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinacaoItem.model";
 export { ProductCategory } from "./models/productCategory.model";
 export { Nfe } from "./models/nfe.model";
@@ -88,7 +88,7 @@ export default class Sequelize {
 
       define: {timestamps: false},
       
-      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderRecieve, Company, Partner, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, User, TabelaPreco, Municipio, Nfe],
+      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderRecieve, Company, Partner, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, User, TabelaPreco, Municipio, Nfe],
       pool: {
         max: 5,
         min: 0,

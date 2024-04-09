@@ -4,7 +4,6 @@ import { AutoComplete, Button, DatePicker, Form, Modal, TextBox } from '../../..
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
-import { ClienteTemplate } from '../../../../Search/Templates/Cliente';
 import { Search } from '../../../../Search';
 import { BankTemplate } from '../../../../Search/Templates/Bank';
 

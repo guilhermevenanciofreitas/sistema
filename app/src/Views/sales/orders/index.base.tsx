@@ -1,6 +1,6 @@
 import React from "react";
 import { Service } from "../../../Service";
-import { ViewContaPagar } from "./View/index";
+import { ViewOrder } from "./View/index";
 import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
@@ -8,9 +8,9 @@ import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 
-export default class BaseContasPagar extends BaseIndex {
+export default class OrdersBase extends BaseIndex {
  
-    protected ViewContaPagar = React.createRef<ViewContaPagar>();
+    protected ViewOrder = React.createRef<ViewOrder>();
 
     protected ViewImportar = React.createRef<ViewImportar>();
     protected ViewFiltro = React.createRef<ViewFiltro>();
@@ -18,13 +18,16 @@ export default class BaseContasPagar extends BaseIndex {
     state = {
         Loading: true,
         Selecteds: [],
-        Data: {
-            rows: [],
-            count: 0,
+        request: {
+            statusId: null,
             offset: 1,
             limit: 100,
             filter: undefined,
             sort: undefined
+        },
+        response: {
+            rows: [],
+            count: 0,
         },
     }
 
@@ -37,10 +40,12 @@ export default class BaseContasPagar extends BaseIndex {
 
             const { id } = queryString.parse(window.location.search);
             if (id) {
-                await this.OpenUsuario(id.toString());
+                await this.OpenPedidoVenda(id.toString(), false);
             }
 
-            await this.Pesquisar(this.state.Data);
+            history.pushState(null, "", `${window.location.origin}${window.location.pathname}`);
+
+            await this.Pesquisar(this.state.request);
 
             this.componentDidMountFinish();
 
@@ -54,9 +59,9 @@ export default class BaseContasPagar extends BaseIndex {
         try
         {
 
-            const r = await this.OpenUsuario(id);
+            const r = await this.OpenPedidoVenda(id);
 
-            if (r) this.Pesquisar(this.state.Data);
+            if (r) this.Pesquisar(this.state.request);
        
         } 
         catch (err: any) 
@@ -70,9 +75,9 @@ export default class BaseContasPagar extends BaseIndex {
         try
         {
 
-            const r = await this.ViewContaPagar.current?.Show(undefined);
+            const r = await this.ViewOrder.current?.Show(undefined);
 
-            if (r) this.Pesquisar(this.state.Data);
+            if (r) this.Pesquisar(this.state.request);
             
         }
         catch (err: any) 
@@ -111,12 +116,12 @@ export default class BaseContasPagar extends BaseIndex {
     {
         try
         {
-            const data = await this.ViewImportar.current?.Show(this.state.Data.filter);
+            const data = await this.ViewImportar.current?.Show(this.state.request.filter);
 
             if (data === null) return;
 
-            this.setState((state: any) => ({Data: {...state.Data, offset: 1}}),
-                () => this.Pesquisar(this.state.Data)
+            this.setState({request: {...this.state.request, offset: 1}},
+                async () => await this.Pesquisar(this.state.request)
             );
     
         }
@@ -130,14 +135,28 @@ export default class BaseContasPagar extends BaseIndex {
     {
         try
         {
-            const filter = await this.ViewFiltro.current?.Show(this.state.Data.filter);
+            const filter = await this.ViewFiltro.current?.Show(this.state.request.filter);
 
             if (filter === null) return;
 
-            this.setState((state: any) => ({Data: {...state.Data, offset: 1, filter}}),
-                () => this.Pesquisar(this.state.Data)
+            this.setState({request: {...this.state.request, offset: 1, filter}},
+                async () => await this.Pesquisar(this.state.request)
             );
     
+        }
+        catch (err: any) 
+        {
+            await DisplayError.Show(err);
+        }
+    }
+
+    protected CardStatus_Click = async(statusId: string): Promise<void> =>
+    {
+        try
+        {
+            this.setState({request: {...this.state.request, statusId}}, 
+                async () => await this.Pesquisar(this.state.request)
+            );
         }
         catch (err: any) 
         {
@@ -149,7 +168,9 @@ export default class BaseContasPagar extends BaseIndex {
     {
         try
         {
-            await this.Pesquisar(this.state.Data);
+            this.setState({request: {...this.state.request, statusId: null}}, 
+                async () => await this.Pesquisar(this.state.request)
+            );
         }
         catch (err: any) 
         {
@@ -161,8 +182,8 @@ export default class BaseContasPagar extends BaseIndex {
     {
         try
         {
-            this.setState((state: any) => ({Data: {...state.Data, limit, offset}}),
-                () => this.Pesquisar(this.state.Data)
+            this.setState({request: {...this.state.request, limit, offset}},
+                async () => await this.Pesquisar(this.state.request)
             );
         }
         catch (err: any) 
@@ -175,8 +196,8 @@ export default class BaseContasPagar extends BaseIndex {
     {
         try
         {
-            this.setState((state: any) => ({Data: {...state.Data, sort}}),
-                () => this.Pesquisar(this.state.Data)
+            this.setState({request: {...this.state.request, sort}},
+                async () => await this.Pesquisar(this.state.request)
             );
         }
         catch (err: any) 
@@ -185,19 +206,19 @@ export default class BaseContasPagar extends BaseIndex {
         }
     }
 
-    private OpenUsuario = async (id: string) =>
+    private OpenPedidoVenda = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewContaPagar.current?.Show(id);
-        history.back();
+        const r = await this.ViewOrder.current?.Show(id);
+        if (isHitoryBack) history.back();
         return r;
     }
 
-    protected Pesquisar = async(Data: any): Promise<void> =>
+    protected Pesquisar = async(request: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("contaPagar/findAll", Data);
-        this.setState({Loading: false, Data: r?.data});
+        var r = await Service.Post("sales/order/findAll", request);
+        this.setState({Loading: false, ...r?.data});
     }
 
 }

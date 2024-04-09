@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { PaymentForm, Partner, SaleOrder, Product, SaleOrderRecieve, SaleOrderStatus, PedidoVendaTipoEntrega, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
+import { PaymentForm, Partner, SaleOrder, Product, SaleOrderRecieve, SaleOrderStatus, PedidoVendaTipoEntrega, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem } from "../../database";
 import { SaleOrderService } from "../../services/sales/saleOrder.service";
 import { SaleOrderItem } from "../../database/models/saleOrderItem.model";
 import {Op, Sequelize} from "sequelize";
 import axios from "axios";
 import { DisplayError } from "../../errors/DisplayError";
 import { Error } from "../../errors";
+import _ from "lodash";
 
 export default class SaleOrderController {
 
@@ -17,73 +18,59 @@ export default class SaleOrderController {
 
                 const transaction = await sequelize.transaction();
 
-                let where: any = {finished: false};
+                let where: any = {};
                 let order: any = [];
+
+                const statusId = req.body.statusId;
         
+                if (statusId != null) {
+                    where = [{"statusId": statusId}];
+                }
+
                 if (pagination.sort) {
                     order = [[pagination.sort.column, pagination.sort.direction]]
                 }
         
                 const saleOrders = await SaleOrder.findAndCountAll({
-                    attributes: ["id"],
+                    attributes: ['id', 'number', 'statusId', 'createdAt', 'valor'],
                     include: [
-                        {model: Partner, as: "cliente", attributes: ["id", "nome"]},
-                        {model: SaleOrderStatus, attributes: ["id", "descricao"]}
+                        {model: Partner, as: "costumer", attributes: ["id", "nome"]},
+                        {model: Company, as: "company", attributes: ["id", "nomeFantasia"]},
+                        {model: Partner, as: "seller", attributes: ["id", "nome"]},
+                        {model: SaleOrderStatus, attributes: ['id', 'descricao', 'color']}
                     ],
                     where, order, limit: pagination.limit, offset: pagination.offset1, transaction});
+
+
+                var saleOrderStatus = await SaleOrderStatus.findAll({
+                    attributes: ['id', 'descricao', 'color'],
+                    include: [{model: SaleOrder, attributes: ['statusId', 'valor']}],
+                    order: [['ordem', 'asc']],
+                    transaction
+                });
+
+                let status = [];
+
+                for (const item of saleOrderStatus) {
+                    const sales = _.filter(item.saleOrders, (sale: SaleOrder) => sale.statusId == item.dataValues.id);
+                    status.push({
+                        ...item.dataValues,
+                        quantity: _.size(sales),
+                        ammount: _.sum(_.map(sales, (c: SaleOrder) => parseFloat(c?.valor?.toString() || "0")))
+                    });
+                }
 
                 sequelize.close();
 
                 res.status(200).json({
                     request: {
-                        ...pagination
+                        statusId, ...pagination
                     },
                     response: {
-                        rows: saleOrders.rows, count: saleOrders.count
+                        saleOrderStatus: status, rows: saleOrders.rows, count: saleOrders.count
                     }
                 });
                 
-            }
-            catch (error: any) {
-                Error.Response(res, error);
-            }
-        }).catch((err: any) => {
-            res.status(401).json({message: err.message})
-        });
-    }
-
-    async progressList(req: Request, res: Response) {
-        Auth(req, res).then(async ({sequelize}) => {
-            try {
-
-                const transaction = await sequelize.transaction();
-
-                const limit = req.body.limit || undefined;
-                const offset = ((req.body.offset - 1) * limit) || undefined;
-                const filter = req.body.filter || undefined;
-                const sort = req.body.sort || undefined;
-        
-                let where: any = {finished: false};
-                let order: any = [];
-        
-                if (sort) {
-                    order = [[sort.column, sort.direction]]
-                }
-        
-                const pedidoVenda = await SaleOrder.findAndCountAll({
-                    attributes: ["id"],
-                    include: [
-                        {model: Partner, as: "cliente", attributes: ["id", "nome"]},
-                        {model: SaleOrderStatus, attributes: ["id", "descricao"]}
-                    ],
-                    where, order, limit, offset, transaction});
-
-                const status = await SaleOrderStatus.findAll({order: [["ordem", "ASC"]], transaction});
-
-                sequelize.close();
-
-                res.status(200).json({...pedidoVenda, status, limit, offset: req.body.offset, filter, sort});
-
             }
             catch (error: any) {
                 Error.Response(res, error);
@@ -146,12 +133,13 @@ export default class SaleOrderController {
             {
                 const transaction = await sequelize.transaction();
 
-                const pedidoVenda = await SaleOrder.findOne({
-                    attributes: ["id", "entrega"], 
+                const saleOrder = await SaleOrder.findOne({
+                    attributes: ['id', 'number', 'createdAt', 'entrega'], 
                     include: [
-                        {model: Partner, as: "cliente", attributes: ["id", "nome"]},
+                        {model: Partner, as: "costumer", attributes: ["id", "nome"]},
+                        {model: Partner, as: "seller", attributes: ["id", "nome"]},
                         {model: Partner, as: "entregador", attributes: ["id", "nome"]},
-                        {model: SaleOrderStatus, attributes: ["id", "descricao"]},
+                        {model: SaleOrderStatus, attributes: ['id', 'descricao', 'color']},
                         {model: PedidoVendaTipoEntrega, attributes: ["id", "descricao"]},
                         {model: SaleOrderItem, attributes: ["id", "quantidade", "valor"], 
                             include: [{model: Product, attributes: ["id", "nome", "descricao"],
@@ -161,7 +149,7 @@ export default class SaleOrderController {
                                     }]    
                                 }],
                             },
-                            {model: PedidoVendaItemCombinacao, attributes: ["id", "pedidoVendaItemId", "combinacaoId"],
+                            {model: SaleOrderItemCombination, attributes: ["id", "saleOrderItemId", "combinationId"],
                                 include: [{model: PedidoVendaItemCombinacaoItem, attributes: ["id", "pedidoVendaItemCombinacaoId", "itemCombinacaoId", "quantidade"]}]
                             }]
                         },
@@ -172,7 +160,7 @@ export default class SaleOrderController {
     
                 sequelize.close();
     
-                res.status(200).json(pedidoVenda);
+                res.status(200).json(saleOrder);
     
             }
             catch (error: any) {
@@ -190,26 +178,28 @@ export default class SaleOrderController {
             {
                 const transaction = await sequelize.transaction();
 
-                const PedidoVenda = req.body as SaleOrder;
+                const SaleOrder = req.body as SaleOrder;
 
-                const valid = SaleOrderService.IsValid(PedidoVenda);
+                SaleOrder.valor = _.sum(SaleOrder.itens?.map(c => parseFloat(c.valor?.toString() || "0")));
+
+                const valid = SaleOrderService.IsValid(SaleOrder);
 
                 if (!valid.success) {
                     res.status(201).json(valid);
                     return;
                 }
 
-                if (!PedidoVenda.id) {
-                    await SaleOrderService.Create(PedidoVenda, transaction);
+                if (!SaleOrder.id) {
+                    await SaleOrderService.Create(SaleOrder, transaction);
                 } else {
-                    await SaleOrderService.Update(PedidoVenda, transaction);
+                    await SaleOrderService.Update(SaleOrder, transaction);
                 }
 
                 await transaction?.commit();
                 
                 sequelize.close();
 
-                res.status(200).json(PedidoVenda);
+                res.status(200).json(SaleOrder);
 
             }
             catch (error: any) {
@@ -219,30 +209,6 @@ export default class SaleOrderController {
             res.status(401).json(err);
         });
 
-    }
-
-    async progress(req: Request, res: Response) {
-        Auth(req, res).then(async ({sequelize}) => {
-            try
-            {
-
-                const transaction = await sequelize.transaction();
-
-                await SaleOrderService.Progress(req.body?.id, req.body?.statusId, transaction);
-
-                await transaction?.commit();
-                
-                sequelize.close();
-
-                res.status(200).json({success: true});
-
-            }
-            catch (error: any) {
-                Error.Response(res, error);
-            }
-        }).catch((err) => {
-            res.status(401).json(err);
-        });
     }
 
     async deliveryman(req: Request, res: Response) {

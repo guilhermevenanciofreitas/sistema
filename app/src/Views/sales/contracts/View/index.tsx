@@ -5,7 +5,7 @@ import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
 import { Search } from '../../../../Search';
-import { ClienteTemplate } from '../../../../Search/Templates/Cliente';
+import { CostumerTemplate } from '../../../../Search/Templates/Costumer';
 
 export class ViewContrato extends ViewContratoBase {
 
@@ -22,8 +22,8 @@ export class ViewContrato extends ViewContratoBase {
 
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                         <Grid md={5}>
-                            <AutoComplete Label='Cliente' Pesquisa={async(Text: string) => await Search.Cliente(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.cliente} OnChange={(args: any) => this.setState({cliente: args})}>
-                                <ClienteTemplate />
+                            <AutoComplete Label='Cliente' Pesquisa={async(Text: string) => await Search.Costumer(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.cliente} OnChange={(args: any) => this.setState({cliente: args})}>
+                                <CostumerTemplate />
                             </AutoComplete>
                         </Grid>
                         <Grid md={3}>
@@ -41,8 +41,8 @@ export class ViewContrato extends ViewContratoBase {
                         </Grid>
 
                         <Grid md={4}>
-                            <AutoComplete Label='Tipo de contrato' Pesquisa={async(Text: string) => await Search.Cliente(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.cliente} OnChange={(args: any) => this.setState({cliente: args})}>
-                                <ClienteTemplate />
+                            <AutoComplete Label='Tipo de contrato' Pesquisa={async(Text: string) => await Search.Costumer(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.cliente} OnChange={(args: any) => this.setState({cliente: args})}>
+                                <CostumerTemplate />
                             </AutoComplete>
                         </Grid>
 

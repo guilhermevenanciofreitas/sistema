@@ -62,7 +62,7 @@ export default class SearchController {
         });
     }
 
-    async cliente(req: Request, res: Response) {
+    async costumer(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try {
@@ -92,7 +92,7 @@ export default class SearchController {
         });
     }
 
-    async funcionario(req: Request, res: Response) {
+    async employee(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try {

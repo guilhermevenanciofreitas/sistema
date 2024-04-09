@@ -30,7 +30,7 @@ export class ControlDatePicker extends DatePickerBase {
         return (
             <>
                 <FormLabel sx={{fontWeight: 400}}>{this.props.Label}</FormLabel>
-                <Input size='sm' type='date' placeholder={this.props.PlaceHolder} value={this.props.Text || ""} onChange={this.TextBox_Change} />
+                <Input size='sm' type='date' placeholder={this.props.PlaceHolder} value={this.props.Text || ""} onChange={this.TextBox_Change} disabled={this.props.ReadOnly} />
             </>
         );
     }

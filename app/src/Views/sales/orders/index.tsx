@@ -1,28 +1,44 @@
 import React from "react";
-import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
+import { Button, CardStatus, Container, Left, ListView, Right } from "../../../Utils/Controls";
 import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
-import { ViewPedidoVenda } from "./View/index";
-import BasePedidoVenda from "./index.base";
+import { ViewOrder } from "./View/index";
+import OrdersBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
-import { IconButton } from "@mui/joy";
+import { Grid, IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
 import { ViewImportar } from "./importar";
 import { ViewFiltro } from "./filtro";
+import _ from "lodash";
 
-const Columns = [
-    { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
-    { selector: (row: any) => row.cliente?.nome, sort: 'nome', name: 'Nome', sortable: true },
-    { selector: (row: any) => row.status?.descricao, sort: '$status.descricao', name: 'Status', sortable: true },
-];
+const Number = ({ row }: any) => {
+    return (
+        <div style={{display: 'flex', height: 'auto'}}>
+            <div style={{width: '5px', height: '25px', backgroundColor: row.status?.color}}></div>
+            <div data-tag="allowRowEvents" style={{ paddingTop: '2px', paddingLeft: '10px', overflow: 'hidden', textOverflow: 'ellipses' }}>
+                {row.number}
+            </div>
+        </div>
+    );
+};
 
-export default class PedidoVenda extends BasePedidoVenda {
+export default class Orders extends OrdersBase {
+
+    private Columns = [
+        { selector: (row: any) => <Number row={row} />, sort: 'number', name: 'Número', sortable: true, maxWidth:"100px" },
+        { selector: (row: any) => row.createdAt, sort: 'nome', name: 'Criado em', sortable: true, maxWidth:"200px" },
+        { selector: (row: any) => row.company?.nomeFantasia, sort: 'nome', name: 'Empresa', sortable: true },
+        { selector: (row: any) => row.costumer?.nome, sort: 'nome', name: 'Nome', sortable: true },
+        { selector: (row: any) => row.seller?.nome, sort: 'nome', name: 'Vendedor', sortable: true, maxWidth:"300px" },
+        { selector: (row: any) => row.status?.descricao, sort: '$status.descricao', name: 'Status', sortable: true },
+        { selector: (row: any) => parseFloat(row.valor).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}), sort: 'valor', name: 'Valor', right: true, sortable: true, maxWidth:"120px" },
+    ];
 
     render(): React.ReactNode {
 
         return (
             <>
 
-                <ViewPedidoVenda ref={this.ViewPedidoVenda} Title="Pedido" />
+                <ViewOrder ref={this.ViewOrder} Title="Pedido" />
 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
@@ -55,10 +71,18 @@ export default class PedidoVenda extends BasePedidoVenda {
                         </Right>
                     </Container>
 
+                    <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+                        {_.map(_.get(this.state.response, 'saleOrderStatus'), (status: any) => (
+                            <Grid md={2}>
+                                <CardStatus checked={this.state.request.statusId == status.id} status={status.descricao.toLowerCase().replace(/(?:^|\s)\S/g, (text: any) => text.toUpperCase())} value={status.ammount} bagde={status.quantity} color={status?.color} OnClick={() => this.CardStatus_Click(status?.id)} />
+                            </Grid>
+                        ))}
+                    </Grid>
+                    
                     <ListView
                         Loading={this.state.Loading}
 
-                        Columns={Columns}
+                        Columns={this.Columns}
                         Rows={this.state.response.rows}
                         Count={this.state.response.count}
 

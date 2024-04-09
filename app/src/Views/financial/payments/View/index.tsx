@@ -4,7 +4,7 @@ import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form,
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
-import { ClienteTemplate } from '../../../../Search/Templates/Cliente';
+import { CostumerTemplate } from '../../../../Search/Templates/Costumer';
 import { Search } from '../../../../Search';
 import { PaymentFormTemplate } from '../../../../Search/Templates/PaymentForm';
 import { BankAccountTemplate } from '../../../../Search/Templates/BankAccount';
@@ -54,8 +54,8 @@ export class ViewPayment extends ViewContaPagarBase {
                             </Grid>
 
                             <Grid md={4}>
-                                <AutoComplete Label='Beneficiário' Pesquisa={async(Text: string) => await Search.Cliente(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.recebedor} OnChange={(recebedor: any) => this.setState({recebedor})}>
-                                    <ClienteTemplate />
+                                <AutoComplete Label='Beneficiário' Pesquisa={async(Text: string) => await Search.Costumer(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.recebedor} OnChange={(recebedor: any) => this.setState({recebedor})}>
+                                    <CostumerTemplate />
                                 </AutoComplete>
                             </Grid>
 

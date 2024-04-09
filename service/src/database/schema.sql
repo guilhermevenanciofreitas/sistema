@@ -128,6 +128,7 @@ ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "rescisaoId" UUID;
 CREATE TABLE IF NOT EXISTS "saleOrderStatus"();
 ALTER TABLE "saleOrderStatus" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "saleOrderStatus" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+ALTER TABLE "saleOrderStatus" ADD COLUMN IF NOT EXISTS "color" VARCHAR(20);
 ALTER TABLE "saleOrderStatus" ADD COLUMN IF NOT EXISTS "ordem" INTEGER;
 
 --saleOrderStatusByFrom
@@ -135,17 +136,20 @@ CREATE TABLE IF NOT EXISTS "saleOrderStatusByFrom"();
 ALTER TABLE "saleOrderStatusByFrom" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "saleOrderStatusByFrom" ADD COLUMN IF NOT EXISTS "statusById" UUID;
 ALTER TABLE "saleOrderStatusByFrom" ADD COLUMN IF NOT EXISTS "statusFromId" UUID;
-ALTER TABLE "saleOrderStatusByFrom" ADD COLUMN IF NOT EXISTS "finished" BOOLEAN;
 
 --saleOrder
 CREATE TABLE IF NOT EXISTS "saleOrder"();
 ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "clienteId" UUID;
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "number" VARCHAR(30);
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "costumerId" UUID;
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "companyId" UUID;
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "sellerId" UUID;
 ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "tipoEntregaId" UUID;
 ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "pedidoVendaStatusId" UUID;
 ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "entregadorId" UUID;
 ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "entrega" JSONB;
-ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "finished" BOOLEAN;
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(18, 2);
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMP WITHOUT TIME ZONE;
 
 --pedidoVendaTipoEntrega
 CREATE TABLE IF NOT EXISTS "pedidoVendaTipoEntrega"();
@@ -159,19 +163,19 @@ ALTER TABLE "saleOrderProgress" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID;
 ALTER TABLE "saleOrderProgress" ADD COLUMN IF NOT EXISTS "data" TIMESTAMP WITHOUT TIME ZONE;
 ALTER TABLE "saleOrderProgress" ADD COLUMN IF NOT EXISTS "statusId" UUID;
 
---SaleOrderItem
-CREATE TABLE IF NOT EXISTS "SaleOrderItem"();
-ALTER TABLE "SaleOrderItem" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "SaleOrderItem" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID;
-ALTER TABLE "SaleOrderItem" ADD COLUMN IF NOT EXISTS "produtoId" UUID;
-ALTER TABLE "SaleOrderItem" ADD COLUMN IF NOT EXISTS "quantidade" DECIMAL(10, 3);
-ALTER TABLE "SaleOrderItem" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
+--saleOrderItem
+CREATE TABLE IF NOT EXISTS "saleOrderItem"();
+ALTER TABLE "saleOrderItem" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "saleOrderItem" ADD COLUMN IF NOT EXISTS "saleOrderId" UUID;
+ALTER TABLE "saleOrderItem" ADD COLUMN IF NOT EXISTS "produtoId" UUID;
+ALTER TABLE "saleOrderItem" ADD COLUMN IF NOT EXISTS "quantidade" DECIMAL(10, 3);
+ALTER TABLE "saleOrderItem" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
 
---pedidoVendaItemCombinacao
-CREATE TABLE IF NOT EXISTS "pedidoVendaItemCombinacao"();
-ALTER TABLE "pedidoVendaItemCombinacao" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "pedidoVendaItemCombinacao" ADD COLUMN IF NOT EXISTS "pedidoVendaItemId" UUID;
-ALTER TABLE "pedidoVendaItemCombinacao" ADD COLUMN IF NOT EXISTS "combinacaoId" UUID;
+--saleOrderItemCombination
+CREATE TABLE IF NOT EXISTS "saleOrderItemCombination"();
+ALTER TABLE "saleOrderItemCombination" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "saleOrderItemCombination" ADD COLUMN IF NOT EXISTS "saleOrderItemId" UUID;
+ALTER TABLE "saleOrderItemCombination" ADD COLUMN IF NOT EXISTS "combinationId" UUID;
 
 --pedidoVendaItemCombinacaoItem
 CREATE TABLE IF NOT EXISTS "pedidoVendaItemCombinacaoItem"();

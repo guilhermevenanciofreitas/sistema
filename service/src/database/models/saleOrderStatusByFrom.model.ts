@@ -12,7 +12,4 @@ export class SaleOrderStatusByFrom extends Model {
   @Column({type: DataType.UUID, field: "statusFromId"})
   statusFromId?: string;
   
-  @Column({type: DataType.BOOLEAN, field: "finished"})
-  finished?: boolean;
-
 }

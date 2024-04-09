@@ -7,9 +7,14 @@ export const Search = {
         return (await Service.Post("search/company", {Search}))?.data;
     },
     
-    Cliente: async (Search: string) =>
+    Costumer: async (Search: string) =>
     {
-        return (await Service.Post("search/cliente", {Search}))?.data;
+        return (await Service.Post("search/costumer", {Search}))?.data;
+    },
+
+    Employee: async (Search: string) =>
+    {
+        return (await Service.Post("search/employee", {Search}))?.data;
     },
 
     Funcionario: async (Search: string) =>

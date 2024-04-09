@@ -1,6 +1,6 @@
 import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-typescript";
 import { ProdutoCombinacaoItem } from "./produtoCombinacaoItem.model";
-import { PedidoVendaItemCombinacao } from "./pedidoVendaItemCombinacao.model";
+import { SaleOrderItemCombination } from "./saleOrderItemCombination.model";
 
 @Table({tableName: "pedidoVendaItemCombinacaoItem"})
 export class PedidoVendaItemCombinacaoItem extends Model {
@@ -17,7 +17,7 @@ export class PedidoVendaItemCombinacaoItem extends Model {
   @Column({type: DataType.UUID, field: "quantidade"})
   quantidade?: number;
 
-  @BelongsTo(() => PedidoVendaItemCombinacao, 'pedidoVendaItemCombinacaoId')
-  pedidoVendaItemCombinacao?: PedidoVendaItemCombinacao;
+  @BelongsTo(() => SaleOrderItemCombination, 'pedidoVendaItemCombinacaoId')
+  pedidoVendaItemCombinacao?: SaleOrderItemCombination;
 
 }

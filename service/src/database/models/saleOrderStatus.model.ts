@@ -1,5 +1,6 @@
 import { Model, Table, Column, DataType, HasMany } from "sequelize-typescript";
 import { SaleOrderStatusByFrom } from "./saleOrderStatusByFrom.model";
+import { SaleOrder } from "./saleOrder.model";
 
 @Table({tableName: "saleOrderStatus"})
 export class SaleOrderStatus extends Model {
@@ -10,6 +11,9 @@ export class SaleOrderStatus extends Model {
   @Column({type: DataType.STRING(100), field: "descricao"})
   descricao?: string;
 
+  @Column({type: DataType.STRING(20), field: "color"})
+  color?: string;
+
   @Column({type: DataType.INTEGER, field: "ordem"})
   ordem?: string;
   
@@ -18,5 +22,8 @@ export class SaleOrderStatus extends Model {
 
   @HasMany(() => SaleOrderStatusByFrom, 'statusFromId')
   statusFrom?: SaleOrderStatusByFrom[];
+
+  @HasMany(() => SaleOrder, 'statusId')
+  saleOrders?: SaleOrder[];
 
 }

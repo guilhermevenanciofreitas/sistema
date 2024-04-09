@@ -3,13 +3,14 @@ import { Service } from "../../../Service";
 import { BaseIndex } from "../../../Utils/Base";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
-import { ViewPedidoVenda } from "../Vendas/View";
+import { ViewOrder } from "../orders/View";
 import _ from "lodash";
 import { MessageBox } from "../../../Utils/Controls";
+import { Loading } from "../../../Utils/Loading";
 
-export default class BaseAndamento extends BaseIndex {
+export default class BaseEntrega extends BaseIndex {
  
-    protected ViewPedidoVenda = React.createRef<ViewPedidoVenda>();
+    protected ViewOrder = React.createRef<ViewOrder>();
 
     //protected ViewImportar = React.createRef<ViewImportar>();
     //protected ViewFiltro = React.createRef<ViewFiltro>();
@@ -18,7 +19,7 @@ export default class BaseAndamento extends BaseIndex {
         Loading: true,
         Selecteds: [],
         Data: {
-            status: [],
+            entregadores: [],
             rows: [],
             count: 0,
             offset: 1,
@@ -97,7 +98,7 @@ export default class BaseAndamento extends BaseIndex {
     private OpenPedidoVenda = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewPedidoVenda.current?.Show(id);
+        const r = await this.ViewOrder.current?.Show(id);
         if (isHitoryBack) history.back();
         return r;
     }
@@ -105,55 +106,71 @@ export default class BaseAndamento extends BaseIndex {
     protected Pesquisar = async(Data: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("sales/order/progressList", Data);
+        var r = await Service.Post("pedidovenda/deliveryList", Data);
 
-        let status = [];
+        let entregadores = [];
 
-        status.push({id: null, descricao: "SEM STATUS"});
+        entregadores.push({id: null, nome: "SEM ENTREGADOR"});
 
-        for (let item of r?.data.status) {
-            status.push(item);
+        for (let item of r?.data.entregadores) {
+            entregadores.push(item);
         }
 
-        this.setState({Loading: false, Data: {...r?.data, status}});
+        this.setState({Loading: false, Data: {...r?.data, entregadores}});
 
     }
 
-    protected onDragStart = (ev: any, id: any, statusId: any) => {
+    protected onDragStart = (ev: any, id: any, entregadorId: any) => {
         ev.dataTransfer.setData("id", id);
-        ev.dataTransfer.setData("statusId", statusId);
+        ev.dataTransfer.setData("entregadorId", entregadorId);
     }
 
     protected onDragOver = (ev: any) => {
         ev.preventDefault();
     }
 
-    protected onDragDrop = async (ev: any, status: any) => {
+    protected onDragDrop = async (ev: any, entregador: any) => {
 
         let id = ev.dataTransfer.getData("id");
-        let statusId = ev.dataTransfer.getData("statusId");
+        let entregadorId = ev.dataTransfer.getData("entregadorId");
         
-        if (status.id == statusId) {
+        if (entregador.id == entregadorId) {
             return;
         }
 
-        const rows = _.cloneDeep(this.state.Data.rows).filter((item: any) => {
+        const rows = this.state.Data.rows.filter((item: any) => {
             if (item.id == id) {
-                item.status = status; 
+                item.entregador = entregador; 
             }
             return item;
         });
 
-        let response = await Service.Post("sales/order/progress", {id: id, statusId: status?.id});
+        let r = await Service.Post("pedidovenda/deliveryman", {id: id, entregadorId: entregador?.id});
 
-        if (response?.status == 201) {
-            await MessageBox.Show({title: "Info", width: 500, type: "Warning", content: response?.data.message, buttons: [{ Text: "OK" }]});
+        if (r?.status == 200) {
+            this.setState({Data: {...this.state.Data, rows: rows}});
+        }
+
+    }
+
+    protected BtnDelivery_Click = async(entregadorId: string) => {
+
+        const ids = _.filter(this.state.Data.rows, (item: any) => item.entregador?.id == entregadorId && _.size(_.filter(item.deliveryRoutes, (c1: any) => c1.deliveryRoute.cancelado == null)) == 0).map((item: any) => item.id);
+
+        if (_.size(ids) == 0) {
+            await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Nenhum pedido para o entregador!", buttons: [{ Text: "OK" }]});
             return;
         }
 
-        if (response?.status == 200) {
-            this.setState({Data: {...this.state.Data, rows: rows}});
-        }
+        Loading.Show();
+
+        await Service.Post("pedidovenda/delivery", {ids, entregadorId});
+
+        await this.Pesquisar(this.state.Data);
+
+        Loading.Hide();
+
+        await MessageBox.Show({title: "Info", width: 400, type: "Success", content: "Pedidos enviados ao entregador!", buttons: [{ Text: "OK" }]});
 
     }
 

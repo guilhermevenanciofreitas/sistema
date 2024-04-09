@@ -1,18 +1,21 @@
+import _ from "lodash";
 import { Service } from "../../../../Service";
 import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
 
-export class ViewContratoBase extends ViewModal<Readonly<{Title: string}>> {
+export class ViewOrderBase extends ViewModal<Readonly<{Title: string}>> {
 
     state = {
         open: false,
         id: "",
-        cliente: null,
+        number: "",
+        costumer: null,
+        company: null,
+        seller: null,
         tipoEntrega: null,
-        status: {
-            descricao: null
-        },
+        status: null,
+        createdAt: '',
         itens: [],
         pagamentos: [],
 
@@ -63,14 +66,22 @@ export class ViewContratoBase extends ViewModal<Readonly<{Title: string}>> {
         try
         {
 
-            if (this.state.cliente == null) {
+            if (this.state.costumer == null) {
                 await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Informe o cliente para venda!", buttons: [{ Text: "OK" }]});
                 return;
             }
 
             Loading.Show();
 
-            let r = await Service.Post("sales/order/save", this.state);
+            const request = {
+                ...this.state,
+                costumerId: _.get(this.state.costumer, 'id') || null,
+                companyId: _.get(this.state.company, 'id') || null,
+                sellerId: _.get(this.state.seller, 'id') || null,
+                entregadorId: _.get(this.state.entregador, 'id') || null,
+            }
+
+            let r = await Service.Post("sales/order/save", request);
     
             Loading.Hide();
     
@@ -94,8 +105,13 @@ export class ViewContratoBase extends ViewModal<Readonly<{Title: string}>> {
     {
         this.setState({
             id: "",
-            cliente: null,
+            number: "",
+            costumer: null,
+            company: null,
+            seller: null,
+            status: null,
             tipoEntrega: null,
+            createdAt: '',
             itens: [],
             pagamentos: [],
             entregador: null,

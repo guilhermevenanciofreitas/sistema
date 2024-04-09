@@ -27,6 +27,7 @@ import nfeRoutes from "./fiscal/nfe.routes";
 import shippingOrderRoutes from "./logistic/shippingOrder.routes";
 import bankAccountRoutes from "./financial/bankAccount.routes";
 import shippingRoutes from "./financial/shipping.routes";
+import progressRoutes from "./sales/progress.routes";
 
 export default class Routes {
   constructor(app: Application) {
@@ -48,6 +49,7 @@ export default class Routes {
     
     //Sales
     app.use("/api/sales/order", saleOrderRoutes);
+    app.use("/api/sales/progress", progressRoutes);
 
     
     app.use("/api/nfe", nfeRoutes);

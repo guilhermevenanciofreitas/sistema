@@ -4,6 +4,7 @@ class Parameters {
     Label?: string;
     PlaceHolder?: string;
     Text?: string | null;
+    ReadOnly?: boolean;
     OnChange?: Function;
 }
 
@@ -12,6 +13,7 @@ export abstract class DatePickerBase extends React.Component<Parameters> {
     static defaultProps = {
         Label: null,
         Text: null,
+        ReadyOnly: false,
     };
 
     public abstract Focus(): void;

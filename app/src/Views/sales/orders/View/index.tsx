@@ -1,18 +1,21 @@
 
-import { ViewContratoBase } from './index.base';
+import { ViewOrderBase } from './index.base';
 import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, MessageBox, Modal, Tab, TabItem, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Alert, FormLabel, Grid } from '@mui/joy';
 import { Search } from '../../../../Search';
-import { ClienteTemplate } from '../../../../Search/Templates/Cliente';
+import { CostumerTemplate } from '../../../../Search/Templates/Costumer';
 import { Itens } from './itens';
 import { MunicipioTemplate } from '../../../../Search/Templates/Municipio';
 import { Estados } from '../../../../Utils/Estados';
 import { Pagamento } from './pagamento';
 import { TipoEntregaTemplate } from '../../../../Search/Templates/TipoEntrega';
+import { EmployeeTemplate } from '../../../../Search/Templates/Employee';
+import _ from 'lodash';
+import { CompanyTemplate } from '../../../../Search/Templates/Company';
 
-export class ViewPedidoVenda extends ViewContratoBase {
+export class ViewOrder extends ViewOrderBase {
 
     public Close = () => this.setState({open: false});
     
@@ -26,15 +29,18 @@ export class ViewPedidoVenda extends ViewContratoBase {
                     <Button Text='Limpar' Type='Reset' Color='white' BackgroundColor='gray' />
 
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
-                        <Grid md={5}>
-                            <AutoComplete Label='Cliente' Pesquisa={async(Text: string) => await Search.Cliente(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.cliente} OnChange={async (args: any) => {
-                                if (args?.isBloquearVenda) {
+                        <Grid md={2}>
+                            <TextBox Label='Número' TextTransform='UpperCase' Text={this.state.number} OnChange={(args: EventArgs) => this.setState({number: args.Value})} />
+                        </Grid>
+                        <Grid md={4}>
+                            <AutoComplete Label='Cliente' Pesquisa={async(Text: string) => await Search.Costumer(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.costumer} OnChange={async (costumer: any) => {
+                                if (costumer?.isBloquearVenda) {
                                     await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Cliente bloqueado para venda!", buttons: [{ Text: "OK" }]});
                                     return;
                                 }
-                                this.setState({cliente: args})
+                                this.setState({costumer})
                             }}>
-                                <ClienteTemplate />
+                                <CostumerTemplate />
                             </AutoComplete>
                         </Grid>
                         <Grid md={3}>
@@ -42,9 +48,35 @@ export class ViewPedidoVenda extends ViewContratoBase {
                                 <TipoEntregaTemplate />
                             </AutoComplete>
                         </Grid>
-                        <Grid md={4}>
+                        <Grid md={3}>
                             <FormLabel>Status</FormLabel>
-                            <Alert variant="soft" style={{height: '32px'}}>{this.state.status?.descricao || "SEM STATUS"}</Alert>
+                            
+                            <Alert variant="soft" style={{height: '32px'}}>
+                                <div style={{display: 'flex', height: 'auto'}}>
+                                    <div style={{marginTop: '3px', width: '15px', height: '15px', backgroundColor: _.get(this.state.status, 'color'), borderRadius: '25px'}}></div>
+                                    <div style={{paddingLeft: '8px'}}>
+                                        {_.get(this.state.status, 'descricao') || "[Sem status]"}
+                                    </div>
+                                </div>
+                            </Alert>
+                        </Grid>
+
+                        <Grid md={4}>
+                            <AutoComplete Label='Empresa' Pesquisa={async(Text: string) => await Search.Company(Text)} Text={(Item: any) => `${Item.nomeFantasia}` } Value={this.state.company} OnChange={(company: any) => this.setState({company})}>
+                                <CompanyTemplate />
+                            </AutoComplete>
+                        </Grid>
+
+                        <Grid md={4}>
+                            <AutoComplete Label='Vendedor' Pesquisa={async(Text: string) => await Search.Employee(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.seller} OnChange={(seller: any) => this.setState({seller})}>
+                                <EmployeeTemplate />
+                            </AutoComplete>
+                        </Grid>
+                        <Grid md={2}>
+                            <TextBox Label='Criado em' Text={this.state.createdAt} ReadOnly={true} />
+                        </Grid>
+                        <Grid md={2}>
+                            <TextBox Label='Valor total' Text={_.sum(this.state.itens.map((c: any) => parseFloat(c.valor.toString() || "0"))).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'})} ReadOnly={true} />
                         </Grid>
 
                         <Tab>
@@ -87,8 +119,8 @@ export class ViewPedidoVenda extends ViewContratoBase {
                                     <br></br>
                                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                                         <Grid md={4}>
-                                            <AutoComplete Label='Entregador' Pesquisa={async(Text: string) => await Search.Funcionario(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.entregador} OnChange={(args: any) => this.setState({entregador: args})}>
-                                                <ClienteTemplate />
+                                            <AutoComplete Label='Transportadora' Pesquisa={async(Text: string) => await Search.Employee(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.entregador} OnChange={(args: any) => this.setState({entregador: args})}>
+                                                <EmployeeTemplate />
                                             </AutoComplete>
                                         </Grid>
                                     </Grid>

@@ -1,10 +1,11 @@
-import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-typescript";
+import { Model, Table, Column, DataType, BelongsTo, HasMany, ForeignKey } from "sequelize-typescript";
 import { Partner } from "./partner.model";
 import { SaleOrderItem } from "./saleOrderItem.model";
 import { SaleOrderRecieve } from "./saleOrderRecieve.model";
 import { SaleOrderStatus } from "./saleOrderStatus.model";
 import { PedidoVendaTipoEntrega } from "./pedidoVendaTipoEntrega.model";
 import { PedidoVendaDeliveryRoute } from "./pedidoVendaDeliveryRoute.model";
+import { Company } from "./company.model";
 
 @Table({tableName: "saleOrder"})
 export class SaleOrder extends Model {
@@ -12,8 +13,17 @@ export class SaleOrder extends Model {
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
   id?: string;
 
-  @Column({type: DataType.UUID, field: "clienteId"})
-  clientId?: string;
+  @Column({type: DataType.STRING(30), field: "number"})
+  number?: string;
+
+  @Column({type: DataType.UUID, field: "costumerId"})
+  costumerId?: string;
+
+  @Column({type: DataType.UUID, field: "companyId"})
+  companyId?: string;
+
+  @Column({type: DataType.UUID, field: "sellerId"})
+  sellerId?: string;
 
   @Column({type: DataType.UUID, field: "statusId"})
   statusId?: string;
@@ -27,11 +37,22 @@ export class SaleOrder extends Model {
   @Column({type: DataType.UUID, field: "entregadorId"})
   entregadorId?: string;
 
-  @Column({type: DataType.BOOLEAN, field: "finished"})
-  finished?: boolean;
+  @Column({type: DataType.DECIMAL(18, 2), field: "valor"})
+  valor?: number;
 
-  @BelongsTo(() => Partner, 'clienteId')
-  cliente?: Partner;
+  @Column({type: DataType.DATE, field: "createdAt"})
+  createdAt?: Date;
+
+
+  
+  @BelongsTo(() => Partner, {as: 'costumer', foreignKey: 'costumerId'})
+  costumer?: Partner;
+
+  @BelongsTo(() => Company, {as: 'company', foreignKey: 'companyId'})
+  company?: Company;
+
+  @BelongsTo(() => Partner, {as: 'seller', foreignKey: 'sellerId'})
+  seller?: Partner;
 
   @BelongsTo(() => PedidoVendaTipoEntrega, 'tipoEntregaId')
   tipoEntrega?: PedidoVendaTipoEntrega;
@@ -39,7 +60,7 @@ export class SaleOrder extends Model {
   @BelongsTo(() => SaleOrderStatus, 'statusId')
   status?: SaleOrderStatus;
 
-  @HasMany(() => SaleOrderItem, 'pedidoVendaId')
+  @HasMany(() => SaleOrderItem, 'saleOrderId')
   itens?: SaleOrderItem[];
 
   @HasMany(() => SaleOrderRecieve, 'pedidoVendaId')

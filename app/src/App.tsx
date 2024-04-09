@@ -15,8 +15,8 @@ import Usuarios from "./views/registrations/users/index";
 
 
 
-import Contratos from "./views/sales/Contratos";
-import PedidoVenda from "./views/sales/Vendas";
+import Contracts from "./views/sales/contracts";
+import Orders from "./views/sales/orders";
 
 import { Login } from "./views/Login";
 
@@ -25,9 +25,9 @@ import NotasFiscais from "./views/fiscal/nfes";
 
 
 
-import Receipts from "./views/financial/receipts";
-import Andamento from "./views/sales/Andamento";
-import Entrega from "./views/sales/Entrega";
+//import Receipts from "./views/financial/receipts";
+import Andamento from "./views/sales/progress";
+import Entrega from "./views/sales/delivery";
 import ShippingsOrders from "./views/logistics/shippingsOrders";
 import Payments from "./views/financial/payments";
 import BankAccounts from "./views/financial/bankAccounts";
@@ -52,14 +52,14 @@ export default class App extends React.Component {
                 <Route path="/registrations/shippings-company" element={<RequireLogin><Transporadoras /></RequireLogin>} />
 
                 {/* Sales */}
-                <Route path="/sales/orders" element={<RequireLogin><PedidoVenda /></RequireLogin>} />
+                <Route path="/sales/orders" element={<RequireLogin><Orders /></RequireLogin>} />
                 <Route path="/sales/progress" element={<RequireLogin><Andamento /></RequireLogin>} />
 
                 {/* Logistics */}
                 <Route path="/logistic/shippings-orders" element={<RequireLogin><ShippingsOrders /></RequireLogin>} />
 
                 {/* Financial */}
-                <Route path="/financial/receipts" element={<RequireLogin><Receipts /></RequireLogin>} />
+                {/*<Route path="/financial/receipts" element={<RequireLogin><Receipts /></RequireLogin>} />*/}
                 <Route path="/financial/payments" element={<RequireLogin><Payments /></RequireLogin>} />
                 <Route path="/financial/bank-accounts" element={<RequireLogin><BankAccounts /></RequireLogin>} />
                 <Route path="/financial/shippings" element={<RequireLogin><Shippings /></RequireLogin>} />
@@ -69,7 +69,7 @@ export default class App extends React.Component {
 
 
 
-                <Route path="/contratos" element={<RequireLogin><Contratos /></RequireLogin>} />
+                <Route path="/contratos" element={<RequireLogin><Contracts /></RequireLogin>} />
                 <Route path="/vendas/delivery" element={<RequireLogin><Entrega /></RequireLogin>} />
 
                 <Route path="*" element={<div>Página não encontrada!</div>} />

@@ -1,6 +1,6 @@
 import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-typescript";
 import { Product } from "./product.model";
-import { PedidoVendaItemCombinacao } from "./pedidoVendaItemCombinacao.model";
+import { SaleOrderItemCombination } from "./saleOrderItemCombination.model";
 
 @Table({tableName: "saleOrderItem"})
 export class SaleOrderItem extends Model {
@@ -8,8 +8,8 @@ export class SaleOrderItem extends Model {
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
   id?: string;
 
-  @Column({type: DataType.UUID, field: "pedidoVendaId"})
-  pedidoVendaId?: string;
+  @Column({type: DataType.UUID, field: "saleOrderId"})
+  saleOrderId?: string;
 
   @Column({type: DataType.UUID, field: "produtoId"})
   produtoId?: string;
@@ -23,7 +23,7 @@ export class SaleOrderItem extends Model {
   @BelongsTo(() => Product, 'produtoId')
   produto?: Product;
 
-  @HasMany(() => PedidoVendaItemCombinacao, 'pedidoVendaItemId')
-  itemCombinacoes?: PedidoVendaItemCombinacao[];
+  @HasMany(() => SaleOrderItemCombination, 'saleOrderItemId')
+  itemCombinacoes?: SaleOrderItemCombination[];
 
 }

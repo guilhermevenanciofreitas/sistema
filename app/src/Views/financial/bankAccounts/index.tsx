@@ -89,7 +89,7 @@ export default class BankAccount extends BankAccountBase {
                                                     <label style={{fontSize: 14, position: 'absolute', right: '0.5rem'}}><b>{parseFloat(item.valor).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'})}</b></label>
                                                     <label style={{fontSize: 12}}>{item.recebedor?.nome}</label>
                                                     <label style={{fontSize: 12}}>Vencimento: {item.vencimento}</label>
-                                                    <IconButton sx={{position: 'absolute', top: '2.5rem', right: '0.5rem'}} onClick={() => this.BtnEditPayment_Click(item.id)}>
+                                                    <IconButton size="sm" sx={{position: 'absolute', top: '2.5rem', right: '0.5rem'}} onClick={() => this.BtnEditPayment_Click(item.id)}>
                                                         <EditRounded style={{fontSize: 16}} />
                                                     </IconButton>
                                                 </Card>

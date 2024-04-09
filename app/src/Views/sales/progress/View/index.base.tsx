@@ -3,15 +3,13 @@ import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
 
-export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
+export class ViewSaleOrderStatusBase extends ViewModal<Readonly<{Title: string}>> {
 
     state = {
         open: false,
         id: "",
-        numeroDocumento: "",
-        emissao: "",
-        vencimento: "",
-        recebedor: null,
+        descricao: "",
+        color: "",
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -21,7 +19,7 @@ export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
 
         if (id) {
             Loading.Show();
-            const r = await Service.Post("contaPagar/findOne", {id});
+            const r = await Service.Post("sales/progress/findOne", {id});
             Loading.Hide();
             this.setState(r?.data);
         }
@@ -51,7 +49,7 @@ export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
 
             Loading.Show();
 
-            let r = await Service.Post("contaPagar/save", this.state);
+            let r = await Service.Post("sales/progress/save", this.state);
     
             Loading.Hide();
     
@@ -73,7 +71,11 @@ export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
 
     private Limpar = () =>
     {
-        this.setState({id: "", nome: "", email: ""});
+        this.setState({
+            id: "",
+            descricao: "",
+            color: "",
+        });
     }
 
 }
