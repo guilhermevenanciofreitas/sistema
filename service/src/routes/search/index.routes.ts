@@ -22,7 +22,7 @@ class SearchRoutes {
     this.router.post("/bank-account", (req, res) => this.controller.bankAccount(req, res));
 
     this.router.post("/municipio", (req, res) => this.controller.municipio(req, res));
-    this.router.post("/form-of-payment", (req, res) => this.controller.formOfPayment(req, res));
+    this.router.post("/payment-form", (req, res) => this.controller.paymentForm(req, res));
     this.router.post("/tipoEntrega", (req, res) => this.controller.tipoEntrega(req, res));
 
     this.router.post("/product", (req, res) => this.controller.product(req, res));

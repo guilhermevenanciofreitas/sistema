@@ -15,22 +15,22 @@ export default class LoginController {
     try {
 
       let accountId = req.body.accountId;
-      let empresaId = req.body.empresaId;
+      let companyId = req.body.companyId;
 
       const sequelize = new Accounts().sequelize;
 
       const accountTransaction = await sequelize?.transaction();
 
-      const user: any = await User1.findOne({attributes: ["id", "email", "password"], where: {email: req.body.email, password: req.body.password}, transaction: accountTransaction});
+      const userAuth: any = await User1.findOne({attributes: ["id", "email", "password"], where: {email: req.body.email, password: req.body.password}, transaction: accountTransaction});
 
-      if (user == null) {
+      if (userAuth == null) {
         res.status(203).json({message: "E-mail/senha incorreto!"});
         return;
       }
 
       if (accountId == "") {
   
-        const accountsUsers = await AccountUser.findAll({attributes: ["accountId"], include: [{attributes: ["id", "name"], model: Account}], where: {userId: user?.id}, transaction: accountTransaction});
+        const accountsUsers = await AccountUser.findAll({attributes: ["accountId"], include: [{attributes: ["id", "name"], model: Account}], where: {userId: userAuth?.id}, transaction: accountTransaction});
       
         if (accountsUsers.length > 1) {
           let accounts = [];
@@ -54,7 +54,7 @@ export default class LoginController {
         database: account?.Database?.database
       }).sequelize?.transaction();
 
-      if (empresaId == "") {
+      if (companyId == "") {
 
         const empresas = await Company.findAll({attributes: ["id", "nomeFantasia"], transaction: transaction});
 
@@ -63,19 +63,19 @@ export default class LoginController {
           return;
         }
 
-        empresaId = empresas[0].id;
+        companyId = empresas[0].id;
 
       }
 
-      const session = await Session.create({id: crypto.randomUUID(), userId: user?.id, accountId: accountId, empresaId: empresaId, lastAcess: new Date()}, {transaction: accountTransaction});
+      const session = await Session.create({id: crypto.randomUUID(), userId: userAuth?.id, accountId: accountId, companyId: companyId, lastAcess: new Date()}, {transaction: accountTransaction});
       accountTransaction?.commit();
       
-      const usuario = await User2.findOne({attributes: ["id", "nome"], where: {id: user?.id}, transaction: transaction});
-      const empresa = await Company.findOne({attributes: ["id", "nomeFantasia"], where: {id: empresaId}, transaction: transaction});
+      const user = await User2.findOne({attributes: ["id", "nome"], where: {id: userAuth?.id}, transaction: transaction});
+      const company = await Company.findOne({attributes: ["id", "nomeFantasia"], where: {id: companyId}, transaction: transaction});
       
       sequelize?.close();
 
-      res.status(200).json({id: session?.id, usuario: usuario, empresa: empresa, lastAcess: session?.lastAcess?.toLocaleString('en-US'), expiresIn: minutes});
+      res.status(200).json({id: session?.id, user: user, company: company, lastAcess: session?.lastAcess?.toLocaleString('en-US'), expiresIn: minutes});
       
 
     } catch (err) {

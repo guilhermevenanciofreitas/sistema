@@ -26,6 +26,7 @@ import pedidoEletronicoRoutes from "./pedido-eletronico/index.routes";
 import nfeRoutes from "./fiscal/nfe.routes";
 import shippingOrderRoutes from "./logistic/shippingOrder.routes";
 import bankAccountRoutes from "./financial/bankAccount.routes";
+import shippingRoutes from "./financial/shipping.routes";
 
 export default class Routes {
   constructor(app: Application) {
@@ -60,7 +61,7 @@ export default class Routes {
     app.use("/api/financial/payment", paymentRoutes);
 
     app.use("/api/financial/bank-account", bankAccountRoutes);
-
+    app.use("/api/financial/shipping", shippingRoutes);
 
 
 

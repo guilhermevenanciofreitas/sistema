@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 class Parameters {
     Label?: string;
+    ReadOnly?: boolean;
     PlaceHolder?: string;
     Text?: string;
     Mask?: any;
@@ -13,6 +14,7 @@ export abstract class TextBoxBase extends React.Component<Parameters> {
 
     static defaultProps = {
         Label: null,
+        ReadyOnly: false,
         Text: '',
         Mask: null,
         TextTransform: "Normal"

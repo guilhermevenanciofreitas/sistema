@@ -1,5 +1,5 @@
 import { Model, Table, Column, DataType, BelongsTo } from "sequelize-typescript";
-import { FormOfPayment } from "./formOfPayment.model";
+import { PaymentForm } from "./paymentForm.model";
 
 @Table({tableName: "saleOrderRecieve"})
 export class SaleOrderRecieve extends Model {
@@ -19,7 +19,7 @@ export class SaleOrderRecieve extends Model {
   @Column({type: DataType.DECIMAL(10, 2), field: "valor"})
   valor?: number;
 
-  @BelongsTo(() => FormOfPayment, 'formaPagamentoId')
-  formaPagamento?: FormOfPayment;
+  @BelongsTo(() => PaymentForm, 'formaPagamentoId')
+  formaPagamento?: PaymentForm;
 
 }

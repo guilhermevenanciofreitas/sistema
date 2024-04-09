@@ -22,6 +22,9 @@ export class BankAccount extends Model {
   @Column({type: DataType.STRING(1), field: "accountDigit"})
   accountDigit?: string;
 
+  @Column({type: DataType.DECIMAL(18, 2), field: "balance"})
+  balance?: string;
+
   @BelongsTo(() => Bank, 'bankId')
   bank?: Bank;
 

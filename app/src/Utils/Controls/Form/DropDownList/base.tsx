@@ -1,9 +1,10 @@
 import React, { Component, ReactNode } from "react";
 
-export abstract class DropDownListBase extends React.Component<Readonly<{Label?: string; SelectedValue?: any; OnChange?: Function; children?: ReactNode;}>> {
+export abstract class DropDownListBase extends React.Component<Readonly<{Label?: string; ReadOnly?: boolean; SelectedValue?: any; OnChange?: Function; children?: ReactNode;}>> {
 
     static defaultProps = {
         Label: null,
+        ReadOnly: false,
         SelectedValue: undefined,
         children: undefined,
     };

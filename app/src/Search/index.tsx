@@ -42,9 +42,9 @@ export const Search = {
         return (await Service.Post("search/bank-account", {Search}))?.data;
     },
     
-    FormOfPayment: async (Search: string) =>
+    PaymentForm: async (Search: string) =>
     {
-        return (await Service.Post("search/form-of-payment", {Search}))?.data;
+        return (await Service.Post("search/payment-form", {Search}))?.data;
     },
 
     TipoEntrega: async (Search: string) =>

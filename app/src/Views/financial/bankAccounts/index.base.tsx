@@ -5,6 +5,9 @@ import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 import { ViewBankAccount } from "./View";
 import { ViewPayment } from "../payments/View";
+import _ from "lodash";
+import { Loading } from "../../../Utils/Loading";
+import { MessageBox } from "../../../Utils/Controls";
 
 export default class BankAccountBase extends BaseIndex {
  
@@ -15,14 +18,11 @@ export default class BankAccountBase extends BaseIndex {
     state = {
         Loading: true,
         Selecteds: [],
-        Data: {
+
+        response: {
             bankAccounts: [],
-            rows: [],
-            count: 0,
-            offset: 1,
-            limit: 100,
-            filter: undefined,
-            sort: undefined
+            payments: [],
+            
         },
 
     }
@@ -32,17 +32,21 @@ export default class BankAccountBase extends BaseIndex {
         try
         {
 
-            /*
             if (this.Finish) return;
 
-            const { id } = queryString.parse(window.location.search);
+            const { id, paymentId } = queryString.parse(window.location.search);
+
             if (id) {
-                await this.OpenPedidoVenda(id.toString(), false);
+                await this.OpenBankAccount(id.toString(), false);
                 history.pushState(null, "", `${window.location.origin}${window.location.pathname}`);
             }
-            */
 
-            await this.Pesquisar(this.state.Data);
+            if (paymentId) {
+                await this.OpenPayment(paymentId.toString(), false);
+                history.pushState(null, "", `${window.location.origin}${window.location.pathname}`);
+            }
+         
+            await this.Pesquisar();
 
             this.componentDidMountFinish();
             
@@ -56,18 +60,80 @@ export default class BankAccountBase extends BaseIndex {
 
     protected BtnNovo_Click = async (id: string): Promise<void> =>
     {
+        try
+        {
 
+            const r = await this.ViewBankAccount.current?.Show(undefined);
+
+            if (r) this.Pesquisar();
+            
+        }
+        catch (err: any) 
+        {
+            await DisplayError.Show(err);
+        }
     }
 
-    protected BtnEdit_Click = async (id: string): Promise<void> =>
+    protected BtnEditBankAccount_Click = async (id: string): Promise<void> =>
+    {
+        try
+        {
+
+            const r = await this.OpenBankAccount(id);
+
+            if (r) this.Pesquisar();
+       
+        } 
+        catch (err: any) 
+        {
+            await DisplayError.Show(err);
+        }
+    }
+
+    protected BtnEditPayment_Click = async (id: string): Promise<void> =>
     {
         try
         {
 
             const r = await this.OpenPayment(id);
 
-            if (r) this.Pesquisar(this.state.Data);
-       
+            if (r) this.Pesquisar();
+        
+        } 
+        catch (err: any) 
+        {
+            await DisplayError.Show(err);
+        }
+    }
+
+    protected BtnShipping_Click = async (bankAccountId: string): Promise<void> =>
+    {
+        try
+        {
+
+            const payments = _.cloneDeep(_.map(this.state.response.payments.filter((item: any) => item?.bankAccount?.id == bankAccountId), (c: any) => c.id));
+
+            if (_.size(payments) == 0) {
+                await MessageBox.Show({title: "Info", width: 420, type: "Warning", content: `Nenhum registrado para remessa!`,
+                    buttons: [
+                        { Text: "Ok" }
+                    ]
+                });
+                return;
+            }
+
+            Loading.Show();
+            var r = await Service.Post("financial/bank-account/shipping", {bankAccountId, payments});
+            Loading.Hide();
+
+            if (r) await this.Pesquisar();
+
+            await MessageBox.Show({title: "Info", width: 420, type: "Success", content: `Remessa gerada com sucesso!`,
+                buttons: [
+                    { Text: "Ok" }
+                ]
+            });
+        
         } 
         catch (err: any) 
         {
@@ -92,7 +158,7 @@ export default class BankAccountBase extends BaseIndex {
     {
         try
         {
-            await this.Pesquisar(this.state.Data);
+            await this.Pesquisar();
         }
         catch (err: any) 
         {
@@ -100,28 +166,36 @@ export default class BankAccountBase extends BaseIndex {
         }
     }
 
-    private OpenPayment = async (id: string, isHitoryBack: boolean = true) =>
+    private OpenBankAccount = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
+        const r = await this.ViewBankAccount.current?.Show(id);
+        if (isHitoryBack) history.back();
+        return r;
+    }
+
+    private OpenPayment = async (id: string, isHitoryBack: boolean = true) =>
+    {
+        history.pushState(null, "", `${window.location.origin}${window.location.pathname}?paymentId=${id}`);
         const r = await this.ViewPayment.current?.Show(id);
         if (isHitoryBack) history.back();
         return r;
     }
 
-    protected Pesquisar = async(Data: any): Promise<void> =>
+    protected Pesquisar = async(): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("financial/bank-account/findAll", Data);
+        var r = await Service.Post("financial/bank-account/findAll", null);
 
         let bankAccounts = [];
 
-        bankAccounts.push({id: null, bank: {description: "SEM CONTA"}});
+        bankAccounts.push({id: null, bank: {description: "[Sem conta]"}});
 
-        for (let item of r?.data.bankAccounts) {
+        for (let item of r?.data.response.bankAccounts) {
             bankAccounts.push(item);
         }
 
-        this.setState({Loading: false, Data: {...r?.data, bankAccounts}});
+        this.setState({Loading: false, response: {...r?.data?.response, bankAccounts}});
 
     }
 
@@ -143,7 +217,7 @@ export default class BankAccountBase extends BaseIndex {
             return;
         }
 
-        const rows = this.state.Data.rows.filter((item: any) => {
+        const payments = this.state.response.payments.filter((item: any) => {
             if (item.id == id) {
                 item.bankAccount = bankAccount; 
             }
@@ -153,7 +227,7 @@ export default class BankAccountBase extends BaseIndex {
         let r = await Service.Post("financial/bank-account/change-bank-account-payment", {id: id, bankAccountId: bankAccount?.id});
 
         if (r?.status == 200) {
-            this.setState({Data: {...this.state.Data, rows: rows}});
+            this.setState({response: {...this.state.response, payments: payments}});
         }
 
     }

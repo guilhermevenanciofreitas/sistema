@@ -3,7 +3,7 @@ import { AutoComplete, Button, DatePicker, GridView, Modal, TextBox, ViewModal }
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
-import { FormOfPaymentTemplate } from "../../../../Search/Templates/FormOfPayment";
+import { PaymentFormTemplate } from "../../../../Search/Templates/PaymentForm";
 import { Grid } from "@mui/joy";
 
 const Columns = [
@@ -41,8 +41,8 @@ class ViewPagamento extends ViewModal {
                 
                 <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                     <Grid md={12}>
-                        <AutoComplete Label='Forma de pagamento' Pesquisa={async(Text: string) => await Search.FormOfPayment(Text)} Text={(Item: any) => `${Item?.description}` } Value={this.state.formaPagamento} OnChange={(args: any) => this.setState({formaPagamento: args})}>
-                            <FormOfPaymentTemplate />
+                        <AutoComplete Label='Forma de pagamento' Pesquisa={async(Text: string) => await Search.PaymentForm(Text)} Text={(Item: any) => `${Item?.description}` } Value={this.state.formaPagamento} OnChange={(args: any) => this.setState({formaPagamento: args})}>
+                            <PaymentFormTemplate />
                         </AutoComplete>
                     </Grid>
                     <Grid md={6}>

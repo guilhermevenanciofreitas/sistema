@@ -6,7 +6,7 @@ import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
 import { ClienteTemplate } from '../../../../Search/Templates/Cliente';
 import { Search } from '../../../../Search';
-import { FormOfPaymentTemplate } from '../../../../Search/Templates/FormOfPayment';
+import { PaymentFormTemplate } from '../../../../Search/Templates/PaymentForm';
 import { BankAccountTemplate } from '../../../../Search/Templates/BankAccount';
 import { CompanyTemplate } from '../../../../Search/Templates/Company';
 import { BankTemplate } from '../../../../Search/Templates/Bank';
@@ -30,11 +30,11 @@ export class ViewPayment extends ViewContaPagarBase {
                         <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                             
                             <Grid md={2}>
-                                <TextBox Label='Número' TextTransform='Normal' Text={this.state.numeroDocumento} OnChange={(args: EventArgs) => this.setState({numeroDocumento: args.Value})} />
+                                <TextBox Label='Número' TextTransform='Normal' Text={this.state.number} OnChange={(args: EventArgs) => this.setState({number: args.Value})} />
                             </Grid>
                             <Grid md={4}>
-                                <AutoComplete Label='Forma de pagamento' Pesquisa={async(Text: string) => await Search.FormOfPayment(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.formOfPayment} OnChange={(formOfPayment: any) => this.setState({formOfPayment})}>
-                                    <FormOfPaymentTemplate />
+                                <AutoComplete Label='Forma de pagamento' Pesquisa={async(Text: string) => await Search.PaymentForm(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.paymentForm} OnChange={(paymentForm: any) => this.setState({paymentForm})}>
+                                    <PaymentFormTemplate />
                                 </AutoComplete>
                             </Grid>
                             <Grid md={2}>
@@ -44,7 +44,7 @@ export class ViewPayment extends ViewContaPagarBase {
                                 <DatePicker Label='Agendamento' Text={this.state.vencimento} OnChange={(args: EventArgs) => this.setState({vencimento: args.Value})} />
                             </Grid>
                             <Grid md={2}>
-                                <TextBox Label='Nosso número' TextTransform='Normal' Text={this.state.ourNumber} OnChange={(args: EventArgs) => this.setState({ourNumber: args.Value})} />
+                                <TextBox Label='Nosso número' TextTransform='Normal' Text={this.state.ourNumber} OnChange={(args: EventArgs) => this.setState({ourNumber: args.Value})} ReadOnly={true} />
                             </Grid>
 
                             <Grid md={4}>
@@ -63,6 +63,19 @@ export class ViewPayment extends ViewContaPagarBase {
                                 <AutoComplete Label='Conta bancária' Pesquisa={async(Text: string) => await Search.BankAccount(Text)} Text={(Item: any) => `${Item.bank?.description} - ${Item.agency}-${Item.agencyDigit} / ${Item.account}-${Item.accountDigit}` } Value={this.state.bankAccount} OnChange={(bankAccount: any) => this.setState({bankAccount})}>
                                     <BankAccountTemplate />
                                 </AutoComplete>
+                            </Grid>
+
+                            <Grid md={3}>
+                                <TextBox Label='Nº Documento' TextTransform='Normal' Text={this.state.numeroDocumento} OnChange={(args: EventArgs) => this.setState({numeroDocumento: args.Value})} />
+                            </Grid>
+                            <Grid md={2}>
+                                <TextBox Label='Moeda' TextTransform='Normal' Text={'BRL (Real)'} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} ReadOnly={true} />
+                            </Grid>
+                            <Grid md={2}>
+                                <TextBox Label='Valor' TextTransform='Normal' Text={this.state.valor} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} />
+                            </Grid>
+                            <Grid md={5}>
+                                <TextBox Label='Aviso ao benificiário' TextTransform='Normal' Text={this.state.beneficiaryNotice} OnChange={(args: EventArgs) => this.setState({beneficiaryNotice: args.Value})} />
                             </Grid>
                         
                             {/* 
@@ -83,42 +96,85 @@ export class ViewPayment extends ViewContaPagarBase {
                         </Grid>
                     </fieldset>
 
-                    {_.get(this.state.formOfPayment, 'type') == 'boleto' && (
+                    {_.get(this.state.paymentForm, 'type') == 'boleto' && (
                         <fieldset>
                             <legend>Título - Boleto</legend>
                             <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                                 <Grid md={12}>
-                                    <TextBox Label='Linha digitável' TextTransform='Normal' Text={this.state.numeroDocumento} OnChange={(args: EventArgs) => this.setState({numeroDocumento: args.Value})} />
+                                    <TextBox Label='Linha digitável' TextTransform='Normal' Text={this.state.data?.digitableLine} OnChange={(args: EventArgs) => this.setState({data: {...this.state.data, digitableLine: args.Value}})} />
                                 </Grid>
                                 <Grid md={3}>
-                                    <TextBox Label='Valor do título' TextTransform='Normal' Text={this.state.numeroDocumento} OnChange={(args: EventArgs) => this.setState({numeroDocumento: args.Value})} />
-                                </Grid>
-                                <Grid md={2}>
-                                    <TextBox Label='Valor da multa' TextTransform='Normal' Text={this.state.numeroDocumento} OnChange={(args: EventArgs) => this.setState({numeroDocumento: args.Value})} />
-                                </Grid>
-                                <Grid md={2}>
-                                    <TextBox Label='Valor do juros' TextTransform='Normal' Text={this.state.numeroDocumento} OnChange={(args: EventArgs) => this.setState({numeroDocumento: args.Value})} />
-                                </Grid>
-                                <Grid md={2}>
-                                    <TextBox Label='Valor do desconto' TextTransform='Normal' Text={this.state.numeroDocumento} OnChange={(args: EventArgs) => this.setState({numeroDocumento: args.Value})} />
+                                    <TextBox Label='Valor da multa' TextTransform='Normal' Text={this.state.data?.fine || "0.00"} OnChange={(args: EventArgs) => this.setState({data: {...this.state.data, fine: args.Value}})} />
                                 </Grid>
                                 <Grid md={3}>
-                                    <TextBox Label='Valor total' TextTransform='Normal' Text={this.state.numeroDocumento} OnChange={(args: EventArgs) => this.setState({numeroDocumento: args.Value})} />
+                                    <TextBox Label='Valor do juros' TextTransform='Normal' Text={this.state.data?.interest || "0.00"} OnChange={(args: EventArgs) => this.setState({data: {...this.state.data, interest: args.Value}})} />
                                 </Grid>
+                                <Grid md={3}>
+                                    <TextBox Label='Valor do desconto' TextTransform='Normal' Text={this.state.data?.discount || "0.00"} OnChange={(args: EventArgs) => this.setState({data: {...this.state.data, discount: args.Value}})} />
+                                </Grid>
+                                <Grid md={3}>
+                                    <TextBox Label='Valor total' TextTransform='Normal' Text={((parseFloat(this.state.valor || "0")) + (parseFloat(this.state.data?.fine || "0")) + (parseFloat(this.state.data?.interest || "0")) - (parseFloat(this.state.data?.discount || "0"))).toLocaleString("pt-BR", {minimumFractionDigits: 2})} ReadOnly={true} />
+                                </Grid>
+
+                                {/*
+                                <Grid md={3}>
+                                    <DropDownList Label='Sacado/Pagador tipo inscrição' SelectedValue={null} ReadOnly={true}>
+                                        <DropDownListItem Label='[Selecione]' Value={null} />
+                                        <DropDownListItem Label='CPF' Value={'cpf'} />
+                                        <DropDownListItem Label='CNPJ' Value={'cnpj'} />
+                                    </DropDownList>
+                                </Grid>
+                                <Grid md={3}>
+                                    <TextBox Label='CNPJ do Sacado/Pagador' TextTransform='Normal' Text={''} ReadOnly={true} />
+                                </Grid>
+                                <Grid md={6}>
+                                    <TextBox Label='Nome do Sacado/Pagador' TextTransform='Normal' Text={''} ReadOnly={true} />
+                                </Grid>
+                                */}
+
+                                <Grid md={3}>
+                                    <DropDownList Label='Cedente/Benificiário tipo inscrição' SelectedValue={null}>
+                                        <DropDownListItem Label='[Selecione]' Value={null} />
+                                        <DropDownListItem Label='CPF' Value={'cpf'} />
+                                        <DropDownListItem Label='CNPJ' Value={'cnpj'} />
+                                    </DropDownList>
+                                </Grid>
+                                <Grid md={3}>
+                                    <TextBox Label='CNPJ do Cedente/Benificiário' TextTransform='Normal' Text={''} />
+                                </Grid>
+                                <Grid md={6}>
+                                    <TextBox Label='Nome do Cedente/Benificiário' TextTransform='Normal' Text={''} />
+                                </Grid>
+                                {/*
+                                <Grid md={3}>
+                                    <DropDownList Label='Sacador/Avalista tipo inscrição' SelectedValue={null}>
+                                        <DropDownListItem Label='[Selecione]' Value={null} />
+                                        <DropDownListItem Label='CPF' Value={'cpf'} />
+                                        <DropDownListItem Label='CNPJ' Value={'cnpj'} />
+                                    </DropDownList>
+                                </Grid>
+                                <Grid md={3}>
+                                    <TextBox Label='CNPJ do Sacador/Avalista' TextTransform='Normal' Text={''} />
+                                </Grid>
+                                <Grid md={6}>
+                                    <TextBox Label='Nome do Sacador/Avalista' TextTransform='Normal' Text={''} />
+                                </Grid>
+                                */}
+
                             </Grid>
                         </fieldset>
                     )}
 
-                    {_.get(this.state.formOfPayment, 'type') == 'transferencia' && (
+                    {_.get(this.state.paymentForm, 'type') == 'transferencia' && (
                         <fieldset>
                             <legend>Transferência - TED</legend>
                             <Grid container spacing={1} sx={{ flexGrow: 1 }}>
 
                                 <Grid md={5}>
-                                    <DropDownList Label='Tipo de conta' SelectedValue={null} OnChange={(args: EventArgs) => this.setState({sexo: args.Value})}>
+                                    <DropDownList Label='Tipo de conta' SelectedValue={this.state.data?.accountType} OnChange={(args: EventArgs) => this.setState({data: {...this.state.data, accountType: args.Value}})}>
                                         <DropDownListItem Label='[Selecione]' Value={null} />
-                                        <DropDownListItem Label='Conta corrente' Value={1} />
-                                        <DropDownListItem Label='Conta poupança' Value={2} />
+                                        <DropDownListItem Label='Conta corrente' Value={'CC'} />
+                                        <DropDownListItem Label='Conta poupança' Value={'CP'} />
                                     </DropDownList>
                                 </Grid>
                                 <Grid md={5}>
@@ -140,20 +196,25 @@ export class ViewPayment extends ViewContaPagarBase {
                                     </AutoComplete>
                                 </Grid>
                                 <Grid md={3}>
-                                    <TextBox Label='Agência' TextTransform='Normal' Text={this.state.multa} OnChange={(args: EventArgs) => this.setState({multa: args.Value})} />
+                                    <TextBox Label='Agência' TextTransform='Normal' Text={this.state.data?.agency} OnChange={(args: EventArgs) => this.setState({data: {...this.state.data, agency: args.Value}})} />
                                 </Grid>
                                 <Grid md={1}>
-                                    <TextBox Label='Digito' TextTransform='Normal' Text={this.state.multa} OnChange={(args: EventArgs) => this.setState({multa: args.Value})} />
+                                    <TextBox Label='Digito' TextTransform='Normal' Text={this.state.data?.accountDigit} OnChange={(args: EventArgs) => this.setState({data: {...this.state.data, accountDigit: args.Value}})} />
                                 </Grid>
                                 <Grid md={3}>
-                                    <TextBox Label='Conta' TextTransform='Normal' Text={this.state.multa} OnChange={(args: EventArgs) => this.setState({multa: args.Value})} />
+                                    <TextBox Label='Conta' TextTransform='Normal' Text={this.state.data?.account} OnChange={(args: EventArgs) => this.setState({data: {...this.state.data, account: args.Value}})} />
                                 </Grid>
                                 <Grid md={1}>
-                                    <TextBox Label='Digito' TextTransform='Normal' Text={this.state.multa} OnChange={(args: EventArgs) => this.setState({multa: args.Value})} />
+                                    <TextBox Label='Digito' TextTransform='Normal' Text={this.state.data?.accountDigit} OnChange={(args: EventArgs) => this.setState({data: {...this.state.data, accountDigit: args.Value}})} />
                                 </Grid>
                             </Grid>
                         </fieldset>
                     )}
+
+                    <fieldset>
+                        <legend>Processamento</legend>
+
+                    </fieldset>
                     
                 </Form>
             </Modal>

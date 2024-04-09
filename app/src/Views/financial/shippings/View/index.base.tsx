@@ -3,16 +3,13 @@ import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
 
-export class ViewBankAccountBase extends ViewModal<Readonly<{Title: string}>> {
+export class ViewUsuarioBase extends ViewModal<Readonly<{Title: string}>> {
 
     state = {
         open: false,
         id: "",
-        bank: null,
-        agency: "",
-        agencyDigit: "",
-        account: "",
-        accountDigit: ""
+        nome: "",
+        email: "",
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -22,7 +19,7 @@ export class ViewBankAccountBase extends ViewModal<Readonly<{Title: string}>> {
 
         if (id) {
             Loading.Show();
-            const r = await Service.Post("financial/bank-account/findOne", {id});
+            const r = await Service.Post("registrations/user/findOne", {id});
             Loading.Hide();
             this.setState(r?.data);
         }
@@ -52,7 +49,7 @@ export class ViewBankAccountBase extends ViewModal<Readonly<{Title: string}>> {
 
             Loading.Show();
 
-            let r = await Service.Post("financial/bank-account/save", this.state);
+            let r = await Service.Post("registrations/user/save", this.state);
     
             Loading.Hide();
     
@@ -74,14 +71,7 @@ export class ViewBankAccountBase extends ViewModal<Readonly<{Title: string}>> {
 
     private Limpar = () =>
     {
-        this.setState({
-            id: "",
-            bank: null,
-            agency: "",
-            agencyDigit: "",
-            account: "",
-            accountDigit: ""
-        });
+        this.setState({id: "", nome: "", email: ""});
     }
 
 }

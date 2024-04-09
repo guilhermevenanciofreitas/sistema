@@ -31,6 +31,7 @@ import Entrega from "./views/sales/Entrega";
 import ShippingsOrders from "./views/logistics/shippingsOrders";
 import Payments from "./views/financial/payments";
 import BankAccounts from "./views/financial/bankAccounts";
+import Shippings from "./views/financial/shippings";
 
 export default class App extends React.Component {
     render(): React.ReactNode {
@@ -61,6 +62,7 @@ export default class App extends React.Component {
                 <Route path="/financial/receipts" element={<RequireLogin><Receipts /></RequireLogin>} />
                 <Route path="/financial/payments" element={<RequireLogin><Payments /></RequireLogin>} />
                 <Route path="/financial/bank-accounts" element={<RequireLogin><BankAccounts /></RequireLogin>} />
+                <Route path="/financial/shippings" element={<RequireLogin><Shippings /></RequireLogin>} />
 
                 {/* Fiscal */}
                 <Route path="/fiscal/nfes" element={<RequireLogin><NotasFiscais /></RequireLogin>} />

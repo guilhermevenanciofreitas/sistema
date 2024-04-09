@@ -24,7 +24,7 @@ export default class AppBar extends Component {
       >
 
         <Typography sx={{flexGrow: 1, color: '#ffffff', marginLeft: { xs: '0px', md: 'var(--Sidebar-width)'}}}>GK Sistemas<span style={{fontSize: 10}}> v1.2.102</span></Typography>
-        <Typography sx={{color: '#ffffff'}}>{JSON.parse(localStorage.getItem("Session") || "null")?.usuario?.nome} | {JSON.parse(localStorage.getItem("Session") || "null")?.empresa?.nomeFantasia}</Typography>
+        <Typography sx={{color: '#ffffff'}}>{JSON.parse(localStorage.getItem("Session") || "null")?.user?.nome} | {JSON.parse(localStorage.getItem("Session") || "null")?.company?.nomeFantasia}</Typography>
         
       </Sheet>
     );

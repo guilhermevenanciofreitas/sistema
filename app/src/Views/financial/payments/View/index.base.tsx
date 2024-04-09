@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { Service } from "../../../../Service";
 import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
@@ -9,16 +10,33 @@ export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
         open: false,
         id: "",
         company: null,
+        number: "",
         numeroDocumento: "",
         emissao: "",
         vencimento: "",
         recebedor: null,
         ourNumber: "",
         bankAccount: null,
-        formOfPayment: null,
+        paymentForm: null,
+        beneficiaryNotice: "",
         valor: "0.00",
         juros: "0.00",
         multa: "0.00",
+        data: {
+            //Transferência - TED
+            accountType: null,
+            finalityId: null,
+            bankId: null,
+            agency: "",
+            agencyDigit: "",
+            account: "",
+            accountDigit: "",
+            //Boleto
+            digitableLine: "",
+            fine: "0.00",
+            interest: "0.00",
+            discount: "0.00"
+        }
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -31,6 +49,8 @@ export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
             const r = await Service.Post("financial/payment/findOne", {id});
             Loading.Hide();
             this.setState(r?.data);
+        } else {
+            this.setState({company: JSON.parse(localStorage.getItem("Session") || "null")?.empresa});
         }
 
         this.setState({open: true});
@@ -58,7 +78,14 @@ export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
 
             Loading.Show();
 
-            let r = await Service.Post("financial/payment/save", this.state);
+            const request = {
+                ...this.state,
+                companyId: _.get(this.state.company, 'id') || null,
+                bankAccountId: _.get(this.state.bankAccount, 'id') || null,
+                paymentFormId: _.get(this.state.paymentForm, 'id') || null,
+            }
+
+            let r = await Service.Post("financial/payment/save", request);
     
             Loading.Hide();
     
@@ -82,17 +109,20 @@ export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
     {
         this.setState({
             id: "",
-            company: JSON.parse(localStorage.getItem("Session") || "null")?.empresa,
+            company: null,
+            number: "",
             numeroDocumento: "",
             emissao: "",
             vencimento: "",
             bankAccount: null,
             recebedor: null,
-            ourNumber: "null",
-            formOfPayment: null,
+            ourNumber: "",
+            paymentForm: null,
+            beneficiaryNotice: "",
             valor: "0.00",
             juros: "0.00",
             multa: "0.00",
+            data: null
         });
     }
 

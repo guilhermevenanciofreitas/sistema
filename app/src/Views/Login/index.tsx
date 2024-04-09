@@ -19,7 +19,7 @@ export class ViewLogin extends React.Component<Readonly<{from: string}>> {
     email: "",
     password: "",
     accountId: "",
-    empresaId: "",
+    companyId: "",
 
     accounts: [],
     empresas: []
@@ -27,18 +27,18 @@ export class ViewLogin extends React.Component<Readonly<{from: string}>> {
 
   protected DplAccount_Change = async (accountId: string) => {
     this.setState({accountId, empresas: []});
-    await this.Signin(this.state.email, this.state.password, accountId, this.state.empresaId)
+    await this.Signin(this.state.email, this.state.password, accountId, this.state.companyId)
   }
 
-  protected DplEmpresa_Change = async (empresaId: string) => {
-    this.setState({empresaId, empresas: []});
-    await this.Signin(this.state.email, this.state.password, this.state.accountId, empresaId);
+  protected DplEmpresa_Change = async (companyId: string) => {
+    this.setState({companyId, empresas: []});
+    await this.Signin(this.state.email, this.state.password, this.state.accountId, companyId);
   }
 
-  protected Signin = async (email: string, password: string, accountId: string, empresaId: string) => {
+  protected Signin = async (email: string, password: string, accountId: string, companyId: string) => {
     try {
       
-      const signin = await Service.Post("login/signin", {email: email, password: password, accountId: accountId, empresaId: empresaId});
+      const signin = await Service.Post("login/signin", {email: email, password: password, accountId: accountId, companyId: companyId});
 
       if (signin?.status == 203) {
         await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: signin.data.message, buttons: [{ Text: "OK" }]});
@@ -67,7 +67,7 @@ export class ViewLogin extends React.Component<Readonly<{from: string}>> {
     return (
       <Layout>
 
-        <Form OnSubmit={() => this.Signin(this.state.email, this.state.password, this.state.accountId, this.state.empresaId)}>
+        <Form OnSubmit={() => this.Signin(this.state.email, this.state.password, this.state.accountId, this.state.companyId)}>
 
           {this.state.step == "login" &&
           <>
@@ -90,7 +90,7 @@ export class ViewLogin extends React.Component<Readonly<{from: string}>> {
             </DropDownList>
           }
           {(this.state.empresas?.length || 0) >= 1 &&
-            <DropDownList Label='Empresa' SelectedValue={this.state.empresaId} OnChange={(args: any) => this.DplEmpresa_Change(args.Value)}>
+            <DropDownList Label='Empresa' SelectedValue={this.state.companyId} OnChange={(args: any) => this.DplEmpresa_Change(args.Value)}>
               <DropDownListItem Label="[Selecione]" Value="" />
               {this.state.empresas.map((Item: any, Key) => {
                 return <DropDownListItem Label={Item.nomeFantasia} Value={Item.id} key={Key} />

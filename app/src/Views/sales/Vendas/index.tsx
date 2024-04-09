@@ -59,11 +59,11 @@ export default class PedidoVenda extends BasePedidoVenda {
                         Loading={this.state.Loading}
 
                         Columns={Columns}
-                        Rows={this.state.Data.rows}
+                        Rows={this.state.response.rows}
+                        Count={this.state.response.count}
 
-                        Count={this.state.Data.count}
-                        Limit={this.state.Data.limit}
-                        OffSet={this.state.Data.offset}
+                        Limit={this.state.request.limit}
+                        OffSet={this.state.request.offset}
 
                         Records={[10, 50, 100, 500]}
 

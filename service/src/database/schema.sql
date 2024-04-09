@@ -229,27 +229,45 @@ ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "agency" VARCHAR(4);
 ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "agencyDigit" VARCHAR(1);
 ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "account" VARCHAR(20);
 ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "accountDigit" VARCHAR(1);
+ALTER TABLE "bankAccount" ADD COLUMN IF NOT EXISTS "balance" DECIMAL(18, 2);
 
---bankAccountFormOfPayment
-CREATE TABLE IF NOT EXISTS "bankAccountFormOfPayment"();
-ALTER TABLE "bankAccountFormOfPayment" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "bankAccountFormOfPayment" ADD COLUMN IF NOT EXISTS "bankAccountId" UUID;
-ALTER TABLE "bankAccountFormOfPayment" ADD COLUMN IF NOT EXISTS "formOfPaymentId" UUID;
+--bankAccountShipping
+CREATE TABLE IF NOT EXISTS "bankAccountShipping"();
+ALTER TABLE "bankAccountShipping" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "bankAccountShipping" ADD COLUMN IF NOT EXISTS "companyId" UUID;
+ALTER TABLE "bankAccountShipping" ADD COLUMN IF NOT EXISTS "bankAccountId" UUID;
+ALTER TABLE "bankAccountShipping" ADD COLUMN IF NOT EXISTS "status" VARCHAR(20);
+ALTER TABLE "bankAccountShipping" ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMP WITHOUT TIME ZONE;
+
+--bankAccountShippingPayment
+CREATE TABLE IF NOT EXISTS "bankAccountShippingPayment"();
+ALTER TABLE "bankAccountShippingPayment" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "bankAccountShippingPayment" ADD COLUMN IF NOT EXISTS "bankAccountShippingId" UUID;
+ALTER TABLE "bankAccountShippingPayment" ADD COLUMN IF NOT EXISTS "paymentId" UUID;
+
+--bankAccountPaymentForm
+CREATE TABLE IF NOT EXISTS "bankAccountPaymentForm"();
+ALTER TABLE "bankAccountPaymentForm" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "bankAccountPaymentForm" ADD COLUMN IF NOT EXISTS "bankAccountId" UUID;
+ALTER TABLE "bankAccountPaymentForm" ADD COLUMN IF NOT EXISTS "paymentFormId" UUID;
 
 --payment
 CREATE TABLE IF NOT EXISTS "payment"();
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "companyId" UUID;
+ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "number" VARCHAR(30);
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "numeroDocumento" VARCHAR(100);
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "recebedorId" UUID;
+ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "beneficiaryNotice" VARCHAR(100);
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "emissao" DATE;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "vencimento" DATE;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "ourNumber" VARCHAR(20);
-ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
-ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "formOfPaymentId" UUID;
+ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(18, 2);
+ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "paymentFormId" UUID;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "bankAccountId" UUID;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "pagamentoId" UUID;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "status" VARCHAR(20);
+ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "data" JSON;
 
 --paymentCarried
 CREATE TABLE IF NOT EXISTS "paymentCarried"();

@@ -6,7 +6,7 @@ import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
 import { ClienteTemplate } from '../../../../Search/Templates/Cliente';
 import { Search } from '../../../../Search';
-import { FormOfPaymentTemplate } from '../../../../Search/Templates/FormOfPayment';
+import { BankTemplate } from '../../../../Search/Templates/Bank';
 
 export class ViewBankAccount extends ViewBankAccountBase {
 
@@ -15,45 +15,28 @@ export class ViewBankAccount extends ViewBankAccountBase {
     public render(): ReactNode {
 
         return (
-            <Modal Open={this.state.open} Title={this.props.Title} Width={1000} Close={() => this.Close()}>
+            <Modal Open={this.state.open} Title={this.props.Title} Width={500} Close={() => this.Close()}>
                 <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
 
                     <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
-                    <Button Text='Limpar' Type='Reset' Color='white' BackgroundColor='gray' />
-
+          
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
-                        <Grid md={2}>
-                            <TextBox Label='Nº Doc' TextTransform='Normal' Text={this.state.numeroDocumento} OnChange={(args: EventArgs) => this.setState({numeroDocumento: args.Value})} />
-                        </Grid>
-                        <Grid md={2}>
-                            <DatePicker Label='Emissão' Text={this.state.emissao} OnChange={(args: EventArgs) => this.setState({emissao: args.Value})} />
-                        </Grid>
-                        <Grid md={2}>
-                            <DatePicker Label='Vencimento' Text={this.state.vencimento} OnChange={(args: EventArgs) => this.setState({vencimento: args.Value})} />
-                        </Grid>
-                        <Grid md={6}>
-                            <AutoComplete Label='Recebedor' Pesquisa={async(Text: string) => await Search.Cliente(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.recebedor} OnChange={(recebedor: any) => this.setState({recebedor})}>
-                                <ClienteTemplate />
+                        <Grid md={12}>
+                            <AutoComplete Label='Banco' Pesquisa={async(Text: string) => await Search.Bank(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.bank} OnChange={(bank: any) => this.setState({bank})}>
+                                <BankTemplate />
                             </AutoComplete>
                         </Grid>
-
-                        <Grid md={4}>
-                            <AutoComplete Label='Forma de pagamento' Pesquisa={async(Text: string) => await Search.FormOfPayment(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.formOfPayment} OnChange={(formOfPayment: any) => this.setState({formOfPayment})}>
-                                <FormOfPaymentTemplate />
-                            </AutoComplete>
-                        </Grid>
-
-                        <Grid md={2}>
-                            <TextBox Label='Valor' TextTransform='Normal' Text={this.state.valor} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} />
+                        <Grid md={3}>
+                            <TextBox Label='Agência' TextTransform='Normal' Text={this.state.agency} OnChange={(args: EventArgs) => this.setState({agency: args.Value})} />
                         </Grid>
                         <Grid md={2}>
-                            <TextBox Label='Juros' TextTransform='Normal' Text={this.state.juros} OnChange={(args: EventArgs) => this.setState({juros: args.Value})} />
+                            <TextBox Label='Digito' TextTransform='Normal' Text={this.state.agencyDigit} OnChange={(args: EventArgs) => this.setState({agencyDigit: args.Value})} />
+                        </Grid>
+                        <Grid md={5}>
+                            <TextBox Label='Conta' TextTransform='Normal' Text={this.state.account} OnChange={(args: EventArgs) => this.setState({account: args.Value})} />
                         </Grid>
                         <Grid md={2}>
-                            <TextBox Label='Multa' TextTransform='Normal' Text={this.state.multa} OnChange={(args: EventArgs) => this.setState({multa: args.Value})} />
-                        </Grid>
-                        <Grid md={2}>
-                            <TextBox Label='Total' TextTransform='Normal' Text={this.state.id} OnChange={(args: EventArgs) => this.setState({nome: args.Value})} />
+                            <TextBox Label='Digito' TextTransform='Normal' Text={this.state.accountDigit} OnChange={(args: EventArgs) => this.setState({accountDigit: args.Value})} />
                         </Grid>
 
                     </Grid>

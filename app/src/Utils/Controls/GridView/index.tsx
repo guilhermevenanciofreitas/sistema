@@ -1,6 +1,5 @@
 import DataTable from 'react-data-table-component';
 import { GridViewBase } from "./base";
-import "./style.css"
 
 export class ControlGridView extends GridViewBase {
 
@@ -20,7 +19,7 @@ export class ControlGridView extends GridViewBase {
           noDataComponent={<h3>Nenhum resultado encontrato!</h3>}
           noHeader={false}
           progressPending={this.props.Loading}
-          progressComponent={<div className="loader">Loading...</div>}
+          progressComponent={<div className="loader" />}
           onSelectedRowsChange={(args: any) => this.props.OnSelected(args)}
         />
       </>

@@ -18,6 +18,8 @@ export class ControlAutoComplete extends AutoCompleteBase {
         <FormLabel sx={{fontWeight: 400}}>{this.props.Label}</FormLabel>
         <Autocomplete
  
+          size='sm'
+
           loading={this.state.Loading}
 
           placeholder="[Selecione]"
@@ -29,7 +31,7 @@ export class ControlAutoComplete extends AutoCompleteBase {
           popupIcon={<Search />}
 
           sx={{
-            [`& .css-1o5f876-JoyAutocomplete-popupIndicator.MuiAutocomplete-popupIndicatorOpen`]: {
+            [`& .css-sxbho7-JoyAutocomplete-popupIndicator.MuiAutocomplete-popupIndicatorOpen`]: {
               transform: "none"
             }
           }}

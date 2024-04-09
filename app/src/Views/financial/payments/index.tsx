@@ -1,10 +1,10 @@
 import React from "react";
 import { Button, CardStatus, Container, Left, ListView, Right } from "../../../Utils/Controls";
-import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle, AttachMoney } from "@mui/icons-material";
+import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
 import { ViewPayment } from "./View/index";
 import BaseContasPagar from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
-import { Badge, Card, CardActions, CardContent, CircularProgress, Grid, IconButton, SvgIcon, Typography } from "@mui/joy";
+import { Grid, IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
 import { ViewImportar } from "./importar";
 import { ViewFiltro } from "./filtro";
@@ -52,11 +52,11 @@ const BankAccount = ({ row }: any) => {
 
 const Columns = [
     { selector: (row: any) => <CompanyRecipient row={row} />, sort: 'id', name: 'Empresa / Benificiário', sortable: true },
-    { selector: (row: any) => row.formOfPayment?.description, sort: 'description', name: 'Tipo', sortable: true, maxWidth: "300px" },
-    { selector: (row: any) => row.numeroDocumento, sort: 'numeroDocumento', name: 'Nº Doc', sortable: true, maxWidth:"150px" },
+    { selector: (row: any) => row.paymentForm?.description, sort: 'description', name: 'Tipo', sortable: true, maxWidth: "300px" },
+    { selector: (row: any) => row.numeroDocumento, sort: 'numeroDocumento', name: 'Nº Documento', sortable: true, maxWidth:"150px" },
     { selector: (row: any) => row.vencimento, sort: 'emissao', name: 'Vencimento', sortable: true, maxWidth: "160px" },
     { selector: (row: any) => row.vencimento, sort: 'vencimento', name: 'Agendamento', sortable: true, maxWidth: "160px" },
-    { selector: (row: any) => row.valor, sort: 'valor', name: 'Valor', sortable: true, right: true, maxWidth:"120px" },
+    { selector: (row: any) => parseFloat(row.valor).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}), sort: 'valor', name: 'Valor', sortable: true, right: true, maxWidth:"120px" },
     { selector: (row: any) => <BankAccount row={row} />, sort: 'recebedor', name: 'Agência / Conta', sortable: true, maxWidth: "250px" },
 ];
 
@@ -78,14 +78,14 @@ export default class Payments extends BaseContasPagar {
 
                     <Container>
                         <Left>
-                            {this.state.Selecteds.length == 0 && (
+                            {_.size(this.state.selecteds) == 0 && (
                                 <Button Text='Novo' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnNovo_Click} />
                             )}
-                            {this.state.Selecteds.length >= 1 && (
+                            {_.size(this.state.selecteds) >= 1 && (
                                 <>
                                 <Button Text='Excluir' Type='Button' Color='white' BackgroundColor='red' StartIcon={<Delete />} OnClick={this.BtnDelete_Click} />
                                 <Button Text='Editar' Type='Button' Color='white' BackgroundColor='#0d6efd' StartIcon={<ChangeCircle />} OnClick={this.BtnNovo_Click} />
-                                &nbsp;&nbsp;({this.state.Selecteds.length}) registro(s) selecionado(s)
+                                &nbsp;&nbsp;({_.size(this.state.selecteds)}) registro(s) selecionado(s)
                                 </>
                             )}
                         </Left>
@@ -102,22 +102,22 @@ export default class Payments extends BaseContasPagar {
 
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                         <Grid md={2}>
-                            <CardStatus checked={this.state.status == "pending"} status="Pendente" value={_.get(this.state.Data.status, 'pending.ammount') as any} bagde={_.get(this.state.Data.status, 'pending.count') as any} color={colors.pending} OnClick={() => this.CardStatus_Click('pending')} />
+                            <CardStatus checked={this.state.request.status == "pending"} status="Pendente" value={_.get(this.state.response.status, 'pending.ammount') as any} bagde={_.get(this.state.response.status, 'pending.count') as any} color={colors.pending} OnClick={() => this.CardStatus_Click('pending')} />
                         </Grid>
                         <Grid md={2}>
-                            <CardStatus checked={this.state.status == "open"} status="Aberto" value={_.get(this.state.Data.status, 'open.ammount') as any} bagde={_.get(this.state.Data.status, 'open.count') as any} color={colors.open} OnClick={() => this.CardStatus_Click('open')} />
+                            <CardStatus checked={this.state.request.status == "open"} status="Aberto" value={_.get(this.state.response.status, 'open.ammount') as any} bagde={_.get(this.state.response.status, 'open.count') as any} color={colors.open} OnClick={() => this.CardStatus_Click('open')} />
                         </Grid>
                         <Grid md={2}>
-                            <CardStatus checked={this.state.status == "shipping"} status="Em remessa" value={_.get(this.state.Data.status, 'shipping.ammount') as any} bagde={_.get(this.state.Data.status, 'shipping.count') as any} color={colors.shipping} OnClick={() => this.CardStatus_Click('shipping')} />
+                            <CardStatus checked={this.state.request.status == "shipping"} status="Em remessa" value={_.get(this.state.response.status, 'shipping.ammount') as any} bagde={_.get(this.state.response.status, 'shipping.count') as any} color={colors.shipping} OnClick={() => this.CardStatus_Click('shipping')} />
                         </Grid>
                         <Grid md={2}>
-                            <CardStatus checked={this.state.status == "send"} status="Enviado" value={_.get(this.state.Data.status, 'send.ammount') as any} bagde={_.get(this.state.Data.status, 'send.count') as any} color={colors.send} OnClick={() => this.CardStatus_Click('send')} />
+                            <CardStatus checked={this.state.request.status == "send"} status="Enviado" value={_.get(this.state.response.status, 'send.ammount') as any} bagde={_.get(this.state.response.status, 'send.count') as any} color={colors.send} OnClick={() => this.CardStatus_Click('send')} />
                         </Grid>
                         <Grid md={2}>
-                            <CardStatus checked={this.state.status == "scheduled"} status="Agendado" value={_.get(this.state.Data.status, 'scheduled.ammount') as any} bagde={_.get(this.state.Data.status, 'scheduled.count') as any} color={colors.scheduled} OnClick={() => this.CardStatus_Click('scheduled')} />
+                            <CardStatus checked={this.state.request.status == "scheduled"} status="Agendado" value={_.get(this.state.response.status, 'scheduled.ammount') as any} bagde={_.get(this.state.response.status, 'scheduled.count') as any} color={colors.scheduled} OnClick={() => this.CardStatus_Click('scheduled')} />
                         </Grid>
                         <Grid md={2}>
-                            <CardStatus checked={this.state.status == "paid"} status="Pago" value={_.get(this.state.Data.status, 'paid.ammount') as any} bagde={_.get(this.state.Data.status, 'paid.count') as any} color={colors.paid} OnClick={() => this.CardStatus_Click('paid')} />
+                            <CardStatus checked={this.state.request.status == "paid"} status="Pago" value={_.get(this.state.response.status, 'paid.ammount') as any} bagde={_.get(this.state.response.status, 'paid.count') as any} color={colors.paid} OnClick={() => this.CardStatus_Click('paid')} />
                         </Grid>
                     </Grid>
                     
@@ -125,16 +125,16 @@ export default class Payments extends BaseContasPagar {
                         Loading={this.state.Loading}
 
                         Columns={Columns}
-                        Rows={this.state.Data.rows}
-
-                        Count={this.state.Data.count}
-                        Limit={this.state.Data.limit}
-                        OffSet={this.state.Data.offset}
+                        Rows={this.state.response.rows}
+                        Count={this.state.response.count}
+                        
+                        Limit={this.state.request.limit}
+                        OffSet={this.state.request.offset}
 
                         Records={[10, 50, 100, 500]}
 
                         OnItem={(Item: any) => this.BtnEdit_Click(Item.id)}
-                        OnSelected={(Args: any) => this.setState({Selecteds: Args.selectedRows})}
+                        OnSelected={(Args: any) => this.setState({selecteds: Args.selectedRows})}
                         OnPageChange={this.ListView_PageChange}
                         OnSort={this.ListView_Sort}
                     />

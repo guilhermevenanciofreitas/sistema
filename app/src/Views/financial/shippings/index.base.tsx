@@ -1,38 +1,34 @@
 import React from "react";
 import { Service } from "../../../Service";
-import { ViewPayment } from "./View/index";
+import { ViewUsuario } from "./View/index";
 import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
 import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
-import _ from "lodash";
+import { Loading } from "../../../Utils/Loading";
 
-export default class BaseContasPagar extends BaseIndex {
+export default class BaseUsuarios extends BaseIndex {
  
-    protected ViewPayment = React.createRef<ViewPayment>();
+    protected ViewUsuario = React.createRef<ViewUsuario>();
 
     protected ViewImportar = React.createRef<ViewImportar>();
     protected ViewFiltro = React.createRef<ViewFiltro>();
 
     state = {
-        Loading: false,
-        selecteds: [],
-
+        Loading: true,
+        Selecteds: [],
         request: {
-            status: undefined,
             offset: 1,
             limit: 100,
             filter: undefined,
             sort: undefined
         },
         response: {
-            status: [],
             rows: [],
-            count: 0
-        },
-
+            count: 0,
+        }
     }
 
     componentDidMount = async () =>
@@ -44,8 +40,7 @@ export default class BaseContasPagar extends BaseIndex {
 
             const { id } = queryString.parse(window.location.search);
             if (id) {
-                await this.OpenPayment(id.toString(), false);
-                history.pushState(null, "", `${window.location.origin}${window.location.pathname}`);
+                await this.OpenUsuario(id.toString());
             }
 
             await this.Pesquisar(this.state.request);
@@ -62,7 +57,7 @@ export default class BaseContasPagar extends BaseIndex {
         try
         {
 
-            const r = await this.OpenPayment(id);
+            const r = await this.OpenUsuario(id);
 
             if (r) this.Pesquisar(this.state.request);
        
@@ -78,7 +73,7 @@ export default class BaseContasPagar extends BaseIndex {
         try
         {
 
-            const r = await this.ViewPayment.current?.Show(undefined);
+            const r = await this.ViewUsuario.current?.Show(undefined);
 
             if (r) this.Pesquisar(this.state.request);
             
@@ -89,11 +84,11 @@ export default class BaseContasPagar extends BaseIndex {
         }
     }
 
-    protected BtnDelete_Click = async(): Promise<void> =>
+    protected BtnUnShipping_Click = async(id: string): Promise<void> =>
     {
         try
         {
-            const result = await MessageBox.Show({title: "Confirmar", width: 420, type: "Question", content: `Tem certeza que deseja excluir ${_.size(this.state.selecteds)} usuário(s) ?`,
+            const result = await MessageBox.Show({title: "Confirmar", width: 420, type: "Question", content: `Tem certeza que deseja cancelar a remessa ?`,
                 buttons: [
                     { Text: "Sim", OnClick: () => "yes" },
                     { Text: "Não", OnClick: () => "no" }
@@ -102,11 +97,21 @@ export default class BaseContasPagar extends BaseIndex {
 
             if (result != "yes") return;
 
-            await MessageBox.Show({title: "Info", width: 420, type: "Success", content: `${_.size(this.state.selecteds)} usuário(s) excluido com sucesso!`,
-                buttons: [
-                    { Text: "Ok" }
-                ]
-            });
+            Loading.Show();
+            var r = await Service.Post("financial/shipping/unshipping", {bankAccountShipping: [id]});
+            Loading.Hide();
+
+            if (r?.data?.success) {
+
+                await this.Pesquisar(this.state.request);
+
+                await MessageBox.Show({title: "Info", width: 420, type: "Success", content: `Remessa cancelado com sucesso!`,
+                    buttons: [
+                        { Text: "Ok" }
+                    ]
+                });
+
+            }
 
         }
         catch (err: any) 
@@ -123,7 +128,7 @@ export default class BaseContasPagar extends BaseIndex {
 
             if (data === null) return;
 
-            this.setState((state: any) => ({Data: {...state.Data, offset: 1}}),
+            this.setState({request: {...this.state.request, offset: 1}},
                 async () => await this.Pesquisar(this.state.request)
             );
     
@@ -142,7 +147,7 @@ export default class BaseContasPagar extends BaseIndex {
 
             if (filter === null) return;
 
-            this.setState((state: any) => ({Data: {...state.Data, offset: 1, filter}}),
+            this.setState({request: {...this.state.request, offset: 1, filter}},
                 async () => await this.Pesquisar(this.state.request)
             );
     
@@ -153,27 +158,11 @@ export default class BaseContasPagar extends BaseIndex {
         }
     }
 
-    protected CardStatus_Click = async(status: string): Promise<void> =>
-    {
-        try
-        {
-            this.setState({request: {...this.state.request, status}}, 
-                async () => await this.Pesquisar(this.state.request)
-            );
-        }
-        catch (err: any) 
-        {
-            await DisplayError.Show(err);
-        }
-    }
-    
     protected BtnPesquisar_Click = async(): Promise<void> =>
     {
         try
         {
-            this.setState({request: {...this.state.request, status: undefined}}, 
-                async () => await this.Pesquisar(this.state.request)
-            );
+            await this.Pesquisar(this.state.request);
         }
         catch (err: any) 
         {
@@ -185,7 +174,7 @@ export default class BaseContasPagar extends BaseIndex {
     {
         try
         {
-            this.setState((state: any) => ({request: {...state.request, limit, offset}}),
+            this.setState({request: {...this.state.request, limit, offset}},
                 async () => await this.Pesquisar(this.state.request)
             );
         }
@@ -199,7 +188,7 @@ export default class BaseContasPagar extends BaseIndex {
     {
         try
         {
-            this.setState((state: any) => ({request: {...state.request, sort}}),
+            this.setState({request: {...this.state.request, sort}},
                 async () => await this.Pesquisar(this.state.request)
             );
         }
@@ -209,19 +198,19 @@ export default class BaseContasPagar extends BaseIndex {
         }
     }
 
-    private OpenPayment = async (id: string, isHitoryBack: boolean = true) =>
+    private OpenUsuario = async (id: string) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewPayment.current?.Show(id);
-        if (isHitoryBack) history.back();
+        const r = await this.ViewUsuario.current?.Show(id);
+        history.back();
         return r;
     }
 
     protected Pesquisar = async(request: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("financial/payment/findAll", request);
-        this.setState({Loading: false, ...r?.data});
+        var r = await Service.Post("financial/shipping/findAll", request);
+        this.setState({Loading: false, response: r?.data.response});
     }
 
 }

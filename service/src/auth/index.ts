@@ -45,10 +45,18 @@ export default async function Auth(req: Request, res: Response): Promise<any> {
 
     await sequelize?.close();
 
+    const limit = req.body.limit || undefined;
+    const offset = ((req.body.offset - 1) * limit) || undefined;
+    const filter = req.body.filter || undefined;
+    const sort = req.body.sort || undefined;
+
+    const pagination = {limit, offset1: offset, offset: req.body.offset, filter, sort}
+
     return { 
         sequelize: await new Sequelize({host: config?.host, username: config?.username, password: config?.password, database: config?.database}).sequelize,
-        usuarioId: session?.userId,
+        userId: session?.userId,
         companyId: session?.companyId,
+        pagination: pagination
     };
 
 }

@@ -14,6 +14,7 @@ class BankAccountRoutes {
     this.router.post("/findOne", (req, res) => this.controller.findOne(req, res));
     this.router.post("/save", (req, res) => this.controller.save(req, res));
     this.router.post("/change-bank-account-payment", (req, res) => this.controller.changeBankAccountPayment(req, res));
+    this.router.post("/shipping", (req, res) => this.controller.shipping(req, res));
     this.router.post("/delete", (req, res) => this.controller.delete(req, res));
   }
 }

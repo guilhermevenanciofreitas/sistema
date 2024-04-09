@@ -101,13 +101,7 @@ export class ViewParceiro extends ViewParceiroBase {
                                         </Grid>
                                     </div>
                                     )}
-                                    <div style={{display: 'flex'}}>
-                                        <Grid md={3}>
-                                            <AutoComplete Label='Tabela de preço' Pesquisa={async (Text: string) => await Search.TabelaPreco(Text)} Text={(Item: any) => `${Item.descricao}` } Value={this.state.tabelaPreco} OnChange={(args: any) => this.setState({tabelaPreco: args})}>
-                                                <TabelaPrecoTemplate />
-                                            </AutoComplete>
-                                        </Grid>
-                                    </div>
+                                    
                                     <Grid md={12}>
                                         <div style={{display: 'flex'}}>
                                             <CheckBox Label='Ativo' Checked={this.state.isAtivo} OnChange={(args: EventArgs) => this.setState({isAtivo: args.Value})} />

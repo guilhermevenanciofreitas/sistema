@@ -4,7 +4,7 @@ import { Model, Table, Column, DataType } from "sequelize-typescript";
 export class Company extends Model {
   
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
-  id?: string;
+  id?: string | null;
 
   @Column({type: DataType.STRING(100), field: "razaoSocial"})
   razaoSocial?: string;

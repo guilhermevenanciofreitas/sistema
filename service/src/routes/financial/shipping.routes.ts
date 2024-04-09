@@ -1,9 +1,9 @@
 import { Router } from "express";
-import PaymentController from "../../controllers/financial/payment.controller";
+import ShippingController from "../../controllers/financial/shipping.controller";
 
-class ContaPagarRoutes {
+class ShippingRoutes {
   router = Router();
-  controller = new PaymentController();
+  controller = new ShippingController();
 
   constructor() {
     this.intializeRoutes();
@@ -13,9 +13,8 @@ class ContaPagarRoutes {
     this.router.post("/findAll", (req, res) => this.controller.findAll(req, res));
     this.router.post("/findOne", (req, res) => this.controller.findOne(req, res));
     this.router.post("/save", (req, res) => this.controller.save(req, res));
-    this.router.post("/delete", (req, res) => this.controller.delete(req, res));
+    this.router.post("/unshipping", (req, res) => this.controller.unShipping(req, res));
   }
-  
 }
 
-export default new ContaPagarRoutes().router;
+export default new ShippingRoutes().router;

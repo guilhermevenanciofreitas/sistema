@@ -29,7 +29,7 @@ export class ControlDropDownList extends DropDownListBase {
         return (
             <>
                 {this.props.Label && <FormLabel sx={{fontWeight: 400}}>{this.props.Label}</FormLabel>}
-                <Select ref={this.DropDownList} value={this.props.SelectedValue} onChange={this.DropDownList_Change} slotProps={{listbox: {sx: {zIndex: 10000}}}}>
+                <Select size='sm' disabled={this.props.ReadOnly} ref={this.DropDownList} value={this.props.SelectedValue} onChange={this.DropDownList_Change} slotProps={{listbox: {sx: {zIndex: 10000}}}}>
                     {this.props.children}
                 </Select>
             </>

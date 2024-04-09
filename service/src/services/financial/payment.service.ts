@@ -6,27 +6,20 @@ export class PaymentService {
 
     public static IsValid = (payment: Payment) => {
 
-
         return { success: true };
-
+        
     }
 
     public static Create = async (payment: Payment, transaction?: Transaction) => {
 
         payment.id = crypto.randomUUID();
-        payment.companyId = payment.company?.id;
-        payment.bankAccountId = payment.bankAccount?.id;
-        payment.formOfPaymentId = payment.formOfPayment?.id;
+        payment.status = 'open';
         
         await Payment.create({...payment}, {transaction});
 
     }
 
     public static Update = async (payment: Payment, transaction?: Transaction) => {
-
-        payment.companyId = payment.company?.id;
-        payment.bankAccountId = payment.bankAccount?.id;
-        payment.formOfPaymentId = payment.formOfPayment?.id;
 
         await Payment.update(payment, {where: {id: payment.id}, transaction});
 

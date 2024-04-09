@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { FormOfPayment, Partner, SaleOrder, Product, SaleOrderRecieve, SaleOrderStatus, PedidoVendaTipoEntrega, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
+import { PaymentForm, Partner, SaleOrder, Product, SaleOrderRecieve, SaleOrderStatus, PedidoVendaTipoEntrega, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem } from "../../database";
 import { SaleOrderService } from "../../services/sales/saleOrder.service";
 import { SaleOrderItem } from "../../database/models/saleOrderItem.model";
 import {Op, Sequelize} from "sequelize";
@@ -12,35 +12,37 @@ export default class SaleOrderController {
 
     async findAll(req: Request, res: Response) {
 
-        Auth(req, res).then(async ({sequelize}) => {
+        Auth(req, res).then(async ({sequelize, pagination}) => {
             try {
 
                 const transaction = await sequelize.transaction();
 
-                const limit = req.body.limit || undefined;
-                const offset = ((req.body.offset - 1) * limit) || undefined;
-                const filter = req.body.filter || undefined;
-                const sort = req.body.sort || undefined;
-        
                 let where: any = {finished: false};
                 let order: any = [];
         
-                if (sort) {
-                    order = [[sort.column, sort.direction]]
+                if (pagination.sort) {
+                    order = [[pagination.sort.column, pagination.sort.direction]]
                 }
         
-                const pedidoVenda = await SaleOrder.findAndCountAll({
+                const saleOrders = await SaleOrder.findAndCountAll({
                     attributes: ["id"],
                     include: [
                         {model: Partner, as: "cliente", attributes: ["id", "nome"]},
                         {model: SaleOrderStatus, attributes: ["id", "descricao"]}
                     ],
-                    where, order, limit, offset, transaction});
+                    where, order, limit: pagination.limit, offset: pagination.offset1, transaction});
 
                 sequelize.close();
 
-                res.status(200).json({...pedidoVenda, limit, offset: req.body.offset, filter, sort});
-
+                res.status(200).json({
+                    request: {
+                        ...pagination
+                    },
+                    response: {
+                        rows: saleOrders.rows, count: saleOrders.count
+                    }
+                });
+                
             }
             catch (error: any) {
                 Error.Response(res, error);
@@ -163,7 +165,7 @@ export default class SaleOrderController {
                                 include: [{model: PedidoVendaItemCombinacaoItem, attributes: ["id", "pedidoVendaItemCombinacaoId", "itemCombinacaoId", "quantidade"]}]
                             }]
                         },
-                        {model: SaleOrderRecieve, attributes: ["id", "vencimento", "valor"], include: [{model: FormOfPayment, attributes: ["id", "description"]}]},
+                        {model: SaleOrderRecieve, attributes: ["id", "vencimento", "valor"], include: [{model: PaymentForm, attributes: ["id", "description"]}]},
                     ],
                     where: {id: req.body.id}, transaction}
                 );

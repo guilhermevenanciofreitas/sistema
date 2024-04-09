@@ -28,12 +28,14 @@ import { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinaca
 import { ProductCategory } from "./models/productCategory.model";
 import { Nfe } from "./models/nfe.model";
 import { ShippingOrder } from "./models/shippingOrder.model";
-import { FormOfPayment } from "./models/formOfPayment.model";
+import { PaymentForm } from "./models/paymentForm.model";
 import { BankAccount } from "./models/bankAccount.model";
 import { Bank } from "./models/bank.model";
 import { SaleOrderStatusByFrom } from "./models/saleOrderStatusByFrom.model";
-import { BankAccountFormOfPayment } from "./models/bankAccountFormOfPayment.model";
+import { BankAccountPaymentForm } from "./models/bankAccountPaymentForm.model";
 import { PaymentCarried } from "./models/paymentCarried.model";
+import { BankAccountShipping } from "./models/bankAccountShipping.model";
+import { BankAccountShippingPayment } from "./models/bankAccountShippingPayment.model";
 
 
 export { Payment } from "./models/payment.model";
@@ -64,11 +66,13 @@ export { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinaca
 export { ProductCategory } from "./models/productCategory.model";
 export { Nfe } from "./models/nfe.model";
 export { ShippingOrder } from "./models/shippingOrder.model";
-export { FormOfPayment } from "./models/formOfPayment.model";
+export { PaymentForm } from "./models/paymentForm.model";
 export { BankAccount } from "./models/bankAccount.model";
 export { SaleOrderStatusByFrom } from "./models/saleOrderStatusByFrom.model";
-export { BankAccountFormOfPayment } from "./models/bankAccountFormOfPayment.model";
+export { BankAccountPaymentForm } from "./models/bankAccountPaymentForm.model";
 export { PaymentCarried } from "./models/paymentCarried.model";
+export { BankAccountShipping } from "./models/bankAccountShipping.model";
+export { BankAccountShippingPayment } from "./models/bankAccountShippingPayment.model";
 
 
 export default class Sequelize {
@@ -76,18 +80,23 @@ export default class Sequelize {
   public sequelize?: sequelize;
 
   constructor(options: any) {
+    
     this.sequelize = new sequelize({
       ...options,
       
       dialect: "postgres",
+
       define: {timestamps: false},
-      models: [Bank, BankAccount, BankAccountFormOfPayment, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, FormOfPayment, SaleOrderItem, SaleOrderRecieve, Company, Partner, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, User, TabelaPreco, Municipio, Nfe],
+      
+      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderRecieve, Company, Partner, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, PedidoVendaItemCombinacao, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, User, TabelaPreco, Municipio, Nfe],
       pool: {
         max: 5,
         min: 0,
         idle: 10000
       },
     });
+
+
   }
 
 }

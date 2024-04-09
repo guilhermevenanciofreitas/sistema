@@ -23,11 +23,11 @@ const MenuItems = [
   {title: "Atendimento", icon: <Diversity3 />, items: [{title: "Agenda", link: "/atendimento/agenda"}, {title: "Chamados", link: "/atendimento/chamados"}]},
   {title: "R.H", icon: <HotTub />, items: [{title: "Folha de pagamento", link: "/human-resources/payroll"}]},
   {title: "Compras", icon: <AddShoppingCart />, items: [{title: "Cotação", link: "/compras/cotação"}, {title: "Pedidos", link: "/compras/pedidos"}]},
+  {title: "Vendas", icon: <LocalOffer />, items: [{title: "Pedidos", link: "/sales/orders"}, {title: "Andamento", link: "/sales/progress"}, {title: "Faturamento", link: "/sales/faturamento"}, {title: "Produção", link: "/sales/producao"}, {title: "Separação", link: "/sales/separacao"}, {title: "Conferência", link: "/sales/conferencia"}, {title: "Entrega", link: "/sales/delivery"}]},
   {title: "Financeiro", icon: <PaidRounded />, items: [{title: "Contas a pagar", link: "/financial/payments"}, {title: "Contas a receber", link: "/financial/receipts"}, {title: "Contas bancárias", link: "/financial/bank-accounts"}, {title: "Remessas", link: "/financial/shippings"}, {title: "Retornos", link: "/financeiro/retornos"}, {title: "Fluxo de caixa", link: "/financial/cash-flow"}]},
   {title: "Produção", icon: <HotTub />, items: [{title: "Ordens de produção", link: "/production/orders"}]},
   {title: "Estoque", icon: <Inventory />, items: [{title: "Entrada", link: "/estoque/entrada"}]},
-  {title: "Vendas", icon: <LocalOffer />, items: [{title: "Pedidos", link: "/sales/orders"}, {title: "Andamento", link: "/sales/progress"}, {title: "Faturamento", link: "/sales/faturamento"}, {title: "Produção", link: "/sales/producao"}, {title: "Separação", link: "/sales/separacao"}, {title: "Conferência", link: "/sales/conferencia"}, {title: "Entrega", link: "/sales/delivery"}]},
-  {title: "Logistica", icon: <LocalShipping />, items: [{title: "Ordens de carga", link: "/logistic/shippings-orders"}, {title: "Viagens", link: "/logistic/trips"}]},
+  {title: "Logistica", icon: <LocalShipping />, items: [{title: "Cotação de frete", link: "/logistic/freight-quote"}, {title: "Ordens de carga", link: "/logistic/shippings-orders"}, {title: "Viagens", link: "/logistic/trips"}]},
   {title: "Fiscal", icon: <TableView />, items: [{title: "Notas fiscais", link: "/fiscal/nfes"}, {title: "Conhecimentos", link: "/fiscal/conhecimentos"}, {title: "Manifestos", link: "/fiscal/manifestos"}]},
 ]
 

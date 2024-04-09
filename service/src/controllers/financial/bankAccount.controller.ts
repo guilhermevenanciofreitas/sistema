@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Payment, Partner, FormOfPayment, BankAccount, Company } from "../../database";
+import { Payment, Partner, PaymentForm, BankAccount, Company } from "../../database";
 import {Op} from "sequelize";
 import { Bank } from "../../database/models/bank.model";
 import { BankAccountService } from "../../services/financial/bankAccount.service";
@@ -15,26 +15,28 @@ export default class BankAccountController {
 
                 const transaction = await sequelize.transaction();
 
-                const bankAccounts = await BankAccount.findAll({attributes: ["id", "agency", "agencyDigit", "account", "accountDigit"],
+                const bankAccounts = await BankAccount.findAll({attributes: ["id", "agency", "agencyDigit", "account", "accountDigit", "balance"],
                     include: [
                         {model: Bank, attributes: ["id", "description", "logo"]},
                     ],
+                    order: [["id", "asc"]],
                     transaction
                 });
 
                 const payments = await Payment.findAll({
                     attributes: ["id", "vencimento", "valor"],
                     include: [
-                        {model: FormOfPayment, attributes: ["id", "description"]},
+                        {model: PaymentForm, attributes: ["id", "description"]},
                         {model: Partner, attributes: ["id", "nome"]},
                         {model: BankAccount, attributes: ["id"]},
                     ],
+                    where: {status: 'open'},
                     transaction
                 });
 
                 sequelize.close();
 
-                res.status(200).json({bankAccounts, rows: payments});
+                res.status(200).json({response: {bankAccounts, payments: payments}});
 
             }
             catch (err) {
@@ -52,12 +54,9 @@ export default class BankAccountController {
             {
                 const transaction = await sequelize.transaction();
 
-                const contaPagar = await Payment.findOne({
-                    attributes: ["id", "numeroDocumento", "valor", "emissao", "vencimento"],
-                    include: [
-                        {model: Partner, attributes: ["id", "nome"]},
-                        {model: FormOfPayment, attributes: ["id", "description"]},
-                    ],
+                const contaPagar = await BankAccount.findOne({
+                    attributes: ["id", "agency", "agencyDigit", "account", "accountDigit"],
+                    include: [{model: Bank, attributes: ["id", "description"]}],
                     where: {id: req.body.id}, transaction});
     
                 sequelize.close();
@@ -97,6 +96,8 @@ export default class BankAccountController {
         });
     }
 
+
+
     async save(req: Request, res: Response) {
         
         Auth(req, res).then(async ({sequelize}) => {
@@ -135,32 +136,28 @@ export default class BankAccountController {
 
     }
 
-    /*
-    async update(req: Request, res: Response) {
+    async shipping(req: Request, res: Response) {
         
-        Auth(req, res).then(async ({transaction}) => {
+        Auth(req, res).then(async ({sequelize, companyId}) => {
 
-            const Usuario = req.body as Usuario;
+            const transaction = await sequelize.transaction();
 
-            const valid = UsuarioService.IsValid(Usuario);
+            const bankAccountId = req.body.bankAccountId;
+            const payments = req.body.payments;
 
-            if (!valid.success) {
-                res.status(201).json(valid);
-                return;
-            }
-
-            await UsuarioService.Update(Usuario, transaction);
+            await BankAccountService.Shipping(companyId, bankAccountId, payments, transaction);
 
             await transaction?.commit();
-            
-            res.status(200).json(Usuario);
+
+            sequelize.close();
+
+            res.status(200).json({success: true});
             
         }).catch((err) => {
             res.status(500).json(err);
         });
        
     }
-    */
 
     async delete(req: Request, res: Response) {
         
