@@ -4,31 +4,22 @@ import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
 
-export class ViewOrderBase extends ViewModal<Readonly<{Title: string}>> {
+export class ViewCalledBase extends ViewModal<Readonly<{Title: string}>> {
 
     state = {
         open: false,
         id: "",
         number: "",
-        costumer: null,
         company: null,
-        seller: null,
-        tipoEntrega: null,
-        status: null,
+        partner: null,
+        responsible: null,
+        occurrence: null,
+        forecast: '',
+        priority: 2,
+        subject: '',
+        status: 'open',
+        
         createdAt: '',
-        itens: [],
-        pagamentos: [],
-
-        entregador: null,
-        entrega: {
-            cep: "",
-            logradouro: "",
-            numero: "",
-            complemento: "",
-            estadoId: "",
-            bairro: "",
-            municipio: null,
-        },
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -38,7 +29,7 @@ export class ViewOrderBase extends ViewModal<Readonly<{Title: string}>> {
 
         if (id) {
             Loading.Show();
-            const r = await Service.Post("sales/order/findOne", {id});
+            const r = await Service.Post("relationships/called/findOne", {id});
             Loading.Hide();
             this.setState(r?.data);
         }
@@ -66,27 +57,17 @@ export class ViewOrderBase extends ViewModal<Readonly<{Title: string}>> {
         try
         {
 
-            if (this.state.status != null) {
-                await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: <>Venda com status {_.get(this.state.status, 'descricao')}<br />Não e possível editar!</>, buttons: [{ Text: "OK" }]});
-                return;
-            }
-
-            if (this.state.costumer == null) {
-                await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Informe o cliente para venda!", buttons: [{ Text: "OK" }]});
-                return;
-            }
-
             Loading.Show();
-
+            
             const request = {
                 ...this.state,
-                costumerId: _.get(this.state.costumer, 'id') || null,
                 companyId: _.get(this.state.company, 'id') || null,
-                sellerId: _.get(this.state.seller, 'id') || null,
-                entregadorId: _.get(this.state.entregador, 'id') || null,
+                partnerId: _.get(this.state.partner, 'id') || null,
+                responsibleId: _.get(this.state.responsible, 'id') || null,
+                occurrenceId: _.get(this.state.occurrence, 'id') || null,
             }
 
-            let r = await Service.Post("sales/order/save", request);
+            let r = await Service.Post("relationships/called/save", request);
     
             Loading.Hide();
     
@@ -111,16 +92,15 @@ export class ViewOrderBase extends ViewModal<Readonly<{Title: string}>> {
         this.setState({
             id: "",
             number: "",
-            costumer: null,
             company: null,
-            seller: null,
-            status: null,
-            tipoEntrega: null,
+            partner: null,
+            responsible: null,
+            occurrence: null,
+            forecast: '',
+            priority: 2,
+            subject: '',
+            status: 'open',
             createdAt: '',
-            itens: [],
-            pagamentos: [],
-            entregador: null,
-            entrega: {},
         });
     }
 

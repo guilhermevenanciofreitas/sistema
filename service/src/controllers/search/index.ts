@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { BankAccount, Company, PaymentForm, Municipio, Partner, PedidoVendaTipoEntrega, Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco } from "../../database";
+import { BankAccount, Company, PaymentForm, Municipio, Partner, PedidoVendaTipoEntrega, Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco, CalledOccurrence } from "../../database";
 import { Op } from "sequelize";
 import { Bank } from "../../database/models/bank.model";
 
@@ -52,6 +52,34 @@ export default class SearchController {
                 sequelize.close();
 
                 res.status(200).json(tabelasPreco);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async partner(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+   
+                if (req.body?.Search) {
+                    where = {"nome": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+        
+                const clientes = await Partner.findAll({attributes: ["id", "cpfCnpj", "nome"], where, order: [["nome", "asc"]], transaction});
+        
+                sequelize.close();
+
+                res.status(200).json(clientes);
 
             }
             catch (err) {
@@ -355,6 +383,37 @@ export default class SearchController {
                 sequelize.close();
 
                 res.status(200).json(produtoCombinacaoGrupo);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async calledOccurrence(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+
+                if (req.body?.Search) {
+                    where = {"description": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+
+                const calledOccurrences = await CalledOccurrence.findAll({attributes: ['id', 'description', 'day', 'hour', 'minute'], 
+                where,
+                order: [["description", "asc"]],
+                transaction});
+        
+                sequelize.close();
+
+                res.status(200).json(calledOccurrences);
 
             }
             catch (err) {

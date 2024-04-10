@@ -19,12 +19,12 @@ export default class SaleOrderController {
                 const transaction = await sequelize.transaction();
 
                 let where: any = {};
-                let order: any = [];
+                let order: any = [['createdAt', 'desc']];
 
                 const statusId = req.body.statusId;
         
                 if (statusId != null) {
-                    where = [{"statusId": statusId}];
+                    where = [{"statusId": statusId == '' ? null : statusId}];
                 }
 
                 if (pagination.sort) {
@@ -180,7 +180,7 @@ export default class SaleOrderController {
 
                 const SaleOrder = req.body as SaleOrder;
 
-                SaleOrder.valor = _.sum(SaleOrder.itens?.map(c => parseFloat(c.valor?.toString() || "0")));
+                SaleOrder.valor = _.sum(SaleOrder.saleOrderItems?.map(c => parseFloat(c.valor?.toString() || "0")));
 
                 const valid = SaleOrderService.IsValid(SaleOrder);
 

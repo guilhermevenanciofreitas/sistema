@@ -152,7 +152,7 @@ export default class ProgressBase extends BaseIndex {
 
         let status = [];
 
-        status.push({id: null, descricao: "[Sem status]"});
+        status.push({id: null, descricao: "Pendente", color: '#a0a0a0'});
 
         for (let item of r?.data.response.status || []) {
             status.push(item);

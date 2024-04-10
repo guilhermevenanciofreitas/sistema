@@ -15,6 +15,7 @@ class SearchRoutes {
 
     this.router.post("/tabelasPreco", (req, res) => this.controller.tabelasPreco(req, res));
 
+    this.router.post("/partner", (req, res) => this.controller.partner(req, res));
     this.router.post("/costumer", (req, res) => this.controller.costumer(req, res));
     this.router.post("/employee", (req, res) => this.controller.employee(req, res));
     
@@ -30,6 +31,9 @@ class SearchRoutes {
     this.router.post("/product-category", (req, res) => this.controller.productCategory(req, res));
 
     this.router.post("/produtoCombinacaoGrupo", (req, res) => this.controller.produtoCombinacaoGrupo(req, res));
+
+    this.router.post("/called-occurrence", (req, res) => this.controller.calledOccurrence(req, res));
+
   }
 }
 

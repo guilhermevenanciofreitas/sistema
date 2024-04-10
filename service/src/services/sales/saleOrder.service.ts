@@ -23,7 +23,7 @@ export class SaleOrderService {
         saleOrder.id = crypto.randomUUID();
         saleOrder.createdAt = new Date();
 
-        for (let item of saleOrder?.itens || []) {
+        for (let item of saleOrder?.saleOrderItems || []) {
             item.id = crypto.randomUUID();
             item.saleOrderId = saleOrder.id;
             item.produtoId = item.produto?.id;
@@ -60,7 +60,7 @@ export class SaleOrderService {
 
         let where: any = [];
 
-        for (let item of saleOrder?.itens || []) {
+        for (let item of saleOrder?.saleOrderItems || []) {
 
             item.saleOrderId = saleOrder.id;
             item.produtoId = item.produto?.id;
@@ -71,7 +71,7 @@ export class SaleOrderService {
             } else {
                 SaleOrderItem.update(item, {where: {id: item.id}, transaction});
             }
-            SaleOrderItem.destroy({where: {saleOrderId: saleOrder.id, id: {[Op.notIn]: saleOrder?.itens?.filter(c => c.id != "").map(c => c.id)}}, transaction});
+            SaleOrderItem.destroy({where: {saleOrderId: saleOrder.id, id: {[Op.notIn]: saleOrder?.saleOrderItems?.filter(c => c.id != "").map(c => c.id)}}, transaction});
 
             if (item?.itemCombinacoes?.length == 0) {
                 SaleOrderItemCombination.destroy({where: {saleOrderItemId: item.id}, transaction});
@@ -149,7 +149,7 @@ export class SaleOrderService {
         });
 
         if (saleOrderStatusByFrom == null) {
-            throw new DisplayError(`${saleOrder?.status?.descricao || '[Sem status]'} => ${saleOrderStatus?.descricao || '[Sem status]'} Não configurado!`, 201);
+            throw new DisplayError(`${saleOrder?.status?.descricao || 'Pendente'} => ${saleOrderStatus?.descricao || 'Pendente'} Não configurado!`, 201);
         }
 
         await SaleOrder.update({statusId: statusId}, {where: {id}, transaction});

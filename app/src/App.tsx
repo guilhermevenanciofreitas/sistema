@@ -32,6 +32,7 @@ import ShippingsOrders from "./views/logistics/shippingsOrders";
 import Payments from "./views/financial/payments";
 import BankAccounts from "./views/financial/bankAccounts";
 import Shippings from "./views/financial/shippings";
+import Calleds from "./views/relationship/calleds";
 
 export default class App extends React.Component {
     render(): React.ReactNode {
@@ -50,6 +51,10 @@ export default class App extends React.Component {
                 <Route path="/registrations/suppliers" element={<RequireLogin><Suppliers /></RequireLogin>} />
                 <Route path="/registrations/employees" element={<RequireLogin><Employees /></RequireLogin>} />
                 <Route path="/registrations/shippings-company" element={<RequireLogin><Transporadoras /></RequireLogin>} />
+
+                {/* Relationship */}
+                <Route path="/relationships/calleds" element={<RequireLogin><Calleds /></RequireLogin>} />
+
 
                 {/* Sales */}
                 <Route path="/sales/orders" element={<RequireLogin><Orders /></RequireLogin>} />

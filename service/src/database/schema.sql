@@ -302,8 +302,91 @@ ALTER TABLE "nfe" ADD COLUMN IF NOT EXISTS "protNFe" JSON;
 CREATE TABLE IF NOT EXISTS "shippingOrder"();
 ALTER TABLE "shippingOrder" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 
---formOfPayment
-CREATE TABLE IF NOT EXISTS "formOfPayment"();
-ALTER TABLE "formOfPayment" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "formOfPayment" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
-ALTER TABLE "formOfPayment" ADD COLUMN IF NOT EXISTS "type" VARCHAR(20);
+--paymentForm
+CREATE TABLE IF NOT EXISTS "paymentForm"();
+ALTER TABLE "paymentForm" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "paymentForm" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
+ALTER TABLE "paymentForm" ADD COLUMN IF NOT EXISTS "type" VARCHAR(20);
+
+--calledOccurrence
+CREATE TABLE IF NOT EXISTS "calledOccurrence"();
+ALTER TABLE "calledOccurrence" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "calledOccurrence" ADD COLUMN IF NOT EXISTS "description" VARCHAR(80);
+ALTER TABLE "calledOccurrence" ADD COLUMN IF NOT EXISTS "day" INTEGER;
+ALTER TABLE "calledOccurrence" ADD COLUMN IF NOT EXISTS "hour" INTEGER;
+ALTER TABLE "calledOccurrence" ADD COLUMN IF NOT EXISTS "minute" INTEGER;
+
+--calledResolution
+CREATE TABLE IF NOT EXISTS "calledResolution"();
+ALTER TABLE "calledResolution" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "calledResolution" ADD COLUMN IF NOT EXISTS "description" VARCHAR(80);
+ALTER TABLE "calledResolution" ADD COLUMN IF NOT EXISTS "finished" BOOLEAN;
+
+--called
+CREATE TABLE IF NOT EXISTS "called"();
+ALTER TABLE "called" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "called" ADD COLUMN IF NOT EXISTS "number" VARCHAR(15);
+ALTER TABLE "called" ADD COLUMN IF NOT EXISTS "status" VARCHAR(15);
+ALTER TABLE "called" ADD COLUMN IF NOT EXISTS "companyId" UUID;
+ALTER TABLE "called" ADD COLUMN IF NOT EXISTS "partnerId" UUID;
+ALTER TABLE "called" ADD COLUMN IF NOT EXISTS "responsibleId" UUID;
+ALTER TABLE "called" ADD COLUMN IF NOT EXISTS "occurrenceId" UUID;
+ALTER TABLE "called" ADD COLUMN IF NOT EXISTS "forecast" TIMESTAMP WITHOUT TIME ZONE;
+ALTER TABLE "called" ADD COLUMN IF NOT EXISTS "priority" INTEGER;
+ALTER TABLE "called" ADD COLUMN IF NOT EXISTS "subject" VARCHAR(200);
+ALTER TABLE "called" ADD COLUMN IF NOT EXISTS "start" TIMESTAMP WITHOUT TIME ZONE;
+ALTER TABLE "called" ADD COLUMN IF NOT EXISTS "end" TIMESTAMP WITHOUT TIME ZONE;
+ALTER TABLE "called" ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMP WITHOUT TIME ZONE;
+
+--calledTask
+CREATE TABLE IF NOT EXISTS "calledTask"();
+ALTER TABLE "calledTask" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "calledTask" ADD COLUMN IF NOT EXISTS "taskId" UUID;
+ALTER TABLE "calledTask" ADD COLUMN IF NOT EXISTS "responsibleId" UUID;
+ALTER TABLE "calledTask" ADD COLUMN IF NOT EXISTS "checked" BOOLEAN;
+
+--task
+CREATE TABLE IF NOT EXISTS "task"();
+ALTER TABLE "task" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "task" ADD COLUMN IF NOT EXISTS "type" VARCHAR(10);
+ALTER TABLE "task" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
+
+--region
+CREATE TABLE IF NOT EXISTS "region"();
+ALTER TABLE "region" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "region" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
+
+--freightCalculationType
+CREATE TABLE IF NOT EXISTS "freightCalculationType"();
+ALTER TABLE "freightCalculationType" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "freightCalculationType" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
+
+--freightCalculation
+CREATE TABLE IF NOT EXISTS "freightCalculation"();
+ALTER TABLE "freightCalculation" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "freightCalculation" ADD COLUMN IF NOT EXISTS "typeId" UUID;
+ALTER TABLE "freightCalculation" ADD COLUMN IF NOT EXISTS "senderRegionId" UUID;
+ALTER TABLE "freightCalculation" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
+ALTER TABLE "freightCalculation" ADD COLUMN IF NOT EXISTS "aliquotICMS" DECIMAL(18, 2);
+
+--freightCalculationSender
+CREATE TABLE IF NOT EXISTS "freightCalculationRecipient"();
+ALTER TABLE "freightCalculationRecipient" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "freightCalculationRecipient" ADD COLUMN IF NOT EXISTS "freightCalculationId" UUID;
+ALTER TABLE "freightCalculationRecipient" ADD COLUMN IF NOT EXISTS "recipientRegionId" UUID;
+
+--freightCalculationWeight
+CREATE TABLE IF NOT EXISTS "freightCalculationWeight"();
+ALTER TABLE "freightCalculationWeight" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "freightCalculationWeight" ADD COLUMN IF NOT EXISTS "freightCalculationId" UUID;
+ALTER TABLE "freightCalculationWeight" ADD COLUMN IF NOT EXISTS "startWeight" DECIMAL(18, 3);
+ALTER TABLE "freightCalculationWeight" ADD COLUMN IF NOT EXISTS "endWeight" DECIMAL(18, 3);
+ALTER TABLE "freightCalculationWeight" ADD COLUMN IF NOT EXISTS "type" VARCHAR(10);
+ALTER TABLE "freightCalculationWeight" ADD COLUMN IF NOT EXISTS "value" DECIMAL(18, 2);
+
+--freightCalculationToll
+CREATE TABLE IF NOT EXISTS "freightCalculationToll"();
+ALTER TABLE "freightCalculationToll" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "freightCalculationToll" ADD COLUMN IF NOT EXISTS "senderRegionId" UUID;
+ALTER TABLE "freightCalculationToll" ADD COLUMN IF NOT EXISTS "recipientRegionId" UUID;
+ALTER TABLE "freightCalculationToll" ADD COLUMN IF NOT EXISTS "value" DECIMAL(18, 2);

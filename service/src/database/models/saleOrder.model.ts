@@ -61,7 +61,7 @@ export class SaleOrder extends Model {
   status?: SaleOrderStatus;
 
   @HasMany(() => SaleOrderItem, 'saleOrderId')
-  itens?: SaleOrderItem[];
+  saleOrderItems?: SaleOrderItem[];
 
   @HasMany(() => SaleOrderRecieve, 'pedidoVendaId')
   pagamentos?: SaleOrderRecieve[];

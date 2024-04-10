@@ -7,6 +7,11 @@ export const Search = {
         return (await Service.Post("search/company", {Search}))?.data;
     },
     
+    Partner: async (Search: string) =>
+    {
+        return (await Service.Post("search/partner", {Search}))?.data;
+    },
+    
     Costumer: async (Search: string) =>
     {
         return (await Service.Post("search/costumer", {Search}))?.data;
@@ -65,6 +70,11 @@ export const Search = {
     ProdutoCombinacaoGrupo: async (Search: string) =>
     {
         return (await Service.Post("search/produtoCombinacaoGrupo", {Search}))?.data;
+    },
+
+    CalledOccurrence: async (Search: string) =>
+    {
+        return (await Service.Post("search/called-occurrence", {Search}))?.data;
     },
     
 }

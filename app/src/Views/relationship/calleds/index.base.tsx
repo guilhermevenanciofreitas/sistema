@@ -1,25 +1,25 @@
 import React from "react";
 import { Service } from "../../../Service";
-import { ViewOrder } from "./View/index";
 import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
 import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
+import { ViewCalled } from "./View";
 
-export default class OrdersBase extends BaseIndex {
+export default class CalledsBase extends BaseIndex {
  
-    protected ViewOrder = React.createRef<ViewOrder>();
+    protected ViewCalled = React.createRef<ViewCalled>();
 
-    protected ViewImportar = React.createRef<ViewImportar>();
-    protected ViewFiltro = React.createRef<ViewFiltro>();
+    //protected ViewImportar = React.createRef<ViewImportar>();
+    //protected ViewFiltro = React.createRef<ViewFiltro>();
 
     state = {
         Loading: true,
         Selecteds: [],
         request: {
-            statusId: null,
+            status: null,
             offset: 1,
             limit: 100,
             filter: undefined,
@@ -28,6 +28,11 @@ export default class OrdersBase extends BaseIndex {
         response: {
             rows: [],
             count: 0,
+            status: {
+                open: null,
+                late: null,
+                closed: null,
+            }
         },
     }
 
@@ -40,7 +45,7 @@ export default class OrdersBase extends BaseIndex {
 
             const { id } = queryString.parse(window.location.search);
             if (id) {
-                await this.OpenPedidoVenda(id.toString(), false);
+                await this.OpenCalled(id.toString(), false);
             }
 
             history.pushState(null, "", `${window.location.origin}${window.location.pathname}`);
@@ -59,12 +64,12 @@ export default class OrdersBase extends BaseIndex {
         try
         {
 
-            const r = await this.OpenPedidoVenda(id);
-
-            if (r) this.Pesquisar(this.state.request);
+            const r = await this.OpenCalled(id);
+            
+            if (r) await this.Pesquisar(this.state.request);
        
         } 
-        catch (err: any) 
+        catch (err: any)
         {
             await DisplayError.Show(err);
         }
@@ -75,9 +80,9 @@ export default class OrdersBase extends BaseIndex {
         try
         {
 
-            const r = await this.ViewOrder.current?.Show(undefined);
+            const r = await this.ViewCalled.current?.Show(undefined);
 
-            if (r) this.Pesquisar(this.state.request);
+            if (r) await this.Pesquisar(this.state.request);
             
         }
         catch (err: any) 
@@ -116,9 +121,9 @@ export default class OrdersBase extends BaseIndex {
     {
         try
         {
-            const data = await this.ViewImportar.current?.Show(this.state.request.filter);
+            //const data = await this.ViewImportar.current?.Show(this.state.request.filter);
 
-            if (data === null) return;
+            //if (data === null) return;
 
             this.setState({request: {...this.state.request, offset: 1}},
                 async () => await this.Pesquisar(this.state.request)
@@ -135,13 +140,13 @@ export default class OrdersBase extends BaseIndex {
     {
         try
         {
-            const filter = await this.ViewFiltro.current?.Show(this.state.request.filter);
+            //const filter = await this.ViewFiltro.current?.Show(this.state.request.filter);
 
-            if (filter === null) return;
+            //if (filter === null) return;
 
-            this.setState({request: {...this.state.request, offset: 1, filter}},
-                async () => await this.Pesquisar(this.state.request)
-            );
+            //this.setState({request: {...this.state.request, offset: 1, filter}},
+            //    async () => await this.Pesquisar(this.state.request)
+            //);
     
         }
         catch (err: any) 
@@ -150,11 +155,11 @@ export default class OrdersBase extends BaseIndex {
         }
     }
 
-    protected CardStatus_Click = async(statusId?: string | null): Promise<void> =>
+    protected CardStatus_Click = async(status?: string | null): Promise<void> =>
     {
         try
         {
-            this.setState({request: {...this.state.request, statusId}}, 
+            this.setState({request: {...this.state.request, status}}, 
                 async () => await this.Pesquisar(this.state.request)
             );
         }
@@ -168,7 +173,7 @@ export default class OrdersBase extends BaseIndex {
     {
         try
         {
-            this.setState({request: {...this.state.request, statusId: null}}, 
+            this.setState({request: {...this.state.request, status: null}}, 
                 async () => await this.Pesquisar(this.state.request)
             );
         }
@@ -206,10 +211,10 @@ export default class OrdersBase extends BaseIndex {
         }
     }
 
-    private OpenPedidoVenda = async (id: string, isHitoryBack: boolean = true) =>
+    private OpenCalled = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewOrder.current?.Show(id);
+        const r = await this.ViewCalled.current?.Show(id);
         if (isHitoryBack) history.back();
         return r;
     }
@@ -217,7 +222,7 @@ export default class OrdersBase extends BaseIndex {
     protected Pesquisar = async(request: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("sales/order/findAll", request);
+        var r = await Service.Post("relationships/called/findAll", request);
         this.setState({Loading: false, ...r?.data});
     }
 

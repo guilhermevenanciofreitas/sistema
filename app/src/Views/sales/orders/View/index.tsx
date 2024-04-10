@@ -49,13 +49,12 @@ export class ViewOrder extends ViewOrderBase {
                             </AutoComplete>
                         </Grid>
                         <Grid md={3}>
-                            <FormLabel>Status</FormLabel>
-                            
+                            <FormLabel sx={{fontWeight: 400}}>Status</FormLabel>
                             <Alert variant="soft" style={{height: '32px'}}>
                                 <div style={{display: 'flex', height: 'auto'}}>
-                                    <div style={{marginTop: '3px', width: '15px', height: '15px', backgroundColor: _.get(this.state.status, 'color'), borderRadius: '25px'}}></div>
+                                    <div style={{marginTop: '3px', width: '15px', height: '15px', backgroundColor: _.get(this.state.status, 'color') || '#a0a0a0', borderRadius: '25px'}}></div>
                                     <div style={{paddingLeft: '8px'}}>
-                                        {_.get(this.state.status, 'descricao') || "[Sem status]"}
+                                        {_.get(this.state.status, 'descricao') || "Pendente"}
                                     </div>
                                 </div>
                             </Alert>

@@ -36,6 +36,10 @@ import { BankAccountPaymentForm } from "./models/bankAccountPaymentForm.model";
 import { PaymentCarried } from "./models/paymentCarried.model";
 import { BankAccountShipping } from "./models/bankAccountShipping.model";
 import { BankAccountShippingPayment } from "./models/bankAccountShippingPayment.model";
+import { CalledOccurrence } from "./models/calledOccurrence.model";
+import { Called } from "./models/called.model";
+import { Task } from "./models/task.model";
+import { CalledTask } from "./models/calledTask.model";
 
 
 export { Payment } from "./models/payment.model";
@@ -73,6 +77,10 @@ export { BankAccountPaymentForm } from "./models/bankAccountPaymentForm.model";
 export { PaymentCarried } from "./models/paymentCarried.model";
 export { BankAccountShipping } from "./models/bankAccountShipping.model";
 export { BankAccountShippingPayment } from "./models/bankAccountShippingPayment.model";
+export { CalledOccurrence } from "./models/calledOccurrence.model";
+export { Called } from "./models/called.model";
+export { Task } from "./models/task.model";
+export { CalledTask } from "./models/calledTask.model";
 
 
 export default class Sequelize {
@@ -88,7 +96,7 @@ export default class Sequelize {
 
       define: {timestamps: false},
       
-      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderRecieve, Company, Partner, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, User, TabelaPreco, Municipio, Nfe],
+      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Called, CalledOccurrence, CalledTask, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderRecieve, Company, Partner, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, Task, User, TabelaPreco, Municipio, Nfe],
       pool: {
         max: 5,
         min: 0,
