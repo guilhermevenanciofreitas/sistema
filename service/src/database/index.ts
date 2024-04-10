@@ -40,6 +40,11 @@ import { CalledOccurrence } from "./models/calledOccurrence.model";
 import { Called } from "./models/called.model";
 import { Task } from "./models/task.model";
 import { CalledTask } from "./models/calledTask.model";
+import { Region } from "./models/region.model";
+import { FreightCalculation } from "./models/freightCalculation.model";
+import { FreightCalculationRecipient } from "./models/freightCalculationRecipient.model";
+import { FreightCalculationType } from "./models/freightCalculationType.model";
+import { FreightCalculationWeight } from "./models/freightCalculationWeight.model";
 
 
 export { Payment } from "./models/payment.model";
@@ -81,6 +86,11 @@ export { CalledOccurrence } from "./models/calledOccurrence.model";
 export { Called } from "./models/called.model";
 export { Task } from "./models/task.model";
 export { CalledTask } from "./models/calledTask.model";
+export { Region } from "./models/region.model";
+export { FreightCalculation } from "./models/freightCalculation.model";
+export { FreightCalculationRecipient } from "./models/freightCalculationRecipient.model";
+export { FreightCalculationType } from "./models/freightCalculationType.model";
+export { FreightCalculationWeight } from "./models/freightCalculationWeight.model";
 
 
 export default class Sequelize {
@@ -96,7 +106,7 @@ export default class Sequelize {
 
       define: {timestamps: false},
       
-      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Called, CalledOccurrence, CalledTask, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderRecieve, Company, Partner, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, Task, User, TabelaPreco, Municipio, Nfe],
+      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Called, CalledOccurrence, CalledTask, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderRecieve, Company, Partner, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, Task, User, TabelaPreco, Municipio, Nfe, Region, FreightCalculation, FreightCalculationRecipient, FreightCalculationType, FreightCalculationWeight],
       pool: {
         max: 5,
         min: 0,

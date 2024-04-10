@@ -153,7 +153,7 @@ export default class CalledController {
                 
                 sequelize.close();
 
-                res.status(200).json(User);
+                res.status(200).json(Called);
 
             }
             catch (error: any) {

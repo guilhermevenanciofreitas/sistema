@@ -364,9 +364,9 @@ ALTER TABLE "freightCalculationType" ADD COLUMN IF NOT EXISTS "description" VARC
 --freightCalculation
 CREATE TABLE IF NOT EXISTS "freightCalculation"();
 ALTER TABLE "freightCalculation" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "freightCalculation" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
 ALTER TABLE "freightCalculation" ADD COLUMN IF NOT EXISTS "typeId" UUID;
 ALTER TABLE "freightCalculation" ADD COLUMN IF NOT EXISTS "senderRegionId" UUID;
-ALTER TABLE "freightCalculation" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
 ALTER TABLE "freightCalculation" ADD COLUMN IF NOT EXISTS "aliquotICMS" DECIMAL(18, 2);
 
 --freightCalculationSender
@@ -381,7 +381,7 @@ ALTER TABLE "freightCalculationWeight" ADD COLUMN IF NOT EXISTS "id" UUID DEFAUL
 ALTER TABLE "freightCalculationWeight" ADD COLUMN IF NOT EXISTS "freightCalculationId" UUID;
 ALTER TABLE "freightCalculationWeight" ADD COLUMN IF NOT EXISTS "startWeight" DECIMAL(18, 3);
 ALTER TABLE "freightCalculationWeight" ADD COLUMN IF NOT EXISTS "endWeight" DECIMAL(18, 3);
-ALTER TABLE "freightCalculationWeight" ADD COLUMN IF NOT EXISTS "type" VARCHAR(10);
+ALTER TABLE "freightCalculationWeight" ADD COLUMN IF NOT EXISTS "calculationType" VARCHAR(10);
 ALTER TABLE "freightCalculationWeight" ADD COLUMN IF NOT EXISTS "value" DECIMAL(18, 2);
 
 --freightCalculationToll

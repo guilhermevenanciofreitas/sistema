@@ -29,6 +29,7 @@ import bankAccountRoutes from "./financial/bankAccount.routes";
 import shippingRoutes from "./financial/shipping.routes";
 import progressRoutes from "./sales/progress.routes";
 import calledRoutes from "./relationships/called.routes";
+import freightCalculationRoutes from "./logistic/freightCalculation.routes";
 
 export default class Routes {
   constructor(app: Application) {
@@ -60,6 +61,7 @@ export default class Routes {
 
     
     //Logistic
+    app.use("/api/logistic/freight-calculation", freightCalculationRoutes);
     app.use("/api/logistic/shipping-order", shippingOrderRoutes);
     app.use("/api/logistic/trip", shippingOrderRoutes);
 

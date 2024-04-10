@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { BankAccount, Company, PaymentForm, Municipio, Partner, PedidoVendaTipoEntrega, Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco, CalledOccurrence } from "../../database";
+import { BankAccount, Company, PaymentForm, Municipio, Partner, PedidoVendaTipoEntrega, Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco, CalledOccurrence, FreightCalculationType, Region } from "../../database";
 import { Op } from "sequelize";
 import { Bank } from "../../database/models/bank.model";
 
@@ -414,6 +414,72 @@ export default class SearchController {
                 sequelize.close();
 
                 res.status(200).json(calledOccurrences);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async freightCalculationType(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+
+                if (req.body?.Search) {
+                    where = {"description": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+
+                const freightCalculationTypes = await FreightCalculationType.findAll({
+                    attributes: ['id', 'description'], 
+                    where,
+                    order: [["description", "asc"]],
+                    transaction
+                });
+        
+                sequelize.close();
+
+                res.status(200).json(freightCalculationTypes);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async region(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+
+                if (req.body?.Search) {
+                    where = {"description": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+
+                const regions = await Region.findAll({
+                    attributes: ['id', 'description'], 
+                    where,
+                    order: [["description", "asc"]],
+                    transaction
+                });
+        
+                sequelize.close();
+
+                res.status(200).json(regions);
 
             }
             catch (err) {

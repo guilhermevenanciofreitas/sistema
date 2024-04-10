@@ -34,6 +34,10 @@ class SearchRoutes {
 
     this.router.post("/called-occurrence", (req, res) => this.controller.calledOccurrence(req, res));
 
+    this.router.post("/freight-calculation-type", (req, res) => this.controller.freightCalculationType(req, res));
+    
+    this.router.post("/region", (req, res) => this.controller.region(req, res));
+
   }
 }
 

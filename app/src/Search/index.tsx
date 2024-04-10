@@ -76,5 +76,15 @@ export const Search = {
     {
         return (await Service.Post("search/called-occurrence", {Search}))?.data;
     },
+
+    FreightCalculationType: async (Search: string) =>
+    {
+        return (await Service.Post("search/freight-calculation-type", {Search}))?.data;
+    },
+
+    Region: async (Search: string) =>
+    {
+        return (await Service.Post("search/region", {Search}))?.data;
+    },
     
 }
