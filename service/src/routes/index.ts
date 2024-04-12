@@ -30,6 +30,7 @@ import shippingRoutes from "./financial/shipping.routes";
 import progressRoutes from "./sales/progress.routes";
 import calledRoutes from "./relationships/called.routes";
 import freightCalculationRoutes from "./logistic/freightCalculation.routes";
+import freightQuotesRoutes from "./logistic/freightQuotes.routes";
 
 export default class Routes {
   constructor(app: Application) {
@@ -56,12 +57,12 @@ export default class Routes {
     app.use("/api/sales/order", saleOrderRoutes);
     app.use("/api/sales/progress", progressRoutes);
 
-    
+    //Fiscal
     app.use("/api/nfe", nfeRoutes);
 
-    
     //Logistic
     app.use("/api/logistic/freight-calculation", freightCalculationRoutes);
+    app.use("/api/logistic/freight-quote", freightQuotesRoutes);
     app.use("/api/logistic/shipping-order", shippingOrderRoutes);
     app.use("/api/logistic/trip", shippingOrderRoutes);
 
@@ -74,7 +75,6 @@ export default class Routes {
 
 
     app.use("/api/search", searchRoutes);
-
 
     app.use("/api/pedido-eletronico", pedidoEletronicoRoutes)
 

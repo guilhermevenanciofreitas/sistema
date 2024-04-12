@@ -23,7 +23,7 @@ export class CardStatus extends CardStatusBase {
                     </div>
                     <CardContent>
                     <Typography level="body-md">{this.props.status}</Typography>
-                    {this.props.value && (<Typography level="h4"><AttachMoney style={{fontSize: 14}} /> {this.props.value?.toLocaleString("pt-BR", {minimumFractionDigits: 2})}</Typography>)}
+                    {this.props.value != null && (<Typography level="h4"><AttachMoney style={{fontSize: 14}} /> {this.props.value?.toLocaleString("pt-BR", {minimumFractionDigits: 2})}</Typography>)}
                     <Badge color={this.props.checked ? "primary" : "neutral"} badgeContent={this.props.bagde?.toString()} style={{marginRight: '20px'}}></Badge>
                     </CardContent>
                 </CardContent>

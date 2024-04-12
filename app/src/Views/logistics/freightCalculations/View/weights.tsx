@@ -3,13 +3,12 @@ import { AutoComplete, Button, CheckBox, DropDownList, DropDownListItem, GridVie
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
 import { Grid } from "@mui/joy";
-import { RegionTemplate } from "../../../../Search/Templates/Region";
 import { EventArgs } from "../../../../Utils/EventArgs";
 
 const Columns = [
     { selector: (row: any) => row.startWeight, name: 'Peso inicial' },
     { selector: (row: any) => row.endWeight, name: 'Peso final' },
-    { selector: (row: any) => row.calculationType == 'fix' ? 'Fixo' : 'Multiplicado', name: 'Peso final' },
+    { selector: (row: any) => row.calculationType == 'fix' ? 'Fixo' : 'Multiplicado', name: 'Cálculo' },
     { selector: (row: any) => row.value, name: 'Valor' },
 ];
 

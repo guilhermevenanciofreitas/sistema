@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { FreightCalculation, FreightCalculationRecipient, FreightCalculationWeight, Nfe } from "../../database";
+import { FreightCalculation, FreightCalculationWeight, Nfe } from "../../database";
 import crypto from "crypto";
 import { Op } from "sequelize";
 
@@ -19,11 +19,6 @@ export class FreightCalculationService {
 
         freightCalculation.id = crypto.randomUUID();
 
-        for (let recipient of freightCalculation?.recipients || []) {
-            recipient.id = crypto.randomUUID();
-            await FreightCalculationRecipient.create({...recipient}, {transaction})
-        }
-
         for (let weight of freightCalculation?.weights || []) {
             weight.id = crypto.randomUUID();
             await FreightCalculationWeight.create({...weight}, {transaction})
@@ -34,16 +29,6 @@ export class FreightCalculationService {
     }
 
     public static Update = async (freightCalculation: FreightCalculation, transaction?: Transaction) => {
-
-        for (let recipient of freightCalculation?.recipients || []) {
-            if (!recipient.id) {
-                recipient.id = crypto.randomUUID();
-                await FreightCalculationRecipient.create({...recipient}, {transaction});
-            } else {
-                await FreightCalculationRecipient.update(recipient, {where: {id: recipient.id}, transaction});
-            }
-            await FreightCalculationRecipient.destroy({where: {freightCalculationId: freightCalculation.id, id: {[Op.notIn]: freightCalculation?.recipients?.filter((c: any) => c.id != "").map(c => c.id)}}, transaction})
-        }
 
         for (let weight of freightCalculation?.weights || []) {
             if (!weight.id) {

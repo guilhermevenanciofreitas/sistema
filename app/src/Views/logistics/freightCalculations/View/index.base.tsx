@@ -11,7 +11,7 @@ export class ViewFreightCalculationBase extends ViewModal<Readonly<{Title: strin
         id: '',
         description: '',
         type: null,
-        senderRegion: null,
+        senderMesoRegion: null,
         sender: null,
         aliquotICMS: '0.00',
         recipients: [],
@@ -80,7 +80,7 @@ export class ViewFreightCalculationBase extends ViewModal<Readonly<{Title: strin
             const request = {
                 id: this.state.id,
                 typeId: _.get(this.state.type, 'id') || null,
-                senderRegionId: _.get(this.state.senderRegion, 'id') || null,
+                senderMesoRegionId: _.get(this.state.senderMesoRegion, 'id') || null,
                 description: this.state.description,
                 aliquotICMS: this.state.aliquotICMS,
                 recipients: recipients,
@@ -113,7 +113,7 @@ export class ViewFreightCalculationBase extends ViewModal<Readonly<{Title: strin
             id: "",
             description: '',
             type: null,
-            senderRegion: null,
+            senderMesoRegion: null,
             aliquotICMS: '',
             recipients: [],
             weights: []

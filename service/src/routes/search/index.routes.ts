@@ -36,7 +36,7 @@ class SearchRoutes {
 
     this.router.post("/freight-calculation-type", (req, res) => this.controller.freightCalculationType(req, res));
     
-    this.router.post("/region", (req, res) => this.controller.region(req, res));
+    this.router.post("/meso-region", (req, res) => this.controller.mesoRegion(req, res));
 
   }
 }

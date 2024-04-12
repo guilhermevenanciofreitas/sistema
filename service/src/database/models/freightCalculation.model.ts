@@ -1,8 +1,8 @@
 import { Model, Table, Column, DataType, HasMany, BelongsTo } from "sequelize-typescript";
 import { FreightCalculationType } from "./freightCalculationType.model";
-import { Region } from "./region.model";
-import { FreightCalculationRecipient } from "./freightCalculationRecipient.model";
+import { MesoRegion } from "./mesoRegion.model";
 import { FreightCalculationWeight } from "./freightCalculationWeight.model";
+import { FreightCalculationRecipient } from "./freightCalculationRecipient.model";
 
 @Table({tableName: "freightCalculation"})
 export class FreightCalculation extends Model {
@@ -16,8 +16,8 @@ export class FreightCalculation extends Model {
   @Column({type: DataType.UUID, field: "typeId"})
   typeId?: string;
 
-  @Column({type: DataType.UUID, field: "senderRegionId"})
-  senderRegionId?: string;
+  @Column({type: DataType.UUID, field: "senderMesoRegionId"})
+  senderMesoRegionId?: string;
 
   @Column({type: DataType.DECIMAL(18, 2), field: "aliquotICMS"})
   aliquotICMS?: string;
@@ -25,8 +25,8 @@ export class FreightCalculation extends Model {
   @BelongsTo(() => FreightCalculationType, 'typeId')
   type?: FreightCalculationType;
 
-  @BelongsTo(() => Region, 'senderRegionId')
-  senderRegion?: Region;
+  @BelongsTo(() => MesoRegion, {as: 'senderMesoRegion', foreignKey: 'senderMesoRegionId'})
+  senderMesoRegion?: MesoRegion;
 
   @HasMany(() => FreightCalculationRecipient, 'freightCalculationId')
   recipients?: FreightCalculationRecipient[];

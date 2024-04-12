@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, CardStatus, Container, Left, ListView, Right } from "../../../Utils/Controls";
 import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
-import FreightCalculationsBase from "./index.base";
+import FreightQuotesBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { Grid, IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
@@ -29,7 +29,7 @@ const Type = ({ row }: any) => {
     );
 };
 
-export default class FreightCalculations extends FreightCalculationsBase {
+export default class FreightQuotes extends FreightQuotesBase {
 
     private Columns = [
         { selector: (row: any) => <Type row={row} />, sort: 'type.description', name: 'Tipo', sortable: true, maxWidth:"200px" },
@@ -43,14 +43,14 @@ export default class FreightCalculations extends FreightCalculationsBase {
         return (
             <>
 
-                <ViewFreightCalculation ref={this.ViewFreightCalculation} Title="Cálculo de frete" />
+                <ViewFreightCalculation ref={this.ViewFreightCalculation} Title="Cotação de frete" />
 {/*
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
 */}
                 <JoyLayout>
 
-                    <Title>Calculo de fretes</Title>
+                    <Title>Cotação de fretes</Title>
 
                     <Container>
                         <Left>

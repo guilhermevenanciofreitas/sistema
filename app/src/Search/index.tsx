@@ -82,9 +82,9 @@ export const Search = {
         return (await Service.Post("search/freight-calculation-type", {Search}))?.data;
     },
 
-    Region: async (Search: string) =>
+    MesoRegion: async (Search: string) =>
     {
-        return (await Service.Post("search/region", {Search}))?.data;
+        return (await Service.Post("search/meso-region", {Search}))?.data;
     },
     
 }

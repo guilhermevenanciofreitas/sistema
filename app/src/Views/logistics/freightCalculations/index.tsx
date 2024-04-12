@@ -34,7 +34,7 @@ export default class FreightCalculations extends FreightCalculationsBase {
     private Columns = [
         { selector: (row: any) => <Type row={row} />, sort: 'type.description', name: 'Tipo', sortable: true, maxWidth:"200px" },
         { selector: (row: any) => row.description, sort: 'description', name: 'Descrição', sortable: true, maxWidth:"200px" },
-        { selector: (row: any) => row.senderRegion?.description, sort: 'senderRegion.description', name: 'Região', sortable: true, maxWidth:"200px" },
+        { selector: (row: any) => row.senderMesoRegion?.description, sort: 'senderRegion.description', name: 'Região (Remetente)', sortable: true, maxWidth:"200px" },
         { selector: (row: any) => row.aliquotICMS, sort: 'aliquotICMS', name: 'ICMS', sortable: true, maxWidth:"100px" },
     ];
 

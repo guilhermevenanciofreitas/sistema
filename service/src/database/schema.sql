@@ -55,14 +55,14 @@ ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "complemento" VARCHAR(5
 ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "bairro" VARCHAR(50);
 ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "estadoId" UUID;
 
---estados
-CREATE TABLE IF NOT EXISTS "estados"();
-ALTER TABLE "estados" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "estados" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(60);
-ALTER TABLE "estados" ADD COLUMN IF NOT EXISTS "uf" VARCHAR(2);
-ALTER TABLE "estados" ADD COLUMN IF NOT EXISTS "ibge" INT;
-ALTER TABLE "estados" ADD COLUMN IF NOT EXISTS "pais" INT;
-ALTER TABLE "estados" ADD COLUMN IF NOT EXISTS "ddd" JSON;
+--state
+CREATE TABLE IF NOT EXISTS "state"();
+ALTER TABLE "state" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "state" ADD COLUMN IF NOT EXISTS "description" VARCHAR(60);
+ALTER TABLE "state" ADD COLUMN IF NOT EXISTS "acronym" VARCHAR(2);
+ALTER TABLE "state" ADD COLUMN IF NOT EXISTS "ibge" INT;
+ALTER TABLE "state" ADD COLUMN IF NOT EXISTS "pais" INT;
+ALTER TABLE "state" ADD COLUMN IF NOT EXISTS "ddd" JSON;
 
 --estados
 CREATE TABLE IF NOT EXISTS "municipio"();
@@ -351,10 +351,11 @@ ALTER TABLE "task" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() 
 ALTER TABLE "task" ADD COLUMN IF NOT EXISTS "type" VARCHAR(10);
 ALTER TABLE "task" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
 
---region
-CREATE TABLE IF NOT EXISTS "region"();
-ALTER TABLE "region" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "region" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
+--mesoRegion
+CREATE TABLE IF NOT EXISTS "mesoRegion"();
+ALTER TABLE "mesoRegion" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "mesoRegion" ADD COLUMN IF NOT EXISTS "stateId" UUID;
+ALTER TABLE "mesoRegion" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
 
 --freightCalculationType
 CREATE TABLE IF NOT EXISTS "freightCalculationType"();
@@ -373,7 +374,7 @@ ALTER TABLE "freightCalculation" ADD COLUMN IF NOT EXISTS "aliquotICMS" DECIMAL(
 CREATE TABLE IF NOT EXISTS "freightCalculationRecipient"();
 ALTER TABLE "freightCalculationRecipient" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "freightCalculationRecipient" ADD COLUMN IF NOT EXISTS "freightCalculationId" UUID;
-ALTER TABLE "freightCalculationRecipient" ADD COLUMN IF NOT EXISTS "recipientRegionId" UUID;
+ALTER TABLE "freightCalculationRecipient" ADD COLUMN IF NOT EXISTS "recipientMesoRegionId" UUID;
 
 --freightCalculationWeight
 CREATE TABLE IF NOT EXISTS "freightCalculationWeight"();
@@ -390,3 +391,7 @@ ALTER TABLE "freightCalculationToll" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT 
 ALTER TABLE "freightCalculationToll" ADD COLUMN IF NOT EXISTS "senderRegionId" UUID;
 ALTER TABLE "freightCalculationToll" ADD COLUMN IF NOT EXISTS "recipientRegionId" UUID;
 ALTER TABLE "freightCalculationToll" ADD COLUMN IF NOT EXISTS "value" DECIMAL(18, 2);
+
+--freightQuote
+CREATE TABLE IF NOT EXISTS "freightQuote"();
+ALTER TABLE "freightQuote" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;

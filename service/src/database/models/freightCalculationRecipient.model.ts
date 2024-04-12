@@ -1,5 +1,5 @@
 import { Model, Table, Column, DataType, HasMany, BelongsTo } from "sequelize-typescript";
-import { Region } from "./region.model";
+import { MesoRegion } from "./mesoRegion.model";
 
 @Table({tableName: "freightCalculationRecipient"})
 export class FreightCalculationRecipient extends Model {
@@ -10,10 +10,10 @@ export class FreightCalculationRecipient extends Model {
   @Column({type: DataType.UUID, field: "freightCalculationId"})
   freightCalculationId?: string;
 
-  @Column({type: DataType.UUID, field: "recipientRegionId"})
-  recipientRegionId?: string;
+  @Column({type: DataType.UUID, field: "recipientMesoRegionId"})
+  recipientMesoRegionId?: string;
 
-  @BelongsTo(() => Region, 'recipientRegionId')
-  recipientRegion?: Region;
+  @BelongsTo(() => MesoRegion, {as: 'recipientMesoRegion', foreignKey: 'recipientMesoRegionId'})
+  recipientMesoRegion?: MesoRegion;
 
 }

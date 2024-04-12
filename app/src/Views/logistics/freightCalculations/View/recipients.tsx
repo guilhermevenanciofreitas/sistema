@@ -3,10 +3,10 @@ import { AutoComplete, Button, CheckBox, GridView, Modal, TextBox, ViewModal } f
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
 import { Grid } from "@mui/joy";
-import { RegionTemplate } from "../../../../Search/Templates/Region";
+import { MesoRegionTemplate } from "../../../../Search/Templates/MesoRegion";
 
 const Columns = [
-    { selector: (row: any) => row.recipientRegion?.description, name: 'Item' },
+    { selector: (row: any) => `${row.recipientMesoRegion?.description} - ${row.recipientMesoRegion?.state?.acronym}`, name: 'Região' },
 ];
 
 class ViewRecipient extends ViewModal {
@@ -16,7 +16,7 @@ class ViewRecipient extends ViewModal {
     state = {
         open: false,
         id: "",
-        recipientRegion: null,
+        recipientMesoRegion: null,
     }
 
     public Show = async (item?: any): Promise<any> =>
@@ -36,8 +36,8 @@ class ViewRecipient extends ViewModal {
                 
                 <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                     <Grid md={12}>
-                        <AutoComplete Label='Região' Pesquisa={async(Text: string) => await Search.Region(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.recipientRegion} OnChange={(recipientRegion: any) => this.setState({recipientRegion})}>
-                            <RegionTemplate />
+                        <AutoComplete Label='Região' Pesquisa={async(Text: string) => await Search.MesoRegion(Text)} Text={(Item: any) => `${Item.description} - ${Item.state.acronym}` } Value={this.state.recipientMesoRegion} OnChange={(recipientMesoRegion: any) => this.setState({recipientMesoRegion})}>
+                            <MesoRegionTemplate />
                         </AutoComplete>
                     </Grid>
                 </Grid>
@@ -58,7 +58,7 @@ export class Recipients extends BaseDetails<Readonly<{recipients: any[], OnChang
 
         const item: any = await this.ViewRecipient.current?.Show({
             id: "",
-            recipientRegion: null,
+            recipientMesoRegion: null,
         });
 
         if (item == null) return;
@@ -73,7 +73,7 @@ export class Recipients extends BaseDetails<Readonly<{recipients: any[], OnChang
 
         const item = await this.ViewRecipient.current?.Show({...args});
         if (item == null) return;
-        args.recipientRegion = item.recipientRegion;
+        args.recipientMesoRegion = item.recipientMesoRegion;
         this.props.OnChange(this.props.recipients);
        
     }

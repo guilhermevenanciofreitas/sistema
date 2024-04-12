@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { BankAccount, Company, PaymentForm, Municipio, Partner, PedidoVendaTipoEntrega, Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco, CalledOccurrence, FreightCalculationType, Region } from "../../database";
+import { BankAccount, Company, PaymentForm, Municipio, Partner, PedidoVendaTipoEntrega, Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco, CalledOccurrence, FreightCalculationType, MesoRegion, State } from "../../database";
 import { Op } from "sequelize";
 import { Bank } from "../../database/models/bank.model";
 
@@ -457,7 +457,7 @@ export default class SearchController {
         });
     }
 
-    async region(req: Request, res: Response) {
+    async mesoRegion(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try {
@@ -470,8 +470,9 @@ export default class SearchController {
                     where = {"description": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
 
-                const regions = await Region.findAll({
+                const regions = await MesoRegion.findAll({
                     attributes: ['id', 'description'], 
+                    include: [{model: State, attributes: ['id', 'acronym']}],
                     where,
                     order: [["description", "asc"]],
                     transaction

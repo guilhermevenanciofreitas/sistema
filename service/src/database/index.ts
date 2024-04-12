@@ -40,11 +40,13 @@ import { CalledOccurrence } from "./models/calledOccurrence.model";
 import { Called } from "./models/called.model";
 import { Task } from "./models/task.model";
 import { CalledTask } from "./models/calledTask.model";
-import { Region } from "./models/region.model";
+import { MesoRegion } from "./models/mesoRegion.model";
 import { FreightCalculation } from "./models/freightCalculation.model";
-import { FreightCalculationRecipient } from "./models/freightCalculationRecipient.model";
 import { FreightCalculationType } from "./models/freightCalculationType.model";
 import { FreightCalculationWeight } from "./models/freightCalculationWeight.model";
+import { FreightQuote } from "./models/freightQuote.model";
+import { State } from "./models/state.model";
+import { FreightCalculationRecipient } from "./models/freightCalculationRecipient.model";
 
 
 export { Payment } from "./models/payment.model";
@@ -86,11 +88,14 @@ export { CalledOccurrence } from "./models/calledOccurrence.model";
 export { Called } from "./models/called.model";
 export { Task } from "./models/task.model";
 export { CalledTask } from "./models/calledTask.model";
-export { Region } from "./models/region.model";
+export { MesoRegion } from "./models/mesoRegion.model";
 export { FreightCalculation } from "./models/freightCalculation.model";
-export { FreightCalculationRecipient } from "./models/freightCalculationRecipient.model";
 export { FreightCalculationType } from "./models/freightCalculationType.model";
 export { FreightCalculationWeight } from "./models/freightCalculationWeight.model";
+export { FreightQuote } from "./models/freightQuote.model";
+export { State } from "./models/state.model";
+export { FreightCalculationRecipient } from "./models/freightCalculationRecipient.model";
+
 
 
 export default class Sequelize {
@@ -106,7 +111,7 @@ export default class Sequelize {
 
       define: {timestamps: false},
       
-      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Called, CalledOccurrence, CalledTask, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderRecieve, Company, Partner, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, Task, User, TabelaPreco, Municipio, Nfe, Region, FreightCalculation, FreightCalculationRecipient, FreightCalculationType, FreightCalculationWeight],
+      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Called, CalledOccurrence, CalledTask, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderRecieve, Company, Partner, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, State, Task, User, TabelaPreco, Municipio, Nfe, MesoRegion, FreightCalculation, FreightCalculationRecipient, FreightCalculationType, FreightCalculationWeight, FreightQuote],
       pool: {
         max: 5,
         min: 0,

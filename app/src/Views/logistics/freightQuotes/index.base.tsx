@@ -8,7 +8,7 @@ import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 import { ViewFreightCalculation } from "./View";
 
-export default class FreightCalculationsBase extends BaseIndex {
+export default class FreightQuotesBase extends BaseIndex {
  
     protected ViewFreightCalculation = React.createRef<ViewFreightCalculation>();
 
@@ -220,7 +220,7 @@ export default class FreightCalculationsBase extends BaseIndex {
     protected Pesquisar = async(request: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("logistic/freight-calculation/findAll", request);
+        var r = await Service.Post("logistic/freight-quote/findAll", request);
         this.setState({Loading: false, ...r?.data});
     }
 

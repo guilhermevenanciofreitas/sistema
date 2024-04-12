@@ -14,7 +14,7 @@ import { CalledOccurrenceTemplate } from '../../../../Search/Templates/CalledOcc
 import { colors } from '..';
 import dayjs from 'dayjs';
 import { FreightCalculationTypeTemplate } from '../../../../Search/Templates/FreightCalculationType';
-import { RegionTemplate } from '../../../../Search/Templates/Region';
+import { MesoRegionTemplate } from '../../../../Search/Templates/MesoRegion';
 import { Recipients } from './recipients';
 import { Weights } from './weights';
 
@@ -25,7 +25,7 @@ export class ViewFreightCalculation extends ViewFreightCalculationBase {
     public render(): ReactNode {
 
         return (
-            <Modal Open={this.state.open} Title={this.props.Title} Width={1000} Close={() => this.Close()}>
+            <Modal Open={this.state.open} Title={this.props.Title} Width={1100} Close={() => this.Close()}>
                 <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
 
                     <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
@@ -41,8 +41,8 @@ export class ViewFreightCalculation extends ViewFreightCalculationBase {
                             </AutoComplete>
                         </Grid>
                         <Grid md={3}>
-                            <AutoComplete Label='Região' Pesquisa={async(Text: string) => await Search.Region(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.senderRegion} OnChange={(senderRegion: any) => this.setState({senderRegion})}>
-                                <RegionTemplate />
+                            <AutoComplete Label='Remetente (Região)' Pesquisa={async(Text: string) => await Search.MesoRegion(Text)} Text={(Item: any) => `${Item.description} - ${Item.state?.acronym}` } Value={this.state.senderMesoRegion} OnChange={(senderMesoRegion: any) => this.setState({senderMesoRegion})}>
+                                <MesoRegionTemplate />
                             </AutoComplete>
                         </Grid>
                         <Grid md={2}>
