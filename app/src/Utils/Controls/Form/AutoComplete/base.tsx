@@ -14,9 +14,9 @@ class Parameter {
 
     public Text?: Function | undefined;
 
-    public Enable?: boolean;
-
     public OnChange?: Function;
+
+    public ReadOnly?: boolean;
 
     public children?: any;
 
@@ -25,7 +25,6 @@ class Parameter {
 export abstract class AutoCompleteBase extends React.Component<Parameter> {
 
     static defaultProps = {
-        Enable: true,
         Value: null,
     };
 

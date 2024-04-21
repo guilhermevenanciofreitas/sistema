@@ -8,14 +8,18 @@ export class ViewFreightCalculationBase extends ViewModal<Readonly<{Title: strin
 
     state = {
         open: false,
+        calculating: false,
         id: '',
-        description: '',
+        company: null,
         type: null,
-        senderRegion: null,
+        weight: null,
         sender: null,
+        senderMesoRegion: null,
+        recipient: null,
+        recipientMesoRegion: null,
+        value: '0.00',
         aliquotICMS: '0.00',
-        recipients: [],
-        weights: []
+        valueICMS: '0.00'
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -25,7 +29,7 @@ export class ViewFreightCalculationBase extends ViewModal<Readonly<{Title: strin
 
         if (id) {
             Loading.Show();
-            const r = await Service.Post("logistic/freight-calculation/findOne", {id});
+            const r = await Service.Post("logistic/freight-quote/findOne", {id});
             Loading.Hide();
             this.setState(r?.data);
         }
@@ -55,39 +59,23 @@ export class ViewFreightCalculationBase extends ViewModal<Readonly<{Title: strin
 
             Loading.Show();
             
-            let recipients: any[] = [];
-            let weights: any[] = [];
-
-            for (let recipient of this.state.recipients) {
-                recipients.push({
-                    id: _.get(recipient, 'id'),
-                    freightCalculationId: this.state.id,
-                    recipientRegionId: _.get(recipient, 'recipientRegion.id'),
-                });
-            }
-
-            for (let weight of this.state.weights) {
-                weights.push({
-                    id: _.get(weight, 'id'),
-                    freightCalculationId: this.state.id,
-                    startWeight: _.get(weight, 'startWeight'),
-                    endWeight: _.get(weight, 'endWeight'),
-                    calculationType: _.get(weight, 'calculationType'),
-                    value: _.get(weight, 'value'),
-                });
-            }
+            console.log(this.state.weight);
 
             const request = {
                 id: this.state.id,
+                companyId: _.get(this.state.company, 'id') || null,
                 typeId: _.get(this.state.type, 'id') || null,
-                senderRegionId: _.get(this.state.senderRegion, 'id') || null,
-                description: this.state.description,
+                weight: this.state.weight || null,
+                senderId: _.get(this.state.sender, 'id') || null,
+                senderMesoRegionId: _.get(this.state.senderMesoRegion, 'id') || null,
+                recipientId: _.get(this.state.recipient, 'id') || null,
+                recipientMesoRegionId: _.get(this.state.recipientMesoRegion, 'id') || null,
+                value: this.state.value,
                 aliquotICMS: this.state.aliquotICMS,
-                recipients: recipients,
-                weights: weights
+                valueICMS: this.state.valueICMS,
             }
 
-            let r = await Service.Post("logistic/freight-calculation/save", request);
+            let r = await Service.Post("logistic/freight-quote/save", request);
     
             Loading.Hide();
     
@@ -107,16 +95,40 @@ export class ViewFreightCalculationBase extends ViewModal<Readonly<{Title: strin
         }
     }
 
+    protected Calculation = async () =>
+    {
+
+        const request = {
+            typeId: _.get(this.state.type, 'id'),
+            senderMesoRegionId: _.get(this.state.senderMesoRegion, 'id'),
+            recipientMesoRegionId: _.get(this.state.recipientMesoRegion, 'id'),
+            weight: this.state.weight
+        };
+
+        if (_.isEmpty(request.typeId) || _.isEmpty(request.senderMesoRegionId) || _.isEmpty(request.recipientMesoRegionId) || _.isEmpty(request.weight)) {
+            return;
+        }
+
+        this.setState({calculating: true});
+        const response = await Service.Post("logistic/freight-quote/calculation", request);
+        this.setState({calculating: false, value: parseFloat(response?.data.value), valueICMS: parseFloat(response?.data.valueICMS), aliquotICMS: parseFloat(response?.data.aliquotICMS)});
+
+    }
+
     private Limpar = () =>
     {
         this.setState({
-            id: "",
-            description: '',
+            id: '',
+            company: null,
             type: null,
-            senderRegion: null,
-            aliquotICMS: '',
-            recipients: [],
-            weights: []
+            weight: null,
+            sender: null,
+            senderMesoRegion: null,
+            recipient: null,
+            recipientMesoRegion: null,
+            value: 0,
+            aliquotICMS: 0,
+            valueICMS: 0
         });
     }
 

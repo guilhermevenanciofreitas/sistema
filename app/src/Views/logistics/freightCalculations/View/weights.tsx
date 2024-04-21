@@ -1,20 +1,21 @@
 import React, { ReactNode } from "react";
-import { AutoComplete, Button, CheckBox, DropDownList, DropDownListItem, GridView, Modal, TextBox, ViewModal } from "../../../../Utils/Controls";
+import { AutoComplete, Button, CheckBox, DropDownList, DropDownListItem, GridView, Modal, NumericBox, TextBox, ViewModal } from "../../../../Utils/Controls";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
 import { Grid } from "@mui/joy";
 import { EventArgs } from "../../../../Utils/EventArgs";
+import _ from "lodash";
 
 const Columns = [
-    { selector: (row: any) => row.startWeight, name: 'Peso inicial' },
-    { selector: (row: any) => row.endWeight, name: 'Peso final' },
+    { selector: (row: any) => row.startWeight.toLocaleString("pt-BR", {minimumFractionDigits: 3}), name: 'Peso inicial' },
+    { selector: (row: any) => parseFloat(row.endWeight).toLocaleString("pt-BR", {minimumFractionDigits: 3}), name: 'Peso final' },
     { selector: (row: any) => row.calculationType == 'fix' ? 'Fixo' : 'Multiplicado', name: 'Cálculo' },
-    { selector: (row: any) => row.value, name: 'Valor' },
+    { selector: (row: any) => parseFloat(row.value).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}), name: 'Valor' },
 ];
 
 class ViewWeight extends ViewModal {
 
-    public Close = (recipient: any) => this.setState({open: false});
+    public Close = (weight: any) => this.setState({open: false});
 
     state = {
         open: false,
@@ -42,10 +43,10 @@ class ViewWeight extends ViewModal {
                 
                 <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                     <Grid md={3}>
-                        <TextBox Label='Peso inicial' TextTransform='UpperCase' Text={this.state.startWeight} OnChange={(args: EventArgs) => this.setState({startWeight: args.Value})} />
+                        <NumericBox Label='Peso inicial' Text={this.state.startWeight} Scale={3} OnChange={(args: EventArgs) => this.setState({startWeight: args.Value})} />
                     </Grid>
                     <Grid md={3}>
-                        <TextBox Label='Peso final' TextTransform='UpperCase' Text={this.state.endWeight} OnChange={(args: EventArgs) => this.setState({endWeight: args.Value})} />
+                        <NumericBox Label='Peso final' Text={this.state.endWeight} Scale={3} OnChange={(args: EventArgs) => this.setState({endWeight: args.Value})} />
                     </Grid>
                     <Grid md={3}>
                         <DropDownList Label='Cálculo' SelectedValue={this.state.calculationType} OnChange={(args: EventArgs) => this.setState({calculationType: args.Value})}>
@@ -55,7 +56,7 @@ class ViewWeight extends ViewModal {
                         </DropDownList>
                     </Grid>
                     <Grid md={3}>
-                        <TextBox Label='Valor' TextTransform='UpperCase' Text={this.state.value} OnChange={(args: EventArgs) => this.setState({value: args.Value})} />
+                        <NumericBox Label='Valor' Text={this.state.value} Scale={2} Prefix="R$ " OnChange={(args: EventArgs) => this.setState({value: args.Value})} />
                     </Grid>
                 </Grid>
 
@@ -111,7 +112,7 @@ export class Weights extends BaseDetails<Readonly<{weights: any[], OnChange?: Fu
                 <ViewWeight ref={this.ViewWeight} />
                 <Button Text='Adicionar' Color='white' BackgroundColor='green' OnClick={this.BtnAdicionar_Click} />
                 {this.state.Selecteds.length >= 1 && <Button Text='Remover' Color='white' BackgroundColor='red' OnClick={this.BtnRemover_Click} />}
-                <GridView Columns={Columns} Rows={this.props.weights} OnItem={this.GridView_OnItem} OnSelected={this.GridView_Selected} />
+                <GridView Columns={Columns} Rows={_.orderBy(_.map(this.props.weights, (c: any) => { c.startWeight = parseFloat(c.startWeight); return c}), ['startWeight'], ['asc'])} OnItem={this.GridView_OnItem} OnSelected={this.GridView_Selected} />
             </>
         )
     }

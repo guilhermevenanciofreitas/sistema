@@ -17,7 +17,11 @@ export class ControlAutoComplete extends AutoCompleteBase {
       <>
         <FormLabel sx={{fontWeight: 400}}>{this.props.Label}</FormLabel>
         <Autocomplete
- 
+
+          disabled={this.props.ReadOnly}
+
+          isOptionEqualToValue={(option, value) => option.id === value.id}
+
           size='sm'
 
           loading={this.state.Loading}
@@ -49,7 +53,7 @@ export class ControlAutoComplete extends AutoCompleteBase {
           noOptionsText={'Nenhum resultado encontrado!'}
           getOptionLabel={(option) => this.props.Text?.call(null, option)}
           
-          endDecorator={this.state.Loading ? (<CircularProgress size="sm" sx={{ bgcolor: 'background.surface' }} />) : null}
+          endDecorator={this.state.Loading && !this.props.ReadOnly ? (<CircularProgress size="sm" sx={{ bgcolor: 'background.surface' }} />) : null}
 
           slotProps={{listbox: {sx: {zIndex: 10000}}, clearIndicator: {sx: {visibility: 'visible'}}}}
           renderOption={(props, option) => (

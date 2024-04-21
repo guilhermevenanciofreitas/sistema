@@ -33,9 +33,12 @@ export default class FreightQuotes extends FreightQuotesBase {
 
     private Columns = [
         { selector: (row: any) => <Type row={row} />, sort: 'type.description', name: 'Tipo', sortable: true, maxWidth:"200px" },
-        { selector: (row: any) => row.description, sort: 'description', name: 'Descrição', sortable: true, maxWidth:"200px" },
-        { selector: (row: any) => row.senderRegion?.description, sort: 'senderRegion.description', name: 'Região', sortable: true, maxWidth:"200px" },
-        { selector: (row: any) => row.aliquotICMS, sort: 'aliquotICMS', name: 'ICMS', sortable: true, maxWidth:"100px" },
+        { selector: (row: any) => `${row.sender?.nome} - ${row.senderMesoRegion?.description}`, sort: 'description', name: 'Remetente - Região', sortable: true },
+        { selector: (row: any) => `${row.recipient?.nome} - ${row.recipientMesoRegion?.description}`, sort: 'description', name: 'Destinatário - Região', sortable: true, maxWidth:"450px" },
+        { selector: (row: any) => row.weight == null ? '' : parseFloat(row.weight).toLocaleString("pt-BR", {minimumFractionDigits: 3}), sort: 'weight', name: 'Peso', sortable: true, maxWidth: "150px" },
+        { selector: (row: any) => parseFloat(row.value).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}), sort: 'value', name: 'Valor', sortable: true, maxWidth: "150px" },
+        { selector: (row: any) => `${parseFloat(row.valueICMS).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'})} (${parseFloat(row.aliquotICMS).toLocaleString("pt-BR", {minimumFractionDigits: 2})}%)`, sort: 'icms', name: 'ICMS', sortable: true, maxWidth: "150px" },
+        { selector: (row: any) => (parseFloat(row.value) + parseFloat(row.valueICMS)).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}), sort: 'total', name: 'Total', sortable: true, maxWidth: "120px" },
     ];
 
     render(): React.ReactNode {

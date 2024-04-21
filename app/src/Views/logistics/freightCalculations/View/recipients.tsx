@@ -4,6 +4,7 @@ import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
 import { Grid } from "@mui/joy";
 import { MesoRegionTemplate } from "../../../../Search/Templates/MesoRegion";
+import _ from "lodash";
 
 const Columns = [
     { selector: (row: any) => `${row.recipientMesoRegion?.description} - ${row.recipientMesoRegion?.state?.acronym}`, name: 'Região' },
@@ -63,7 +64,7 @@ export class Recipients extends BaseDetails<Readonly<{recipients: any[], OnChang
 
         if (item == null) return;
 
-        this.props.recipients.push({...item});
+        this.props.recipients.push({...item, recipientMesoRegionId: item.recipientMesoRegion.id});
         this.props.OnChange(this.props.recipients);
 
     }
@@ -88,7 +89,7 @@ export class Recipients extends BaseDetails<Readonly<{recipients: any[], OnChang
                 <ViewRecipient ref={this.ViewRecipient} />
                 <Button Text='Adicionar' Color='white' BackgroundColor='green' OnClick={this.BtnAdicionar_Click} />
                 {this.state.Selecteds.length >= 1 && <Button Text='Remover' Color='white' BackgroundColor='red' OnClick={this.BtnRemover_Click} />}
-                <GridView Columns={Columns} Rows={this.props.recipients} OnItem={this.GridView_OnItem} OnSelected={this.GridView_Selected} />
+                <GridView Columns={Columns} Rows={_.orderBy(this.props.recipients, (c: any) => c.recipientMesoRegion?.description)} OnItem={this.GridView_OnItem} OnSelected={this.GridView_Selected} />
             </>
         )
     }

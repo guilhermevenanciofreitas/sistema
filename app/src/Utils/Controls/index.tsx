@@ -13,6 +13,8 @@ export { ControlCheckBox as CheckBox } from '../../Utils/Controls/Form/CheckBox'
 export { ControlDatePicker as DatePicker } from '../../Utils/Controls/Form/DatePicker';
 
 export { ControlTextBox as TextBox } from '../../Utils/Controls/Form/TextBox';
+export { ControlNumericBox as NumericBox } from './Form/NumericBox';
+export { ControlCurrencyBox as CurrencyBox } from './Form/CurrencyBox';
 
 export { ControlGridView as GridView } from './GridView/index';
 

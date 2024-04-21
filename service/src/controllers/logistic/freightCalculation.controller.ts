@@ -25,12 +25,15 @@ export default class FreightCalculationController {
                 if (pagination.sort) {
                     order = [[pagination.sort.column, pagination.sort.direction]]
                 }
+
+                order = [['description', 'asc']];
         
                 const freightCalculations = await FreightCalculation.findAndCountAll({
                     attributes: ['id', 'description', 'aliquotICMS'],
                     include: [
                         {model: FreightCalculationType, attributes: ['id', 'description']},
-                        {model: MesoRegion, attributes: ['id', 'description']}
+                        {model: MesoRegion, attributes: ['id', 'description']},
+                        {model: FreightCalculationRecipient, attributes: ['id']},
                     ],
                     where, order, limit: pagination.limit, offset: pagination.offset1, transaction
                 });
@@ -78,6 +81,7 @@ export default class FreightCalculationController {
                         },
                         {model: FreightCalculationWeight, attributes: ['id', 'freightCalculationId', 'startWeight', 'endWeight', 'calculationType', 'value']},
                     ],
+                    //order: [['freightCalculationWeight', 'startWeight', 'ASC']],
                     where: {id: req.body.id}, transaction
                 });
 

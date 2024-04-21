@@ -23,7 +23,7 @@ export class ControlTextBox extends TextBoxBase {
             <IMaskInput
                 {...other}
                 mask={this.props.Mask}
-                definitions = {{'#': /[0-9]/}}
+                definitions={{'#': /[0-9]/}}
                 inputRef={ref}
                 onAccept={(value: any) => onChange({ target: { name: props.name, value } })}
                 overwrite

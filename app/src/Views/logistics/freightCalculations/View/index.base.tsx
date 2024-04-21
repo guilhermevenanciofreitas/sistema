@@ -62,7 +62,7 @@ export class ViewFreightCalculationBase extends ViewModal<Readonly<{Title: strin
                 recipients.push({
                     id: _.get(recipient, 'id'),
                     freightCalculationId: this.state.id,
-                    recipientRegionId: _.get(recipient, 'recipientRegion.id'),
+                    recipientMesoRegionId: _.get(recipient, 'recipientMesoRegion.id'),
                 });
             }
 
@@ -110,11 +110,12 @@ export class ViewFreightCalculationBase extends ViewModal<Readonly<{Title: strin
     private Limpar = () =>
     {
         this.setState({
-            id: "",
+            id: '',
             description: '',
             type: null,
             senderMesoRegion: null,
-            aliquotICMS: '',
+            sender: null,
+            aliquotICMS: '0.00',
             recipients: [],
             weights: []
         });

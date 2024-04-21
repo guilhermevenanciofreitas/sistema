@@ -388,10 +388,20 @@ ALTER TABLE "freightCalculationWeight" ADD COLUMN IF NOT EXISTS "value" DECIMAL(
 --freightCalculationToll
 CREATE TABLE IF NOT EXISTS "freightCalculationToll"();
 ALTER TABLE "freightCalculationToll" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "freightCalculationToll" ADD COLUMN IF NOT EXISTS "senderRegionId" UUID;
-ALTER TABLE "freightCalculationToll" ADD COLUMN IF NOT EXISTS "recipientRegionId" UUID;
+ALTER TABLE "freightCalculationToll" ADD COLUMN IF NOT EXISTS "senderMesoRegionId" UUID;
+ALTER TABLE "freightCalculationToll" ADD COLUMN IF NOT EXISTS "recipientMesoRegionId" UUID;
 ALTER TABLE "freightCalculationToll" ADD COLUMN IF NOT EXISTS "value" DECIMAL(18, 2);
 
 --freightQuote
 CREATE TABLE IF NOT EXISTS "freightQuote"();
 ALTER TABLE "freightQuote" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "freightQuote" ADD COLUMN IF NOT EXISTS "companyId" UUID;
+ALTER TABLE "freightQuote" ADD COLUMN IF NOT EXISTS "typeId" UUID;
+ALTER TABLE "freightQuote" ADD COLUMN IF NOT EXISTS "weight" DECIMAL(18, 2);
+ALTER TABLE "freightQuote" ADD COLUMN IF NOT EXISTS "senderId" UUID;
+ALTER TABLE "freightQuote" ADD COLUMN IF NOT EXISTS "senderMesoRegionId" UUID;
+ALTER TABLE "freightQuote" ADD COLUMN IF NOT EXISTS "recipientId" UUID;
+ALTER TABLE "freightQuote" ADD COLUMN IF NOT EXISTS "recipientMesoRegionId" UUID;
+ALTER TABLE "freightQuote" ADD COLUMN IF NOT EXISTS "value" DECIMAL(18, 2);
+ALTER TABLE "freightQuote" ADD COLUMN IF NOT EXISTS "aliquotICMS" DECIMAL(18, 2);
+ALTER TABLE "freightQuote" ADD COLUMN IF NOT EXISTS "valueICMS" DECIMAL(18, 2);

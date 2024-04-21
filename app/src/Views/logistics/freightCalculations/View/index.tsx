@@ -1,6 +1,6 @@
 
 import { ViewFreightCalculationBase } from './index.base';
-import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, Modal, Tab, TabItem, TextBox } from '../../../../Utils/Controls';
+import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, Modal, NumericBox, Tab, TabItem, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Alert, FormLabel, Grid } from '@mui/joy';
@@ -46,7 +46,7 @@ export class ViewFreightCalculation extends ViewFreightCalculationBase {
                             </AutoComplete>
                         </Grid>
                         <Grid md={2}>
-                            <TextBox Label='ICMS' TextTransform='Normal' Text={this.state.aliquotICMS} OnChange={(args: EventArgs) => this.setState({aliquotICMS: args.Value})} />
+                            <NumericBox Label='ICMS' Text={this.state.aliquotICMS} Prefix='% ' Scale={2} OnChange={(args: EventArgs) => this.setState({aliquotICMS: args.Value})} />
                         </Grid>
                         
                     </Grid>
