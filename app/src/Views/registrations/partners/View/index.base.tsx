@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { Service } from "../../../../Service";
 import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
@@ -25,7 +26,8 @@ export class ViewPartnerBase extends ViewModal<Readonly<{Title: string, Type: "c
         profissao: "",
         tabelaPreco: null,
         isAtivo: true,
-        isBlockSale: true,
+
+        isBlockSale: false,
         isBloquearCompra: true,
 
         contacts: [],
@@ -69,18 +71,31 @@ export class ViewPartnerBase extends ViewModal<Readonly<{Title: string, Type: "c
 
             Loading.Show();
 
-            let r = await Service.Post(`registrations/${this.props.Type}/save`, this.state);
+            const request = {
+                id: _.get(this.state, 'id') || null,
+                cpfCnpj: _.get(this.state, 'cpfCnpj') || null,
+                name: _.get(this.state, 'name') || null,
+                surname: _.get(this.state, 'surname') || null,
+                isCustomer: _.get(this.state, 'isCustomer') || null,
+                isSupplier: _.get(this.state, 'isSupplier') || null,
+                isShippingCompany: _.get(this.state, 'isShippingCompany') || null,
+                isEmployee: _.get(this.state, 'isEmployee') || null,
+                birth: _.get(this.state, 'birth') || null,
+                sex: _.get(this.state, 'sex') || null,
+            }
+
+            let response = await Service.Post(`registrations/${this.props.Type}/save`, request);
     
             Loading.Hide();
     
-            if (r?.status == 201) {
-                await MessageBox.Show({title: "Info", width: 400, content: r?.data.message, buttons: [{ Text: "OK" }]});
+            if (response?.status == 201) {
+                await MessageBox.Show({title: "Info", width: 400, content: response?.data.message, buttons: [{ Text: "OK" }]});
                 return;
             }
     
             await MessageBox.Show({title: "Info", width: 400, type: "Success", content: "Salvo com sucesso!", buttons: [{ Text: "OK" }]});
     
-            this.Close(r?.data.id);
+            this.Close(response?.data.id);
 
         }
         catch(err: any)
@@ -97,10 +112,10 @@ export class ViewPartnerBase extends ViewModal<Readonly<{Title: string, Type: "c
             cpfCnpj: '',
             name: '',
             surname: '',
-            isCustomer: false,
-            isSupplier: false,
-            isShippingCompany: false,
-            isEmployee: false,
+            isCustomer: this.props.Type == 'customer',
+            isSupplier: this.props.Type == 'supplier',
+            isShippingCompany: this.props.Type == 'shipping-company',
+            isEmployee: this.props.Type == 'employee',
             birth: null,
             sex: null,
             estadoCivil: "",
@@ -111,7 +126,8 @@ export class ViewPartnerBase extends ViewModal<Readonly<{Title: string, Type: "c
             profissao: "",
             tabelaPreco: null,
             isAtivo: true,
-            isBlockSale: true,
+            
+            isBlockSale: false,
             isBloquearCompra: true,
 
             contacts: [],

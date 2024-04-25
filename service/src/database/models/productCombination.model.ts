@@ -1,6 +1,6 @@
 import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-typescript";
-import { ProdutoCombinacaoGrupo } from "./produtoCombinacaoGrupo.model";
-import { ProdutoCombinacaoItem } from "./produtoCombinacaoItem.model";
+import { ProductCombinationGroup } from "./productCombinationGroup.model";
+import { ProductCombinationItem } from "./productCombinationItem.model";
 
 @Table({tableName: "productCombination"})
 export class ProductCombination extends Model {
@@ -11,8 +11,8 @@ export class ProductCombination extends Model {
   @Column({type: DataType.UUID, field: "productId"})
   productId?: string;
 
-  @Column({type: DataType.UUID, field: "combinacaoId"})
-  combinacaoId?: string;
+  @Column({type: DataType.UUID, field: "combinationGroupId"})
+  combinationGroupId?: string;
 
   @Column({type: DataType.BOOLEAN, field: "isObrigatorio"})
   isObrigatorio?: string;
@@ -26,10 +26,10 @@ export class ProductCombination extends Model {
   @Column({type: DataType.INTEGER, field: "ordem"})
   ordem?: number;
 
-  @BelongsTo(() => ProdutoCombinacaoGrupo, 'combinacaoId')
-  combinacao?: ProdutoCombinacaoGrupo;
+  @BelongsTo(() => ProductCombinationGroup, {as: 'combinationGroup', foreignKey: 'combinationGroupId'})
+  combinationGroup?: ProductCombinationGroup;
 
-  @HasMany(() => ProdutoCombinacaoItem, {onDelete: 'cascade', foreignKey: 'combinacaoId'})
-  combinacaoItems?: ProdutoCombinacaoItem[];
+  @HasMany(() => ProductCombinationItem, {as: 'combinationItems', foreignKey: 'combinationId', onDelete: 'cascade'})
+  combinationItems?: ProductCombinationItem[];
 
 }

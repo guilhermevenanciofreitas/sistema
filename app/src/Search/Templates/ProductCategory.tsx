@@ -7,7 +7,7 @@ export class ProductCategoryTemplate extends React.Component {
         return <>
             <ResultContext.Consumer>
                 {({ args }: any) => (
-                    <span>{args.descricao}</span>
+                    <span>{args.description}</span>
                 )}
             </ResultContext.Consumer>
         </>

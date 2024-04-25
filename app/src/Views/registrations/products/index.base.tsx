@@ -1,6 +1,6 @@
 import React from "react";
 import { Service } from "../../../Service";
-import { ViewProduto } from "./View/index";
+import { ViewProduct } from "./View/index";
 import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
@@ -8,9 +8,9 @@ import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 
-export default class BaseProdutos extends BaseIndex {
+export default class ProductsBase extends BaseIndex {
  
-    protected ViewProduto = React.createRef<ViewProduto>();
+    protected ViewProduct = React.createRef<ViewProduct>();
 
     protected ViewImportar = React.createRef<ViewImportar>();
     protected ViewFiltro = React.createRef<ViewFiltro>();
@@ -73,7 +73,7 @@ export default class BaseProdutos extends BaseIndex {
         try
         {
 
-            const r = await this.ViewProduto.current?.Show(undefined);
+            const r = await this.ViewProduct.current?.Show(undefined);
 
             if (r) await this.Pesquisar(this.state.request);
             
@@ -190,8 +190,8 @@ export default class BaseProdutos extends BaseIndex {
 
     private OpenProduct = async (id: string, isHitoryBack: boolean = true) =>
     {
-        history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewProduto.current?.Show(id);
+        history.pushState(null, '', `${window.location.origin}${window.location.pathname}?id=${id}`);
+        const r = await this.ViewProduct.current?.Show(id);
         if (isHitoryBack) history.back();
         return r;
     }
@@ -199,7 +199,7 @@ export default class BaseProdutos extends BaseIndex {
     protected Pesquisar = async(request: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("registrations/product/findAll", request);
+        var r = await Service.Post('registrations/product/findAll', request);
         this.setState({Loading: false, ...r?.data});
     }
 

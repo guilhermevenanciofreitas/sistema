@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { BankAccount, Company, PaymentForm, Municipio, Partner, SaleOrderShippingType, Product, ProductCategory, ProductCombination, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco, CalledOccurrence, FreightCalculationType, MesoRegion, State } from "../../database";
+import { BankAccount, Company, PaymentForm, Municipio, Partner, SaleOrderShippingType, Product, ProductCategory, ProductCombination, ProductCombinationGroup, ProductCombinationItem, TabelaPreco, CalledOccurrence, FreightCalculationType, MesoRegion, State } from "../../database";
 import { Op } from "sequelize";
 import { Bank } from "../../database/models/bank.model";
 
@@ -165,8 +165,8 @@ export default class SearchController {
         
                 const produtos = await Product.findAll({attributes: ["id", "name"],
                     include: [{model: ProductCombination, attributes: ["id", "isObrigatorio", "minimo", "maximo", "ordem"],
-                        include: [{model: ProdutoCombinacaoGrupo, attributes: ["id", "descricao"],
-                            include: [{model: ProdutoCombinacaoItem, attributes: ["id", "nome"]}]    
+                        include: [{model: ProductCombinationGroup, attributes: ["id", "description"],
+                            include: [{model: ProductCombinationItem, attributes: ["id", "name"]}]    
                         }]
                     }],
                     where,
@@ -347,14 +347,14 @@ export default class SearchController {
                 let where: any = {};
 
                 if (req.body?.Search) {
-                    where = {"descricao": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                    where = {"description": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
 
-                const produtoCategoria = await ProductCategory.findAll({attributes: ["id", "descricao"], where, order: [["descricao", "asc"]], transaction});
+                const productCategory = await ProductCategory.findAll({attributes: ["id", "description"], where, order: [["description", "asc"]], transaction});
         
                 sequelize.close();
 
-                res.status(200).json(produtoCategoria);
+                res.status(200).json(productCategory);
 
             }
             catch (err) {
@@ -365,7 +365,7 @@ export default class SearchController {
         });
     }
 
-    async produtoCombinacaoGrupo(req: Request, res: Response) {
+    async productCombinationGroup(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try {
@@ -375,14 +375,14 @@ export default class SearchController {
                 let where: any = {};
 
                 if (req.body?.Search) {
-                    where = {"descricao": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                    where = {'description': {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
 
-                const produtoCombinacaoGrupo = await ProdutoCombinacaoGrupo.findAll({attributes: ["id", "descricao"], where, order: [["descricao", "asc"]], transaction});
+                const productCombinationGroup = await ProductCombinationGroup.findAll({attributes: ['id', 'description'], where, order: [['description', 'asc']], transaction});
         
                 sequelize.close();
 
-                res.status(200).json(produtoCombinacaoGrupo);
+                res.status(200).json(productCombinationGroup);
 
             }
             catch (err) {

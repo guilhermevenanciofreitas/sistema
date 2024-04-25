@@ -3,11 +3,11 @@ import { AutoComplete, Button, CheckBox, GridView, Modal, TextBox, ViewModal } f
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
-import { ProdutoCombinacaoGrupoTemplate } from "../../../../Search/Templates/ProdutoCombinacaoGrupo";
 import { Grid } from "@mui/joy";
+import { ProductCombinationGroupTemplate } from "../../../../Search/Templates/ProductCombinationGroup";
 
 const Columns = [
-    { selector: (row: any) => row.combinacao.descricao, name: 'Item' },
+    { selector: (row: any) => row.combinationGroup?.description, name: 'Item' },
     { selector: (row: any) => row.isObrigatorio ? "SIM" : "NÃO", name: 'Obrigatório' },
     { selector: (row: any) => row.minimo, name: 'Minimo' },
     { selector: (row: any) => row.maximo, name: 'Máximo' },
@@ -15,12 +15,12 @@ const Columns = [
 
 class ViewCombination extends ViewModal {
 
-    public Close = (combination: any) => this.setState({open: false});
+    public Close = (combinationGroup: any) => this.setState({open: false});
 
     state = {
         open: false,
         id: '',
-        combination: null,
+        combinationGroup: null,
         isObrigatorio: true,
         minimo: '1',
         maximo: '1',
@@ -43,8 +43,8 @@ class ViewCombination extends ViewModal {
                 
                 <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                     <Grid md={12}>
-                        <AutoComplete Label='Item' Pesquisa={async(Text: string) => await Search.ProdutoCombinacaoGrupo(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.combination} OnChange={(args: any) => this.setState({combination: args})}>
-                            <ProdutoCombinacaoGrupoTemplate />
+                        <AutoComplete Label='Item' Pesquisa={async(Text: string) => await Search.ProductCombinationGroup(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.combinationGroup} OnChange={(combinationGroup: any) => this.setState({combinationGroup})}>
+                            <ProductCombinationGroupTemplate />
                         </AutoComplete>
                     </Grid>
                     <Grid md={12}>
@@ -73,11 +73,11 @@ export class Combinations extends BaseDetails<Readonly<{combinations: any[], OnC
     protected BtnAdicionar_Click = async () => {
 
         const item: any = await this.ViewCombination.current?.Show({
-            id: "",
-            combination: null,
+            id: '',
+            combinationGroup: null,
             isObrigatorio: false,
-            minimo: "1",
-            maximo: "1",
+            minimo: '1',
+            maximo: '1',
         });
 
         if (item == null) return;
@@ -92,7 +92,7 @@ export class Combinations extends BaseDetails<Readonly<{combinations: any[], OnC
 
         const item = await this.ViewCombination.current?.Show({...args});
         if (item == null) return;
-        args.combinacao = item.combinacao;
+        args.combinationGroup = item.combinationGroup;
         args.isObrigatorio = item.isObrigatorio;
         args.minimo = item.minimo;
         args.maximo = item.maximo;

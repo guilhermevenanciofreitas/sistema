@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 import { Accounts, Database } from "../../auth";
-import Sequelize, { Company, Product, ProductCategory, ProductCombination, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem } from "../../database";
+import Sequelize, { Company, Product, ProductCategory, ProductCombination, ProductCombinationGroup, ProductCombinationItem } from "../../database";
 
 async function Auth(id: string): Promise<any> {
 
@@ -29,13 +29,13 @@ export default class IndexController {
 
             const transaction = await sequelize.transaction();
         
-            const empresa = await Company.findOne({attributes: ["id", "pedidoDigital"], transaction});
+            const company = await Company.findOne({attributes: ["id", "pedidoDigital"], transaction});
 
-            const categorias = await ProductCategory.findAll({attributes: ["id", "description", "image"], 
+            const productCategory = await ProductCategory.findAll({attributes: ["id", "description", "image"], 
                 include: [{model: Product, attributes: ["id", "name", "description", "value"],
                     include: [{model: ProductCombination, attributes: ["id", "isObrigatorio", "minimo", "maximo", "ordem"],
-                        include: [{model: ProdutoCombinacaoGrupo, attributes: ["id", "descricao"],
-                            include: [{model: ProdutoCombinacaoItem, attributes: ["id", "nome", "descricao"]}]
+                        include: [{model: ProductCombinationGroup, attributes: ["id", "description"],
+                            include: [{model: ProductCombinationItem, attributes: ["id", "name", "description"]}]
                         }]    
                     }]
                 }],
@@ -45,7 +45,7 @@ export default class IndexController {
 
             sequelize.close();
 
-            res.status(200).json({empresa, categorias});
+            res.status(200).json({company, productCategory});
 
         }).catch((err: any) => {
             res.status(401).json({message: err.message})

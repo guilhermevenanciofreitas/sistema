@@ -21,10 +21,10 @@ import { Delivery } from "./models/delivery.model";
 import { DeliveryRoute } from "./models/deliveryRoute.model";
 import { PedidoVendaDeliveryRoute } from "./models/pedidoVendaDeliveryRoute.model";
 import { ProductCombination } from "./models/productCombination.model";
-import { ProdutoCombinacaoGrupo } from "./models/produtoCombinacaoGrupo.model";
-import { ProdutoCombinacaoItem } from "./models/produtoCombinacaoItem.model";
+import { ProductCombinationGroup } from "./models/productCombinationGroup.model";
+import { ProductCombinationItem } from "./models/productCombinationItem.model";
 import { SaleOrderItemCombination } from "./models/saleOrderItemCombination.model";
-import { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinacaoItem.model";
+import { SaleOrderItemCombinationItem } from "./models/saleOrderItemCombinationItem.model";
 import { ProductCategory } from "./models/productCategory.model";
 import { Nfe } from "./models/nfe.model";
 import { ShippingOrder } from "./models/shippingOrder.model";
@@ -71,10 +71,10 @@ export { Delivery } from "./models/delivery.model";
 export { DeliveryRoute } from "./models/deliveryRoute.model";
 export { PedidoVendaDeliveryRoute } from "./models/pedidoVendaDeliveryRoute.model";
 export { ProductCombination } from "./models/productCombination.model";
-export { ProdutoCombinacaoGrupo } from "./models/produtoCombinacaoGrupo.model";
-export { ProdutoCombinacaoItem } from "./models/produtoCombinacaoItem.model";
+export { ProductCombinationGroup } from "./models/productCombinationGroup.model";
+export { ProductCombinationItem } from "./models/productCombinationItem.model";
 export { SaleOrderItemCombination } from "./models/saleOrderItemCombination.model";
-export { PedidoVendaItemCombinacaoItem } from "./models/pedidoVendaItemCombinacaoItem.model";
+export { SaleOrderItemCombinationItem } from "./models/saleOrderItemCombinationItem.model";
 export { ProductCategory } from "./models/productCategory.model";
 export { Nfe } from "./models/nfe.model";
 export { ShippingOrder } from "./models/shippingOrder.model";
@@ -112,7 +112,7 @@ export default class Sequelize {
 
       define: {timestamps: false},
       
-      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Called, CalledOccurrence, CalledTask, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, SaleOrderShippingType, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderNfe, SaleOrderRecieve, Company, Partner, PartnerContact, PartnerAddress, Product, ProductCategory, ProdutoCombinacaoGrupo, ProductCombination, ProdutoCombinacaoItem, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, State, Task, User, TabelaPreco, Municipio, Nfe, MesoRegion, FreightCalculation, FreightCalculationRecipient, FreightCalculationType, FreightCalculationWeight, FreightQuote],
+      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Called, CalledOccurrence, CalledTask, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, SaleOrderShippingType, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderNfe, SaleOrderRecieve, Company, Partner, PartnerContact, PartnerAddress, Product, ProductCategory, ProductCombinationGroup, ProductCombination, ProductCombinationItem, SaleOrderItemCombination, SaleOrderItemCombinationItem, Service, ShippingOrder, State, Task, User, TabelaPreco, Municipio, Nfe, MesoRegion, FreightCalculation, FreightCalculationRecipient, FreightCalculationType, FreightCalculationWeight, FreightQuote],
       pool: {
         max: 5,
         min: 0,

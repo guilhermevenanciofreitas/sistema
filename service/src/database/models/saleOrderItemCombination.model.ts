@@ -1,5 +1,5 @@
 import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-typescript";
-import { PedidoVendaItemCombinacaoItem } from "./pedidoVendaItemCombinacaoItem.model";
+import { SaleOrderItemCombinationItem } from "./saleOrderItemCombinationItem.model";
 
 @Table({tableName: "saleOrderItemCombination"})
 export class SaleOrderItemCombination extends Model {
@@ -13,7 +13,7 @@ export class SaleOrderItemCombination extends Model {
   @Column({type: DataType.UUID, field: "combinationId"})
   combinationId?: string;
 
-  @HasMany(() => PedidoVendaItemCombinacaoItem, { onDelete: 'cascade', foreignKey: 'pedidoVendaItemCombinacaoId' })
-  combinacaoItems?: PedidoVendaItemCombinacaoItem[];
+  @HasMany(() => SaleOrderItemCombinationItem, {as: 'itemCombinationItems', foreignKey: 'saleOrderItemCombinationId', onDelete: 'cascade' })
+  itemCombinationItems?: SaleOrderItemCombinationItem[];
 
 }

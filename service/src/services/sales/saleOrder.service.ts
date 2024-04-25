@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { SaleOrder, SaleOrderRecieve, SaleOrderItem, SaleOrderProgress, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem, ProdutoCombinacaoItem, SaleOrderStatus } from "../../database";
+import { SaleOrder, SaleOrderRecieve, SaleOrderItem, SaleOrderProgress, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, SaleOrderItemCombination, SaleOrderItemCombinationItem, ProductCombination, SaleOrderStatus, ProductCombinationItem } from "../../database";
 import crypto from "crypto";
 import {Op} from "sequelize";
 import { SaleOrderStatusByFrom } from "../../database/models/saleOrderStatusByFrom.model";
@@ -25,27 +25,26 @@ export class SaleOrderService {
 
         for (let item of saleOrder?.items || []) {
             item.id = crypto.randomUUID();
-            SaleOrderItem.create({...item}, {transaction});
+            await SaleOrderItem.create({...item}, {transaction});
 
-            for (let combinacao of item?.itemCombinations || []) {
-                combinacao.id = crypto.randomUUID();
-                SaleOrderItemCombination.create({...combinacao}, {transaction});
+            for (let itemCombination of item?.itemCombinations || []) {
+                itemCombination.id = crypto.randomUUID();
+                await SaleOrderItemCombination.create({...itemCombination}, {transaction});
 
-                for (let combinacaoItem of combinacao?.combinacaoItems || []) {
-                    combinacaoItem.id = crypto.randomUUID();
-                    PedidoVendaItemCombinacaoItem.create({...combinacaoItem}, {transaction});
+                for (let itemCombinationItem of itemCombination?.itemCombinationItems || []) {
+                    itemCombinationItem.id = crypto.randomUUID();
+                    await SaleOrderItemCombinationItem.create({...itemCombinationItem}, {transaction});
                 }
 
             }
 
         }
         
-
         for (let item of saleOrder?.recievies || []) {
             item.id = crypto.randomUUID();
             item.saleOrderId = saleOrder.id;
             item.formaPagamentoId = item.formaPagamento?.id;
-            SaleOrderRecieve.create({...item}, {transaction})
+            await SaleOrderRecieve.create({...item}, {transaction})
         }
 
         await SaleOrder.create({...saleOrder}, {transaction});
@@ -60,47 +59,47 @@ export class SaleOrderService {
 
             if (!item.id) {
                 item.id = crypto.randomUUID();
-                SaleOrderItem.create({...item}, {transaction});
+                await SaleOrderItem.create({...item}, {transaction});
             } else {
-                SaleOrderItem.update(item, {where: {id: item.id}, transaction});
+                await SaleOrderItem.update(item, {where: {id: item.id}, transaction});
             }
-            SaleOrderItem.destroy({where: {saleOrderId: saleOrder.id, id: {[Op.notIn]: saleOrder?.items?.filter(c => c.id != "").map(c => c.id)}}, transaction});
+            await SaleOrderItem.destroy({where: {saleOrderId: saleOrder.id, id: {[Op.notIn]: saleOrder?.items?.filter(c => c.id != "").map(c => c.id)}}, transaction});
 
-            if (item?.itemCombinations?.length == 0) {
-                SaleOrderItemCombination.destroy({where: {saleOrderItemId: item.id}, transaction});
+            if (_.size(item?.itemCombinations) == 0) {
+                await SaleOrderItemCombination.destroy({where: {saleOrderItemId: item.id}, transaction});
             }
 
             //SaleOrderItemCombination
-            where['SaleOrderItemCombination'] = {pedidoVendaItemId: item.id};
-            for (let combinacao of item?.itemCombinations || []) {
-                combinacao.saleOrderItemId = item.id;
-                if (!combinacao.id) {
-                    combinacao.id = crypto.randomUUID();
-                    SaleOrderItemCombination.create({...combinacao}, {transaction});
+            where['SaleOrderItemCombination'] = {saleOrderItemId: item.id};
+            for (let combination of item?.itemCombinations || []) {
+                combination.saleOrderItemId = item.id;
+                if (!combination.id) {
+                    combination.id = crypto.randomUUID();
+                    await SaleOrderItemCombination.create({...combination}, {transaction});
                 } else {
-                    SaleOrderItemCombination.update(combinacao, {where: {id: combinacao.id}, transaction});
+                    await SaleOrderItemCombination.update(combination, {where: {id: combination.id}, transaction});
                 }
                 where['SaleOrderItemCombination'] = {id: {[Op.notIn]: item?.itemCombinations?.filter(c => c.id != "").map(c => c.id)}};
-                SaleOrderItemCombination.destroy({where: where['SaleOrderItemCombination'], cascade: true, transaction});
+                await SaleOrderItemCombination.destroy({where: where['SaleOrderItemCombination'], transaction});
             }
             //SaleOrderItemCombination
 
             //PedidoVendaItemCombinacao.PedidoVendaItemCombinacaoItem
             for (let saleOrderItemCombination of item?.itemCombinations || []) {
                 where['PedidoVendaItemCombinacaoItem'] = {pedidoVendaItemCombinacaoId: saleOrderItemCombination.id};
-                for (let combinacaoItem of saleOrderItemCombination?.combinacaoItems || []) {
-                    combinacaoItem.pedidoVendaItemCombinacaoId = saleOrderItemCombination.id;
-                    if (!combinacaoItem.id) {
-                        combinacaoItem.id = crypto.randomUUID();
-                        PedidoVendaItemCombinacaoItem.create({...combinacaoItem}, {transaction});
+                for (let itemCombinationItem of saleOrderItemCombination?.itemCombinationItems || []) {
+                    itemCombinationItem.saleOrderItemCombinationId = saleOrderItemCombination.id;
+                    if (!itemCombinationItem.id) {
+                        itemCombinationItem.id = crypto.randomUUID();
+                        await SaleOrderItemCombinationItem.create({...itemCombinationItem}, {transaction});
                     } else {
-                        PedidoVendaItemCombinacaoItem.update(combinacaoItem, {where: {id: combinacaoItem.id}, transaction});
+                        await SaleOrderItemCombinationItem.update(itemCombinationItem, {where: {id: itemCombinationItem.id}, transaction});
                     }
                 }
 
-                const r = await ProdutoCombinacaoItem.findAll({attributes: ["id"], where: {combinacaoId: saleOrderItemCombination.combinationId}});
-                where['PedidoVendaItemCombinacaoItem'] = {itemCombinacaoId: {[Op.in]: r.map(c => c.id)}, id: {[Op.notIn]: saleOrderItemCombination?.combinacaoItems?.filter(c => c.id != "").map(c => c.id)}};
-                PedidoVendaItemCombinacaoItem.destroy({where: where['PedidoVendaItemCombinacaoItem'], transaction});
+                const r = await ProductCombinationItem.findAll({attributes: ["id"], where: {combinacaoId: saleOrderItemCombination.combinationId}});
+                where['PedidoVendaItemCombinacaoItem'] = {itemCombinacaoId: {[Op.in]: r.map(c => c.id)}, id: {[Op.notIn]: saleOrderItemCombination?.itemCombinationItems?.filter(c => c.id != "").map(c => c.id)}};
+                await SaleOrderItemCombinationItem.destroy({where: where['PedidoVendaItemCombinacaoItem'], transaction});
             }
             //PedidoVendaItemCombinacao.PedidoVendaItemCombinacaoItem
 

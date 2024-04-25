@@ -152,7 +152,7 @@ export default class PartnersBase extends BaseIndex<Readonly<{Title: string, Typ
         try
         {
             this.setState({request: {...this.state.request, limit, offset}},
-                () => this.Pesquisar(this.state.request)
+                async () => await this.Pesquisar(this.state.request)
             );
         }
         catch (err: any) 
@@ -166,7 +166,7 @@ export default class PartnersBase extends BaseIndex<Readonly<{Title: string, Typ
         try
         {
             this.setState({request: {...this.state.request, sort}},
-                () => this.Pesquisar(this.state.request)
+                async () => await this.Pesquisar(this.state.request)
             );
         }
         catch (err: any) 

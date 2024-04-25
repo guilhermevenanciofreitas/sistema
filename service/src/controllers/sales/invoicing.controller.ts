@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { PaymentForm, Partner, SaleOrder, Product, SaleOrderRecieve, SaleOrderStatus, SaleOrderShippingType, Company, ProductCombination, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem, Nfe } from "../../database";
+import { PaymentForm, Partner, SaleOrder, Product, SaleOrderRecieve, SaleOrderStatus, SaleOrderShippingType, Company, ProductCombination, ProductCombinationGroup, ProductCombinationItem, SaleOrderItemCombination, SaleOrderItemCombinationItem, Nfe } from "../../database";
 import { SaleOrderService } from "../../services/sales/saleOrder.service";
 import { SaleOrderItem } from "../../database/models/saleOrderItem.model";
 import { Error } from "../../errors";

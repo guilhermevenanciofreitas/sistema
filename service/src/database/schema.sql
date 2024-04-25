@@ -86,21 +86,21 @@ ALTER TABLE "productCategory" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100
 ALTER TABLE "productCategory" ADD COLUMN IF NOT EXISTS "image" BYTEA;
 ALTER TABLE "productCategory" ADD COLUMN IF NOT EXISTS "ordem" INTEGER;
 
---produtoCombinacaoGrupo
-CREATE TABLE IF NOT EXISTS "produtoCombinacaoGrupo"();
-ALTER TABLE "produtoCombinacaoGrupo" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "produtoCombinacaoGrupo" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
-ALTER TABLE "produtoCombinacaoGrupo" ADD COLUMN IF NOT EXISTS "isObrigatorio" BOOLEAN;
-ALTER TABLE "produtoCombinacaoGrupo" ADD COLUMN IF NOT EXISTS "minimo" INTEGER;
-ALTER TABLE "produtoCombinacaoGrupo" ADD COLUMN IF NOT EXISTS "maximo" INTEGER;
-ALTER TABLE "produtoCombinacaoGrupo" ADD COLUMN IF NOT EXISTS "ordem" INTEGER;
+--produtoCombinationGroup
+CREATE TABLE IF NOT EXISTS "produtoCombinationGroup"();
+ALTER TABLE "produtoCombinationGroup" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "produtoCombinationGroup" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
+ALTER TABLE "produtoCombinationGroup" ADD COLUMN IF NOT EXISTS "isObrigatorio" BOOLEAN;
+ALTER TABLE "produtoCombinationGroup" ADD COLUMN IF NOT EXISTS "minimo" INTEGER;
+ALTER TABLE "produtoCombinationGroup" ADD COLUMN IF NOT EXISTS "maximo" INTEGER;
+ALTER TABLE "produtoCombinationGroup" ADD COLUMN IF NOT EXISTS "ordem" INTEGER;
 
---produtoCombinacaoItem
-CREATE TABLE IF NOT EXISTS "produtoCombinacaoItem"();
-ALTER TABLE "produtoCombinacaoItem" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "produtoCombinacaoItem" ADD COLUMN IF NOT EXISTS "combinacaoId" UUID;
-ALTER TABLE "produtoCombinacaoItem" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(100);
-ALTER TABLE "produtoCombinacaoItem" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+--productCombinationItem
+CREATE TABLE IF NOT EXISTS "productCombinationItem"();
+ALTER TABLE "productCombinationItem" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "productCombinationItem" ADD COLUMN IF NOT EXISTS "combinationId" UUID;
+ALTER TABLE "productCombinationItem" ADD COLUMN IF NOT EXISTS "name" VARCHAR(100);
+ALTER TABLE "productCombinationItem" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
 
 --productCombination
 CREATE TABLE IF NOT EXISTS "productCombination"();
@@ -177,12 +177,12 @@ ALTER TABLE "saleOrderItemCombination" ADD COLUMN IF NOT EXISTS "id" UUID DEFAUL
 ALTER TABLE "saleOrderItemCombination" ADD COLUMN IF NOT EXISTS "saleOrderItemId" UUID;
 ALTER TABLE "saleOrderItemCombination" ADD COLUMN IF NOT EXISTS "combinationId" UUID;
 
---pedidoVendaItemCombinacaoItem
-CREATE TABLE IF NOT EXISTS "pedidoVendaItemCombinacaoItem"();
-ALTER TABLE "pedidoVendaItemCombinacaoItem" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "pedidoVendaItemCombinacaoItem" ADD COLUMN IF NOT EXISTS "pedidoVendaItemCombinacaoId" UUID;
-ALTER TABLE "pedidoVendaItemCombinacaoItem" ADD COLUMN IF NOT EXISTS "itemCombinacaoId" UUID;
-ALTER TABLE "pedidoVendaItemCombinacaoItem" ADD COLUMN IF NOT EXISTS "quantidade" DECIMAL(10, 3);
+--saleOrderItemCombinationItem
+CREATE TABLE IF NOT EXISTS "saleOrderItemCombinationItem"();
+ALTER TABLE "saleOrderItemCombinationItem" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "saleOrderItemCombinationItem" ADD COLUMN IF NOT EXISTS "saleOrderItemCombinationId" UUID;
+ALTER TABLE "saleOrderItemCombinationItem" ADD COLUMN IF NOT EXISTS "itemCombinationId" UUID;
+ALTER TABLE "saleOrderItemCombinationItem" ADD COLUMN IF NOT EXISTS "quantidade" DECIMAL(10, 3);
 
 --saleOrderNfe
 CREATE TABLE IF NOT EXISTS "saleOrderNfe"();

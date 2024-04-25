@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { PaymentForm, Partner, SaleOrder, Product, SaleOrderRecieve, SaleOrderStatus, SaleOrderShippingType, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProductCombination, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem } from "../../database";
+import { PaymentForm, Partner, SaleOrder, Product, SaleOrderRecieve, SaleOrderStatus, SaleOrderShippingType, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProductCombination, ProductCombinationGroup, ProductCombinationItem, SaleOrderItemCombination, SaleOrderItemCombinationItem } from "../../database";
 import { SaleOrderService } from "../../services/sales/saleOrder.service";
 import { SaleOrderItem } from "../../database/models/saleOrderItem.model";
 import {Op, Sequelize} from "sequelize";

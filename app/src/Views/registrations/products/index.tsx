@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
 import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
-import { ViewProduto } from "./View/index";
-import BaseProdutos from "./index.base";
+import { ViewProduct } from "./View/index";
+import ProductsBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
@@ -10,19 +10,19 @@ import { ViewImportar } from "./importar";
 import { ViewFiltro } from "./filtro";
 
 const Columns = [
-    { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
     { selector: (row: any) => row.name, sort: 'name', name: 'Nome', sortable: true },
     { selector: (row: any) => row.category?.description, sort: 'description', name: 'Categoria', sortable: true },
+    { selector: (row: any) => row.value ? parseFloat(row.value).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}) : '', sort: 'value', name: 'Valor', sortable: true },
 ];
 
-export default class Products extends BaseProdutos {
+export default class Products extends ProductsBase {
 
     render(): React.ReactNode {
 
         return (
             <>
 
-                <ViewProduto ref={this.ViewProduto} Title='Produto' />
+                <ViewProduct ref={this.ViewProduct} Title='Produto' />
 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />

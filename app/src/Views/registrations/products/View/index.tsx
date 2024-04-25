@@ -1,5 +1,5 @@
 
-import { ViewProdutoBase } from './index.base';
+import { ViewProductBase } from './index.base';
 import { AutoComplete, Button, CheckBox, Form, Modal, Tab, TabItem, TextBox, NumericBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
@@ -8,7 +8,7 @@ import { Combinations } from './combinations';
 import { ProductCategoryTemplate } from '../../../../Search/Templates/ProductCategory';
 import { Search } from '../../../../Search';
 
-export class ViewProduto extends ViewProdutoBase {
+export class ViewProduct extends ViewProductBase {
 
     public Close = () => this.setState({open: false});
     
@@ -18,7 +18,7 @@ export class ViewProduto extends ViewProdutoBase {
             <Modal Open={this.state.open} Title={this.props.Title} Width={1000} Close={() => this.Close()}>
                 <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
 
-                    <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' Enable={this.state.description != ''} />
+                    <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
                     <Button Text='Limpar' Type='Reset' Color='white' BackgroundColor='gray' />
 
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
@@ -45,8 +45,8 @@ export class ViewProduto extends ViewProdutoBase {
                         <Grid md={12}>
                             
                             <Tab>
-                                <TabItem Title='Principal' Visible={this.state.isCombination}>
-                                    <Grid md={12}>
+                                <TabItem Title='Principal' Visible={true}>
+                                    <Grid md={2}>
                                         <NumericBox Label='Valor' Text={this.state.value} Prefix='R$ ' Scale={2} OnChange={(args: EventArgs) => this.setState({value: args.Value})} />
                                     </Grid>
                                 </TabItem>

@@ -30,7 +30,7 @@ class SearchRoutes {
     this.router.post("/product", (req, res) => this.controller.product(req, res));
     this.router.post("/product-category", (req, res) => this.controller.productCategory(req, res));
 
-    this.router.post("/produtoCombinacaoGrupo", (req, res) => this.controller.produtoCombinacaoGrupo(req, res));
+    this.router.post("/product-combination-group", (req, res) => this.controller.productCombinationGroup(req, res));
 
     this.router.post("/called-occurrence", (req, res) => this.controller.calledOccurrence(req, res));
 

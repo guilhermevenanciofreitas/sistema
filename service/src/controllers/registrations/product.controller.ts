@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Product, ProductCategory, ProductCombination, ProdutoCombinacaoGrupo } from "../../database";
+import { Product, ProductCategory, ProductCombination, ProductCombinationGroup } from "../../database";
 import { ProductService } from "../../services/registrations/product.service";
 import { Op } from "sequelize";
 import { Error } from "../../errors";
@@ -26,7 +26,7 @@ export default class ProductController {
                 }
         
                 const products = await Product.findAndCountAll({
-                    attributes: ['id', 'name'],
+                    attributes: ['id', 'name', 'value'],
                     include: [{model: ProductCategory, attributes: ['id', 'description']}],
                     where,
                     order,
@@ -65,9 +65,9 @@ export default class ProductController {
                 const product = await Product.findOne({
                     attributes: ['id', 'name', 'description', 'isCombination', 'value'], 
                     include: [
-                        {model: ProductCategory, attributes: ['id', 'description']}, 
-                        {model: ProductCombination, attributes: ['id', 'isObrigatorio', 'minimo', 'maximo'],
-                            include: [{model: ProdutoCombinacaoGrupo, attributes: ['descricao']}]    
+                        {model: ProductCategory, as: 'category', attributes: ['id', 'description']}, 
+                        {model: ProductCombination, as: 'combinations', attributes: ['id', 'isObrigatorio', 'minimo', 'maximo'],
+                            include: [{model: ProductCombinationGroup, as: 'combinationGroup', attributes: ['description']}]    
                         }
                     ],
                     where: {id: req.body.id},

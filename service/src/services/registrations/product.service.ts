@@ -19,8 +19,10 @@ export class ProductService {
 
         product.id = crypto.randomUUID();
         
-        for (let item of product?.combinations || []) {
-            item.id = crypto.randomUUID();
+        for (let combination of product?.combinations || []) {
+            combination.id = crypto.randomUUID();
+            combination.productId = product.id;
+            await ProductCombination.create({...combination}, {transaction});
         }
 
         await Product.create({...product}, {transaction});
@@ -37,7 +39,7 @@ export class ProductService {
             } else {
                 await ProductCombination.update(item, {where: {id: item.id}, transaction});
             }
-            await ProductCombination.destroy({where: {productId: product.id, id: {[Op.notIn]: product?.combinations?.filter((c: any) => c.id != "").map(c => c.id)}}, transaction})
+            await ProductCombination.destroy({where: {productId: product.id, id: {[Op.notIn]: product?.combinations?.filter((c: any) => c.id != '').map(c => c.id)}}, transaction})
         }
 
         await Product.update(product, {where: {id: product.id}, transaction});
