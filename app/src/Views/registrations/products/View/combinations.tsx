@@ -15,7 +15,7 @@ const Columns = [
 
 class ViewCombination extends ViewModal {
 
-    public Close = (combinationGroup: any) => this.setState({open: false});
+    public Close = (combinations: any) => this.setState({open: false});
 
     state = {
         open: false,

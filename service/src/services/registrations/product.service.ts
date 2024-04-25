@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { Product, ProductCombination } from "../../database";
+import { Product, ProductCombination, ProductSupplier } from "../../database";
 import crypto from "crypto";
 import { Op } from "sequelize";
 
@@ -25,21 +25,38 @@ export class ProductService {
             await ProductCombination.create({...combination}, {transaction});
         }
 
+        for (let supplier of product?.suppliers || []) {
+            supplier.id = crypto.randomUUID();
+            supplier.productId = product.id;
+            await ProductSupplier.create({...supplier}, {transaction});
+        }
+
         await Product.create({...product}, {transaction});
 
     }
 
     public static Update = async (product: Product, transaction: Transaction | undefined) => {
 
-        for (let item of product?.combinations || []) {
-            if (!item.id) {
-                item.id = crypto.randomUUID();
-                item.productId = product.id;
-                await ProductCombination.create({...item}, {transaction});
+        for (let combination of product?.combinations || []) {
+            if (!combination.id) {
+                combination.id = crypto.randomUUID();
+                combination.productId = product.id;
+                await ProductCombination.create({...combination}, {transaction});
             } else {
-                await ProductCombination.update(item, {where: {id: item.id}, transaction});
+                await ProductCombination.update(combination, {where: {id: combination.id}, transaction});
             }
             await ProductCombination.destroy({where: {productId: product.id, id: {[Op.notIn]: product?.combinations?.filter((c: any) => c.id != '').map(c => c.id)}}, transaction})
+        }
+
+        for (let supplier of product?.suppliers || []) {
+            if (!supplier.id) {
+                supplier.id = crypto.randomUUID();
+                supplier.productId = product.id;
+                await ProductSupplier.create({...supplier}, {transaction});
+            } else {
+                await ProductSupplier.update(supplier, {where: {id: supplier.id}, transaction});
+            }
+            await ProductSupplier.destroy({where: {productId: product.id, id: {[Op.notIn]: product?.suppliers?.filter((c: any) => c.id != '').map(c => c.id)}}, transaction})
         }
 
         await Product.update(product, {where: {id: product.id}, transaction});

@@ -10,7 +10,6 @@ import { ViewFiltro } from "./filtro";
 import { ViewPartner } from "./View";
 
 const Columns = [
-    { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
     { selector: (row: any) => row.cpfCnpj, sort: 'cpfCnpj', name: 'CPF/CNPJ', sortable: true },
     { selector: (row: any) => row.name, sort: 'name', name: 'Nome/Razão Social', sortable: true },
     { selector: (row: any) => row.surname, sort: 'surname', name: 'Apelido/NomeFantasia', sortable: true },

@@ -14,7 +14,9 @@ export class ViewProductBase extends ViewModal<Readonly<{Title: string}>> {
         category: null,
         isCombination: false,
         value: null,
-        combinations: []
+
+        combinations: [],
+        suppliers: []
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -55,6 +57,7 @@ export class ViewProductBase extends ViewModal<Readonly<{Title: string}>> {
             Loading.Show();
 
             let combinations = [];
+            let suppliers = [];
 
             for (let combination of _.get(this.state, 'combinations')) {
                 combinations.push({
@@ -66,6 +69,13 @@ export class ViewProductBase extends ViewModal<Readonly<{Title: string}>> {
                 });
             }
 
+            for (let supplier of _.get(this.state, 'suppliers')) {
+                suppliers.push({
+                    id: _.get(supplier, 'id'),
+                    supplierId: _.get(supplier, 'supplier.id'),
+                });
+            }
+
             const request = {
                 id: _.get(this.state, 'id') || null,
                 name: _.get(this.state, 'name') || null,
@@ -74,6 +84,7 @@ export class ViewProductBase extends ViewModal<Readonly<{Title: string}>> {
                 isCombination: _.get(this.state, 'isCombination') || null,
                 value: _.get(this.state, 'value') || null,
                 combinations,
+                suppliers
             }
             
             let response = await Service.Post("registrations/product/save", request);
@@ -105,7 +116,9 @@ export class ViewProductBase extends ViewModal<Readonly<{Title: string}>> {
             category: null,
             isCombination: false,
             value: null,
-            combinations: []
+
+            combinations: [],
+            suppliers: []
         });
     }
 

@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-typescript";
+import { Model, Table, Column, DataType, BelongsTo, HasMany, ForeignKey } from "sequelize-typescript";
 import { Product } from "./product.model";
 import { SaleOrderItemCombination } from "./saleOrderItemCombination.model";
 
@@ -11,19 +11,22 @@ export class SaleOrderItem extends Model {
   @Column({type: DataType.UUID, field: "saleOrderId"})
   saleOrderId?: string;
 
-  @Column({type: DataType.UUID, field: "produtoId"})
-  produtoId?: string;
+  @Column({type: DataType.UUID, field: "productId"})
+  productId?: string;
 
-  @Column({type: DataType.DECIMAL(10, 3), field: "quantidade"})
-  quantidade?: number;
+  @Column({type: DataType.DECIMAL(18, 3), field: "quantity"})
+  quantity?: number;
 
-  @Column({type: DataType.DECIMAL(10, 2), field: "valor"})
+  @Column({type: DataType.DECIMAL(18, 2), field: "value"})
   value?: number;
 
-  @BelongsTo(() => Product, 'produtoId')
+  @Column({type: DataType.DECIMAL(18, 2), field: "discount"})
+  discount?: number;
+
+  @BelongsTo(() => Product, {as: 'product', foreignKey: 'productId'})
   product?: Product;
 
-  @HasMany(() => SaleOrderItemCombination, 'saleOrderItemId')
+  @HasMany(() => SaleOrderItemCombination, {as: 'itemCombinations', foreignKey: 'saleOrderItemId'})
   itemCombinations?: SaleOrderItemCombination[];
 
 }

@@ -22,7 +22,7 @@ export class ShippingService {
                 transaction
             });
 
-            for (const payment of shipping?.bankAccountShippingPayment || []) {
+            for (const payment of shipping?.bankAccountShippingPayments || []) {
                 await Payment.update({status: 'open'}, {where: {id: payment?.paymentId}, transaction});
             }
 

@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType, HasMany, BelongsTo } from "sequelize-typescript";
+import { Model, Table, Column, DataType, HasMany, BelongsTo, ForeignKey } from "sequelize-typescript";
 import { Company } from "./company.model";
 import { FreightCalculationType } from "./freightCalculationType.model";
 import { Partner } from "./partner.model";
@@ -42,10 +42,10 @@ export class FreightQuote extends Model {
 
 
 
-  @BelongsTo(() => Company, 'companyId')
+  @BelongsTo(() => Company, {as: 'company', foreignKey: 'companyId'})
   company?: Company;
 
-  @BelongsTo(() => FreightCalculationType, 'typeId')
+  @BelongsTo(() => FreightCalculationType, {as: 'type', foreignKey: 'typeId'})
   type?: FreightCalculationType;
 
   @BelongsTo(() => Partner, {as: 'sender', foreignKey: 'senderId'})

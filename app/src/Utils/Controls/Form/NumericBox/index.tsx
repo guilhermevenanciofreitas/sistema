@@ -18,11 +18,11 @@ const CustomInput = (props: InputProps) => {
 
 export class ControlNumericBox extends NumericBoxBase {
 
-    private TextBox = React.createRef<HTMLInputElement>();
+    private NumericFormat = React.createRef<HTMLInputElement>();
 
     public Focus = (): void =>
     {
-        this.TextBox?.current?.focus();
+        this.NumericFormat?.current?.focus();
     }
     
     protected TextBox_Change = (value: string): void =>
@@ -36,7 +36,7 @@ export class ControlNumericBox extends NumericBoxBase {
         return (
             <>
                 <FormLabel sx={{fontWeight: 400}}>{this.props.Label}</FormLabel>
-                <NumericFormat customInput={CustomInput} value={this.props.Text} onValueChange={({value}) => this.TextBox_Change(value)} prefix={this.props.Prefix} decimalScale={this.props.Scale} decimalSeparator=',' thousandSeparator={''} fixedDecimalScale={true} />
+                <NumericFormat getInputRef={this.NumericFormat} customInput={CustomInput} value={this.props.Text} onValueChange={({value}) => this.TextBox_Change(value)} prefix={this.props.Prefix} decimalScale={this.props.Scale} decimalSeparator=',' thousandSeparator={''} fixedDecimalScale={true} disabled={this.props.ReadOnly} />
             </>
         );
     }

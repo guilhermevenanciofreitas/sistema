@@ -1,5 +1,4 @@
-import { Model, Table, Column, DataType, HasMany } from "sequelize-typescript";
-import { BankAccount } from "./bankAccount.model";
+import { Model, Table, Column, DataType } from "sequelize-typescript";
 
 @Table({tableName: "calledOccurrence"})
 export class CalledOccurrence extends Model {

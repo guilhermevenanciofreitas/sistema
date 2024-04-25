@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { BankAccount, Company, PaymentForm, Municipio, Partner, SaleOrderShippingType, Product, ProductCategory, ProductCombination, ProductCombinationGroup, ProductCombinationItem, TabelaPreco, CalledOccurrence, FreightCalculationType, MesoRegion, State } from "../../database";
+import { BankAccount, Company, PaymentForm, Municipio, Partner, SaleOrderShippingType, Product, ProductCategory, ProductCombination, ProductCombinationGroup, ProductCombinationItem, TabelaPreco, CalledOccurrence, FreightCalculationType, MesoRegion, State, ReceivieForm } from "../../database";
 import { Op } from "sequelize";
 import { Bank } from "../../database/models/bank.model";
 
@@ -105,11 +105,11 @@ export default class SearchController {
                     where = {"surname": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
         
-                const clientes = await Partner.findAll({attributes: ["id", "cpfCnpj", "surname", "isBlockSale"], where, order: [["surname", "asc"]], transaction});
+                const costumers = await Partner.findAll({attributes: ["id", "cpfCnpj", "surname", "isBlockSale"], where, order: [["surname", "asc"]], transaction});
         
                 sequelize.close();
 
-                res.status(200).json(clientes);
+                res.status(200).json(costumers);
 
             }
             catch (err) {
@@ -135,11 +135,71 @@ export default class SearchController {
                     where = {"surname": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
         
-                const clientes = await Partner.findAll({attributes: ["id", "cpfCnpj", "surname"], where, order: [["surname", "asc"]], transaction});
+                const employees = await Partner.findAll({attributes: ["id", "cpfCnpj", "surname"], where, order: [["surname", "asc"]], transaction});
         
                 sequelize.close();
 
-                res.status(200).json(clientes);
+                res.status(200).json(employees);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async supplier(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+   
+                where = {"isSupplier": true};
+
+                if (req.body?.Search) {
+                    where = {"surname": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+        
+                const suppliers = await Partner.findAll({attributes: ["id", "cpfCnpj", "surname"], where, order: [["surname", "asc"]], transaction});
+        
+                sequelize.close();
+
+                res.status(200).json(suppliers);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async shippingCompany(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+   
+                where = {"isShippingCompany": true};
+
+                if (req.body?.Search) {
+                    where = {"surname": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+        
+                const shippingCompanies = await Partner.findAll({attributes: ["id", "cpfCnpj", "surname"], where, order: [["surname", "asc"]], transaction});
+        
+                sequelize.close();
+
+                res.status(200).json(shippingCompanies);
 
             }
             catch (err) {
@@ -160,22 +220,23 @@ export default class SearchController {
                 let where: any = {};
    
                 if (req.body?.Search) {
-                    where = {"name": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                    where = {'name': {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
         
-                const produtos = await Product.findAll({attributes: ["id", "name"],
-                    include: [{model: ProductCombination, attributes: ["id", "isObrigatorio", "minimo", "maximo", "ordem"],
-                        include: [{model: ProductCombinationGroup, attributes: ["id", "description"],
-                            include: [{model: ProductCombinationItem, attributes: ["id", "name"]}]    
+                const products = await Product.findAll({attributes: ['id', 'name', 'value'],
+                    include: [{model: ProductCombination, attributes: ['id', 'isObrigatorio', 'minimo', 'maximo', 'ordem'],
+                        include: [{model: ProductCombinationGroup, attributes: ['id', 'description'],
+                            include: [{model: ProductCombinationItem, attributes: ['id', 'name']}]    
                         }]
                     }],
                     where,
-                    order: [["name", "asc"]], transaction
+                    order: [['name', 'asc']],
+                    transaction
                 });
         
                 sequelize.close();
 
-                res.status(200).json(produtos);
+                res.status(200).json(products);
 
             }
             catch (err) {
@@ -299,6 +360,34 @@ export default class SearchController {
                 sequelize.close();
 
                 res.status(200).json(paymentForm);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async receivieForm(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+
+                if (req.body?.Search) {
+                    where = {"description": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+
+                const receivieForm = await ReceivieForm.findAll({attributes: ["id", "description", "type"], where, order: [["description", "asc"]], transaction});
+        
+                sequelize.close();
+
+                res.status(200).json(receivieForm);
 
             }
             catch (err) {

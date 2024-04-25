@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType, BelongsTo } from "sequelize-typescript";
+import { Model, Table, Column, DataType, BelongsTo, ForeignKey } from "sequelize-typescript";
 import { Partner } from "./partner.model";
 
 @Table({tableName: "partnerAddress"})
@@ -28,7 +28,8 @@ export class PartnerAddress extends Model {
   @Column({type: DataType.UUID, field: "estadoId"})
   estadoId?: string;
 
-  @BelongsTo(() => Partner, 'parceiroId')
-  parceiro?: Partner;
+  
+  @BelongsTo(() => Partner, {as: 'partner', foreignKey: 'partnerId'})
+  partner?: Partner;
 
 }

@@ -22,9 +22,14 @@ export const Search = {
         return (await Service.Post("search/employee", {Search}))?.data;
     },
 
-    Funcionario: async (Search: string) =>
+    Supplier: async (Search: string) =>
     {
-        return (await Service.Post("search/funcionario", {Search}))?.data;
+        return (await Service.Post("search/supplier", {Search}))?.data;
+    },
+
+    ShippingCompany: async (Search: string) =>
+    {
+        return (await Service.Post("search/shipping-company", {Search}))?.data;
     },
 
     TabelaPreco: async (Search: string) =>
@@ -55,6 +60,11 @@ export const Search = {
     PaymentForm: async (Search: string) =>
     {
         return (await Service.Post("search/payment-form", {Search}))?.data;
+    },
+
+    ReceivieForm: async (Search: string) =>
+    {
+        return (await Service.Post("search/receivie-form", {Search}))?.data;
     },
 
     SaleOrderShippingType: async (Search: string) =>

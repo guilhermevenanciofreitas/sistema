@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-typescript";
+import { Model, Table, Column, DataType, BelongsTo, HasMany, ForeignKey } from "sequelize-typescript";
 import { Company } from "./company.model";
 import { BankAccount } from "./bankAccount.model";
 import { BankAccountShippingPayment } from "./bankAccountShippingPayment.model";
@@ -21,13 +21,14 @@ export class BankAccountShipping extends Model {
   @Column({type: DataType.DATE, field: "createdAt"})
   createdAt?: Date;
 
-  @BelongsTo(() => Company, 'companyId')
+  
+  @BelongsTo(() => Company, {as: 'company', foreignKey: 'companyId'})
   company?: Company;
 
-  @BelongsTo(() => BankAccount, 'bankAccountId')
+  @BelongsTo(() => BankAccount, {as: 'bankAccount', foreignKey: 'bankAccountId'})
   bankAccount?: BankAccount;
 
-  @HasMany(() => BankAccountShippingPayment, 'bankAccountShippingId')
-  bankAccountShippingPayment?: BankAccountShippingPayment[];
+  @HasMany(() => BankAccountShippingPayment, {as: 'bankAccountShippingPayments', foreignKey: 'bankAccountShippingId'})
+  bankAccountShippingPayments?: BankAccountShippingPayment[];
 
 }

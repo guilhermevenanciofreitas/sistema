@@ -28,7 +28,7 @@ import NotasFiscais from "./views/fiscal/nfes";
 //import Receipts from "./views/financial/receipts";
 import Andamento from "./views/sales/progress";
 import Entrega from "./views/sales/delivery";
-import ShippingsOrders from "./views/logistics/shippingsOrders";
+import ShippingOrders from "./views/logistics/shippingOrders";
 import Payments from "./views/financial/payments";
 import BankAccounts from "./views/financial/bankAccounts";
 import Shippings from "./views/financial/shippings";
@@ -67,7 +67,7 @@ export default class App extends React.Component {
                 {/* Logistics */}
                 <Route path="/logistic/freight-calculations" element={<RequireLogin><FreightCalculations /></RequireLogin>} />
                 <Route path="/logistic/freight-quotes" element={<RequireLogin><FreightQuotes /></RequireLogin>} />
-                <Route path="/logistic/shippings-orders" element={<RequireLogin><ShippingsOrders /></RequireLogin>} />
+                <Route path="/logistic/shipping-orders" element={<RequireLogin><ShippingOrders /></RequireLogin>} />
 
                 {/* Financial */}
                 <Route path="/financial/payments" element={<RequireLogin><Payments /></RequireLogin>} />

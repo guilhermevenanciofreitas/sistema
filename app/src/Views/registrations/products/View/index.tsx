@@ -7,6 +7,7 @@ import { Grid } from '@mui/joy';
 import { Combinations } from './combinations';
 import { ProductCategoryTemplate } from '../../../../Search/Templates/ProductCategory';
 import { Search } from '../../../../Search';
+import { Suppliers } from './suppliers';
 
 export class ViewProduct extends ViewProductBase {
 
@@ -57,7 +58,7 @@ export class ViewProduct extends ViewProductBase {
                                     <></>
                                 </TabItem>
                                 <TabItem Title='Fornecedores' Visible={true}>
-                                    <></>
+                                    <Suppliers suppliers={this.state.suppliers} OnChange={(suppliers: any[]) => this.setState({suppliers})} />
                                 </TabItem>
                             </Tab>
                            

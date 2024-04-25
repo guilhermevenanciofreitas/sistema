@@ -1,6 +1,7 @@
 import { Model, Table, Column, DataType, HasMany, BelongsTo, ForeignKey } from "sequelize-typescript";
 import { ProductCombination } from "./productCombination.model";
 import { ProductCategory } from "./productCategory.model";
+import { ProductSupplier } from "./productSupplier.model";
 
 @Table({tableName: "product"})
 export class Product extends Model {
@@ -28,5 +29,8 @@ export class Product extends Model {
 
   @HasMany(() => ProductCombination, {as: 'combinations', foreignKey: 'productId'})
   combinations?: ProductCombination[];
+
+  @HasMany(() => ProductSupplier, {as: 'suppliers', foreignKey: 'productId'})
+  suppliers?: ProductSupplier[];
 
 }

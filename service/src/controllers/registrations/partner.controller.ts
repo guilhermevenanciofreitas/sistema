@@ -83,7 +83,7 @@ export default class PartnerController {
                         'cpfCnpj',
                         'name',
                         'surname',
-                        'isCustomer',
+                        'isCostumer',
                         'isSupplier',
                         'isShippingCompany',
                         'isEmployee',
@@ -96,7 +96,7 @@ export default class PartnerController {
                         'escolaridade',
                         'profissao',
                         'isAtivo',
-                        'isBloquearVenda',
+                        'isBlockSale',
                         'isBloquearCompra'
                     ],
                     include: [

@@ -15,7 +15,7 @@ const Columns = [
     { selector: (row: any) => row.email, sort: 'email', name: 'E-mail', sortable: true },
 ];
 
-export default class ShippingsOrders extends BaseUsuarios {
+export default class ShippingOrders extends BaseUsuarios {
 
     render(): React.ReactNode {
 
@@ -59,11 +59,12 @@ export default class ShippingsOrders extends BaseUsuarios {
                         Loading={this.state.Loading}
 
                         Columns={Columns}
-                        Rows={this.state.Data.rows}
 
-                        Count={this.state.Data.count}
-                        Limit={this.state.Data.limit}
-                        OffSet={this.state.Data.offset}
+                        Rows={this.state.response.rows}
+                        Count={this.state.response.count}
+
+                        Limit={this.state.request.limit}
+                        OffSet={this.state.request.offset}
 
                         Records={[10, 50, 100, 500]}
 

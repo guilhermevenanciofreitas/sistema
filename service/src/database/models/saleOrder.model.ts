@@ -1,7 +1,7 @@
 import { Model, Table, Column, DataType, BelongsTo, HasMany, ForeignKey } from "sequelize-typescript";
 import { Partner } from "./partner.model";
 import { SaleOrderItem } from "./saleOrderItem.model";
-import { SaleOrderRecieve } from "./saleOrderRecieve.model";
+import { SaleOrderReceivie } from "./saleOrderReceivie.model";
 import { SaleOrderStatus } from "./saleOrderStatus.model";
 import { SaleOrderShippingType } from "./saleOrderShippingType.model";
 import { Company } from "./company.model";
@@ -65,8 +65,8 @@ export class SaleOrder extends Model {
   @HasMany(() => SaleOrderItem, {as: 'items', foreignKey: 'saleOrderId'})
   items?: SaleOrderItem[];
 
-  @HasMany(() => SaleOrderRecieve, {as: 'recievies', foreignKey: 'saleOrderId'})
-  recievies?: SaleOrderRecieve[];
+  @HasMany(() => SaleOrderReceivie, {as: 'receivies', foreignKey: 'saleOrderId'})
+  receivies?: SaleOrderReceivie[];
 
   @HasMany(() => SaleOrderNfe, {as: 'nfes', foreignKey: 'saleOrderId'})
   nfes?: SaleOrderNfe[];

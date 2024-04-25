@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType, HasMany, BelongsTo } from "sequelize-typescript";
+import { Model, Table, Column, DataType, HasMany, BelongsTo, ForeignKey } from "sequelize-typescript";
 import { State } from "./state.model";
 
 @Table({tableName: "mesoRegion"})
@@ -13,7 +13,7 @@ export class MesoRegion extends Model {
   @Column({type: DataType.STRING(100), field: "description"})
   description?: string;
 
-  @BelongsTo(() => State, 'stateId')
+  @BelongsTo(() => State, {as: 'state', foreignKey: 'stateId'})
   state?: State;
 
 }

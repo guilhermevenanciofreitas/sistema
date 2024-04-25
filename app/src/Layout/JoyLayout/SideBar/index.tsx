@@ -28,7 +28,7 @@ const MenuItems = [
   {title: "Vendas", icon: <LocalOffer />, items: [{title: "Pedidos", link: "/sales/orders"}, {title: "Andamento", link: "/sales/progress"}, {title: "Faturamento", link: "/sales/invoicing"}, {title: "Separação", link: "/sales/separation"}, {title: "Conferência", link: "/sales/checked"}, {title: "Entrega", link: "/sales/delivery"}]},
   {title: "Financeiro", icon: <PaidRounded />, items: [{title: "Contas a pagar", link: "/financial/payments"}, {title: "Contas a receber", link: "/financial/receipts"}, {title: "Contas bancárias", link: "/financial/bank-accounts"}, {title: "Remessas", link: "/financial/shippings"}, {title: "Retornos", link: "/financeiro/retornos"}, {title: "Fluxo de caixa", link: "/financial/cash-flow"}]},
   {title: "Produção", icon: <HotTub />, items: [{title: "Ordens de produção", link: "/production/orders"}]},
-  {title: "Logistica", icon: <LocalShipping />, items: [{title: "Calculo de frete", link: "/logistic/freight-calculations"}, {title: "Cotação de frete", link: "/logistic/freight-quotes"}, {title: "Ordens de carga", link: "/logistic/shippings-orders"}, {title: "Andamento", link: "/logistic/progress"}, {title: "Viagens", link: "/logistic/trips"}]},
+  {title: "Logistica", icon: <LocalShipping />, items: [{title: "Calculo de frete", link: "/logistic/freight-calculations"}, {title: "Cotação de frete", link: "/logistic/freight-quotes"}, {title: "Ordens de carga", link: "/logistic/shipping-orders"}, {title: "Andamento", link: "/logistic/progress"}, {title: "Viagens", link: "/logistic/trips"}]},
   {title: "Fiscal", icon: <TableView />, items: [{title: "Notas fiscais", link: "/fiscal/nfes"}, {title: "Conhecimentos", link: "/fiscal/conhecimentos"}, {title: "Manifestos", link: "/fiscal/manifestos"}]},
 ]
 

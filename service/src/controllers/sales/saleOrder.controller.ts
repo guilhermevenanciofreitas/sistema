@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { PaymentForm, Partner, SaleOrder, Product, SaleOrderRecieve, SaleOrderStatus, SaleOrderShippingType, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProductCombination, ProductCombinationGroup, ProductCombinationItem, SaleOrderItemCombination, SaleOrderItemCombinationItem } from "../../database";
+import { PaymentForm, Partner, SaleOrder, Product, SaleOrderReceivie, SaleOrderStatus, SaleOrderShippingType, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProductCombination, ProductCombinationGroup, ProductCombinationItem, SaleOrderItemCombination, SaleOrderItemCombinationItem, ReceivieForm } from "../../database";
 import { SaleOrderService } from "../../services/sales/saleOrder.service";
 import { SaleOrderItem } from "../../database/models/saleOrderItem.model";
 import {Op, Sequelize} from "sequelize";
@@ -139,22 +139,22 @@ export default class SaleOrderController {
                         {model: Company, as: 'company', attributes: ['id', 'surname']},
                         {model: Partner, as: "seller", attributes: ["id", "surname"]},
                         {model: Partner, as: "shippingCompany", attributes: ["id", "surname"]},
-                        /*{model: SaleOrderStatus, attributes: ['id', 'descricao', 'color']},
+                        {model: SaleOrderStatus, attributes: ['id', 'description', 'color']},
                         {model: SaleOrderShippingType, attributes: ["id", "description"]},
-                        {model: SaleOrderItem, attributes: ["id", "quantidade", "valor"], 
+                        {model: SaleOrderItem, attributes: ['id', 'quantity', 'value', 'discount'], 
                             include: [{model: Product, attributes: ["id", "name", "description"],
-                                include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
-                                    include: [{model: ProdutoCombinacaoGrupo, attributes: ["id", "descricao"],
-                                        include: [{model: ProdutoCombinacaoItem, attributes: ["id", "nome"]}]
+                                include: [{model: ProductCombination, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
+                                    include: [{model: ProductCombinationGroup, attributes: ['id', 'description'],
+                                        include: [{model: ProductCombinationItem, attributes: ['id', 'name']}]
                                     }]    
                                 }],
                             },
-                            {model: SaleOrderItemCombination, attributes: ["id", "saleOrderItemId", "combinationId"],
-                                include: [{model: PedidoVendaItemCombinacaoItem, attributes: ["id", "pedidoVendaItemCombinacaoId", "itemCombinacaoId", "quantidade"]}]
+                            {model: SaleOrderItemCombination, attributes: ['id', 'saleOrderItemId', 'combinationId'],
+                                include: [{model: SaleOrderItemCombinationItem, attributes: ['id', 'saleOrderItemCombinationId', 'itemCombinationId', 'quantity']}]
                             }]
                         },
-                        {model: SaleOrderRecieve, attributes: ["id", "vencimento", "valor"], include: [{model: PaymentForm, attributes: ["id", "description"]}]},
-                        */
+                        {model: SaleOrderReceivie, attributes: ['id', 'dueDate', 'value'], include: [{model: ReceivieForm, attributes: ['id', 'description']}]},
+                     
                     ],
                     where: {id: req.body.id}, transaction}
                 );
@@ -181,7 +181,7 @@ export default class SaleOrderController {
 
                 const SaleOrder = req.body as SaleOrder;
 
-                SaleOrder.value = _.sum(SaleOrder.items?.map(c => parseFloat(c.value?.toString() || "0")));
+                SaleOrder.value = _.sum(SaleOrder.items?.map(c => (parseFloat(c.value?.toString() || '0') - parseFloat(c.discount?.toString() || '0')) * parseFloat(c.quantity?.toString() || '0')));
 
                 const valid = SaleOrderService.IsValid(SaleOrder);
 

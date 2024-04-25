@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType, HasMany, BelongsTo } from "sequelize-typescript";
+import { Model, Table, Column, DataType, HasMany, BelongsTo, ForeignKey } from "sequelize-typescript";
 import { FreightCalculationType } from "./freightCalculationType.model";
 import { MesoRegion } from "./mesoRegion.model";
 import { FreightCalculationWeight } from "./freightCalculationWeight.model";
@@ -22,16 +22,17 @@ export class FreightCalculation extends Model {
   @Column({type: DataType.DECIMAL(18, 2), field: "aliquotICMS"})
   aliquotICMS?: string;
 
-  @BelongsTo(() => FreightCalculationType, 'typeId')
+  
+  @BelongsTo(() => FreightCalculationType, {as: 'type', foreignKey: 'typeId'})
   type?: FreightCalculationType;
 
   @BelongsTo(() => MesoRegion, {as: 'senderMesoRegion', foreignKey: 'senderMesoRegionId'})
   senderMesoRegion?: MesoRegion;
 
-  @HasMany(() => FreightCalculationRecipient, 'freightCalculationId')
+  @HasMany(() => FreightCalculationRecipient, {as: 'recipients', foreignKey: 'freightCalculationId'})
   recipients?: FreightCalculationRecipient[];
 
-  @HasMany(() => FreightCalculationWeight, 'freightCalculationId')
+  @HasMany(() => FreightCalculationWeight, {as: 'weights', foreignKey: 'freightCalculationId'})
   weights?: FreightCalculationWeight[];
 
 }

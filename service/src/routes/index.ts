@@ -8,7 +8,7 @@ import configuracaoRoutes from "./configuracao/index.routes"
 import userRoutes from "./registrations/user.routes";
 import productRoutes from "./registrations/product.routes";
 import serviceRoutes from "./registrations/service.routes";
-import customerRoutes from "./registrations/consumer.routes";
+import customerRoutes from "./registrations/costumer.routes";
 import supplierRoutes from "./registrations/supplier.routes";
 import employeeRoutes from "./registrations/employee.routes";
 import shippingCompanyRoutes from "./registrations/shippingsCompany.routes";

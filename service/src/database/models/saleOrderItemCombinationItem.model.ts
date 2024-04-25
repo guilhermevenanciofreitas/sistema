@@ -13,8 +13,8 @@ export class SaleOrderItemCombinationItem extends Model {
   @Column({type: DataType.UUID, field: "itemCombinationId"})
   itemCombinationId?: string;
 
-  @Column({type: DataType.UUID, field: "quantidade"})
-  quantidade?: number;
+  @Column({type: DataType.UUID, field: "quantity"})
+  quantity?: number;
 
   @BelongsTo(() => SaleOrderItemCombination, 'saleOrderItemId')
   itemCombinations?: SaleOrderItemCombination;

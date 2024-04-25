@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Product, ProductCategory, ProductCombination, ProductCombinationGroup } from "../../database";
+import { Partner, Product, ProductCategory, ProductCombination, ProductCombinationGroup, ProductSupplier } from "../../database";
 import { ProductService } from "../../services/registrations/product.service";
 import { Op } from "sequelize";
 import { Error } from "../../errors";
@@ -68,7 +68,10 @@ export default class ProductController {
                         {model: ProductCategory, as: 'category', attributes: ['id', 'description']}, 
                         {model: ProductCombination, as: 'combinations', attributes: ['id', 'isObrigatorio', 'minimo', 'maximo'],
                             include: [{model: ProductCombinationGroup, as: 'combinationGroup', attributes: ['description']}]    
-                        }
+                        },
+                        {model: ProductSupplier, as: 'suppliers', attributes: ['id'],
+                            include: [{model: Partner, as: 'supplier', attributes: ['id', 'surname']}]
+                        }, 
                     ],
                     where: {id: req.body.id},
                     transaction

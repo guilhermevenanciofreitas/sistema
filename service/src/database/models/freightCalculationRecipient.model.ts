@@ -13,6 +13,7 @@ export class FreightCalculationRecipient extends Model {
   @Column({type: DataType.UUID, field: "recipientMesoRegionId"})
   recipientMesoRegionId?: string;
 
+  
   @BelongsTo(() => MesoRegion, {as: 'recipientMesoRegion', foreignKey: 'recipientMesoRegionId'})
   recipientMesoRegion?: MesoRegion;
 

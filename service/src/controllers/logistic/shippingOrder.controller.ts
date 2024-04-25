@@ -8,32 +8,37 @@ export default class ShippingOrderController {
 
     async findAll(req: Request, res: Response) {
 
-        Auth(req, res).then(async ({sequelize}) => {
+        Auth(req, res).then(async ({sequelize, pagination}) => {
             try {
 
                 const transaction = await sequelize.transaction();
 
-                const limit = req.body.limit || undefined;
-                const offset = ((req.body.offset - 1) * limit) || undefined;
-                const filter = req.body.filter || undefined;
-                const sort = req.body.sort || undefined;
-        
                 let where: any = {};
                 let order: any = [];
         
-                if (sort) {
-                    order = [[sort.column, sort.direction]]
+                if (pagination.sort) {
+                    order = [[pagination.sort.column, pagination.sort.direction]]
                 }
         
-                const produtos = await ShippingOrder.findAndCountAll({attributes: [
-                    "id",
-                ],
-                    where, order, limit, offset, transaction
+                const shippingOrders = await ShippingOrder.findAndCountAll({
+                    attributes: ['id'],
+                    where,
+                    order,
+                    limit: pagination.limit,
+                    offset: pagination.offset1,
+                    transaction
                 });
         
                 sequelize.close();
 
-                res.status(200).json({rows: produtos.rows, count: produtos.count, limit, offset: req.body.offset, filter, sort});
+                res.status(200).json({
+                    request: {
+                        ...pagination
+                    },
+                    response: {
+                        rows: shippingOrders.rows, count: shippingOrders.count
+                    }
+                });
 
             }
             catch (err) {

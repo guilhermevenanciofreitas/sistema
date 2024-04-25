@@ -26,8 +26,6 @@ export class DisplayError {
             ]
         });
 
-        console.log(err);
-
         if (r == "yes") {
             await MessageBox.Show({title: "Ops!", width: 400, type: "Error", content: err?.message,
                 buttons: [

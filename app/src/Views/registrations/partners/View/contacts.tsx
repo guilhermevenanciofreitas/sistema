@@ -5,8 +5,8 @@ import { BaseDetails } from "../../../../Utils/Base/details";
 import { Divider } from "@mui/joy";
 
 const Columns = [
-    { selector: (row: any) => row.nome, name: 'Nome' },
-    { selector: (row: any) => row.telefone, name: 'Telefone' },
+    { selector: (row: any) => row.name, name: 'Nome' },
+    { selector: (row: any) => row.phone, name: 'Telefone' },
     { selector: (row: any) => row.email, name: 'Email' },
 ];
 

@@ -93,28 +93,26 @@ export default class ShippingController {
             {
                 const transaction = await sequelize.transaction();
 
-                const ContaPagar = req.body as Payment;
+                const payment = req.body as Payment;
 
-                ContaPagar.recebedorId = req.body.recebedor?.id || null;
-
-                const valid = PaymentService.IsValid(ContaPagar);
+                const valid = PaymentService.IsValid(payment);
 
                 if (!valid.success) {
                     res.status(201).json(valid);
                     return;
                 }
 
-                if (!ContaPagar.id) {
-                    await PaymentService.Create(ContaPagar, transaction);
+                if (!payment.id) {
+                    await PaymentService.Create(payment, transaction);
                 } else {
-                    await PaymentService.Update(ContaPagar, transaction);
+                    await PaymentService.Update(payment, transaction);
                 }
 
                 await transaction?.commit();
                 
                 sequelize.close();
 
-                res.status(200).json(ContaPagar);
+                res.status(200).json(payment);
 
             }
             catch (err) {

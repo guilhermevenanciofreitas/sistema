@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { SaleOrder, SaleOrderRecieve, SaleOrderItem, SaleOrderProgress, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, SaleOrderItemCombination, SaleOrderItemCombinationItem, ProductCombination, SaleOrderStatus, ProductCombinationItem } from "../../database";
+import { SaleOrder, SaleOrderReceivie, SaleOrderItem, SaleOrderProgress, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, SaleOrderItemCombination, SaleOrderItemCombinationItem, ProductCombination, SaleOrderStatus, ProductCombinationItem } from "../../database";
 import crypto from "crypto";
 import {Op} from "sequelize";
 import { SaleOrderStatusByFrom } from "../../database/models/saleOrderStatusByFrom.model";
@@ -24,7 +24,10 @@ export class SaleOrderService {
         saleOrder.createdAt = new Date();
 
         for (let item of saleOrder?.items || []) {
+
             item.id = crypto.randomUUID();
+            item.saleOrderId = saleOrder.id;
+
             await SaleOrderItem.create({...item}, {transaction});
 
             for (let itemCombination of item?.itemCombinations || []) {
@@ -40,11 +43,12 @@ export class SaleOrderService {
 
         }
         
-        for (let item of saleOrder?.recievies || []) {
+        for (let item of saleOrder?.receivies || []) {
+
             item.id = crypto.randomUUID();
             item.saleOrderId = saleOrder.id;
-            item.formaPagamentoId = item.formaPagamento?.id;
-            await SaleOrderRecieve.create({...item}, {transaction})
+            await SaleOrderReceivie.create({...item}, {transaction});
+
         }
 
         await SaleOrder.create({...saleOrder}, {transaction});
@@ -59,16 +63,18 @@ export class SaleOrderService {
 
             if (!item.id) {
                 item.id = crypto.randomUUID();
+                item.saleOrderId = saleOrder.id;
                 await SaleOrderItem.create({...item}, {transaction});
             } else {
                 await SaleOrderItem.update(item, {where: {id: item.id}, transaction});
             }
-            await SaleOrderItem.destroy({where: {saleOrderId: saleOrder.id, id: {[Op.notIn]: saleOrder?.items?.filter(c => c.id != "").map(c => c.id)}}, transaction});
+            await SaleOrderItem.destroy({where: {saleOrderId: saleOrder.id, id: {[Op.notIn]: saleOrder?.items?.filter(c => c.id != '').map(c => c.id)}}, transaction});
 
-            if (_.size(item?.itemCombinations) == 0) {
-                await SaleOrderItemCombination.destroy({where: {saleOrderItemId: item.id}, transaction});
-            }
+            //if (_.size(item?.itemCombinations) == 0) {
+            //    await SaleOrderItemCombination.destroy({where: {saleOrderItemId: item.id}, transaction});
+            //}
 
+            /*
             //SaleOrderItemCombination
             where['SaleOrderItemCombination'] = {saleOrderItemId: item.id};
             for (let combination of item?.itemCombinations || []) {
@@ -102,22 +108,22 @@ export class SaleOrderService {
                 await SaleOrderItemCombinationItem.destroy({where: where['PedidoVendaItemCombinacaoItem'], transaction});
             }
             //PedidoVendaItemCombinacao.PedidoVendaItemCombinacaoItem
-
+            */
         }
 
-        for (let item of saleOrder?.recievies || []) {
+        for (let receivie of saleOrder?.receivies || []) {
 
-            item.saleOrderId = saleOrder.id;
+            receivie.saleOrderId = saleOrder.id;
           
-            if (!item.id) {
-                item.id = crypto.randomUUID();
-                SaleOrderRecieve.create({...item}, {transaction});
+            if (!receivie.id) {
+                receivie.id = crypto.randomUUID();
+                await SaleOrderReceivie.create({...receivie}, {transaction});
             } else {
-                SaleOrderRecieve.update(item, {where: {id: item.id}, transaction});
+                await SaleOrderReceivie.update(receivie, {where: {id: receivie.id}, transaction});
             }
-            SaleOrderRecieve.destroy({where: {pedidoVendaId: saleOrder.id, id: {[Op.notIn]: saleOrder?.recievies?.filter(c => c.id != "").map(c => c.id)}}, transaction})
+            await SaleOrderReceivie.destroy({where: {saleOrderId: saleOrder.id, id: {[Op.notIn]: saleOrder?.receivies?.filter(c => c.id != '').map(c => c.id)}}, transaction})
         }
-
+       
         await SaleOrder.update(saleOrder, {where: {id: saleOrder.id}, transaction});
 
     }
@@ -126,13 +132,15 @@ export class SaleOrderService {
     public static Progress = async (id: string, statusId: string, transaction: Transaction) => {
 
         const saleOrder = await SaleOrder.findOne({
-            attributes: ["statusId"],
-            include: [{model: SaleOrderStatus, attributes: ["descricao"]}],
+            attributes: ['statusId'],
+            include: [
+                {model: SaleOrderStatus, attributes: ['description']}
+            ],
             where: {id},
             transaction
         });
 
-        const saleOrderStatus = await SaleOrderStatus.findOne({attributes: ["descricao"], where: {id: statusId}, transaction})
+        const saleOrderStatus = await SaleOrderStatus.findOne({attributes: ['description'], where: {id: statusId}, transaction})
 
         const saleOrderStatusByFrom = await SaleOrderStatusByFrom.findOne({
             where: {statusById: saleOrder?.statusId, statusFromId: statusId},

@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType, BelongsTo } from "sequelize-typescript";
+import { Model, Table, Column, DataType, BelongsTo, ForeignKey } from "sequelize-typescript";
 import { Partner } from "./partner.model";
 import { PaymentForm } from "./paymentForm.model";
 import { BankAccount } from "./bankAccount.model";
@@ -22,8 +22,8 @@ export class Payment extends Model {
   @Column({type: DataType.STRING, field: "status"})
   status?: "pending" | "open" | "shipping" | "send" | "paid";
 
-  @Column({type: DataType.UUID, field: "recebedorId"})
-  recebedorId?: string;
+  @Column({type: DataType.UUID, field: "receiverId"})
+  receiverId?: string;
 
   @Column({type: DataType.STRING(100), field: "beneficiaryNotice"})
   beneficiaryNotice?: string;
@@ -52,13 +52,14 @@ export class Payment extends Model {
   @Column({type: DataType.JSONB, field: "data"})
   data?: any;
 
-  @BelongsTo(() => Company, 'companyId')
-  company?: Company | null;
+  @BelongsTo(() => Company, {as: 'company', foreignKey: 'companyId'})
+  company?: Company;
 
-  @BelongsTo(() => Partner, 'recebedorId')
-  recebedor?: Partner;
 
-  @BelongsTo(() => PaymentForm, 'paymentFormId')
+  @BelongsTo(() => Partner, {as: 'receiver', foreignKey: 'receiverId'})
+  receiver?: Partner;
+
+  @BelongsTo(() => PaymentForm, {as: 'paymentForm', foreignKey: 'paymentFormId'})
   paymentForm?: PaymentForm;
 
   @BelongsTo(() => BankAccount, 'bankAccountId')

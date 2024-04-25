@@ -10,8 +10,8 @@ class CustomerRoutes {
   }
 
   intializeRoutes() {
-    this.router.post("/findAll", (req, res) => this.controller.findAll(req, res, "isCustomer"));
-    this.router.post("/findOne", (req, res) => this.controller.findOne(req, res, "isCustomer"));
+    this.router.post("/findAll", (req, res) => this.controller.findAll(req, res, "isCostumer"));
+    this.router.post("/findOne", (req, res) => this.controller.findOne(req, res, "isCostumer"));
     this.router.post("/save", (req, res) => this.controller.save(req, res));
     //this.router.post("/delete", (req, res) => this.controller.delete(req, res));
   }

@@ -13,7 +13,7 @@ import { Company } from "./models/company.model";
 import { Payment } from "./models/payment.model";
 import { SaleOrderItem } from "./models/saleOrderItem.model";
 import { Municipio } from "./models/municipio.model";
-import { SaleOrderRecieve } from "./models/saleOrderRecieve.model";
+import { SaleOrderReceivie } from "./models/saleOrderReceivie.model";
 import { SaleOrderStatus } from "./models/saleOrderStatus.model";
 import { SaleOrderProgress } from "./models/saleOrderProgress.model";
 import { SaleOrderShippingType } from "./models/saleOrderShippingType.model";
@@ -48,6 +48,8 @@ import { FreightQuote } from "./models/freightQuote.model";
 import { State } from "./models/state.model";
 import { FreightCalculationRecipient } from "./models/freightCalculationRecipient.model";
 import { SaleOrderNfe } from "./models/saleOrderNfe.model";
+import { ProductSupplier } from "./models/productSupplier.model";
+import { ReceivieForm } from "./models/ReceivieForm.model";
 
 
 export { Payment } from "./models/payment.model";
@@ -63,7 +65,7 @@ export { Service } from "./models/service.model";
 export { Company } from "./models/company.model";
 export { User } from "./models/user.model";
 export { Municipio } from "./models/municipio.model";
-export { SaleOrderRecieve } from "./models/saleOrderRecieve.model";
+export { SaleOrderReceivie } from "./models/saleOrderReceivie.model";
 export { SaleOrderStatus } from "./models/saleOrderStatus.model";
 export { SaleOrderProgress } from "./models/saleOrderProgress.model";
 export { SaleOrderShippingType } from "./models/saleOrderShippingType.model";
@@ -97,6 +99,8 @@ export { FreightQuote } from "./models/freightQuote.model";
 export { State } from "./models/state.model";
 export { FreightCalculationRecipient } from "./models/freightCalculationRecipient.model";
 export { SaleOrderNfe } from "./models/saleOrderNfe.model";
+export { ProductSupplier } from "./models/productSupplier.model";
+export { ReceivieForm } from "./models/ReceivieForm.model";
 
 
 export default class Sequelize {
@@ -112,7 +116,7 @@ export default class Sequelize {
 
       define: {timestamps: false},
       
-      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Called, CalledOccurrence, CalledTask, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, SaleOrderShippingType, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderNfe, SaleOrderRecieve, Company, Partner, PartnerContact, PartnerAddress, Product, ProductCategory, ProductCombinationGroup, ProductCombination, ProductCombinationItem, SaleOrderItemCombination, SaleOrderItemCombinationItem, Service, ShippingOrder, State, Task, User, TabelaPreco, Municipio, Nfe, MesoRegion, FreightCalculation, FreightCalculationRecipient, FreightCalculationType, FreightCalculationWeight, FreightQuote],
+      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Called, CalledOccurrence, CalledTask, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, SaleOrderShippingType, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderNfe, SaleOrderReceivie, Company, Partner, PartnerContact, PartnerAddress, Product, ProductCategory, ProductCombinationGroup, ProductCombination, ProductSupplier, ReceivieForm, ProductCombinationItem, SaleOrderItemCombination, SaleOrderItemCombinationItem, Service, ShippingOrder, State, Task, User, TabelaPreco, Municipio, Nfe, MesoRegion, FreightCalculation, FreightCalculationRecipient, FreightCalculationType, FreightCalculationWeight, FreightQuote],
       pool: {
         max: 5,
         min: 0,

@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType, HasMany } from "sequelize-typescript";
+import { Model, Table, Column, DataType, HasMany, ForeignKey } from "sequelize-typescript";
 import { BankAccount } from "./bankAccount.model";
 
 @Table({tableName: "bank"})
@@ -10,7 +10,7 @@ export class Bank extends Model {
   @Column({type: DataType.STRING(100), field: "description"})
   description?: string;
 
-  @HasMany(() => BankAccount, 'bankId')
+  @HasMany(() => BankAccount, {as: 'banks', foreignKey: 'bankId'})
   banks?: BankAccount[];
 
 }

@@ -16,7 +16,7 @@ ALTER TABLE "user" ADD COLUMN IF NOT EXISTS "name" VARCHAR(80);
 --partner
 CREATE TABLE IF NOT EXISTS "partner"();
 ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isCustomer" BOOLEAN;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isCostumer" BOOLEAN;
 ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isSupplier" BOOLEAN;
 ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isShippingCompany" BOOLEAN;
 ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isEmployee" BOOLEAN;
@@ -77,7 +77,7 @@ ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "name" VARCHAR(100);
 ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
 ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "categoryId" UUID;
 ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "isCombination" BOOLEAN;
-ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "value" DECIMAL(10, 2);
+ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "value" DECIMAL(18, 2);
 
 --productCategory
 CREATE TABLE IF NOT EXISTS "productCategory"();
@@ -110,6 +110,12 @@ ALTER TABLE "productCombination" ADD COLUMN IF NOT EXISTS "combinacaoId" UUID;
 ALTER TABLE "productCombination" ADD COLUMN IF NOT EXISTS "isObrigatorio" BOOLEAN;
 ALTER TABLE "productCombination" ADD COLUMN IF NOT EXISTS "minimo" INTEGER;
 ALTER TABLE "productCombination" ADD COLUMN IF NOT EXISTS "maximo" INTEGER;
+
+--productSupplier
+CREATE TABLE IF NOT EXISTS "productSupplier"();
+ALTER TABLE "productSupplier" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "productSupplier" ADD COLUMN IF NOT EXISTS "productId" UUID;
+ALTER TABLE "productSupplier" ADD COLUMN IF NOT EXISTS "supplierId" UUID;
 
 --service
 CREATE TABLE IF NOT EXISTS "service"();
@@ -167,9 +173,10 @@ ALTER TABLE "saleOrderProgress" ADD COLUMN IF NOT EXISTS "statusId" UUID;
 CREATE TABLE IF NOT EXISTS "saleOrderItem"();
 ALTER TABLE "saleOrderItem" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "saleOrderItem" ADD COLUMN IF NOT EXISTS "saleOrderId" UUID;
-ALTER TABLE "saleOrderItem" ADD COLUMN IF NOT EXISTS "produtoId" UUID;
-ALTER TABLE "saleOrderItem" ADD COLUMN IF NOT EXISTS "quantidade" DECIMAL(10, 3);
-ALTER TABLE "saleOrderItem" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
+ALTER TABLE "saleOrderItem" ADD COLUMN IF NOT EXISTS "productId" UUID;
+ALTER TABLE "saleOrderItem" ADD COLUMN IF NOT EXISTS "quantity" DECIMAL(18, 3);
+ALTER TABLE "saleOrderItem" ADD COLUMN IF NOT EXISTS "value" DECIMAL(18, 2);
+ALTER TABLE "saleOrderItem" ADD COLUMN IF NOT EXISTS "discount" DECIMAL(18, 2);
 
 --saleOrderItemCombination
 CREATE TABLE IF NOT EXISTS "saleOrderItemCombination"();
@@ -182,7 +189,7 @@ CREATE TABLE IF NOT EXISTS "saleOrderItemCombinationItem"();
 ALTER TABLE "saleOrderItemCombinationItem" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "saleOrderItemCombinationItem" ADD COLUMN IF NOT EXISTS "saleOrderItemCombinationId" UUID;
 ALTER TABLE "saleOrderItemCombinationItem" ADD COLUMN IF NOT EXISTS "itemCombinationId" UUID;
-ALTER TABLE "saleOrderItemCombinationItem" ADD COLUMN IF NOT EXISTS "quantidade" DECIMAL(10, 3);
+ALTER TABLE "saleOrderItemCombinationItem" ADD COLUMN IF NOT EXISTS "quantity" DECIMAL(18, 3);
 
 --saleOrderNfe
 CREATE TABLE IF NOT EXISTS "saleOrderNfe"();
@@ -190,13 +197,13 @@ ALTER TABLE "saleOrderNfe" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random
 ALTER TABLE "saleOrderNfe" ADD COLUMN IF NOT EXISTS "saleOrderId" UUID;
 ALTER TABLE "saleOrderNfe" ADD COLUMN IF NOT EXISTS "nfeId" UUID;
 
---saleOrderRecieve
-CREATE TABLE IF NOT EXISTS "saleOrderRecieve"();
-ALTER TABLE "saleOrderRecieve" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "saleOrderRecieve" ADD COLUMN IF NOT EXISTS "pedidoVendaId" UUID;
-ALTER TABLE "saleOrderRecieve" ADD COLUMN IF NOT EXISTS "formaPagamentoId" UUID;
-ALTER TABLE "saleOrderRecieve" ADD COLUMN IF NOT EXISTS "vencimento" DATE;
-ALTER TABLE "saleOrderRecieve" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
+--saleOrderReceivie
+CREATE TABLE IF NOT EXISTS "saleOrderReceivie"();
+ALTER TABLE "saleOrderReceivie" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "saleOrderReceivie" ADD COLUMN IF NOT EXISTS "saleOrderId" UUID;
+ALTER TABLE "saleOrderReceivie" ADD COLUMN IF NOT EXISTS "receivieFormId" UUID;
+ALTER TABLE "saleOrderReceivie" ADD COLUMN IF NOT EXISTS "dueDate" DATE;
+ALTER TABLE "saleOrderReceivie" ADD COLUMN IF NOT EXISTS "value" DECIMAL(18, 2);
 
 --pedidoVendaDeliveryRoute
 CREATE TABLE IF NOT EXISTS "pedidoVendaDeliveryRoute"();
@@ -267,7 +274,7 @@ ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "companyId" UUID;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "number" VARCHAR(30);
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "numeroDocumento" VARCHAR(100);
-ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "recebedorId" UUID;
+ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "receiverId" UUID;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "beneficiaryNotice" VARCHAR(100);
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "emissao" DATE;
 ALTER TABLE "payment" ADD COLUMN IF NOT EXISTS "vencimento" DATE;
@@ -307,6 +314,12 @@ ALTER TABLE "nfe" ADD COLUMN IF NOT EXISTS "protNFe" JSON;
 --shippingOrder
 CREATE TABLE IF NOT EXISTS "shippingOrder"();
 ALTER TABLE "shippingOrder" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+
+--receivieForm
+CREATE TABLE IF NOT EXISTS "receivieForm"();
+ALTER TABLE "receivieForm" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "receivieForm" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
+ALTER TABLE "receivieForm" ADD COLUMN IF NOT EXISTS "type" VARCHAR(20);
 
 --paymentForm
 CREATE TABLE IF NOT EXISTS "paymentForm"();

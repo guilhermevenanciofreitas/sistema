@@ -9,8 +9,8 @@ export class Partner extends Model {
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
   id?: string;
 
-  @Column({type: DataType.BOOLEAN, field: 'isCustomer'})
-  isCustomer?: boolean;
+  @Column({type: DataType.BOOLEAN, field: 'isCostumer'})
+  isCostumer?: boolean;
 
   @Column({type: DataType.BOOLEAN, field: 'isSupplier'})
   isSupplier?: boolean;

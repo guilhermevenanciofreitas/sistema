@@ -30,7 +30,7 @@ export default class Orders extends OrdersBase {
         { selector: (row: any) => row.costumer?.surname, sort: 'surname', name: 'Nome', sortable: true },
         { selector: (row: any) => row.seller?.surname, sort: 'surname', name: 'Vendedor', sortable: true, maxWidth:"300px" },
         { selector: (row: any) => row.status?.description || 'PENDENTE', sort: '$status.descricao', name: 'Status', sortable: true },
-        { selector: (row: any) => parseFloat(row.valor).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}), sort: 'valor', name: 'Valor', right: true, sortable: true, maxWidth:"120px" },
+        { selector: (row: any) => parseFloat(row.value).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}), sort: 'value', name: 'Valor', right: true, sortable: true, maxWidth:"120px" },
     ];
 
     render(): React.ReactNode {

@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType, BelongsTo } from "sequelize-typescript";
+import { Model, Table, Column, DataType, BelongsTo, ForeignKey } from "sequelize-typescript";
 import { Bank } from "./bank.model";
 
 @Table({tableName: "bankAccount"})
@@ -25,7 +25,7 @@ export class BankAccount extends Model {
   @Column({type: DataType.DECIMAL(18, 2), field: "balance"})
   balance?: string;
 
-  @BelongsTo(() => Bank, 'bankId')
+  @BelongsTo(() => Bank, {as: 'bank', foreignKey: 'bankId'})
   bank?: Bank;
 
 }

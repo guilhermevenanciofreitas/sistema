@@ -14,21 +14,21 @@ export class ViewOrderBase extends ViewModal<Readonly<{Title: string}>> {
         costumer: null,
         company: null,
         seller: null,
-        tipoEntrega: null,
         status: null,
         createdAt: '',
 
-        saleOrderItems: [],
-        pagamentos: [],
+        items: [],
+        receivies: [],
 
-        entregador: null,
-        entrega: {
-            cep: "",
-            logradouro: "",
-            numero: "",
-            complemento: "",
-            estadoId: "",
-            bairro: "",
+        shippingType: null,
+        shippingCompany: null,
+        shippingAddress: {
+            cep: '',
+            logradouro: '',
+            numero: '',
+            complemento: '',
+            estadoId: '',
+            bairro: '',
             municipio: null,
         },
     }
@@ -80,14 +80,41 @@ export class ViewOrderBase extends ViewModal<Readonly<{Title: string}>> {
 
             Loading.Show();
 
+            let items = [];
+            let receivies = [];
+
+            for (const saleOrderItem of this.state.items || []) {
+                items.push({
+                    id: _.get(saleOrderItem, 'id') || null,
+                    productId: _.get(saleOrderItem, 'product.id') || null,
+                    quantity: _.get(saleOrderItem, 'quantity') || null,
+                    value: _.get(saleOrderItem, 'value') || null,
+                    discount: _.get(saleOrderItem, 'discount') || null,
+                });
+            }
+
+            for (const receivie of this.state.receivies || []) {
+                receivies.push({
+                    id: _.get(receivie, 'id') || null,
+                    receivieFormId: _.get(receivie, 'receivieForm.id') || null,
+                    dueDate: _.get(receivie, 'dueDate') || null,
+                    value: _.get(receivie, 'value') || null,
+                });
+            }
+
             const request = {
                 id: _.get(this.state, 'id') || null,
                 number: _.get(this.state, 'number') || null,
                 costumerId: _.get(this.state.costumer, 'id') || null,
                 companyId: _.get(this.state.company, 'id') || null,
                 sellerId: _.get(this.state.seller, 'id') || null,
-                entregadorId: _.get(this.state.entregador, 'id') || null,
-                value: _.sum(this.state.saleOrderItems.map((c: any) => parseFloat(c.value || '0'))) || null,
+              
+                items,
+                receivies,
+
+                shippingTypeId: _.get(this.state.shippingType, 'id') || null,
+                shippingCompanyId: _.get(this.state.shippingCompany, 'id') || null,
+                shippingAddress: _.get(this.state, 'shippingAddress') || null,
             }
 
             let r = await Service.Post("sales/order/save", request);
@@ -113,18 +140,30 @@ export class ViewOrderBase extends ViewModal<Readonly<{Title: string}>> {
     private Limpar = () =>
     {
         this.setState({
-            id: "",
-            number: "",
+            id: '',
+            number: '',
+            value: '0.00',
             costumer: null,
             company: null,
             seller: null,
+            
             status: null,
-            tipoEntrega: null,
             createdAt: '',
-            itens: [],
-            pagamentos: [],
-            entregador: null,
-            entrega: {},
+
+            items: [],
+            receivies: [],
+
+            shippingType: null,
+            shippingCompany: null,
+            shippingAddress: {
+                cep: '',
+                logradouro: '',
+                numero: '',
+                complemento: '',
+                estadoId: '',
+                bairro: '',
+                municipio: null,
+            },
         });
     }
 

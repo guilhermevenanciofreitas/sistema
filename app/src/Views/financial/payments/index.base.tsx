@@ -64,7 +64,7 @@ export default class BaseContasPagar extends BaseIndex {
 
             const r = await this.OpenPayment(id);
 
-            if (r) this.Pesquisar(this.state.request);
+            if (r) await this.Pesquisar(this.state.request);
        
         } 
         catch (err: any) 
@@ -80,7 +80,7 @@ export default class BaseContasPagar extends BaseIndex {
 
             const r = await this.ViewPayment.current?.Show(undefined);
 
-            if (r) this.Pesquisar(this.state.request);
+            if (r) await this.Pesquisar(this.state.request);
             
         }
         catch (err: any) 
@@ -123,7 +123,7 @@ export default class BaseContasPagar extends BaseIndex {
 
             if (data === null) return;
 
-            this.setState((state: any) => ({Data: {...state.Data, offset: 1}}),
+            this.setState({request: {...this.state.request, offset: 1}},
                 async () => await this.Pesquisar(this.state.request)
             );
     
@@ -142,7 +142,7 @@ export default class BaseContasPagar extends BaseIndex {
 
             if (filter === null) return;
 
-            this.setState((state: any) => ({Data: {...state.Data, offset: 1, filter}}),
+            this.setState({request: {...this.state.request, offset: 1, filter}},
                 async () => await this.Pesquisar(this.state.request)
             );
     

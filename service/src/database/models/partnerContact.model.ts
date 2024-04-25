@@ -1,4 +1,5 @@
-import { Model, Table, Column, DataType } from "sequelize-typescript";
+import { Model, Table, Column, DataType, BelongsTo } from "sequelize-typescript";
+import { Partner } from "./partner.model";
 
 @Table({tableName: "partnerContact"})
 export class PartnerContact extends Model {
@@ -17,5 +18,9 @@ export class PartnerContact extends Model {
 
   @Column({type: DataType.STRING(30), field: "email"})
   email?: string;
+
+  
+  @BelongsTo(() => Partner, {as: 'partner', foreignKey: 'partnerId'})
+  partner?: Partner;
 
 }

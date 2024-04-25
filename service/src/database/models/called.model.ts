@@ -33,12 +33,11 @@ export class Called extends Model {
   @Column({type: DataType.STRING(200), field: "subject"})
   subject?: string;
 
-
   @Column({type: DataType.STRING(15), field: "status"})
   status?: 'open' | 'late' | 'closed';
 
 
-  @BelongsTo(() => Company, 'companyId')
+  @BelongsTo(() => Company, {as: 'company', foreignKey: 'companyId'})
   company?: Company;
 
   @BelongsTo(() => Partner, {as: 'partner', foreignKey: 'partnerId'})

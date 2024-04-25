@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Payment, Partner, PaymentForm, BankAccount, Company } from "../../database";
-import {Op} from "sequelize";
+import { Payment, Partner, PaymentForm, BankAccount } from "../../database";
 import { Bank } from "../../database/models/bank.model";
 import { BankAccountService } from "../../services/financial/bankAccount.service";
 import { Error } from "../../errors";
@@ -15,20 +14,20 @@ export default class BankAccountController {
 
                 const transaction = await sequelize.transaction();
 
-                const bankAccounts = await BankAccount.findAll({attributes: ["id", "agency", "agencyDigit", "account", "accountDigit", "balance"],
+                const bankAccounts = await BankAccount.findAll({attributes: ['id', 'agency', 'agencyDigit', 'account', 'accountDigit', 'balance'],
                     include: [
-                        {model: Bank, attributes: ["id", "description", "logo"]},
+                        {model: Bank, attributes: ['id', 'description', 'logo']},
                     ],
-                    order: [["id", "asc"]],
+                    order: [['id', 'asc']],
                     transaction
                 });
 
                 const payments = await Payment.findAll({
-                    attributes: ["id", "vencimento", "valor"],
+                    attributes: ['id', 'dueDate', 'value'],
                     include: [
-                        {model: PaymentForm, attributes: ["id", "description"]},
-                        {model: Partner, attributes: ["id", "nome"]},
-                        {model: BankAccount, attributes: ["id"]},
+                        {model: PaymentForm, attributes: ['id', 'description']},
+                        {model: Partner, attributes: ['id', 'surname']},
+                        {model: BankAccount, attributes: ['id']},
                     ],
                     where: {status: 'open'},
                     transaction
@@ -55,8 +54,8 @@ export default class BankAccountController {
                 const transaction = await sequelize.transaction();
 
                 const contaPagar = await BankAccount.findOne({
-                    attributes: ["id", "agency", "agencyDigit", "account", "accountDigit"],
-                    include: [{model: Bank, attributes: ["id", "description"]}],
+                    attributes: ['id', 'agency', 'agencyDigit', 'account', 'accountDigit'],
+                    include: [{model: Bank, attributes: ['id', 'description']}],
                     where: {id: req.body.id}, transaction});
     
                 sequelize.close();
@@ -95,8 +94,6 @@ export default class BankAccountController {
             res.status(401).json(err);
         });
     }
-
-
 
     async save(req: Request, res: Response) {
         

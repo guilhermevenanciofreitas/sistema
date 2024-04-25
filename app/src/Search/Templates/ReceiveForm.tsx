@@ -1,7 +1,7 @@
 import React from 'react';
 import { ResultContext } from '../../Utils/Controls/Form/AutoComplete/base';
 
-export class SaleOrderShippingTypeTemplate extends React.Component {
+export class ReceiveFormTemplate extends React.Component {
 
     render() {
         return (
