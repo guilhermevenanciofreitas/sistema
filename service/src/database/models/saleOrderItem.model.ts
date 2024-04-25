@@ -18,12 +18,12 @@ export class SaleOrderItem extends Model {
   quantidade?: number;
 
   @Column({type: DataType.DECIMAL(10, 2), field: "valor"})
-  valor?: number;
+  value?: number;
 
   @BelongsTo(() => Product, 'produtoId')
-  produto?: Product;
+  product?: Product;
 
   @HasMany(() => SaleOrderItemCombination, 'saleOrderItemId')
-  itemCombinacoes?: SaleOrderItemCombination[];
+  itemCombinations?: SaleOrderItemCombination[];
 
 }

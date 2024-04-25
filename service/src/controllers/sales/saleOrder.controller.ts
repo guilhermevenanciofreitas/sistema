@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { PaymentForm, Partner, SaleOrder, Product, SaleOrderRecieve, SaleOrderStatus, PedidoVendaTipoEntrega, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem } from "../../database";
+import { PaymentForm, Partner, SaleOrder, Product, SaleOrderRecieve, SaleOrderStatus, SaleOrderShippingType, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProductCombination, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem } from "../../database";
 import { SaleOrderService } from "../../services/sales/saleOrder.service";
 import { SaleOrderItem } from "../../database/models/saleOrderItem.model";
 import {Op, Sequelize} from "sequelize";
@@ -24,7 +24,7 @@ export default class SaleOrderController {
                 const statusId = req.body.statusId;
         
                 if (statusId != null) {
-                    where = [{"statusId": statusId == '' ? null : statusId}];
+                    where = [{'statusId': statusId == '' ? null : statusId}];
                 }
 
                 if (pagination.sort) {
@@ -32,19 +32,18 @@ export default class SaleOrderController {
                 }
         
                 const saleOrders = await SaleOrder.findAndCountAll({
-                    attributes: ['id', 'number', 'statusId', 'createdAt', 'valor'],
+                    attributes: ['id', 'number', 'statusId', 'createdAt', 'value'],
                     include: [
-                        {model: Partner, as: "costumer", attributes: ["id", "nome"]},
-                        {model: Company, as: "company", attributes: ["id", "nomeFantasia"]},
-                        {model: Partner, as: "seller", attributes: ["id", "nome"]},
-                        {model: SaleOrderStatus, attributes: ['id', 'descricao', 'color']}
+                        {model: Partner, as: 'costumer', attributes: ['id', 'surname']},
+                        {model: Company, as: 'company', attributes: ['id', 'surname']},
+                        {model: Partner, as: 'seller', attributes: ['id', 'surname']},
+                        {model: SaleOrderStatus, as: 'status', attributes: ['id', 'description', 'color']}
                     ],
                     where, order, limit: pagination.limit, offset: pagination.offset1, transaction});
 
-
                 var saleOrderStatus = await SaleOrderStatus.findAll({
-                    attributes: ['id', 'descricao', 'color'],
-                    include: [{model: SaleOrder, attributes: ['statusId', 'valor']}],
+                    attributes: ['id', 'description', 'color'],
+                    include: [{model: SaleOrder, attributes: ['statusId', 'value']}],
                     order: [['ordem', 'asc']],
                     transaction
                 });
@@ -56,7 +55,7 @@ export default class SaleOrderController {
                     status.push({
                         ...item.dataValues,
                         quantity: _.size(sales),
-                        ammount: _.sum(_.map(sales, (c: SaleOrder) => parseFloat(c?.valor?.toString() || "0")))
+                        ammount: _.sum(_.map(sales, (c: SaleOrder) => parseFloat(c?.value?.toString() || '0')))
                     });
                 }
 
@@ -134,15 +133,16 @@ export default class SaleOrderController {
                 const transaction = await sequelize.transaction();
 
                 const saleOrder = await SaleOrder.findOne({
-                    attributes: ['id', 'number', 'createdAt', 'entrega'], 
+                    attributes: ['id', 'number', 'createdAt', 'shippingAddress'], 
                     include: [
-                        {model: Partner, as: "costumer", attributes: ["id", "nome"]},
-                        {model: Partner, as: "seller", attributes: ["id", "nome"]},
-                        {model: Partner, as: "entregador", attributes: ["id", "nome"]},
-                        {model: SaleOrderStatus, attributes: ['id', 'descricao', 'color']},
-                        {model: PedidoVendaTipoEntrega, attributes: ["id", "descricao"]},
+                        {model: Partner, as: "costumer", attributes: ["id", "surname"]},
+                        {model: Company, as: 'company', attributes: ['id', 'surname']},
+                        {model: Partner, as: "seller", attributes: ["id", "surname"]},
+                        {model: Partner, as: "shippingCompany", attributes: ["id", "surname"]},
+                        /*{model: SaleOrderStatus, attributes: ['id', 'descricao', 'color']},
+                        {model: SaleOrderShippingType, attributes: ["id", "description"]},
                         {model: SaleOrderItem, attributes: ["id", "quantidade", "valor"], 
-                            include: [{model: Product, attributes: ["id", "nome", "descricao"],
+                            include: [{model: Product, attributes: ["id", "name", "description"],
                                 include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
                                     include: [{model: ProdutoCombinacaoGrupo, attributes: ["id", "descricao"],
                                         include: [{model: ProdutoCombinacaoItem, attributes: ["id", "nome"]}]
@@ -154,6 +154,7 @@ export default class SaleOrderController {
                             }]
                         },
                         {model: SaleOrderRecieve, attributes: ["id", "vencimento", "valor"], include: [{model: PaymentForm, attributes: ["id", "description"]}]},
+                        */
                     ],
                     where: {id: req.body.id}, transaction}
                 );
@@ -180,7 +181,7 @@ export default class SaleOrderController {
 
                 const SaleOrder = req.body as SaleOrder;
 
-                SaleOrder.valor = _.sum(SaleOrder.saleOrderItems?.map(c => parseFloat(c.valor?.toString() || "0")));
+                SaleOrder.value = _.sum(SaleOrder.items?.map(c => parseFloat(c.value?.toString() || "0")));
 
                 const valid = SaleOrderService.IsValid(SaleOrder);
 
@@ -245,13 +246,13 @@ export default class SaleOrderController {
                 const ids = req.body?.ids;
                 const entregadorId = req.body?.entregadorId;
 
-                const empresa = await Company.findOne({attributes: ["endereco"], where: {id: empresaId}, transaction});
+                const empresa = await Company.findOne({attributes: ["address"], where: {id: empresaId}, transaction});
                 
                 const pedidoVenda = await SaleOrder.findAll({attributes: ["id", "entrega"], where: {id: ids}, transaction});
 
                 let waypoints: any = pedidoVenda.map((c: any) => ({id: c.id, latitude: c.entrega.latitude, longitude: c.entrega.longitude}));
 
-                let params = empresa?.endereco.longitude + "," + empresa?.endereco.latitude + ";";
+                let params = empresa?.address.longitude + "," + empresa?.address.latitude + ";";
 
                 var waypoint_index = 1;
 

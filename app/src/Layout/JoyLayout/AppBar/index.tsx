@@ -1,6 +1,4 @@
 import Sheet from '@mui/joy/Sheet';
-import IconButton from '@mui/joy/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import { Typography } from '@mui/joy';
 import { Component, ReactNode } from 'react';
 
@@ -24,7 +22,7 @@ export default class AppBar extends Component {
       >
 
         <Typography sx={{flexGrow: 1, color: '#ffffff', marginLeft: { xs: '0px', md: 'var(--Sidebar-width)'}}}>GK Sistemas<span style={{fontSize: 10}}> v1.2.102</span></Typography>
-        <Typography sx={{color: '#ffffff'}}>{JSON.parse(localStorage.getItem("Session") || "null")?.user?.nome} | {JSON.parse(localStorage.getItem("Session") || "null")?.company?.nomeFantasia}</Typography>
+        <Typography sx={{color: '#ffffff'}}>{JSON.parse(localStorage.getItem("Session") || "null")?.user?.name} | {JSON.parse(localStorage.getItem("Session") || "null")?.company?.surname}</Typography>
         
       </Sheet>
     );

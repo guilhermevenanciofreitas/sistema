@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { AutoComplete, Button, DropDownList, DropDownListItem, GridView, Modal, TextBox, ViewModal } from "../../../../Utils/Controls";
+import { AutoComplete, Button, DropDownList, DropDownListItem, GridView, Modal, NumericBox, TextBox, ViewModal } from "../../../../Utils/Controls";
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
@@ -23,9 +23,9 @@ class ViewItem extends ViewModal {
         open: false,
         id: "",
         produto: null,
-        quantidade: "1.000",
-        desconto: "0.00",
-        valor: "0.00",
+        quantidade: null,
+        desconto: null,
+        valor: null,
         total: "0.00",
         itemCombinacoes: []
     }
@@ -86,7 +86,7 @@ class ViewItem extends ViewModal {
 
     render(): React.ReactNode {
         return (
-            <Modal Open={this.state.open} Title='Item' Width={600} Close={this.Close}>
+            <Modal Open={this.state.open} Title='Item' Width={550} Close={this.Close}>
                 
                 <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                     
@@ -166,16 +166,16 @@ class ViewItem extends ViewModal {
                     )}
 
                     <Grid md={3}>
-                        <TextBox Label='Quantidade' TextTransform='UpperCase' Text={this.state.quantidade} OnChange={(args: EventArgs) => this.setState({quantidade: args.Value})} />
+                        <NumericBox Label='Quantidade' Text={this.state.quantidade} Scale={3} OnChange={(args: EventArgs) => this.setState({quantidade: args.Value})} />
                     </Grid>
                     <Grid md={3}>
-                        <TextBox Label='Desconto' TextTransform='UpperCase' Text={this.state.desconto} OnChange={(args: EventArgs) => this.setState({quantidade: args.Value})} />
+                        <NumericBox Label='Desconto' Text={this.state.desconto} Prefix="R$ " Scale={2} OnChange={(args: EventArgs) => this.setState({desconto: args.Value})} />
                     </Grid>
                     <Grid md={3}>
-                        <TextBox Label='Valor' TextTransform='UpperCase' Text={this.state.valor} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} />
+                        <NumericBox Label='Valor' Text={this.state.valor} Prefix="R$ " Scale={2} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} />
                     </Grid>
                     <Grid md={3}>
-                        <TextBox Label='Total' TextTransform='UpperCase' Text={this.state.total} OnChange={(args: EventArgs) => this.setState({quantidade: args.Value})} />
+                        <TextBox Label='Total' Text={`R$ ${this.state.total.toString()}`} ReadOnly={true} />
                     </Grid>
 
                     <Grid md={3}>
@@ -195,14 +195,12 @@ export class Itens extends BaseDetails<Readonly<{Itens: any[], OnChange?: Functi
 
     protected BtnAdicionar_Click = async () => {
 
-
         const item: any = await this.ViewItem.current?.Show({
             id: "",
-            produto: {
-                combinacoes: []
-            },
-            quantidade: "1",
-            valor: "0.00",
+            produto: null,
+            quantidade: null,
+            desconto: null,
+            valor: null,
             itemCombinacoes: []
         });
 

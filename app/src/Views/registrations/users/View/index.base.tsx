@@ -8,7 +8,7 @@ export class ViewUsuarioBase extends ViewModal<Readonly<{Title: string}>> {
     state = {
         open: false,
         id: "",
-        nome: "",
+        name: "",
         email: "",
     }
 

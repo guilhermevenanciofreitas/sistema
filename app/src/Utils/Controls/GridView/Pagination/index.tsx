@@ -53,7 +53,6 @@ export class ControlPagination extends React.Component<Parameter> {
 
         {this.props.Type == 'Dropdown' &&
           <DropDownList SelectedValue={this.props.OffSet || 1} OnChange={(args: any) => {if(args.Value == null) return;this.props.OnPageChange(this.props.Limit, args.Value)}}>
-            {this.props.OffSet == 1 && <DropDownListItem Label={"1"} Value={1}></DropDownListItem>}
             {this.pagesArr().map((num, index) => (
               <DropDownListItem Label={(index + 1).toString()} Value={index + 1}></DropDownListItem>
             ))}

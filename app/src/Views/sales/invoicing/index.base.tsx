@@ -1,16 +1,17 @@
 import React from "react";
 import { Service } from "../../../Service";
-import { ViewProduto } from "./View/index";
+import { ViewOrderInvoicing } from "./View/index";
 import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
 import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
+import _ from "lodash";
 
-export default class BaseProdutos extends BaseIndex {
+export default class OrdersBase extends BaseIndex {
  
-    protected ViewProduto = React.createRef<ViewProduto>();
+    protected ViewOrderInvoicing = React.createRef<ViewOrderInvoicing>();
 
     protected ViewImportar = React.createRef<ViewImportar>();
     protected ViewFiltro = React.createRef<ViewFiltro>();
@@ -26,7 +27,7 @@ export default class BaseProdutos extends BaseIndex {
         },
         response: {
             rows: [],
-            count: 0
+            count: 0,
         },
     }
 
@@ -36,12 +37,6 @@ export default class BaseProdutos extends BaseIndex {
         {
 
             if (this.Finish) return;
-
-            const { id } = queryString.parse(window.location.search);
-            if (id) {
-                await this.OpenProduct(id.toString(), false);
-                history.pushState(null, '', `${window.location.origin}${window.location.pathname}`);
-            }
 
             await this.Pesquisar(this.state.request);
 
@@ -57,9 +52,9 @@ export default class BaseProdutos extends BaseIndex {
         try
         {
 
-            const r = await this.OpenProduct(id);
+            const r = await this.OpenPedidoVenda([id]);
 
-            if (r) await this.Pesquisar(this.state.request);
+            if (r) this.Pesquisar(this.state.request);
        
         } 
         catch (err: any) 
@@ -68,14 +63,14 @@ export default class BaseProdutos extends BaseIndex {
         }
     }
 
-    protected BtnNovo_Click = async (): Promise<void> =>
+    protected BtnInvoice_Click = async (): Promise<void> =>
     {
         try
         {
 
-            const r = await this.ViewProduto.current?.Show(undefined);
+            const r = await this.ViewOrderInvoicing.current?.Show(_.map(this.state.Selecteds, (c: any) => c.id));
 
-            if (r) await this.Pesquisar(this.state.request);
+            if (r) this.Pesquisar(this.state.request);
             
         }
         catch (err: any) 
@@ -148,11 +143,27 @@ export default class BaseProdutos extends BaseIndex {
         }
     }
 
+    protected CardStatus_Click = async(statusId?: string | null): Promise<void> =>
+    {
+        try
+        {
+            this.setState({request: {...this.state.request, statusId}}, 
+                async () => await this.Pesquisar(this.state.request)
+            );
+        }
+        catch (err: any) 
+        {
+            await DisplayError.Show(err);
+        }
+    }
+
     protected BtnPesquisar_Click = async(): Promise<void> =>
     {
         try
         {
-            await this.Pesquisar(this.state.request);
+            this.setState({request: {...this.state.request, statusId: null}}, 
+                async () => await this.Pesquisar(this.state.request)
+            );
         }
         catch (err: any) 
         {
@@ -165,7 +176,7 @@ export default class BaseProdutos extends BaseIndex {
         try
         {
             this.setState({request: {...this.state.request, limit, offset}},
-                async() => await this.Pesquisar(this.state.request)
+                async () => await this.Pesquisar(this.state.request)
             );
         }
         catch (err: any) 
@@ -188,18 +199,18 @@ export default class BaseProdutos extends BaseIndex {
         }
     }
 
-    private OpenProduct = async (id: string, isHitoryBack: boolean = true) =>
+    private OpenPedidoVenda = async (id: string[], isHitoryBack: boolean = true) =>
     {
-        history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewProduto.current?.Show(id);
-        if (isHitoryBack) history.back();
+       // history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
+        const r = await this.ViewOrderInvoicing.current?.Show(id);
+        //if (isHitoryBack) history.back();
         return r;
     }
 
     protected Pesquisar = async(request: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("registrations/product/findAll", request);
+        var r = await Service.Post("sales/order/findAll", request);
         this.setState({Loading: false, ...r?.data});
     }
 

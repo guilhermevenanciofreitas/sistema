@@ -10,9 +10,14 @@ class Parameters {
     Loading?: boolean;
     OnItem?: Function | any;
     OnSort?: Function | any;
-    OnSelected?: Function | any;;
+    OnSelected?: Function | any;
+    SelectedRows?: boolean; 
 }
 
 export abstract class GridViewBase extends React.Component<Parameters> {
+
+    static defaultProps = {
+        SelectedRows: true,
+    };
 
 }

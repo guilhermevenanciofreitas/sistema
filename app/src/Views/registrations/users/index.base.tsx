@@ -18,13 +18,15 @@ export default class BaseUsuarios extends BaseIndex {
     state = {
         Loading: true,
         Selecteds: [],
-        Data: {
-            rows: [],
-            count: 0,
+        request: {
             offset: 1,
             limit: 100,
             filter: undefined,
             sort: undefined
+        },
+        response: {
+            rows: [],
+            count: 0
         },
     }
 
@@ -37,10 +39,10 @@ export default class BaseUsuarios extends BaseIndex {
 
             const { id } = queryString.parse(window.location.search);
             if (id) {
-                await this.OpenUsuario(id.toString());
+                await this.OpenUser(id.toString());
             }
 
-            await this.Pesquisar(this.state.Data);
+            await this.Pesquisar(this.state.request);
 
             this.componentDidMountFinish();
 
@@ -54,9 +56,9 @@ export default class BaseUsuarios extends BaseIndex {
         try
         {
 
-            const r = await this.OpenUsuario(id);
+            const r = await this.OpenUser(id);
 
-            if (r) this.Pesquisar(this.state.Data);
+            if (r) await this.Pesquisar(this.state.request);
        
         } 
         catch (err: any) 
@@ -72,7 +74,7 @@ export default class BaseUsuarios extends BaseIndex {
 
             const r = await this.ViewUsuario.current?.Show(undefined);
 
-            if (r) this.Pesquisar(this.state.Data);
+            if (r) await this.Pesquisar(this.state.request);
             
         }
         catch (err: any) 
@@ -111,12 +113,12 @@ export default class BaseUsuarios extends BaseIndex {
     {
         try
         {
-            const data = await this.ViewImportar.current?.Show(this.state.Data.filter);
+            const data = await this.ViewImportar.current?.Show(this.state.request.filter);
 
             if (data === null) return;
 
-            this.setState((state: any) => ({Data: {...state.Data, offset: 1}}),
-                () => this.Pesquisar(this.state.Data)
+            this.setState({request: {...this.state.request, offset: 1}},
+                async () => await this.Pesquisar(this.state.request)
             );
     
         }
@@ -130,12 +132,12 @@ export default class BaseUsuarios extends BaseIndex {
     {
         try
         {
-            const filter = await this.ViewFiltro.current?.Show(this.state.Data.filter);
+            const filter = await this.ViewFiltro.current?.Show(this.state.request.filter);
 
             if (filter === null) return;
 
-            this.setState((state: any) => ({Data: {...state.Data, offset: 1, filter}}),
-                () => this.Pesquisar(this.state.Data)
+            this.setState({request: {...this.state.request, offset: 1, filter}},
+                async () => await this.Pesquisar(this.state.request)
             );
     
         }
@@ -149,7 +151,7 @@ export default class BaseUsuarios extends BaseIndex {
     {
         try
         {
-            await this.Pesquisar(this.state.Data);
+            await this.Pesquisar(this.state.request);
         }
         catch (err: any) 
         {
@@ -161,8 +163,8 @@ export default class BaseUsuarios extends BaseIndex {
     {
         try
         {
-            this.setState((state: any) => ({Data: {...state.Data, limit, offset}}),
-                () => this.Pesquisar(this.state.Data)
+            this.setState({request: {...this.state.request, limit, offset}},
+                async () => await this.Pesquisar(this.state.request)
             );
         }
         catch (err: any) 
@@ -175,8 +177,8 @@ export default class BaseUsuarios extends BaseIndex {
     {
         try
         {
-            this.setState((state: any) => ({Data: {...state.Data, sort}}),
-                () => this.Pesquisar(this.state.Data)
+            this.setState({request: {...this.state.request, sort}},
+                async () => await this.Pesquisar(this.state.request)
             );
         }
         catch (err: any) 
@@ -185,7 +187,7 @@ export default class BaseUsuarios extends BaseIndex {
         }
     }
 
-    private OpenUsuario = async (id: string) =>
+    private OpenUser = async (id: string) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
         const r = await this.ViewUsuario.current?.Show(id);
@@ -193,11 +195,11 @@ export default class BaseUsuarios extends BaseIndex {
         return r;
     }
 
-    protected Pesquisar = async(Data: any): Promise<void> =>
+    protected Pesquisar = async(request: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("registrations/user/findAll", Data);
-        this.setState({Loading: false, Data: r?.data});
+        var r = await Service.Post("registrations/user/findAll", request);
+        this.setState({Loading: false, ...r?.data});
     }
 
 }

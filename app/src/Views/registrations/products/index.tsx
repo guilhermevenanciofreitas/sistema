@@ -11,8 +11,8 @@ import { ViewFiltro } from "./filtro";
 
 const Columns = [
     { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
-    { selector: (row: any) => row.nome, sort: 'nome', name: 'Nome', sortable: true },
-    { selector: (row: any) => row.categoria?.descricao, sort: 'descricao', name: 'Categoria', sortable: true },
+    { selector: (row: any) => row.name, sort: 'name', name: 'Nome', sortable: true },
+    { selector: (row: any) => row.category?.description, sort: 'description', name: 'Categoria', sortable: true },
 ];
 
 export default class Products extends BaseProdutos {
@@ -22,7 +22,7 @@ export default class Products extends BaseProdutos {
         return (
             <>
 
-                <ViewProduto ref={this.ViewProduto} Title="Produto" />
+                <ViewProduto ref={this.ViewProduto} Title='Produto' />
 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
@@ -59,11 +59,11 @@ export default class Products extends BaseProdutos {
                         Loading={this.state.Loading}
 
                         Columns={Columns}
-                        Rows={this.state.Data.rows}
+                        Rows={this.state.response.rows}
+                        Count={this.state.response.count}
 
-                        Count={this.state.Data.count}
-                        Limit={this.state.Data.limit}
-                        OffSet={this.state.Data.offset}
+                        Limit={this.state.request.limit}
+                        OffSet={this.state.request.offset}
 
                         Records={[10, 50, 100, 500]}
 

@@ -8,15 +8,17 @@ export class ViewOrderBase extends ViewModal<Readonly<{Title: string}>> {
 
     state = {
         open: false,
-        id: "",
-        number: "",
+        id: '',
+        number: '',
+        value: '0.00',
         costumer: null,
         company: null,
         seller: null,
         tipoEntrega: null,
         status: null,
         createdAt: '',
-        itens: [],
+
+        saleOrderItems: [],
         pagamentos: [],
 
         entregador: null,
@@ -79,11 +81,13 @@ export class ViewOrderBase extends ViewModal<Readonly<{Title: string}>> {
             Loading.Show();
 
             const request = {
-                ...this.state,
+                id: _.get(this.state, 'id') || null,
+                number: _.get(this.state, 'number') || null,
                 costumerId: _.get(this.state.costumer, 'id') || null,
                 companyId: _.get(this.state.company, 'id') || null,
                 sellerId: _.get(this.state.seller, 'id') || null,
                 entregadorId: _.get(this.state.entregador, 'id') || null,
+                value: _.sum(this.state.saleOrderItems.map((c: any) => parseFloat(c.value || '0'))) || null,
             }
 
             let r = await Service.Post("sales/order/save", request);

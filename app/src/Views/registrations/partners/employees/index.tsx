@@ -1,12 +1,12 @@
 import React from 'react';
-import Parceiros from '..';
-import { ViewParceiro } from '../View';
+import Partners from '..';
+import { ViewPartner } from '../View';
 
 export default class Funcionarios extends React.Component {
 
     render(): React.ReactNode {
         return (
-            <Parceiros Title='Funcionários' Tipo='employee' ViewParceiro={<ViewParceiro Title='Funcionário' Tipo='employee' />} />
+            <Partners Title='Funcionários' Type='employee' ViewPartner={<ViewPartner Title='Funcionário' Type='employee' />} />
         );
     }
 

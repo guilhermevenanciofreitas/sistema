@@ -21,16 +21,16 @@ export default class LoginController {
 
       const accountTransaction = await sequelize?.transaction();
 
-      const userAuth: any = await User1.findOne({attributes: ["id", "email", "password"], where: {email: req.body.email, password: req.body.password}, transaction: accountTransaction});
+      const userAuth: any = await User1.findOne({attributes: ['id', 'email', 'password'], where: {email: req.body.email, password: req.body.password}, transaction: accountTransaction});
 
       if (userAuth == null) {
-        res.status(203).json({message: "E-mail/senha incorreto!"});
+        res.status(203).json({message: 'E-mail/senha incorreto!'});
         return;
       }
 
       if (accountId == "") {
   
-        const accountsUsers = await AccountUser.findAll({attributes: ["accountId"], include: [{attributes: ["id", "name"], model: Account}], where: {userId: userAuth?.id}, transaction: accountTransaction});
+        const accountsUsers = await AccountUser.findAll({attributes: ['accountId'], include: [{attributes: ['id', 'name'], model: Account}], where: {userId: userAuth?.id}, transaction: accountTransaction});
       
         if (accountsUsers.length > 1) {
           let accounts = [];
@@ -45,7 +45,7 @@ export default class LoginController {
         
       }
 
-      const account: any = await Account.findOne({include: [{attributes: ["host", "username", "password", "database"], model: Database}], where: {id: accountId}, transaction: accountTransaction});
+      const account: any = await Account.findOne({include: [{attributes: ['host', 'username', 'password', 'database'], model: Database}], where: {id: accountId}, transaction: accountTransaction});
 
       const transaction = await new Sequelize({
         host: account?.Database?.host,
@@ -56,7 +56,7 @@ export default class LoginController {
 
       if (companyId == "") {
 
-        const empresas = await Company.findAll({attributes: ["id", "nomeFantasia"], transaction: transaction});
+        const empresas = await Company.findAll({attributes: ['id', 'name', 'surname'], transaction: transaction});
 
         if (empresas.length > 1) {
           res.status(202).json(empresas);
@@ -70,8 +70,8 @@ export default class LoginController {
       const session = await Session.create({id: crypto.randomUUID(), userId: userAuth?.id, accountId: accountId, companyId: companyId, lastAcess: new Date()}, {transaction: accountTransaction});
       accountTransaction?.commit();
       
-      const user = await User2.findOne({attributes: ["id", "nome"], where: {id: userAuth?.id}, transaction: transaction});
-      const company = await Company.findOne({attributes: ["id", "nomeFantasia"], where: {id: companyId}, transaction: transaction});
+      const user = await User2.findOne({attributes: ['id', 'name'], where: {id: userAuth?.id}, transaction: transaction});
+      const company = await Company.findOne({attributes: ['id', 'surname'], where: {id: companyId}, transaction: transaction});
       
       sequelize?.close();
 
@@ -96,7 +96,7 @@ export default class LoginController {
 
       transaction?.commit();
 
-      res.status(200).json({message: "signout success!"});
+      res.status(200).json({message: 'signout success!'});
 
     } catch (err) {
       res.status(500).json({

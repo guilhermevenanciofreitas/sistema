@@ -12,9 +12,9 @@ export class ControlModal extends React.Component<Readonly<{children: any, Open:
                     <IconButton onClick={() => this.props.Close()} sx={{position: 'absolute', right: 8, top: 8}}><CloseIcon /></IconButton>
                     <Divider></Divider>
                     <DialogContent>
-                    <div style={{overflow: 'hidden', bottom: '10px'}}>
-                        {this.props.children}
-                    </div>
+                        <div style={{overflow: 'hidden', bottom: '10px'}}>
+                            {this.props.children}
+                        </div>
                     </DialogContent>
                 </ModalDialog>
             </Modal>

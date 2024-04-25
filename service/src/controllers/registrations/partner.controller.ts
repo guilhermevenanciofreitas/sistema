@@ -1,50 +1,61 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Partner, ParceiroContato, ParceiroEndereco, TabelaPreco } from "../../database";
-import { PartnerService } from "../../services/registrations/parceiro.service";
+import { Partner, PartnerContact, PartnerAddress, TabelaPreco } from "../../database";
+import { PartnerService } from "../../services/registrations/partner.service";
 import {Op} from "sequelize";
 
 export default class PartnerController {
 
     async findAll(req: Request, res: Response, column: string) {
 
-        Auth(req, res).then(async ({sequelize}) => {
+        Auth(req, res).then(async ({sequelize, pagination}) => {
             try
             {
 
                 const transaction = await sequelize.transaction();
 
-                const limit = req.body.limit || undefined;
-                const offset = ((req.body.offset - 1) * limit) || undefined;
-                const filter = req.body.filter || undefined;
-                const sort = req.body.sort || undefined;
-        
                 let where: any = {};
                 let order: any = [];
 
                 where = {[column]: true};
         
+                /*
                 if (filter?.cpfCnpj) {
                     where = {"cpfCnpj": {[Op.iLike]: `%${filter?.cpfCnpj.replace(' ', "%")}%`}};
                 }
 
-                if (filter?.nome) {
-                    where = {"nome": {[Op.iLike]: `%${filter?.nome.replace(' ', "%")}%`}};
+                if (filter?.name) {
+                    where = {"name": {[Op.iLike]: `%${filter?.name.replace(' ', "%")}%`}};
                 }
         
-                if (filter?.apelido) {
-                    where = {"apelido": {[Op.iLike]: `%${filter?.apelido}%`}};
+                if (filter?.surname) {
+                    where = {"surname": {[Op.iLike]: `%${filter?.surname}%`}};
+                }
+                */
+        
+                if (pagination.sort) {
+                    order = [[pagination.sort.column, pagination.sort.direction]]
                 }
         
-                if (sort) {
-                    order = [[sort.column, sort.direction]]
-                }
-        
-                const parceiros = await Partner.findAndCountAll({attributes: ["id", "cpfCnpj", "nome", "apelido"], where, order, limit, offset, transaction});
+                const partners = await Partner.findAndCountAll({
+                    attributes: ['id', 'cpfCnpj', 'name', 'surname'],
+                    where,
+                    order,
+                    limit: pagination.limit,
+                    offset: pagination.offset1,
+                    transaction
+                });
                 
                 sequelize.close();
 
-                res.status(200).json({rows: parceiros.rows, count: parceiros.count, limit, offset: req.body.offset, filter, sort});
+                res.status(200).json({
+                    request: {
+                        ...pagination
+                    },
+                    response: {
+                        rows: partners.rows, count: partners.count
+                    }
+                });
 
             }
             catch (err)
@@ -66,37 +77,37 @@ export default class PartnerController {
 
                 const where = {id: req.body.id, [column]: true};
 
-                const parceiro = await Partner.findOne({attributes: [
-                    "id",
-                    "cpfCnpj",
-                    "nome",
-                    "apelido",
-                    "isCliente",
-                    "isFornecedor",
-                    "isTransportadora",
-                    "isFuncionario",
-                    "nascimento",
-                    "sexo",
-                    "estadoCivil",
-                    "rg",
-                    "ie",
-                    "im",
-                    "escolaridade",
-                    "profissao",
-                    "isAtivo",
-                    "isBloquearVenda",
-                    "isBloquearCompra"
-                ],
-                include: [
-                    {model: TabelaPreco, attributes: ["id", "descricao"]},
-                    {model: ParceiroContato, attributes: ["id", "nome", "telefone", "email"]},
-                    {model: ParceiroEndereco, attributes: ["id", "cep", "logradouro", "numero", "complemento", "bairro"]}
-                ],
-                where,
-                transaction
+                const partner = await Partner.findOne({
+                    attributes: [
+                        'id',
+                        'cpfCnpj',
+                        'name',
+                        'surname',
+                        'isCustomer',
+                        'isSupplier',
+                        'isShippingCompany',
+                        'isEmployee',
+                        'birth',
+                        'sex',
+                        'estadoCivil',
+                        'rg',
+                        'ie',
+                        'im',
+                        'escolaridade',
+                        'profissao',
+                        'isAtivo',
+                        'isBloquearVenda',
+                        'isBloquearCompra'
+                    ],
+                    include: [
+                        {model: PartnerContact, as: 'contacts', attributes: ["id", "name", "phone", "email"]},
+                        {model: PartnerAddress, as: 'address', attributes: ["id", "cep", "logradouro", "numero", "complemento", "bairro"]}
+                    ],
+                    where,
+                    transaction
                 });
     
-                res.status(200).json(parceiro);
+                res.status(200).json(partner);
 
                 sequelize.close();
 

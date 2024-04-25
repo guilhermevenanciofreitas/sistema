@@ -13,17 +13,17 @@ const Columns = [
     { selector: (row: any) => row.maximo, name: 'Máximo' },
 ];
 
-class ViewCombinacao extends ViewModal {
+class ViewCombination extends ViewModal {
 
-    public Close = (combinacao: any) => this.setState({open: false});
+    public Close = (combination: any) => this.setState({open: false});
 
     state = {
         open: false,
-        id: "",
-        combinacao: null,
+        id: '',
+        combination: null,
         isObrigatorio: true,
-        minimo: "1",
-        maximo: "1",
+        minimo: '1',
+        maximo: '1',
     }
 
     public Show = async (item?: any): Promise<any> =>
@@ -43,7 +43,7 @@ class ViewCombinacao extends ViewModal {
                 
                 <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                     <Grid md={12}>
-                        <AutoComplete Label='Item' Pesquisa={async(Text: string) => await Search.ProdutoCombinacaoGrupo(Text)} Text={(Item: any) => `${Item.descricao}` } Value={this.state.combinacao} OnChange={(args: any) => this.setState({combinacao: args})}>
+                        <AutoComplete Label='Item' Pesquisa={async(Text: string) => await Search.ProdutoCombinacaoGrupo(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.combination} OnChange={(args: any) => this.setState({combination: args})}>
                             <ProdutoCombinacaoGrupoTemplate />
                         </AutoComplete>
                     </Grid>
@@ -66,15 +66,15 @@ class ViewCombinacao extends ViewModal {
 
 }
 
-export class Combinacao extends BaseDetails<Readonly<{Itens: any[], OnChange?: Function | any}>> {
+export class Combinations extends BaseDetails<Readonly<{combinations: any[], OnChange?: Function | any}>> {
 
-    protected ViewCombinacao = React.createRef<ViewCombinacao>();
+    protected ViewCombination = React.createRef<ViewCombination>();
 
     protected BtnAdicionar_Click = async () => {
 
-        const item: any = await this.ViewCombinacao.current?.Show({
+        const item: any = await this.ViewCombination.current?.Show({
             id: "",
-            combinacao: null,
+            combination: null,
             isObrigatorio: false,
             minimo: "1",
             maximo: "1",
@@ -82,35 +82,35 @@ export class Combinacao extends BaseDetails<Readonly<{Itens: any[], OnChange?: F
 
         if (item == null) return;
 
-        this.props.Itens.push({...item});
-        this.props.OnChange(this.props.Itens);
+        this.props.combinations.push({...item});
+        this.props.OnChange(this.props.combinations);
 
     }
 
     protected GridView_OnItem = async (args: any) =>
     {
 
-        const item = await this.ViewCombinacao.current?.Show({...args});
+        const item = await this.ViewCombination.current?.Show({...args});
         if (item == null) return;
         args.combinacao = item.combinacao;
         args.isObrigatorio = item.isObrigatorio;
         args.minimo = item.minimo;
         args.maximo = item.maximo;
-        this.props.OnChange(this.props.Itens);
+        this.props.OnChange(this.props.combinations);
        
     }
 
-    protected BtnRemover_Click = () => this.props.OnChange(this.Remover(this.props.Itens));
+    protected BtnRemover_Click = () => this.props.OnChange(this.Remover(this.props.combinations));
     
-    protected GridView_Selected = (args: any) => this.props.OnChange(this.Selected(args.selectedRows, this.props.Itens));
+    protected GridView_Selected = (args: any) => this.props.OnChange(this.Selected(args.selectedRows, this.props.combinations));
 
     render(): ReactNode {
         return (
             <>
-                <ViewCombinacao ref={this.ViewCombinacao} />
+                <ViewCombination ref={this.ViewCombination} />
                 <Button Text='Adicionar' Color='white' BackgroundColor='green' OnClick={this.BtnAdicionar_Click} />
                 {this.state.Selecteds.length >= 1 && <Button Text='Remover' Color='white' BackgroundColor='red' OnClick={this.BtnRemover_Click} />}
-                <GridView Columns={Columns} Rows={this.props.Itens} OnItem={this.GridView_OnItem} OnSelected={this.GridView_Selected} />
+                <GridView Columns={Columns} Rows={this.props.combinations} OnItem={this.GridView_OnItem} OnSelected={this.GridView_Selected} />
             </>
         )
     }

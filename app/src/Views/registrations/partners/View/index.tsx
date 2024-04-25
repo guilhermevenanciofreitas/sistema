@@ -1,16 +1,14 @@
 
-import { ViewParceiroBase } from './index.base';
+import { ViewPartnerBase } from './index.base';
 import { Button, CheckBox, Form, Modal, Tab, TabItem, TextBox, DropDownList, DropDownListItem, AutoComplete, DatePicker, GridView } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
 
-import { Search } from '../../../../Search';
-import { TabelaPrecoTemplate } from '../../../../Search/Templates/TabelaPreco';
-import { Contatos } from './contatos';
-import { Enderecos } from './enderecos';
+import { Contacts } from './contacts';
+import { Address } from './address';
 
-export class ViewParceiro extends ViewParceiroBase {
+export class ViewPartner extends ViewPartnerBase {
 
     public Close = () => this.setState({open: false});
     
@@ -20,27 +18,27 @@ export class ViewParceiro extends ViewParceiroBase {
             <Modal Open={this.state.open} Title={this.props.Title} Width={1150} Close={this.Close}>
                 <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
 
-                    <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' Enable={this.state.nome != ''} />
+                    <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' Enable={this.state.name != ''} />
                     <Button Text='Limpar' Type='Reset' Color='white' BackgroundColor='gray' />
 
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                         <Grid md={2}>
-                            <TextBox Label={this.state.tipo} TextTransform='UpperCase' Text={this.state.cpfCnpj} Mask={this.state.tipo == 'CNPJ' ? '##.###.###/####-##' : '###.###.###-#####'} OnChange={(args: EventArgs) => {
-                                this.setState({tipo: args.Value.length >= 15 ? 'CNPJ' : 'CPF', cpfCnpj: args.Value})
+                            <TextBox Label={this.state.type} TextTransform='UpperCase' Text={this.state.cpfCnpj} Mask={this.state.type == 'CNPJ' ? '##.###.###/####-##' : '###.###.###-#####'} OnChange={(args: EventArgs) => {
+                                this.setState({type: args.Value.length >= 15 ? 'CNPJ' : 'CPF', cpfCnpj: args.Value})
                             }} />
                         </Grid>
                         <Grid md={5}>
-                            <TextBox Label={this.state.tipo == 'CPF' ? 'Nome' : 'Razão social'} TextTransform='UpperCase' Text={this.state.nome} OnChange={(args: EventArgs) => this.setState({nome: args.Value})} />
+                            <TextBox Label={this.state.type == 'CPF' ? 'Nome' : 'Razão social'} TextTransform='UpperCase' Text={this.state.name} OnChange={(args: EventArgs) => this.setState({name: args.Value})} />
                         </Grid>
                         <Grid md={5}>
-                            <TextBox Label={this.state.tipo == 'CPF' ? 'Apelido' : 'Nome fantasia'} TextTransform='UpperCase' Text={this.state.apelido} OnChange={(args: EventArgs) => this.setState({apelido: args.Value})} />
+                            <TextBox Label={this.state.type == 'CPF' ? 'Apelido' : 'Nome fantasia'} TextTransform='UpperCase' Text={this.state.surname} OnChange={(args: EventArgs) => this.setState({surname: args.Value})} />
                         </Grid>
                         <Grid md={12}>
                             <div style={{display: 'flex'}}>
-                                <CheckBox Label='Cliente' Checked={this.state.isCliente} OnChange={(args: EventArgs) => this.setState({isCliente: args.Value})} />
-                                <CheckBox Label='Fornecedor' Checked={this.state.isFornecedor} OnChange={(args: EventArgs) => this.setState({isFornecedor: args.Value})} />
-                                <CheckBox Label='Transportadora' Checked={this.state.isTransportadora} OnChange={(args: EventArgs) => this.setState({isTransportadora: args.Value})} />
-                                <CheckBox Label='Funcionario' Checked={this.state.isFuncionario} OnChange={(args: EventArgs) => this.setState({isFuncionario: args.Value})} />
+                                <CheckBox Label='Cliente' Checked={this.state.isCustomer} OnChange={(args: EventArgs) => this.setState({isCustomer: args.Value})} />
+                                <CheckBox Label='Fornecedor' Checked={this.state.isSupplier} OnChange={(args: EventArgs) => this.setState({isSupplier: args.Value})} />
+                                <CheckBox Label='Transportadora' Checked={this.state.isShippingCompany} OnChange={(args: EventArgs) => this.setState({isShippingCompany: args.Value})} />
+                                <CheckBox Label='Funcionario' Checked={this.state.isEmployee} OnChange={(args: EventArgs) => this.setState({isEmployee: args.Value})} />
                             </div>
                         </Grid>
                         <Grid md={12}>
@@ -48,13 +46,13 @@ export class ViewParceiro extends ViewParceiroBase {
                                 <TabItem Title='Principal' Visible={true}>
                                     <div style={{display: 'flex'}}>
                                         <Grid md={2}>
-                                            <DatePicker Label={this.state.tipo == 'CPF' ? 'Nascimento' : 'Abertura'} Text={this.state.nascimento} OnChange={(args: EventArgs) => this.setState({nascimento: args.Value})} />
+                                            <DatePicker Label={this.state.type == 'CPF' ? 'Nascimento' : 'Abertura'} Text={this.state.birth} OnChange={(args: EventArgs) => this.setState({birth: args.Value})} />
                                         </Grid>
                                         
-                                        {this.state.tipo == 'CPF' && (
+                                        {this.state.type == 'CPF' && (
                                             <>
                                                 <Grid md={2}>
-                                                    <DropDownList Label='Sexo' SelectedValue={this.state.sexo} OnChange={(args: EventArgs) => this.setState({sexo: args.Value})}>
+                                                    <DropDownList Label='Sexo' SelectedValue={this.state.sex} OnChange={(args: EventArgs) => this.setState({sex: args.Value})}>
                                                         <DropDownListItem Label='[Selecione]' Value={null} />
                                                         <DropDownListItem Label='Masculino' Value={1} />
                                                         <DropDownListItem Label='Feminino' Value={2} />
@@ -63,10 +61,10 @@ export class ViewParceiro extends ViewParceiroBase {
                                                 <Grid md={2}>
                                                     <DropDownList Label='Estado cívil' SelectedValue={this.state.estadoCivil} OnChange={(args: EventArgs) => this.setState({estadoCivil: args.Value})}>
                                                         <DropDownListItem Label='[Selecione]' Value={null} />
-                                                        <DropDownListItem Label={this.state.sexo == '2' ? 'Solteira' : 'Solteiro'} Value={1} />
-                                                        <DropDownListItem Label={this.state.sexo == '2' ? 'Casada' : 'Casado'} Value={2} />
-                                                        <DropDownListItem Label={this.state.sexo == '2' ? 'Divorciada' : 'Divorciado'} Value={3} />
-                                                        <DropDownListItem Label={this.state.sexo == '2' ? 'Viúva' : 'Viúvo'} Value={4} />
+                                                        <DropDownListItem Label={this.state.sex == '2' ? 'Solteira' : 'Solteiro'} Value={1} />
+                                                        <DropDownListItem Label={this.state.sex == '2' ? 'Casada' : 'Casado'} Value={2} />
+                                                        <DropDownListItem Label={this.state.sex == '2' ? 'Divorciada' : 'Divorciado'} Value={3} />
+                                                        <DropDownListItem Label={this.state.sex == '2' ? 'Viúva' : 'Viúvo'} Value={4} />
                                                     </DropDownList>
                                                 </Grid>
                                                 <Grid md={2}>
@@ -82,7 +80,7 @@ export class ViewParceiro extends ViewParceiroBase {
                                             <TextBox Label='Insc. Municipal' TextTransform='UpperCase' Text={this.state.im} OnChange={(args: EventArgs) => this.setState({im: args.Value})} />
                                         </Grid>
                                     </div>
-                                    {this.state.tipo == 'CPF' && (
+                                    {this.state.type == 'CPF' && (
                                     <div style={{display: 'flex'}}>
                                         <Grid md={3}>
                                             <DropDownList Label='Escolaridade' SelectedValue={this.state.escolaridade} OnChange={(args: EventArgs) => this.setState({escolaridade: args.Value})}>
@@ -105,18 +103,18 @@ export class ViewParceiro extends ViewParceiroBase {
                                     <Grid md={12}>
                                         <div style={{display: 'flex'}}>
                                             <CheckBox Label='Ativo' Checked={this.state.isAtivo} OnChange={(args: EventArgs) => this.setState({isAtivo: args.Value})} />
-                                            {this.state.isCliente && <CheckBox Label='Bloquear venda' Checked={this.state.isBloquearVenda} OnChange={(args: EventArgs) => this.setState({isBloquearVenda: args.Value})} />}
-                                            {this.state.isFornecedor && <CheckBox Label='Bloquear compra' Checked={this.state.isBloquearCompra} OnChange={(args: EventArgs) => this.setState({isBloquearCompra: args.Value})} />}
+                                            {this.state.isCustomer && <CheckBox Label='Bloquear venda' Checked={this.state.isBlockSale} OnChange={(args: EventArgs) => this.setState({isBlockSale: args.Value})} />}
+                                            {this.state.isSupplier && <CheckBox Label='Bloquear compra' Checked={this.state.isBloquearCompra} OnChange={(args: EventArgs) => this.setState({isBloquearCompra: args.Value})} />}
                                         </div>
                                     </Grid>
                                 </TabItem>
                                 <TabItem Title='Contatos' Visible={true}>
-                                    <Contatos Contatos={this.state.contatos} OnChange={(contatos: any[]) => this.setState({contatos})} />
+                                    <Contacts contacts={this.state.contacts} OnChange={(contacts: any[]) => this.setState({contacts})} />
                                 </TabItem>
                                 <TabItem Title='Endereços' Visible={true}>
-                                    <Enderecos Enderecos={this.state.enderecos} OnChange={(enderecos: any[]) => this.setState({enderecos})} />
+                                    <Address address={this.state.address} OnChange={(address: any[]) => this.setState({address})} />
                                 </TabItem>
-                                <TabItem Title='Vendedores' Visible={this.state.isCliente}>
+                                <TabItem Title='Vendedores' Visible={this.state.isCustomer}>
                                     Vendedores
                                 </TabItem>
                             </Tab>

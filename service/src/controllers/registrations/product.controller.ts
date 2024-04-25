@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo } from "../../database";
+import { Product, ProductCategory, ProductCombination, ProdutoCombinacaoGrupo } from "../../database";
 import { ProductService } from "../../services/registrations/product.service";
 import { Op } from "sequelize";
 import { Error } from "../../errors";
@@ -9,35 +9,42 @@ export default class ProductController {
 
     async findAll(req: Request, res: Response) {
 
-        Auth(req, res).then(async ({sequelize}) => {
+        Auth(req, res).then(async ({sequelize, pagination}) => {
             try {
 
                 const transaction = await sequelize.transaction();
 
-                const limit = req.body.limit || undefined;
-                const offset = ((req.body.offset - 1) * limit) || undefined;
-                const filter = req.body.filter || undefined;
-                const sort = req.body.sort || undefined;
-        
                 let where: any = {};
                 let order: any = [];
         
-                if (filter?.nome) {
-                    where = {"nome": {[Op.iLike]: `%${filter?.nome.replace(' ', "%")}%`}};
+                if (pagination.filter?.name) {
+                    where = {'name': {[Op.iLike]: `%${pagination.filter?.name.replace(' ', "%")}%`}};
                 }
         
-                if (sort) {
-                    order = [[sort.column, sort.direction]]
+                if (pagination.sort) {
+                    order = [[pagination.sort.column, pagination.sort.direction]]
                 }
         
-                const produtos = await Product.findAndCountAll({attributes: ["id", "nome"],
-                    include: [{model: ProductCategory, attributes: ["id", "descricao"]}],
-                    where, order, limit, offset, transaction
+                const products = await Product.findAndCountAll({
+                    attributes: ['id', 'name'],
+                    include: [{model: ProductCategory, attributes: ['id', 'description']}],
+                    where,
+                    order,
+                    limit: pagination.limit,
+                    offset: pagination.offset1,
+                    transaction
                 });
         
                 sequelize.close();
 
-                res.status(200).json({rows: produtos.rows, count: produtos.count, limit, offset: req.body.offset, filter, sort});
+                res.status(200).json({
+                    request: {
+                        ...pagination
+                    },
+                    response: {
+                        rows: products.rows, count: products.count
+                    }
+                });
 
             }
             catch (error: any) {
@@ -55,16 +62,21 @@ export default class ProductController {
             {
                 const transaction = await sequelize.transaction();
 
-                const produto = await Product.findOne({attributes: ["id", "nome", "descricao", "isCombinacao", "valor"], 
-                    include: [{model: ProductCategory, attributes: ["id", "descricao"]}, {model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
-                        include: [{model: ProdutoCombinacaoGrupo, attributes: ["descricao"]}]    
-                    }],
-                    where: {id: req.body.id}, transaction
+                const product = await Product.findOne({
+                    attributes: ['id', 'name', 'description', 'isCombination', 'value'], 
+                    include: [
+                        {model: ProductCategory, attributes: ['id', 'description']}, 
+                        {model: ProductCombination, attributes: ['id', 'isObrigatorio', 'minimo', 'maximo'],
+                            include: [{model: ProdutoCombinacaoGrupo, attributes: ['descricao']}]    
+                        }
+                    ],
+                    where: {id: req.body.id},
+                    transaction
                 });
 
                 sequelize.close();
     
-                res.status(200).json(produto);
+                res.status(200).json(product);
     
             }
             catch (error: any) {
@@ -82,26 +94,26 @@ export default class ProductController {
             {
                 const transaction = await sequelize.transaction();
 
-                const Produto = req.body as Product;
+                const product = req.body as Product;
 
-                const valid = ProductService.IsValid(Produto);
+                const valid = ProductService.IsValid(product);
 
                 if (!valid.success) {
                     res.status(201).json(valid);
                     return;
                 }
 
-                if (!Produto.id) {
-                    await ProductService.Create(Produto, transaction);
+                if (!product.id) {
+                    await ProductService.Create(product, transaction);
                 } else {
-                    await ProductService.Update(Produto, transaction);
+                    await ProductService.Update(product, transaction);
                 }
 
                 await transaction?.commit();
                 
                 sequelize.close();
 
-                res.status(200).json(Produto);
+                res.status(200).json(product);
 
             }
             catch (error: any) {

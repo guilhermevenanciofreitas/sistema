@@ -2,14 +2,14 @@ import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-ty
 import { ProdutoCombinacaoGrupo } from "./produtoCombinacaoGrupo.model";
 import { ProdutoCombinacaoItem } from "./produtoCombinacaoItem.model";
 
-@Table({tableName: "produtoCombinacao"})
-export class ProdutoCombinacao extends Model {
+@Table({tableName: "productCombination"})
+export class ProductCombination extends Model {
   
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
   id?: string;
 
-  @Column({type: DataType.UUID, field: "produtoId"})
-  produtoId?: string;
+  @Column({type: DataType.UUID, field: "productId"})
+  productId?: string;
 
   @Column({type: DataType.UUID, field: "combinacaoId"})
   combinacaoId?: string;

@@ -1,6 +1,6 @@
 import React, { ComponentClass } from "react";
 import { Service } from "../../../Service";
-import { ViewParceiro } from "./View/index";
+import { ViewPartner } from "./View/index";
 import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
@@ -8,9 +8,9 @@ import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 
-export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Tipo: "customer" | "supplier" | "shipping-company" | "employee", ViewParceiro: React.ReactElement}>> {
+export default class PartnersBase extends BaseIndex<Readonly<{Title: string, Type: "customer" | "supplier" | "shipping-company" | "employee", ViewPartner: React.ReactElement}>> {
 
-    protected ViewParceiro = React.createRef<ViewParceiro>();
+    protected ViewPartner = React.createRef<ViewPartner>();
 
     protected ViewImportar = React.createRef<ViewImportar>();
     protected ViewFiltro = React.createRef<ViewFiltro>();
@@ -18,13 +18,13 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
     state = {
         Loading: true,
         Selecteds: [],
-        Data: {
-            rows: [],
-            count: 0,
+        request: {
             offset: 1,
-            limit: 100,
-            filter: undefined,
-            sort: undefined
+            limit: 100
+        },
+        response: {
+            rows: [],
+            count: 0
         },
     }
 
@@ -38,11 +38,11 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
             const { id } = queryString.parse(window.location.search);
 
             if (id) {
-                await this.OpenParceiro(id.toString(), false);
+                await this.OpenPartner(id.toString(), false);
                 history.pushState(null, "", `${window.location.origin}${window.location.pathname}`);
             }
 
-            await this.Pesquisar(this.state.Data);
+            await this.Pesquisar(this.state.request);
 
             this.componentDidMountFinish();
 
@@ -56,9 +56,9 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
         try
         {
 
-            const r = await this.OpenParceiro(id);
+            const r = await this.OpenPartner(id);
 
-            if (r) this.Pesquisar(this.state.Data);
+            if (r) await this.Pesquisar(this.state.request);
        
         } 
         catch (err: any) 
@@ -72,9 +72,9 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
         try
         {
 
-            const r = await this.ViewParceiro.current?.Show(undefined);
+            const r = await this.ViewPartner.current?.Show(undefined);
 
-            if (r) this.Pesquisar(this.state.Data);
+            if (r) await this.Pesquisar(this.state.request);
             
         }
         catch (err: any) 
@@ -113,13 +113,7 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
     {
         try
         {
-            const data = await this.ViewImportar.current?.Show(this.state.Data.filter);
-
-            if (data === null) return;
-
-            this.setState((state: any) => ({Data: {...state.Data, offset: 1}}),
-                () => this.Pesquisar(this.state.Data)
-            );
+            
     
         }
         catch (err: any) 
@@ -132,13 +126,7 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
     {
         try
         {
-            const filter = await this.ViewFiltro.current?.Show(this.state.Data.filter);
-
-            if (filter === null) return;
-
-            this.setState((state: any) => ({Data: {...state.Data, offset: 1, filter}}),
-                () => this.Pesquisar(this.state.Data)
-            );
+            
     
         }
         catch (err: any) 
@@ -151,7 +139,7 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
     {
         try
         {
-            await this.Pesquisar(this.state.Data);
+            await this.Pesquisar(this.state.request);
         }
         catch (err: any) 
         {
@@ -163,8 +151,8 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
     {
         try
         {
-            this.setState((state: any) => ({Data: {...state.Data, limit, offset}}),
-                () => this.Pesquisar(this.state.Data)
+            this.setState({request: {...this.state.request, limit, offset}},
+                () => this.Pesquisar(this.state.request)
             );
         }
         catch (err: any) 
@@ -177,8 +165,8 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
     {
         try
         {
-            this.setState((state: any) => ({Data: {...state.Data, sort}}),
-                () => this.Pesquisar(this.state.Data)
+            this.setState({request: {...this.state.request, sort}},
+                () => this.Pesquisar(this.state.request)
             );
         }
         catch (err: any) 
@@ -187,19 +175,19 @@ export default class BaseParceiros extends BaseIndex<Readonly<{Title: string, Ti
         }
     }
 
-    private OpenParceiro = async (id: string, isHitoryBack: boolean = true) =>
+    private OpenPartner = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewParceiro.current?.Show(id);
+        const r = await this.ViewPartner.current?.Show(id);
         if (isHitoryBack) history.back();
         return r;
     }
 
-    private Pesquisar = async(Data: any): Promise<void> =>
+    private Pesquisar = async(request: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post(`registrations/${this.props.Tipo}/findAll`, Data);
-        this.setState({Loading: false, Data: r?.data});
+        var r = await Service.Post(`registrations/${this.props.Type}/findAll`, request);
+        this.setState({Loading: false, ...r?.data});
     }
 
 }

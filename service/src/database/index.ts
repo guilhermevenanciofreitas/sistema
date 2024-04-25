@@ -5,8 +5,8 @@ import { SaleOrder } from "./models/saleOrder.model";
 import { TabelaPreco } from "./models/tabelaPreco.model";
 import { User } from "./models/user.model";
 import { Partner } from "./models/partner.model";
-import { ParceiroContato } from "./models/parceiroContato.model";
-import { ParceiroEndereco } from "./models/parceiroEndereco.model";
+import { PartnerContact } from "./models/partnerContact.model";
+import { PartnerAddress } from "./models/partnerAddress.model";
 import { Product } from "./models/product.model";
 import { Service } from "./models/service.model";
 import { Company } from "./models/company.model";
@@ -16,11 +16,11 @@ import { Municipio } from "./models/municipio.model";
 import { SaleOrderRecieve } from "./models/saleOrderRecieve.model";
 import { SaleOrderStatus } from "./models/saleOrderStatus.model";
 import { SaleOrderProgress } from "./models/saleOrderProgress.model";
-import { PedidoVendaTipoEntrega } from "./models/pedidoVendaTipoEntrega.model";
+import { SaleOrderShippingType } from "./models/saleOrderShippingType.model";
 import { Delivery } from "./models/delivery.model";
 import { DeliveryRoute } from "./models/deliveryRoute.model";
 import { PedidoVendaDeliveryRoute } from "./models/pedidoVendaDeliveryRoute.model";
-import { ProdutoCombinacao } from "./models/produtoCombinacao.model";
+import { ProductCombination } from "./models/productCombination.model";
 import { ProdutoCombinacaoGrupo } from "./models/produtoCombinacaoGrupo.model";
 import { ProdutoCombinacaoItem } from "./models/produtoCombinacaoItem.model";
 import { SaleOrderItemCombination } from "./models/saleOrderItemCombination.model";
@@ -47,6 +47,7 @@ import { FreightCalculationWeight } from "./models/freightCalculationWeight.mode
 import { FreightQuote } from "./models/freightQuote.model";
 import { State } from "./models/state.model";
 import { FreightCalculationRecipient } from "./models/freightCalculationRecipient.model";
+import { SaleOrderNfe } from "./models/saleOrderNfe.model";
 
 
 export { Payment } from "./models/payment.model";
@@ -55,8 +56,8 @@ export { SaleOrder } from "./models/saleOrder.model";
 export { SaleOrderItem } from "./models/saleOrderItem.model";
 export { TabelaPreco } from "./models/tabelaPreco.model";
 export { Partner } from "./models/partner.model";
-export { ParceiroContato } from "./models/parceiroContato.model";
-export { ParceiroEndereco } from "./models/parceiroEndereco.model";
+export { PartnerContact } from "./models/partnerContact.model";
+export { PartnerAddress } from "./models/partnerAddress.model";
 export { Product } from "./models/product.model";
 export { Service } from "./models/service.model";
 export { Company } from "./models/company.model";
@@ -65,11 +66,11 @@ export { Municipio } from "./models/municipio.model";
 export { SaleOrderRecieve } from "./models/saleOrderRecieve.model";
 export { SaleOrderStatus } from "./models/saleOrderStatus.model";
 export { SaleOrderProgress } from "./models/saleOrderProgress.model";
-export { PedidoVendaTipoEntrega } from "./models/pedidoVendaTipoEntrega.model";
+export { SaleOrderShippingType } from "./models/saleOrderShippingType.model";
 export { Delivery } from "./models/delivery.model";
 export { DeliveryRoute } from "./models/deliveryRoute.model";
 export { PedidoVendaDeliveryRoute } from "./models/pedidoVendaDeliveryRoute.model";
-export { ProdutoCombinacao } from "./models/produtoCombinacao.model";
+export { ProductCombination } from "./models/productCombination.model";
 export { ProdutoCombinacaoGrupo } from "./models/produtoCombinacaoGrupo.model";
 export { ProdutoCombinacaoItem } from "./models/produtoCombinacaoItem.model";
 export { SaleOrderItemCombination } from "./models/saleOrderItemCombination.model";
@@ -95,7 +96,7 @@ export { FreightCalculationWeight } from "./models/freightCalculationWeight.mode
 export { FreightQuote } from "./models/freightQuote.model";
 export { State } from "./models/state.model";
 export { FreightCalculationRecipient } from "./models/freightCalculationRecipient.model";
-
+export { SaleOrderNfe } from "./models/saleOrderNfe.model";
 
 
 export default class Sequelize {
@@ -111,7 +112,7 @@ export default class Sequelize {
 
       define: {timestamps: false},
       
-      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Called, CalledOccurrence, CalledTask, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, PedidoVendaTipoEntrega, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderRecieve, Company, Partner, ParceiroContato, ParceiroEndereco, Product, ProductCategory, ProdutoCombinacaoGrupo, ProdutoCombinacao, ProdutoCombinacaoItem, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, State, Task, User, TabelaPreco, Municipio, Nfe, MesoRegion, FreightCalculation, FreightCalculationRecipient, FreightCalculationType, FreightCalculationWeight, FreightQuote],
+      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Called, CalledOccurrence, CalledTask, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, SaleOrderShippingType, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderNfe, SaleOrderRecieve, Company, Partner, PartnerContact, PartnerAddress, Product, ProductCategory, ProdutoCombinacaoGrupo, ProductCombination, ProdutoCombinacaoItem, SaleOrderItemCombination, PedidoVendaItemCombinacaoItem, Service, ShippingOrder, State, Task, User, TabelaPreco, Municipio, Nfe, MesoRegion, FreightCalculation, FreightCalculationRecipient, FreightCalculationType, FreightCalculationWeight, FreightQuote],
       pool: {
         max: 5,
         min: 0,

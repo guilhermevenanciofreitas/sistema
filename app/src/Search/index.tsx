@@ -57,9 +57,9 @@ export const Search = {
         return (await Service.Post("search/payment-form", {Search}))?.data;
     },
 
-    TipoEntrega: async (Search: string) =>
+    SaleOrderShippingType: async (Search: string) =>
     {
-        return (await Service.Post("search/tipoEntrega", {Search}))?.data;
+        return (await Service.Post("search/sale-order-shipping-type", {Search}))?.data;
     },
 
     ProductCategory: async (Search: string) =>

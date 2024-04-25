@@ -1,5 +1,5 @@
-import { Model, Table, Column, DataType, HasMany, BelongsTo } from "sequelize-typescript";
-import { ProdutoCombinacao } from "./produtoCombinacao.model";
+import { Model, Table, Column, DataType, HasMany, BelongsTo, ForeignKey } from "sequelize-typescript";
+import { ProductCombination } from "./productCombination.model";
 import { ProductCategory } from "./productCategory.model";
 
 @Table({tableName: "product"})
@@ -8,25 +8,25 @@ export class Product extends Model {
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
   id?: string;
 
-  @Column({type: DataType.STRING(100), field: "nome"})
-  nome?: string;
+  @Column({type: DataType.STRING(100), field: "name"})
+  name?: string;
 
-  @Column({type: DataType.STRING(100), field: "descricao"})
-  descricao?: string;
+  @Column({type: DataType.STRING(100), field: "description"})
+  description?: string;
 
-  @Column({type: DataType.UUID, field: "categoriaId"})
-  categoriaId?: string;
+  @Column({type: DataType.UUID, field: "categoryId"})
+  categoryId?: string;
 
-  @Column({type: DataType.BOOLEAN, field: "isCombinacao"})
-  isCombinacao?: string;
+  @Column({type: DataType.BOOLEAN, field: "isCombination"})
+  isCombination?: string;
 
-  @Column({type: DataType.DECIMAL(10, 2), field: "valor"})
-  valor?: number;
+  @Column({type: DataType.DECIMAL(10, 2), field: "value"})
+  value?: number;
 
-  @BelongsTo(() => ProductCategory, 'categoriaId')
-  categoria?: ProductCategory;
+  @BelongsTo(() => ProductCategory, {as: 'category', foreignKey: 'categoryId'})
+  category?: ProductCategory;
 
-  @HasMany(() => ProdutoCombinacao, 'produtoId')
-  combinacoes?: ProdutoCombinacao[];
+  @HasMany(() => ProductCombination, {as: 'combinations', foreignKey: 'productId'})
+  combinations?: ProductCombination[];
 
 }

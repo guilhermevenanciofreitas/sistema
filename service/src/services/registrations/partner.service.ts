@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { Partner, ParceiroContato } from "../../database";
+import { Partner, PartnerContact } from "../../database";
 import crypto from "crypto";
 import {Op} from "sequelize";
 
@@ -7,8 +7,8 @@ export class PartnerService {
 
     public static IsValid = (partner: Partner) => {
 
-        if (partner.nome == '') {
-            return { success: false, message: 'Informe o e-mail!' };
+        if (partner.name == '') {
+            return { success: false, message: 'Informe a razão social!' };
         }
 
         return { success: true };
@@ -19,9 +19,9 @@ export class PartnerService {
 
         partner.id = crypto.randomUUID();
 
-        for (let contato of partner?.contatos || []) {
-            contato.id = crypto.randomUUID();
-            contato.parceiroId = partner.id;
+        for (let contact of partner?.contacts || []) {
+            contact.id = crypto.randomUUID();
+            contact.partnerId = partner.id;
         }
 
         await Partner.create({...partner}, {transaction});
@@ -30,15 +30,15 @@ export class PartnerService {
 
     public static Update = async (partner: Partner, transaction: Transaction | undefined) => {
 
-        for (let contato of partner?.contatos || []) {
-            if (!contato.id) {
-                contato.id = crypto.randomUUID();
-                contato.parceiroId = partner.id;
-                ParceiroContato.create({...contato}, {transaction});
+        for (let contact of partner?.contacts || []) {
+            if (!contact.id) {
+                contact.id = crypto.randomUUID();
+                contact.partnerId = partner.id;
+                await PartnerContact.create({...contact}, {transaction});
             } else {
-                ParceiroContato.update(contato, {where: {id: contato.id}, transaction});
+                await PartnerContact.update(contact, {where: {id: contact.id}, transaction});
             }
-            ParceiroContato.destroy({where: {parceiroId: partner.id, id: {[Op.notIn]: partner?.contatos?.filter(c => c.id != "").map(c => c.id)}}, transaction})
+            await PartnerContact.destroy({where: {parceiroId: partner.id, id: {[Op.notIn]: partner?.contacts?.filter(c => c.id != "").map(c => c.id)}}, transaction})
         }
 
         await Partner.update(partner, {where: {id: partner.id}, transaction});

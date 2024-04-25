@@ -23,20 +23,16 @@ export class SaleOrderService {
         saleOrder.id = crypto.randomUUID();
         saleOrder.createdAt = new Date();
 
-        for (let item of saleOrder?.saleOrderItems || []) {
+        for (let item of saleOrder?.items || []) {
             item.id = crypto.randomUUID();
-            item.saleOrderId = saleOrder.id;
-            item.produtoId = item.produto?.id;
             SaleOrderItem.create({...item}, {transaction});
 
-            for (let combinacao of item?.itemCombinacoes || []) {
+            for (let combinacao of item?.itemCombinations || []) {
                 combinacao.id = crypto.randomUUID();
-                combinacao.saleOrderItemId = item.id;
                 SaleOrderItemCombination.create({...combinacao}, {transaction});
 
                 for (let combinacaoItem of combinacao?.combinacaoItems || []) {
                     combinacaoItem.id = crypto.randomUUID();
-                    combinacaoItem.pedidoVendaItemCombinacaoId = combinacao.id;
                     PedidoVendaItemCombinacaoItem.create({...combinacaoItem}, {transaction});
                 }
 
@@ -45,9 +41,9 @@ export class SaleOrderService {
         }
         
 
-        for (let item of saleOrder?.pagamentos || []) {
+        for (let item of saleOrder?.recievies || []) {
             item.id = crypto.randomUUID();
-            item.pedidoVendaId = saleOrder.id;
+            item.saleOrderId = saleOrder.id;
             item.formaPagamentoId = item.formaPagamento?.id;
             SaleOrderRecieve.create({...item}, {transaction})
         }
@@ -60,26 +56,23 @@ export class SaleOrderService {
 
         let where: any = [];
 
-        for (let item of saleOrder?.saleOrderItems || []) {
+        for (let item of saleOrder?.items || []) {
 
-            item.saleOrderId = saleOrder.id;
-            item.produtoId = item.produto?.id;
-            
             if (!item.id) {
                 item.id = crypto.randomUUID();
                 SaleOrderItem.create({...item}, {transaction});
             } else {
                 SaleOrderItem.update(item, {where: {id: item.id}, transaction});
             }
-            SaleOrderItem.destroy({where: {saleOrderId: saleOrder.id, id: {[Op.notIn]: saleOrder?.saleOrderItems?.filter(c => c.id != "").map(c => c.id)}}, transaction});
+            SaleOrderItem.destroy({where: {saleOrderId: saleOrder.id, id: {[Op.notIn]: saleOrder?.items?.filter(c => c.id != "").map(c => c.id)}}, transaction});
 
-            if (item?.itemCombinacoes?.length == 0) {
+            if (item?.itemCombinations?.length == 0) {
                 SaleOrderItemCombination.destroy({where: {saleOrderItemId: item.id}, transaction});
             }
 
             //SaleOrderItemCombination
             where['SaleOrderItemCombination'] = {pedidoVendaItemId: item.id};
-            for (let combinacao of item?.itemCombinacoes || []) {
+            for (let combinacao of item?.itemCombinations || []) {
                 combinacao.saleOrderItemId = item.id;
                 if (!combinacao.id) {
                     combinacao.id = crypto.randomUUID();
@@ -87,13 +80,13 @@ export class SaleOrderService {
                 } else {
                     SaleOrderItemCombination.update(combinacao, {where: {id: combinacao.id}, transaction});
                 }
-                where['SaleOrderItemCombination'] = {id: {[Op.notIn]: item?.itemCombinacoes?.filter(c => c.id != "").map(c => c.id)}};
+                where['SaleOrderItemCombination'] = {id: {[Op.notIn]: item?.itemCombinations?.filter(c => c.id != "").map(c => c.id)}};
                 SaleOrderItemCombination.destroy({where: where['SaleOrderItemCombination'], cascade: true, transaction});
             }
             //SaleOrderItemCombination
 
             //PedidoVendaItemCombinacao.PedidoVendaItemCombinacaoItem
-            for (let saleOrderItemCombination of item?.itemCombinacoes || []) {
+            for (let saleOrderItemCombination of item?.itemCombinations || []) {
                 where['PedidoVendaItemCombinacaoItem'] = {pedidoVendaItemCombinacaoId: saleOrderItemCombination.id};
                 for (let combinacaoItem of saleOrderItemCombination?.combinacaoItems || []) {
                     combinacaoItem.pedidoVendaItemCombinacaoId = saleOrderItemCombination.id;
@@ -113,18 +106,17 @@ export class SaleOrderService {
 
         }
 
-        for (let item of saleOrder?.pagamentos || []) {
+        for (let item of saleOrder?.recievies || []) {
 
-            item.pedidoVendaId = saleOrder.id;
-            item.formaPagamentoId = item.formaPagamento?.id;
-
+            item.saleOrderId = saleOrder.id;
+          
             if (!item.id) {
                 item.id = crypto.randomUUID();
                 SaleOrderRecieve.create({...item}, {transaction});
             } else {
                 SaleOrderRecieve.update(item, {where: {id: item.id}, transaction});
             }
-            SaleOrderRecieve.destroy({where: {pedidoVendaId: saleOrder.id, id: {[Op.notIn]: saleOrder?.pagamentos?.filter(c => c.id != "").map(c => c.id)}}, transaction})
+            SaleOrderRecieve.destroy({where: {pedidoVendaId: saleOrder.id, id: {[Op.notIn]: saleOrder?.recievies?.filter(c => c.id != "").map(c => c.id)}}, transaction})
         }
 
         await SaleOrder.update(saleOrder, {where: {id: saleOrder.id}, transaction});
@@ -149,7 +141,7 @@ export class SaleOrderService {
         });
 
         if (saleOrderStatusByFrom == null) {
-            throw new DisplayError(`${saleOrder?.status?.descricao || 'Pendente'} => ${saleOrderStatus?.descricao || 'Pendente'} Não configurado!`, 201);
+            throw new DisplayError(`${saleOrder?.status?.description || 'Pendente'} => ${saleOrderStatus?.description || 'Pendente'} Não configurado!`, 201);
         }
 
         await SaleOrder.update({statusId: statusId}, {where: {id}, transaction});

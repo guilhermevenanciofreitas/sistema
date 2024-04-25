@@ -31,6 +31,7 @@ import progressRoutes from "./sales/progress.routes";
 import calledRoutes from "./relationships/called.routes";
 import freightCalculationRoutes from "./logistic/freightCalculation.routes";
 import freightQuotesRoutes from "./logistic/freightQuotes.routes";
+import invoicingRoutes from "./sales/invoicing.routes";
 
 export default class Routes {
   constructor(app: Application) {
@@ -56,6 +57,7 @@ export default class Routes {
     //Sales
     app.use("/api/sales/order", saleOrderRoutes);
     app.use("/api/sales/progress", progressRoutes);
+    app.use("/api/sales/invoicing", invoicingRoutes);
 
     //Fiscal
     app.use("/api/nfe", nfeRoutes);

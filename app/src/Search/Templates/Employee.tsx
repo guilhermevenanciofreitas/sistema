@@ -7,7 +7,7 @@ export class EmployeeTemplate extends React.Component {
         return <>
             <ResultContext.Consumer>
                 {({ args }: any) => (
-                    <span>{args.cpfCnpj} - {args.nome}</span>
+                    <span>{args.cpfCnpj} - {args.surname}</span>
                 )}
             </ResultContext.Consumer>
         </>

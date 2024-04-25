@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { Product, ProdutoCombinacao } from "../../database";
+import { Product, ProductCombination } from "../../database";
 import crypto from "crypto";
 import { Op } from "sequelize";
 
@@ -7,7 +7,7 @@ export class ProductService {
 
     public static IsValid = (produto: Product) => {
 
-        if (produto.descricao == '') {
+        if (produto.description == '') {
             return { success: false, message: 'Informe a descrição!' };
         }
 
@@ -15,38 +15,32 @@ export class ProductService {
 
     }
 
-    public static Create = async (produto: Product, transaction: Transaction | undefined) => {
+    public static Create = async (product: Product, transaction: Transaction | undefined) => {
 
-        produto.id = crypto.randomUUID();
-        produto.categoriaId = produto.categoria?.id;
+        product.id = crypto.randomUUID();
         
-        for (let item of produto?.combinacoes || []) {
+        for (let item of product?.combinations || []) {
             item.id = crypto.randomUUID();
-            item.produtoId = produto.id;
-            item.combinacaoId = item.combinacao?.id;
         }
 
-        await Product.create({...produto}, {transaction});
+        await Product.create({...product}, {transaction});
 
     }
 
-    public static Update = async (produto: Product, transaction: Transaction | undefined) => {
+    public static Update = async (product: Product, transaction: Transaction | undefined) => {
 
-        produto.categoriaId = produto.categoria?.id;
-
-        for (let item of produto?.combinacoes || []) {
+        for (let item of product?.combinations || []) {
             if (!item.id) {
                 item.id = crypto.randomUUID();
-                item.produtoId = produto.id;
-                item.combinacaoId = item.combinacao?.id;
-                ProdutoCombinacao.create({...item}, {transaction});
+                item.productId = product.id;
+                await ProductCombination.create({...item}, {transaction});
             } else {
-                ProdutoCombinacao.update(item, {where: {id: item.id}, transaction});
+                await ProductCombination.update(item, {where: {id: item.id}, transaction});
             }
-            ProdutoCombinacao.destroy({where: {produtoId: produto.id, id: {[Op.notIn]: produto?.combinacoes?.filter((c: any) => c.id != "").map(c => c.id)}}, transaction})
+            await ProductCombination.destroy({where: {productId: product.id, id: {[Op.notIn]: product?.combinations?.filter((c: any) => c.id != "").map(c => c.id)}}, transaction})
         }
 
-        await Product.update(produto, {where: {id: produto.id}, transaction});
+        await Product.update(product, {where: {id: product.id}, transaction});
 
     }
 

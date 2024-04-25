@@ -9,20 +9,15 @@ export default class UserController {
 
     async findAll(req: Request, res: Response) {
 
-        Auth(req, res).then(async ({sequelize}) => {
+        Auth(req, res).then(async ({sequelize, pagination}) => {
             try {
 
-                
                 const transaction = await sequelize.transaction();
 
-                const limit = req.body.limit || undefined;
-                const offset = ((req.body.offset - 1) * limit) || undefined;
-                const filter = req.body.filter || undefined;
-                const sort = req.body.sort || undefined;
-        
                 let where: any = {};
                 let order: any = [];
         
+                /*
                 if (filter?.nome) {
                     where = {"nome": {[Op.iLike]: `%${filter?.nome.replace(' ', "%")}%`}};
                 }
@@ -30,16 +25,31 @@ export default class UserController {
                 if (filter?.email) {
                     where = {"email": {[Op.iLike]: `%${filter?.email}%`}};
                 }
+                */
         
-                if (sort) {
-                    order = [[sort.column, sort.direction]]
+                if (pagination.sort) {
+                    order = [[pagination.sort.column, pagination.sort.direction]]
                 }
         
-                const users = await User.findAndCountAll({attributes: ["id", "nome", "email"], where, order, limit, offset, transaction});
+                const users = await User.findAndCountAll({
+                    attributes: ["id", "name", "email"],
+                    where,
+                    order,
+                    limit: pagination.limit,
+                    offset: pagination.offset1,
+                    transaction
+                });
         
                 sequelize.close();
 
-                res.status(200).json({rows: users.rows, count: users.count, limit, offset: req.body.offset, filter, sort});
+                res.status(200).json({
+                    request: {
+                        ...pagination
+                    },
+                    response: {
+                        rows: users.rows, count: users.count
+                    }
+                });
 
             }
             catch (error: any) {
@@ -57,11 +67,11 @@ export default class UserController {
             {
                 const transaction = await sequelize.transaction();
 
-                const usuario = await User.findOne({attributes: ["id", "nome", "email"], where: {id: req.body.id}, transaction});
+                const user = await User.findOne({attributes: ["id", "name", "email"], where: {id: req.body.id}, transaction});
     
                 sequelize.close();
     
-                res.status(200).json(usuario);
+                res.status(200).json(user);
     
             }
             catch (error: any) {

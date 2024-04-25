@@ -10,8 +10,8 @@ class SupplierRoutes {
   }
 
   intializeRoutes() {
-    this.router.post("/findAll", (req, res) => this.controller.findAll(req, res, "isFornecedor"));
-    this.router.post("/findOne", (req, res) => this.controller.findOne(req, res, "isFornecedor"));
+    this.router.post("/findAll", (req, res) => this.controller.findAll(req, res, "isSupplier"));
+    this.router.post("/findOne", (req, res) => this.controller.findOne(req, res, "isSupplier"));
     this.router.post("/save", (req, res) => this.controller.save(req, res));
     //this.router.post("/delete", (req, res) => this.controller.delete(req, res));
   }

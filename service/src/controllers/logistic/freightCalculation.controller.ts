@@ -4,6 +4,8 @@ import { FreightCalculation, FreightCalculationRecipient, FreightCalculationType
 import { Op } from "sequelize";
 import { FreightCalculationService } from "../../services/logistic/freightCalculation.service";
 
+import sql from 'mssql';
+
 export default class FreightCalculationController {
 
     async findAll(req: Request, res: Response) {
@@ -103,6 +105,45 @@ export default class FreightCalculationController {
         Auth(req, res).then(async ({sequelize}) => {
             try
             {
+
+                /*
+                const transaction = await sequelize.transaction();
+
+                const freightCalculations = await FreightCalculation.findAll({
+                    attributes: ['id', 'description', 'aliquotICMS'],
+                    include: [
+                        {model: MesoRegion, attributes: ['id', 'description']},
+                        {model: FreightCalculationRecipient, attributes: ['id'],
+                            include: [{model: MesoRegion, attributes: ['id', 'description']},]
+                        },
+                        {model: FreightCalculationWeight, attributes: ['id', 'startWeight', 'endWeight', 'calculationType', 'value']},
+                    ],
+                    order: [['description', 'asc']], transaction
+                });
+
+                await sql.connect('Server=170.254.135.108,1433;Database=GlobalTCL;User Id=sa;Password=Tcldatabase@01;Encrypt=false')
+
+                for (const r of freightCalculations) {
+
+                    var query = `INSERT INTO FreteCalculo (IDRemetenteMesoRegiao, Descricao, AliquotaICMS) VALUES ((SELECT TOP 1 ID FROM MesoRegiao WHERE Descricao = '${r.senderMesoRegion?.description}'), '${r.description}', ${r.aliquotICMS}); `;
+
+                    for (const recipient of r.recipients || []) {
+                        query += `INSERT INTO FreteCalculoDestinatario (IDFreteCalculo, IDDestinatarioMesoRegiao) VALUES (IDENT_CURRENT('FreteCalculo'), (SELECT TOP 1 ID FROM MesoRegiao WHERE Descricao = '${recipient.recipientMesoRegion?.description}')); `;
+                    }
+
+                    for (const weight of r.weights || []) {
+                        query += `INSERT INTO FreteCalculoPeso (IDFreteCalculo, PesoInicial, PesoFinal, CalculoTipo, Valor) VALUES (IDENT_CURRENT('FreteCalculo'), ${weight.startWeight}, ${weight.endWeight}, '${weight.calculationType == 'fix' ? 'fixo' : 'multiplicado'}', ${weight.value}); `;
+                    }
+
+                    console.log(query);
+
+                    await sql.query(query);
+                }
+
+                res.status(200).json({message: 'success'});
+
+                */
+
                 const transaction = await sequelize.transaction();
 
                 const freightCalculation = req.body as FreightCalculation;
@@ -125,6 +166,7 @@ export default class FreightCalculationController {
                 sequelize.close();
 
                 res.status(200).json(freightCalculation);
+              
 
             }
             catch (err) {

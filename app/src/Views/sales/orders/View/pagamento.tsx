@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { AutoComplete, Button, DatePicker, GridView, Modal, TextBox, ViewModal } from "../../../../Utils/Controls";
+import { AutoComplete, Button, DatePicker, GridView, Modal, NumericBox, TextBox, ViewModal } from "../../../../Utils/Controls";
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
@@ -21,7 +21,7 @@ class ViewPagamento extends ViewModal {
         id: "",
         formaPagamento: null,
         vencimento: null,
-        valor: "0,00",
+        valor: null,
     }
 
     public Show = async (item?: any): Promise<any> =>
@@ -37,7 +37,7 @@ class ViewPagamento extends ViewModal {
 
     render(): React.ReactNode {
         return (
-            <Modal Open={this.state.open} Title='Forma de pagamento' Width={450} Close={this.Close}>
+            <Modal Open={this.state.open} Title='Forma de pagamento' Width={400} Close={this.Close}>
                 
                 <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                     <Grid md={12}>
@@ -49,7 +49,7 @@ class ViewPagamento extends ViewModal {
                         <DatePicker Label='Vencimento' Text={this.state.vencimento} OnChange={(args: EventArgs) => this.setState({vencimento: args.Value})} />
                     </Grid>
                     <Grid md={6}>
-                        <TextBox Label='Valor' TextTransform='UpperCase' Text={this.state.valor} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} />
+                        <NumericBox Label='Valor' Text={this.state.valor} Prefix="R$ " Scale={2} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} />
                     </Grid>
                 </Grid>
 
@@ -69,10 +69,9 @@ export class Pagamento extends BaseDetails<Readonly<{Itens: any[], OnChange?: Fu
 
         const item: any = await this.ViewContato.current?.Show({
             id: "",
-            quantidade: "1",
-            valor: "",
             formaPagamento: null,
-            vencimento: null
+            vencimento: null,
+            valor: null
         });
 
         if (item == null) return;

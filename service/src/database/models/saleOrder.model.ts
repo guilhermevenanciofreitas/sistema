@@ -3,9 +3,9 @@ import { Partner } from "./partner.model";
 import { SaleOrderItem } from "./saleOrderItem.model";
 import { SaleOrderRecieve } from "./saleOrderRecieve.model";
 import { SaleOrderStatus } from "./saleOrderStatus.model";
-import { PedidoVendaTipoEntrega } from "./pedidoVendaTipoEntrega.model";
-import { PedidoVendaDeliveryRoute } from "./pedidoVendaDeliveryRoute.model";
+import { SaleOrderShippingType } from "./saleOrderShippingType.model";
 import { Company } from "./company.model";
+import { SaleOrderNfe } from "./saleOrderNfe.model";
 
 @Table({tableName: "saleOrder"})
 export class SaleOrder extends Model {
@@ -13,14 +13,14 @@ export class SaleOrder extends Model {
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
   id?: string;
 
+  @Column({type: DataType.UUID, field: "companyId"})
+  companyId?: string;
+
   @Column({type: DataType.STRING(30), field: "number"})
   number?: string;
 
   @Column({type: DataType.UUID, field: "costumerId"})
   costumerId?: string;
-
-  @Column({type: DataType.UUID, field: "companyId"})
-  companyId?: string;
 
   @Column({type: DataType.UUID, field: "sellerId"})
   sellerId?: string;
@@ -28,48 +28,47 @@ export class SaleOrder extends Model {
   @Column({type: DataType.UUID, field: "statusId"})
   statusId?: string;
 
-  @Column({type: DataType.UUID, field: "tipoEntregaId"})
-  tipoEntregaId?: string;
+  @Column({type: DataType.UUID, field: "shippingTypeId"})
+  shippingTypeId?: string;
 
-  @Column({type: DataType.JSONB, field: "entrega"})
-  entrega?: any;
+  @Column({type: DataType.UUID, field: "shippingCompanyId"})
+  shippingCompanyId?: string;
 
-  @Column({type: DataType.UUID, field: "entregadorId"})
-  entregadorId?: string;
+  @Column({type: DataType.JSONB, field: "shippingAddress"})
+  shippingAddress?: any;
 
-  @Column({type: DataType.DECIMAL(18, 2), field: "valor"})
-  valor?: number;
+  @Column({type: DataType.DECIMAL(18, 2), field: "value"})
+  value?: number;
 
   @Column({type: DataType.DATE, field: "createdAt"})
   createdAt?: Date;
 
 
+  @BelongsTo(() => Company, {as: 'company', foreignKey: 'companyId'})
+  company?: Company;
   
   @BelongsTo(() => Partner, {as: 'costumer', foreignKey: 'costumerId'})
   costumer?: Partner;
 
-  @BelongsTo(() => Company, {as: 'company', foreignKey: 'companyId'})
-  company?: Company;
-
   @BelongsTo(() => Partner, {as: 'seller', foreignKey: 'sellerId'})
   seller?: Partner;
 
-  @BelongsTo(() => PedidoVendaTipoEntrega, 'tipoEntregaId')
-  tipoEntrega?: PedidoVendaTipoEntrega;
-
-  @BelongsTo(() => SaleOrderStatus, 'statusId')
+  @BelongsTo(() => SaleOrderStatus, {as: 'status', foreignKey: 'statusId'})
   status?: SaleOrderStatus;
 
-  @HasMany(() => SaleOrderItem, 'saleOrderId')
-  saleOrderItems?: SaleOrderItem[];
+  @BelongsTo(() => SaleOrderShippingType, {as: 'shippingType', foreignKey: 'shippingTypeId'})
+  shippingType?: SaleOrderShippingType;
 
-  @HasMany(() => SaleOrderRecieve, 'pedidoVendaId')
-  pagamentos?: SaleOrderRecieve[];
+  @BelongsTo(() => Partner, {as: 'shippingCompany', foreignKey: 'shippingCompanyId'})
+  shippingCompany?: Partner;
 
-  @BelongsTo(() => Partner, 'entregadorId')
-  entregador?: Partner;
+  @HasMany(() => SaleOrderItem, {as: 'items', foreignKey: 'saleOrderId'})
+  items?: SaleOrderItem[];
 
-  @HasMany(() => PedidoVendaDeliveryRoute, 'pedidoVendaId')
-  deliveryRoutes?: PedidoVendaDeliveryRoute[];
+  @HasMany(() => SaleOrderRecieve, {as: 'recievies', foreignKey: 'saleOrderId'})
+  recievies?: SaleOrderRecieve[];
+
+  @HasMany(() => SaleOrderNfe, {as: 'nfes', foreignKey: 'saleOrderId'})
+  nfes?: SaleOrderNfe[];
 
 }

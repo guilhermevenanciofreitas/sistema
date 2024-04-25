@@ -7,7 +7,7 @@ export class EmpresaService {
 
     public static IsValid = (empresa: Company) => {
 
-        if (empresa.razaoSocial == '') {
+        if (empresa.name == '') {
             return { success: false, message: 'Informe a razão social!' };
         }
 

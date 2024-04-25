@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { BankAccount, Company, PaymentForm, Municipio, Partner, PedidoVendaTipoEntrega, Product, ProductCategory, ProdutoCombinacao, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco, CalledOccurrence, FreightCalculationType, MesoRegion, State } from "../../database";
+import { BankAccount, Company, PaymentForm, Municipio, Partner, SaleOrderShippingType, Product, ProductCategory, ProductCombination, ProdutoCombinacaoGrupo, ProdutoCombinacaoItem, TabelaPreco, CalledOccurrence, FreightCalculationType, MesoRegion, State } from "../../database";
 import { Op } from "sequelize";
 import { Bank } from "../../database/models/bank.model";
 
@@ -16,10 +16,10 @@ export default class SearchController {
                 let where: any = {};
    
                 if (req.body?.Search) {
-                    where = {"nomeFantasia": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                    where = {"surname": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
         
-                const companies = await Company.findAll({attributes: ["id", "cpfCnpj", "nomeFantasia"], where, order: [["nomeFantasia", "asc"]], transaction});
+                const companies = await Company.findAll({attributes: ["id", "cpfCnpj", "surname"], where, order: [["surname", "asc"]], transaction});
         
                 sequelize.close();
 
@@ -72,10 +72,10 @@ export default class SearchController {
                 let where: any = {};
    
                 if (req.body?.Search) {
-                    where = {"nome": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                    where = {"surname": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
         
-                const clientes = await Partner.findAll({attributes: ["id", "cpfCnpj", "nome"], where, order: [["nome", "asc"]], transaction});
+                const clientes = await Partner.findAll({attributes: ["id", "cpfCnpj", "surname"], where, order: [["surname", "asc"]], transaction});
         
                 sequelize.close();
 
@@ -99,13 +99,13 @@ export default class SearchController {
 
                 let where: any = {};
    
-                where = {"isCliente": true};
+                where = {"isCostumer": true};
 
                 if (req.body?.Search) {
-                    where = {"nome": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                    where = {"surname": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
         
-                const clientes = await Partner.findAll({attributes: ["id", "cpfCnpj", "nome", "isBloquearVenda"], where, order: [["nome", "asc"]], transaction});
+                const clientes = await Partner.findAll({attributes: ["id", "cpfCnpj", "surname", "isBlockSale"], where, order: [["surname", "asc"]], transaction});
         
                 sequelize.close();
 
@@ -129,13 +129,13 @@ export default class SearchController {
 
                 let where: any = {};
    
-                where = {"isFuncionario": true};
+                where = {"isEmployee": true};
 
                 if (req.body?.Search) {
-                    where = {"nome": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                    where = {"surname": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
         
-                const clientes = await Partner.findAll({attributes: ["id", "cpfCnpj", "nome"], where, order: [["nome", "asc"]], transaction});
+                const clientes = await Partner.findAll({attributes: ["id", "cpfCnpj", "surname"], where, order: [["surname", "asc"]], transaction});
         
                 sequelize.close();
 
@@ -160,17 +160,17 @@ export default class SearchController {
                 let where: any = {};
    
                 if (req.body?.Search) {
-                    where = {"descricao": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                    where = {"name": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
         
-                const produtos = await Product.findAll({attributes: ["id", "nome"],
-                    include: [{model: ProdutoCombinacao, attributes: ["id", "isObrigatorio", "minimo", "maximo", "ordem"],
+                const produtos = await Product.findAll({attributes: ["id", "name"],
+                    include: [{model: ProductCombination, attributes: ["id", "isObrigatorio", "minimo", "maximo", "ordem"],
                         include: [{model: ProdutoCombinacaoGrupo, attributes: ["id", "descricao"],
                             include: [{model: ProdutoCombinacaoItem, attributes: ["id", "nome"]}]    
                         }]
                     }],
                     where,
-                    order: [["nome", "asc"]], transaction
+                    order: [["name", "asc"]], transaction
                 });
         
                 sequelize.close();
@@ -309,7 +309,7 @@ export default class SearchController {
         });
     }
 
-    async tipoEntrega(req: Request, res: Response) {
+    async saleOrderShippingType(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try {
@@ -319,10 +319,10 @@ export default class SearchController {
                 let where: any = {};
 
                 if (req.body?.Search) {
-                    where = {"descricao": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                    where = {"description": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
 
-                const tipoEntregas = await PedidoVendaTipoEntrega.findAll({attributes: ["id", "descricao"], where, order: [["descricao", "asc"]], transaction});
+                const tipoEntregas = await SaleOrderShippingType.findAll({attributes: ["id", "description"], where, order: [["description", "asc"]], transaction});
         
                 sequelize.close();
 

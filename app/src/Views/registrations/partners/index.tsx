@@ -1,31 +1,29 @@
 import React from "react";
 import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
 import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
-import BaseParceiros from "./index.base";
+import PartnersBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
 import { ViewImportar } from "./importar";
 import { ViewFiltro } from "./filtro";
-import { ViewParceiro } from "./View";
+import { ViewPartner } from "./View";
 
 const Columns = [
     { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
     { selector: (row: any) => row.cpfCnpj, sort: 'cpfCnpj', name: 'CPF/CNPJ', sortable: true },
-    { selector: (row: any) => row.nome, sort: 'nome', name: 'Nome/Razão Social', sortable: true },
-    { selector: (row: any) => row.apelido, sort: 'apelido', name: 'Apelido/NomeFantasia', sortable: true },
+    { selector: (row: any) => row.name, sort: 'name', name: 'Nome/Razão Social', sortable: true },
+    { selector: (row: any) => row.surname, sort: 'surname', name: 'Apelido/NomeFantasia', sortable: true },
 ];
 
-export default class Parceiros extends BaseParceiros {
-
-    private ref = this.ViewParceiro;
+export default class Partners extends PartnersBase {
 
     render(): React.ReactNode {
 
         return (
             <>
 
-                {React.createElement(ViewParceiro, {...this.props.ViewParceiro.props, ref: this.ViewParceiro })}
+                {React.createElement(ViewPartner, {...this.props.ViewPartner.props, ref: this.ViewPartner })}
                 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
@@ -62,11 +60,12 @@ export default class Parceiros extends BaseParceiros {
                         Loading={this.state.Loading}
 
                         Columns={Columns}
-                        Rows={this.state.Data.rows}
+                        
+                        Rows={this.state.response.rows}
+                        Count={this.state.response.count}
 
-                        Count={this.state.Data.count}
-                        Limit={this.state.Data.limit}
-                        OffSet={this.state.Data.offset}
+                        Limit={this.state.request.limit}
+                        OffSet={this.state.request.offset}
 
                         Records={[10, 50, 100, 500]}
 

@@ -7,7 +7,7 @@ export class ProductTemplate extends React.Component {
         return <>
             <ResultContext.Consumer>
                 {({ args }: any) => (
-                    <span>{args.nome}</span>
+                    <span>{args.name}</span>
                 )}
             </ResultContext.Consumer>
         </>

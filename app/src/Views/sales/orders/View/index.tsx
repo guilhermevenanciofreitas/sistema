@@ -10,7 +10,7 @@ import { Itens } from './itens';
 import { MunicipioTemplate } from '../../../../Search/Templates/Municipio';
 import { Estados } from '../../../../Utils/Estados';
 import { Pagamento } from './pagamento';
-import { TipoEntregaTemplate } from '../../../../Search/Templates/TipoEntrega';
+import { SaleOrderShippingTypeTemplate } from '../../../../Search/Templates/SaleOrderShippingType';
 import { EmployeeTemplate } from '../../../../Search/Templates/Employee';
 import _ from 'lodash';
 import { CompanyTemplate } from '../../../../Search/Templates/Company';
@@ -33,7 +33,7 @@ export class ViewOrder extends ViewOrderBase {
                             <TextBox Label='Número' TextTransform='UpperCase' Text={this.state.number} OnChange={(args: EventArgs) => this.setState({number: args.Value})} />
                         </Grid>
                         <Grid md={4}>
-                            <AutoComplete Label='Cliente' Pesquisa={async(Text: string) => await Search.Costumer(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.costumer} OnChange={async (costumer: any) => {
+                            <AutoComplete Label='Cliente' Pesquisa={async(Text: string) => await Search.Costumer(Text)} Text={(Item: any) => `${Item.surname}` } Value={this.state.costumer} OnChange={async (costumer: any) => {
                                 if (costumer?.isBloquearVenda) {
                                     await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Cliente bloqueado para venda!", buttons: [{ Text: "OK" }]});
                                     return;
@@ -44,8 +44,8 @@ export class ViewOrder extends ViewOrderBase {
                             </AutoComplete>
                         </Grid>
                         <Grid md={3}>
-                            <AutoComplete Label='Tipo de entrega' Pesquisa={async(Text: string) => await Search.TipoEntrega(Text)} Text={(Item: any) => `${Item.descricao}` } Value={this.state.tipoEntrega} OnChange={(args: any) => this.setState({tipoEntrega: args})}>
-                                <TipoEntregaTemplate />
+                            <AutoComplete Label='Tipo de entrega' Pesquisa={async(Text: string) => await Search.SaleOrderShippingType(Text)} Text={(Item: any) => `${Item.descricao}` } Value={this.state.tipoEntrega} OnChange={(args: any) => this.setState({tipoEntrega: args})}>
+                                <SaleOrderShippingTypeTemplate />
                             </AutoComplete>
                         </Grid>
                         <Grid md={3}>
@@ -54,7 +54,7 @@ export class ViewOrder extends ViewOrderBase {
                                 <div style={{display: 'flex', height: 'auto'}}>
                                     <div style={{marginTop: '3px', width: '15px', height: '15px', backgroundColor: _.get(this.state.status, 'color') || '#a0a0a0', borderRadius: '25px'}}></div>
                                     <div style={{paddingLeft: '8px'}}>
-                                        {_.get(this.state.status, 'descricao') || "Pendente"}
+                                        {_.get(this.state.status, 'description') || "Pendente"}
                                     </div>
                                 </div>
                             </Alert>
@@ -75,12 +75,12 @@ export class ViewOrder extends ViewOrderBase {
                             <TextBox Label='Criado em' Text={this.state.createdAt} ReadOnly={true} />
                         </Grid>
                         <Grid md={2}>
-                            <TextBox Label='Valor total' Text={_.sum(this.state.itens.map((c: any) => parseFloat(c.valor.toString() || "0"))).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'})} ReadOnly={true} />
+                            <TextBox Label='Valor total' Text={_.sum(this.state.saleOrderItems.map((c: any) => parseFloat(c.value.toString() || '0'))).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})} ReadOnly={true} />
                         </Grid>
 
                         <Tab>
                             <TabItem Title='Itens' Visible={true}>
-                                <Itens Itens={this.state.itens} OnChange={(itens: any[]) => this.setState({itens})} />
+                                <Itens Itens={this.state.saleOrderItems} OnChange={(saleOrderItems: any[]) => this.setState({saleOrderItems})} />
                             </TabItem>
                             <TabItem Title='Entrega' Visible={this.state.tipoEntrega != null}>
                                 <>

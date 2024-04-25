@@ -1,30 +1,30 @@
 --company
 CREATE TABLE IF NOT EXISTS "company"();
 ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "razaoSocial" VARCHAR(100);
-ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "nomeFantasia" VARCHAR(100);
+ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "name" VARCHAR(100);
+ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "surname" VARCHAR(100);
 ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "cpfCnpj" VARCHAR(14);
-ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "endereco" JSONB;
+ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "address" JSONB;
 ALTER TABLE "company" ADD COLUMN IF NOT EXISTS "pedidoDigital" JSONB;
 
 --user
 CREATE TABLE IF NOT EXISTS "user"();
 ALTER TABLE "user" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
 ALTER TABLE "user" ADD COLUMN IF NOT EXISTS "email" VARCHAR(100);
-ALTER TABLE "user" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(80);
+ALTER TABLE "user" ADD COLUMN IF NOT EXISTS "name" VARCHAR(80);
 
 --partner
 CREATE TABLE IF NOT EXISTS "partner"();
 ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isCliente" BOOLEAN;
-ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isFornecedor" BOOLEAN;
-ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isTransportadora" BOOLEAN;
-ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isFuncionario" BOOLEAN;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isCustomer" BOOLEAN;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isSupplier" BOOLEAN;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isShippingCompany" BOOLEAN;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isEmployee" BOOLEAN;
 ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "cpfCnpj" VARCHAR(14);
-ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(100);
-ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "apelido" VARCHAR(100);
-ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "nascimento" DATE;
-ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "sexo" SMALLINT;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "name" VARCHAR(100);
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "surname" VARCHAR(100);
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "birth" DATE;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "sex" SMALLINT;
 ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "estadoCivil" SMALLINT;
 ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "rg" VARCHAR(20);
 ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "ie" VARCHAR(30);
@@ -33,27 +33,27 @@ ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "escolaridade" SMALLINT;
 ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "profissao" VARCHAR(80);
 ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "tabelaPrecoId" UUID;
 ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isAtivo" BOOLEAN DEFAULT true;
-ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isBloquearVenda" BOOLEAN DEFAULT false;
+ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isBlockSale" BOOLEAN DEFAULT false;
 ALTER TABLE "partner" ADD COLUMN IF NOT EXISTS "isBloquearCompra" BOOLEAN DEFAULT false;
 
---parceirosContato
-CREATE TABLE IF NOT EXISTS "parceirosContato"();
-ALTER TABLE "parceirosContato" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "parceirosContato" ADD COLUMN IF NOT EXISTS "parceiroId" UUID;
-ALTER TABLE "parceirosContato" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(80);
-ALTER TABLE "parceirosContato" ADD COLUMN IF NOT EXISTS "telefone" VARCHAR(30);
-ALTER TABLE "parceirosContato" ADD COLUMN IF NOT EXISTS "email" VARCHAR(120);
+--partnerContact
+CREATE TABLE IF NOT EXISTS "partnerContact"();
+ALTER TABLE "partnerContact" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "partnerContact" ADD COLUMN IF NOT EXISTS "partnerId" UUID;
+ALTER TABLE "partnerContact" ADD COLUMN IF NOT EXISTS "name" VARCHAR(80);
+ALTER TABLE "partnerContact" ADD COLUMN IF NOT EXISTS "phone" VARCHAR(30);
+ALTER TABLE "partnerContact" ADD COLUMN IF NOT EXISTS "email" VARCHAR(120);
 
---parceirosEndereco
-CREATE TABLE IF NOT EXISTS "parceirosEndereco"();
-ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "parceiroId" UUID;
-ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "cep" VARCHAR(8);
-ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "logradouro" VARCHAR(100);
-ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "numero" VARCHAR(20);
-ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "complemento" VARCHAR(50);
-ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "bairro" VARCHAR(50);
-ALTER TABLE "parceirosEndereco" ADD COLUMN IF NOT EXISTS "estadoId" UUID;
+--partnerAddress
+CREATE TABLE IF NOT EXISTS "partnerAddress"();
+ALTER TABLE "partnerAddress" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "partnerAddress" ADD COLUMN IF NOT EXISTS "partnerId" UUID;
+ALTER TABLE "partnerAddress" ADD COLUMN IF NOT EXISTS "cep" VARCHAR(8);
+ALTER TABLE "partnerAddress" ADD COLUMN IF NOT EXISTS "logradouro" VARCHAR(100);
+ALTER TABLE "partnerAddress" ADD COLUMN IF NOT EXISTS "numero" VARCHAR(20);
+ALTER TABLE "partnerAddress" ADD COLUMN IF NOT EXISTS "complemento" VARCHAR(50);
+ALTER TABLE "partnerAddress" ADD COLUMN IF NOT EXISTS "bairro" VARCHAR(50);
+ALTER TABLE "partnerAddress" ADD COLUMN IF NOT EXISTS "estadoId" UUID;
 
 --state
 CREATE TABLE IF NOT EXISTS "state"();
@@ -73,17 +73,17 @@ ALTER TABLE "municipio" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(60);
 --product
 CREATE TABLE IF NOT EXISTS "product"();
 ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(100);
-ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
-ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "categoriaId" UUID;
-ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "isCombinacao" BOOLEAN;
-ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(10, 2);
+ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "name" VARCHAR(100);
+ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
+ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "categoryId" UUID;
+ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "isCombination" BOOLEAN;
+ALTER TABLE "product" ADD COLUMN IF NOT EXISTS "value" DECIMAL(10, 2);
 
 --productCategory
 CREATE TABLE IF NOT EXISTS "productCategory"();
 ALTER TABLE "productCategory" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "productCategory" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
-ALTER TABLE "productCategory" ADD COLUMN IF NOT EXISTS "imagem" BYTEA;
+ALTER TABLE "productCategory" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
+ALTER TABLE "productCategory" ADD COLUMN IF NOT EXISTS "image" BYTEA;
 ALTER TABLE "productCategory" ADD COLUMN IF NOT EXISTS "ordem" INTEGER;
 
 --produtoCombinacaoGrupo
@@ -102,14 +102,14 @@ ALTER TABLE "produtoCombinacaoItem" ADD COLUMN IF NOT EXISTS "combinacaoId" UUID
 ALTER TABLE "produtoCombinacaoItem" ADD COLUMN IF NOT EXISTS "nome" VARCHAR(100);
 ALTER TABLE "produtoCombinacaoItem" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
 
---produtoCombinacao
-CREATE TABLE IF NOT EXISTS "produtoCombinacao"();
-ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "produtoId" UUID;
-ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "combinacaoId" UUID;
-ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "isObrigatorio" BOOLEAN;
-ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "minimo" INTEGER;
-ALTER TABLE "produtoCombinacao" ADD COLUMN IF NOT EXISTS "maximo" INTEGER;
+--productCombination
+CREATE TABLE IF NOT EXISTS "productCombination"();
+ALTER TABLE "productCombination" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "productCombination" ADD COLUMN IF NOT EXISTS "productId" UUID;
+ALTER TABLE "productCombination" ADD COLUMN IF NOT EXISTS "combinacaoId" UUID;
+ALTER TABLE "productCombination" ADD COLUMN IF NOT EXISTS "isObrigatorio" BOOLEAN;
+ALTER TABLE "productCombination" ADD COLUMN IF NOT EXISTS "minimo" INTEGER;
+ALTER TABLE "productCombination" ADD COLUMN IF NOT EXISTS "maximo" INTEGER;
 
 --service
 CREATE TABLE IF NOT EXISTS "service"();
@@ -127,7 +127,7 @@ ALTER TABLE "contratos" ADD COLUMN IF NOT EXISTS "rescisaoId" UUID;
 --saleOrderStatus
 CREATE TABLE IF NOT EXISTS "saleOrderStatus"();
 ALTER TABLE "saleOrderStatus" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "saleOrderStatus" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+ALTER TABLE "saleOrderStatus" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
 ALTER TABLE "saleOrderStatus" ADD COLUMN IF NOT EXISTS "color" VARCHAR(20);
 ALTER TABLE "saleOrderStatus" ADD COLUMN IF NOT EXISTS "ordem" INTEGER;
 
@@ -140,21 +140,21 @@ ALTER TABLE "saleOrderStatusByFrom" ADD COLUMN IF NOT EXISTS "statusFromId" UUID
 --saleOrder
 CREATE TABLE IF NOT EXISTS "saleOrder"();
 ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "companyId" UUID;
 ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "number" VARCHAR(30);
 ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "costumerId" UUID;
-ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "companyId" UUID;
 ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "sellerId" UUID;
-ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "tipoEntregaId" UUID;
-ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "pedidoVendaStatusId" UUID;
-ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "entregadorId" UUID;
-ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "entrega" JSONB;
-ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "valor" DECIMAL(18, 2);
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "statusId" UUID;
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "value" DECIMAL(18, 2);
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "shippingTypeId" UUID;
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "shippingCompanyId" UUID;
+ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "shippingAddress" JSONB;
 ALTER TABLE "saleOrder" ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMP WITHOUT TIME ZONE;
 
---pedidoVendaTipoEntrega
-CREATE TABLE IF NOT EXISTS "pedidoVendaTipoEntrega"();
-ALTER TABLE "pedidoVendaTipoEntrega" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
-ALTER TABLE "pedidoVendaTipoEntrega" ADD COLUMN IF NOT EXISTS "descricao" VARCHAR(100);
+--saleOrderShippingType
+CREATE TABLE IF NOT EXISTS "saleOrderShippingType"();
+ALTER TABLE "saleOrderShippingType" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "saleOrderShippingType" ADD COLUMN IF NOT EXISTS "description" VARCHAR(100);
 
 --saleOrderProgress
 CREATE TABLE IF NOT EXISTS "saleOrderProgress"();
@@ -183,6 +183,12 @@ ALTER TABLE "pedidoVendaItemCombinacaoItem" ADD COLUMN IF NOT EXISTS "id" UUID D
 ALTER TABLE "pedidoVendaItemCombinacaoItem" ADD COLUMN IF NOT EXISTS "pedidoVendaItemCombinacaoId" UUID;
 ALTER TABLE "pedidoVendaItemCombinacaoItem" ADD COLUMN IF NOT EXISTS "itemCombinacaoId" UUID;
 ALTER TABLE "pedidoVendaItemCombinacaoItem" ADD COLUMN IF NOT EXISTS "quantidade" DECIMAL(10, 3);
+
+--saleOrderNfe
+CREATE TABLE IF NOT EXISTS "saleOrderNfe"();
+ALTER TABLE "saleOrderNfe" ADD COLUMN IF NOT EXISTS "id" UUID DEFAULT gen_random_uuid() PRIMARY KEY;
+ALTER TABLE "saleOrderNfe" ADD COLUMN IF NOT EXISTS "saleOrderId" UUID;
+ALTER TABLE "saleOrderNfe" ADD COLUMN IF NOT EXISTS "nfeId" UUID;
 
 --saleOrderRecieve
 CREATE TABLE IF NOT EXISTS "saleOrderRecieve"();

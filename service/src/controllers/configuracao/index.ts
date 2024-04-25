@@ -18,8 +18,8 @@ export default class ConfiguracaoController {
                 const empresa = await Company.findOne({attributes: [
                     "id",
                     "cpfCnpj",
-                    "razaoSocial",
-                    "nomeFantasia",
+                    "name",
+                    "surname",
                     "pedidoDigital",
                 ],
                 where: {id: req.body.id},

@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, CardStatus, Container, Left, ListView, Right } from "../../../Utils/Controls";
 import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
-import { ViewOrder } from "./View/index";
+import { ViewOrderInvoicing } from "./View/index";
 import OrdersBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { Grid, IconButton } from "@mui/joy";
@@ -21,15 +21,15 @@ const Number = ({ row }: any) => {
     );
 };
 
-export default class Orders extends OrdersBase {
+export default class Invoicing extends OrdersBase {
 
     private Columns = [
         { selector: (row: any) => <Number row={row} />, sort: 'number', name: 'Número', sortable: true, maxWidth:"100px" },
-        { selector: (row: any) => row.createdAt, sort: 'surname', name: 'Criado em', sortable: true, maxWidth:"200px" },
-        { selector: (row: any) => row.company?.surname, sort: 'surname', name: 'Empresa', sortable: true },
-        { selector: (row: any) => row.costumer?.surname, sort: 'surname', name: 'Nome', sortable: true },
-        { selector: (row: any) => row.seller?.surname, sort: 'surname', name: 'Vendedor', sortable: true, maxWidth:"300px" },
-        { selector: (row: any) => row.status?.description || 'PENDENTE', sort: '$status.descricao', name: 'Status', sortable: true },
+        { selector: (row: any) => row.createdAt, sort: 'nome', name: 'Criado em', sortable: true, maxWidth:"200px" },
+        { selector: (row: any) => row.company?.nomeFantasia, sort: 'nome', name: 'Empresa', sortable: true },
+        { selector: (row: any) => row.costumer?.nome, sort: 'nome', name: 'Nome', sortable: true },
+        { selector: (row: any) => row.seller?.nome, sort: 'nome', name: 'Vendedor', sortable: true, maxWidth:"300px" },
+        { selector: (row: any) => row.status?.descricao || 'PENDENTE', sort: '$status.descricao', name: 'Status', sortable: true },
         { selector: (row: any) => parseFloat(row.valor).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}), sort: 'valor', name: 'Valor', right: true, sortable: true, maxWidth:"120px" },
     ];
 
@@ -38,24 +38,21 @@ export default class Orders extends OrdersBase {
         return (
             <>
 
-                <ViewOrder ref={this.ViewOrder} Title="Pedido" />
+                <ViewOrderInvoicing ref={this.ViewOrderInvoicing} Title="Faturar" />
 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
 
                 <JoyLayout>
 
-                    <Title>Pedidos</Title>
+                    <Title>Faturamento</Title>
 
                     <Container>
                         <Left>
-                            {this.state.Selecteds.length == 0 && (
-                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnNovo_Click} />
-                            )}
+                            <Button Text='Faturar' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnInvoice_Click} />
                             {this.state.Selecteds.length >= 1 && (
                                 <>
                                 <Button Text='Excluir' Type='Button' Color='white' BackgroundColor='red' StartIcon={<Delete />} OnClick={this.BtnDelete_Click} />
-                                <Button Text='Editar' Type='Button' Color='white' BackgroundColor='#0d6efd' StartIcon={<ChangeCircle />} OnClick={this.BtnNovo_Click} />
                                 &nbsp;&nbsp;({this.state.Selecteds.length}) registro(s) selecionado(s)
                                 </>
                             )}
@@ -70,20 +67,6 @@ export default class Orders extends OrdersBase {
                             <Button Text='Pesquisar' Type='Button' Color='white' BackgroundColor='#0d6efd' StartIcon={<SearchRounded />} OnClick={this.BtnPesquisar_Click} />
                         </Right>
                     </Container>
-                    
-
-                    <Grid container spacing={1} sx={{ flexGrow: 1 }}>
-
-                        <Grid md={2}>
-                            <CardStatus checked={this.state.request.statusId == ''} status={'Pendente'} value={_.sum(_.map(_.filter(this.state.response.rows, (c: any) => c.statusId == null), (c: any) => parseFloat(c.valor || "0")))} bagde={_.size(_.filter(this.state.response.rows, (c: any) => c.statusId == null))} color={'#a0a0a0'} OnClick={() => this.CardStatus_Click('')} />
-                        </Grid>
-                        
-                        {_.map(_.get(this.state.response, 'saleOrderStatus'), (status: any) => (
-                            <Grid md={2}>
-                                <CardStatus checked={this.state.request.statusId == status.id} status={status.description.toLowerCase().replace(/(?:^|\s)\S/g, (text: any) => text.toUpperCase())} value={status.ammount} bagde={status.quantity} color={status?.color} OnClick={() => this.CardStatus_Click(status?.id)} />
-                            </Grid>
-                        ))}
-                    </Grid>
                     
                     <ListView
                         Loading={this.state.Loading}

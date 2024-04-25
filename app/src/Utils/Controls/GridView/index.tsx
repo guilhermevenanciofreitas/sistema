@@ -13,7 +13,7 @@ export class ControlGridView extends GridViewBase {
           data={this.props.Rows || []}
           onRowDoubleClicked={(args: any) => this.props.OnItem(args)}
           dense
-          selectableRows
+          selectableRows={this.props.SelectedRows}
           onSort={(column: any, direction: any) => {if (!column?.sort) return;this.props.OnSort({column: column.sort, direction})}}
           highlightOnHover
           noDataComponent={<h3>Nenhum resultado encontrato!</h3>}

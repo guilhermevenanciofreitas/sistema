@@ -8,8 +8,8 @@ export class SaleOrderStatus extends Model {
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
   id?: string;
 
-  @Column({type: DataType.STRING(100), field: "descricao"})
-  descricao?: string;
+  @Column({type: DataType.STRING(100), field: "description"})
+  description?: string;
 
   @Column({type: DataType.STRING(20), field: "color"})
   color?: string;

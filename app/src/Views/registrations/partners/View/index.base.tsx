@@ -3,20 +3,20 @@ import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
 
-export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: "customer" | "supplier" | "shipping-company" | "employee"}>> {
+export class ViewPartnerBase extends ViewModal<Readonly<{Title: string, Type: "customer" | "supplier" | "shipping-company" | "employee"}>> {
 
     state = {
         open: false,
-        tipo: "CPF",
-        cpfCnpj: "",
-        nome: "",
-        apelido: "",
-        isCliente: false,
-        isFornecedor: false,
-        isTransportadora: false,
-        isFuncionario: false,
-        nascimento: null,
-        sexo: null,
+        type: "CPF",
+        cpfCnpj: '',
+        name: '',
+        surname: '',
+        isCustomer: false,
+        isSupplier: false,
+        isShippingCompany: false,
+        isEmployee: false,
+        birth: null,
+        sex: null,
         estadoCivil: "",
         rg: "",
         ie: "",
@@ -25,10 +25,11 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: "
         profissao: "",
         tabelaPreco: null,
         isAtivo: true,
-        isBloquearVenda: true,
+        isBlockSale: true,
         isBloquearCompra: true,
-        contatos: [],
-        enderecos: []
+
+        contacts: [],
+        address: []
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -38,7 +39,7 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: "
 
         if (id) {
             Loading.Show();
-            const r = await Service.Post(`registrations/${this.props.Tipo}/findOne`, {id});
+            const r = await Service.Post(`registrations/${this.props.Type}/findOne`, {id});
             Loading.Hide();
             this.setState(r?.data);
         }
@@ -68,7 +69,7 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: "
 
             Loading.Show();
 
-            let r = await Service.Post(`registrations/${this.props.Tipo}/save`, this.state);
+            let r = await Service.Post(`registrations/${this.props.Type}/save`, this.state);
     
             Loading.Hide();
     
@@ -91,18 +92,18 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: "
     private Limpar = () =>
     {
         this.setState({
-            id: "",
-            tipo: "CPF",
-            cpfCnpj: "",
-            nome: "",
-            apelido: "",
-            isCliente: this.props.Tipo == "customer",
-            isFornecedor: this.props.Tipo == "supplier",
-            isTransportadora: this.props.Tipo == "shipping-company",
-            isFuncionario: this.props.Tipo == "employee",
-            nascimento: null,
-            sexo: null,
-            estadoCivil: null,
+            id: '',
+            type: "CPF",
+            cpfCnpj: '',
+            name: '',
+            surname: '',
+            isCustomer: false,
+            isSupplier: false,
+            isShippingCompany: false,
+            isEmployee: false,
+            birth: null,
+            sex: null,
+            estadoCivil: "",
             rg: "",
             ie: "",
             im: "",
@@ -110,10 +111,11 @@ export class ViewParceiroBase extends ViewModal<Readonly<{Title: string, Tipo: "
             profissao: "",
             tabelaPreco: null,
             isAtivo: true,
-            isBloquearVenda: false,
-            isBloquearCompra: false,
-            contatos: [],
-            enderecos: []
+            isBlockSale: true,
+            isBloquearCompra: true,
+
+            contacts: [],
+            address: []
         });
     }
 

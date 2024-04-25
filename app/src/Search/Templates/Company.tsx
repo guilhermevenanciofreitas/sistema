@@ -7,7 +7,7 @@ export class CompanyTemplate extends React.Component {
         return (
             <ResultContext.Consumer>
                 {({ args }: any) => (
-                    <span>{args.cpfCnpj} - {args.nomeFantasia}</span>
+                    <span>{args.cpfCnpj} - {args.surname}</span>
                 )}
             </ResultContext.Consumer>
         );

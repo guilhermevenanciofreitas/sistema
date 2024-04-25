@@ -1,12 +1,12 @@
 import React from 'react';
-import Parceiros from '..';
-import { ViewParceiro } from '../View';
+import Partners from '..';
+import { ViewPartner } from '../View';
 
 export default class Clientes extends React.Component {
 
     render(): React.ReactNode {
         return (
-            <Parceiros Title='Clientes' Tipo='customer' ViewParceiro={<ViewParceiro Title='Cliente' Tipo='customer' />} />
+            <Partners Title='Clientes' Type='customer' ViewPartner={<ViewPartner Title='Cliente' Type='customer' />} />
         );
     }
 

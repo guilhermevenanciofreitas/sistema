@@ -11,7 +11,7 @@ import { ViewFiltro } from "./filtro";
 
 const Columns = [
     { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
-    { selector: (row: any) => row.nome, sort: 'nome', name: 'Nome', sortable: true },
+    { selector: (row: any) => row.name, sort: 'name', name: 'Nome', sortable: true },
     { selector: (row: any) => row.email, sort: 'email', name: 'E-mail', sortable: true },
 ];
 
@@ -59,11 +59,11 @@ export default class Usuarios extends BaseUsuarios {
                         Loading={this.state.Loading}
 
                         Columns={Columns}
-                        Rows={this.state.Data.rows}
+                        Rows={this.state.response.rows}
+                        Count={this.state.response.count}
 
-                        Count={this.state.Data.count}
-                        Limit={this.state.Data.limit}
-                        OffSet={this.state.Data.offset}
+                        Limit={this.state.request.limit}
+                        OffSet={this.state.request.offset}
 
                         Records={[10, 50, 100, 500]}
 
