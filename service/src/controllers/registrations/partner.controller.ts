@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Partner, PartnerContact, PartnerAddress, TabelaPreco } from "../../database";
+import { Partner, PartnerContact, PartnerAddress, ProductPrice } from "../../database";
 import { PartnerService } from "../../services/registrations/partner.service";
 import {Op} from "sequelize";
 

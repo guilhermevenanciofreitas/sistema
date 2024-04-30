@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { SaleOrder, SaleOrderReceivie, SaleOrderItem, SaleOrderProgress, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, SaleOrderItemCombination, SaleOrderItemCombinationItem, ProductCombination, SaleOrderStatus, ProductCombinationItem } from "../../database";
+import { SaleOrder, SaleOrderReceivie, SaleOrderItem, SaleOrderProgress, Delivery, DeliveryRoute, SaleOrderDeliveryRoute, SaleOrderItemCombination, SaleOrderItemCombinationItem, ProductCombination, SaleOrderStatus, ProductCombinationItem } from "../../database";
 import crypto from "crypto";
 import {Op} from "sequelize";
 import { SaleOrderStatusByFrom } from "../../database/models/saleOrderStatusByFrom.model";
@@ -170,9 +170,9 @@ export class SaleOrderService {
 
     }
 
-    public static PedidoVendaDeliveryRoute = async (pedidoVendaDeliveryRoute: PedidoVendaDeliveryRoute, transaction: Transaction) => {
-        pedidoVendaDeliveryRoute.id = crypto.randomUUID();
-        await PedidoVendaDeliveryRoute.create({...pedidoVendaDeliveryRoute}, {transaction});
+    public static PedidoVendaDeliveryRoute = async (saleOrderDeliveryRoute: SaleOrderDeliveryRoute, transaction: Transaction) => {
+        saleOrderDeliveryRoute.id = crypto.randomUUID();
+        await SaleOrderDeliveryRoute.create({...saleOrderDeliveryRoute}, {transaction});
     }
 
     public static DeliveryRoute = async (deliveryRoute: DeliveryRoute, transaction: Transaction) => {

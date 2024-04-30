@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { PaymentForm, Partner, SaleOrder, Product, SaleOrderReceivie, SaleOrderStatus, SaleOrderShippingType, Company, Delivery, DeliveryRoute, PedidoVendaDeliveryRoute, ProductCombination, ProductCombinationGroup, ProductCombinationItem, SaleOrderItemCombination, SaleOrderItemCombinationItem, ReceivieForm } from "../../database";
+import { PaymentForm, Partner, SaleOrder, Product, SaleOrderReceivie, SaleOrderStatus, SaleOrderShippingType, Company, Delivery, DeliveryRoute, SaleOrderDeliveryRoute, ProductCombination, ProductCombinationGroup, ProductCombinationItem, SaleOrderItemCombination, SaleOrderItemCombinationItem, ReceivieForm } from "../../database";
 import { SaleOrderService } from "../../services/sales/saleOrder.service";
 import { SaleOrderItem } from "../../database/models/saleOrderItem.model";
 import {Op, Sequelize} from "sequelize";
@@ -103,7 +103,7 @@ export default class SaleOrderController {
                     include: [
                         {model: Partner, as: "cliente", attributes: ["id", "nome"]},
                         {model: Partner, as: "entregador", attributes: ["id", "nome"]},
-                        {model: PedidoVendaDeliveryRoute, attributes: ["id"],
+                        {model: SaleOrderDeliveryRoute, attributes: ["id"],
                             include: [{model: DeliveryRoute, attributes: ["id", "entregue", "cancelado"],
                                 include: [{model: Delivery, attributes: ["id"]}]}]
                         },
@@ -296,8 +296,8 @@ export default class SaleOrderController {
                         deliveryRoute.ordem = ordem;
                         await SaleOrderService.DeliveryRoute(deliveryRoute.dataValues, transaction);
                         
-                        var pedidoVendaDeliveryRoute = new PedidoVendaDeliveryRoute();
-                        pedidoVendaDeliveryRoute.pedidoVendaId = item.id;
+                        var pedidoVendaDeliveryRoute = new SaleOrderDeliveryRoute();
+                        pedidoVendaDeliveryRoute.saleOrderId = item.id;
                         pedidoVendaDeliveryRoute.deliveryRouteId = deliveryRoute.id;
                         await SaleOrderService.PedidoVendaDeliveryRoute(pedidoVendaDeliveryRoute.dataValues, transaction);
 

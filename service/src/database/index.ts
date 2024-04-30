@@ -1,8 +1,9 @@
 import { Sequelize as sequelize } from "sequelize-typescript";
 
-import { Contrato } from "./models/contrato.model";
+import { Bank } from "./models/bank.model";
+import { Contract } from "./models/contract.model";
 import { SaleOrder } from "./models/saleOrder.model";
-import { TabelaPreco } from "./models/tabelaPreco.model";
+import { ProductPrice } from "./models/productPrice.model";
 import { User } from "./models/user.model";
 import { Partner } from "./models/partner.model";
 import { PartnerContact } from "./models/partnerContact.model";
@@ -12,14 +13,14 @@ import { Service } from "./models/service.model";
 import { Company } from "./models/company.model";
 import { Payment } from "./models/payment.model";
 import { SaleOrderItem } from "./models/saleOrderItem.model";
-import { Municipio } from "./models/municipio.model";
+import { City } from "./models/city.model";
 import { SaleOrderReceivie } from "./models/saleOrderReceivie.model";
 import { SaleOrderStatus } from "./models/saleOrderStatus.model";
 import { SaleOrderProgress } from "./models/saleOrderProgress.model";
 import { SaleOrderShippingType } from "./models/saleOrderShippingType.model";
 import { Delivery } from "./models/delivery.model";
 import { DeliveryRoute } from "./models/deliveryRoute.model";
-import { PedidoVendaDeliveryRoute } from "./models/pedidoVendaDeliveryRoute.model";
+import { SaleOrderDeliveryRoute } from "./models/SaleOrderDeliveryRoute.model";
 import { ProductCombination } from "./models/productCombination.model";
 import { ProductCombinationGroup } from "./models/productCombinationGroup.model";
 import { ProductCombinationItem } from "./models/productCombinationItem.model";
@@ -30,7 +31,7 @@ import { Nfe } from "./models/nfe.model";
 import { ShippingOrder } from "./models/shippingOrder.model";
 import { PaymentForm } from "./models/paymentForm.model";
 import { BankAccount } from "./models/bankAccount.model";
-import { Bank } from "./models/bank.model";
+
 import { SaleOrderStatusByFrom } from "./models/saleOrderStatusByFrom.model";
 import { BankAccountPaymentForm } from "./models/bankAccountPaymentForm.model";
 import { PaymentCarried } from "./models/paymentCarried.model";
@@ -50,13 +51,18 @@ import { FreightCalculationRecipient } from "./models/freightCalculationRecipien
 import { SaleOrderNfe } from "./models/saleOrderNfe.model";
 import { ProductSupplier } from "./models/productSupplier.model";
 import { ReceivieForm } from "./models/ReceivieForm.model";
+import { ShippingOrderStatus } from "./models/shippingOrderStatus.model";
+import { Vehicle } from "./models/vehicle.model";
+import { Cte } from "./models/cte.model";
+import { ShippingOrderNfe } from "./models/shippingOrderNfe.model";
+import { ShippingOrderVehicle } from "./models/shippingOrderVehicle.model";
 
 
 export { Payment } from "./models/payment.model";
-export { Contrato } from "./models/contrato.model";
+export { Contract } from "./models/contract.model";
 export { SaleOrder } from "./models/saleOrder.model";
 export { SaleOrderItem } from "./models/saleOrderItem.model";
-export { TabelaPreco } from "./models/tabelaPreco.model";
+export { ProductPrice } from "./models/productPrice.model";
 export { Partner } from "./models/partner.model";
 export { PartnerContact } from "./models/partnerContact.model";
 export { PartnerAddress } from "./models/partnerAddress.model";
@@ -64,14 +70,14 @@ export { Product } from "./models/product.model";
 export { Service } from "./models/service.model";
 export { Company } from "./models/company.model";
 export { User } from "./models/user.model";
-export { Municipio } from "./models/municipio.model";
+export { City } from "./models/city.model";
 export { SaleOrderReceivie } from "./models/saleOrderReceivie.model";
 export { SaleOrderStatus } from "./models/saleOrderStatus.model";
 export { SaleOrderProgress } from "./models/saleOrderProgress.model";
 export { SaleOrderShippingType } from "./models/saleOrderShippingType.model";
 export { Delivery } from "./models/delivery.model";
 export { DeliveryRoute } from "./models/deliveryRoute.model";
-export { PedidoVendaDeliveryRoute } from "./models/pedidoVendaDeliveryRoute.model";
+export { SaleOrderDeliveryRoute } from "./models/SaleOrderDeliveryRoute.model";
 export { ProductCombination } from "./models/productCombination.model";
 export { ProductCombinationGroup } from "./models/productCombinationGroup.model";
 export { ProductCombinationItem } from "./models/productCombinationItem.model";
@@ -101,6 +107,11 @@ export { FreightCalculationRecipient } from "./models/freightCalculationRecipien
 export { SaleOrderNfe } from "./models/saleOrderNfe.model";
 export { ProductSupplier } from "./models/productSupplier.model";
 export { ReceivieForm } from "./models/ReceivieForm.model";
+export { ShippingOrderStatus } from "./models/shippingOrderStatus.model";
+export { Vehicle } from "./models/vehicle.model";
+export { Cte } from "./models/cte.model";
+export { ShippingOrderNfe } from "./models/shippingOrderNfe.model";
+export { ShippingOrderVehicle } from "./models/shippingOrderVehicle.model";
 
 
 export default class Sequelize {
@@ -116,7 +127,63 @@ export default class Sequelize {
 
       define: {timestamps: false},
       
-      models: [Bank, BankAccount, BankAccountPaymentForm, BankAccountShipping, BankAccountShippingPayment, Called, CalledOccurrence, CalledTask, Payment, PaymentCarried, Contrato, Delivery, DeliveryRoute, SaleOrderStatus, SaleOrderStatusByFrom, SaleOrderShippingType, PedidoVendaDeliveryRoute, SaleOrderProgress, SaleOrder, PaymentForm, SaleOrderItem, SaleOrderNfe, SaleOrderReceivie, Company, Partner, PartnerContact, PartnerAddress, Product, ProductCategory, ProductCombinationGroup, ProductCombination, ProductSupplier, ReceivieForm, ProductCombinationItem, SaleOrderItemCombination, SaleOrderItemCombinationItem, Service, ShippingOrder, State, Task, User, TabelaPreco, Municipio, Nfe, MesoRegion, FreightCalculation, FreightCalculationRecipient, FreightCalculationType, FreightCalculationWeight, FreightQuote],
+      models: [
+        Bank,
+        BankAccount,
+        BankAccountPaymentForm,
+        BankAccountShipping,
+        BankAccountShippingPayment,
+        Called,
+        CalledOccurrence,
+        CalledTask,
+        City,
+        Company,
+        Contract,
+        Cte, 
+        Delivery,
+        DeliveryRoute,
+        FreightCalculation,
+        FreightCalculationRecipient,
+        FreightCalculationType,
+        FreightCalculationWeight,
+        FreightQuote,
+        MesoRegion,
+        Nfe,
+        Partner,
+        PartnerAddress,
+        PartnerContact,
+        Payment,
+        PaymentCarried,
+        PaymentForm,
+        Product,
+        ProductCategory,
+        ProductCombination,
+        ProductCombinationGroup,
+        ProductCombinationItem,
+        ProductPrice,
+        ProductSupplier,
+        ReceivieForm,
+        SaleOrder,
+        SaleOrderDeliveryRoute,
+        SaleOrderItem,
+        SaleOrderItemCombination,
+        SaleOrderItemCombinationItem,
+        SaleOrderNfe,
+        SaleOrderProgress,
+        SaleOrderReceivie,
+        SaleOrderShippingType,
+        SaleOrderStatus,
+        SaleOrderStatusByFrom, 
+        Service,
+        ShippingOrder,
+        ShippingOrderNfe,
+        ShippingOrderStatus,
+        ShippingOrderVehicle,
+        State,
+        Task,
+        User, 
+        Vehicle
+      ],
       pool: {
         max: 5,
         min: 0,

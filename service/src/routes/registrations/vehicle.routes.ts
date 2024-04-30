@@ -1,9 +1,9 @@
 import { Router } from "express";
-import ContratoController from "../../controllers/sales/contrato.controller";
+import VehicleController from "../../controllers/registrations/vehicle.controller";
 
-class ContratoRoutes {
+class VehicleRoutes {
   router = Router();
-  controller = new ContratoController();
+  controller = new VehicleController();
 
   constructor() {
     this.intializeRoutes();
@@ -17,4 +17,4 @@ class ContratoRoutes {
   }
 }
 
-export default new ContratoRoutes().router;
+export default new VehicleRoutes().router;

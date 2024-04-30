@@ -1,13 +1,13 @@
 import React from 'react';
 import { ResultContext } from '../../Utils/Controls/Form/AutoComplete/base';
 
-export class MunicipioTemplate extends React.Component {
+export class CityTemplate extends React.Component {
 
     render() {
         return <>
             <ResultContext.Consumer>
                 {({ args }: any) => (
-                    <span>{args.nome}</span>
+                    <span>{args.name}</span>
                 )}
             </ResultContext.Consumer>
         </>

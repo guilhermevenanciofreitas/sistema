@@ -14,7 +14,7 @@ import employeeRoutes from "./registrations/employee.routes";
 import shippingCompanyRoutes from "./registrations/shippingsCompany.routes";
 
 import searchRoutes from "./search/index.routes";
-import contratoRoutes from "./sales/contrato.routes";
+import contratoRoutes from "./sales/contract.routes";
 
 //Financial
 import paymentRoutes from "./financial/payment.routes";
@@ -32,6 +32,8 @@ import calledRoutes from "./relationships/called.routes";
 import freightCalculationRoutes from "./logistic/freightCalculation.routes";
 import freightQuotesRoutes from "./logistic/freightQuotes.routes";
 import invoicingRoutes from "./sales/invoicing.routes";
+import cteRoutes from "./fiscal/cte.routes";
+import vehicleRoutes from "./registrations/vehicle.routes";
 
 export default class Routes {
   constructor(app: Application) {
@@ -42,6 +44,7 @@ export default class Routes {
     //Registrations
     app.use("/api/registrations/user", userRoutes);
     app.use("/api/registrations/product", productRoutes);
+    app.use("/api/registrations/vehicle", vehicleRoutes);
     app.use("/api/registrations/service", serviceRoutes);
     app.use("/api/registrations/customer", customerRoutes);
     app.use("/api/registrations/supplier", supplierRoutes);
@@ -61,6 +64,7 @@ export default class Routes {
 
     //Fiscal
     app.use("/api/nfe", nfeRoutes);
+    app.use("/api/cte", cteRoutes);
 
     //Logistic
     app.use("/api/logistic/freight-calculation", freightCalculationRoutes);

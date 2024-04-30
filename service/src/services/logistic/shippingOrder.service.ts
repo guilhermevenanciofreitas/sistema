@@ -1,11 +1,11 @@
 import { Transaction } from "sequelize";
-import { Nfe } from "../../database";
+import { Nfe, ShippingOrder } from "../../database";
 import crypto from "crypto";
 import { Op } from "sequelize";
 
 export class ShippingOrderService {
 
-    public static IsValid = (nfe: Nfe) => {
+    public static IsValid = (shippingOrder: ShippingOrder) => {
 
         ///if (nfe.descricao == '') {
         //    return { success: false, message: 'Informe a descrição!' };
@@ -15,9 +15,9 @@ export class ShippingOrderService {
 
     }
 
-    public static Create = async (nfe: Nfe, transaction: Transaction | undefined) => {
+    public static Create = async (shippingOrder: ShippingOrder, transaction: Transaction | undefined) => {
 
-        nfe.id = crypto.randomUUID();
+        shippingOrder.id = crypto.randomUUID();
         //produto.categoriaId = produto.categoria?.id;
         
         /*
@@ -28,11 +28,11 @@ export class ShippingOrderService {
         }
         */
 
-        await Nfe.create({...nfe}, {transaction});
+        await ShippingOrder.create({...shippingOrder}, {transaction});
 
     }
 
-    public static Update = async (nfe: Nfe, transaction?: Transaction) => {
+    public static Update = async (shippingOrder: ShippingOrder, transaction?: Transaction) => {
 
         /*produto.categoriaId = produto.categoria?.id;
 
@@ -48,7 +48,7 @@ export class ShippingOrderService {
             ProdutoCombinacao.destroy({where: {produtoId: produto.id, id: {[Op.notIn]: produto?.combinacoes?.filter((c: any) => c.id != "").map(c => c.id)}}, transaction})
         }
         */
-        await Nfe.update(nfe, {where: {id: nfe.id}, transaction});
+        await ShippingOrder.update(shippingOrder, {where: {id: shippingOrder.id}, transaction});
 
     }
 

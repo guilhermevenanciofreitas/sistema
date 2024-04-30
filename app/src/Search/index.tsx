@@ -42,9 +42,9 @@ export const Search = {
         return (await Service.Post("search/product", {Search}))?.data;
     },
 
-    Municipio: async (Search: string, estadoId: string) =>
+    City: async (Search: string, stateId: string) =>
     {
-        return (await Service.Post("search/municipio", {Search, estadoId}))?.data;
+        return (await Service.Post("search/city", {Search, stateId}))?.data;
     },
 
     Bank: async (Search: string) =>
@@ -95,6 +95,11 @@ export const Search = {
     MesoRegion: async (Search: string) =>
     {
         return (await Service.Post("search/meso-region", {Search}))?.data;
+    },
+
+    Vehicle: async (Search: string) =>
+    {
+        return (await Service.Post("search/vehicle", {Search}))?.data;
     },
     
 }

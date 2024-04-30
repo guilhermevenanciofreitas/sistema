@@ -36,6 +36,8 @@ import Calleds from "./views/relationship/calleds";
 import FreightCalculations from "./views/logistics/freightCalculations";
 import FreightQuotes from "./views/logistics/freightQuotes";
 import Invoicing from "./views/sales/invoicing";
+import Ctes from "./views/fiscal/ctes";
+import Vehicles from "./views/registrations/vehicles";
 
 export default class App extends React.Component {
     render(): React.ReactNode {
@@ -49,7 +51,7 @@ export default class App extends React.Component {
                 <Route path="/registrations/users" element={<Usuarios />} />
                 <Route path="/registrations/products" element={<RequireLogin><Products /></RequireLogin>} />
                 <Route path="/registrations/services" element={<RequireLogin><Services /></RequireLogin>} />
-                <Route path="/registrations/vehicles" element={<RequireLogin><Services /></RequireLogin>} />
+                <Route path="/registrations/vehicles" element={<RequireLogin><Vehicles /></RequireLogin>} />
                 <Route path="/registrations/customers" element={<RequireLogin><Customers /></RequireLogin>} />
                 <Route path="/registrations/suppliers" element={<RequireLogin><Suppliers /></RequireLogin>} />
                 <Route path="/registrations/employees" element={<RequireLogin><Employees /></RequireLogin>} />
@@ -77,7 +79,7 @@ export default class App extends React.Component {
 
                 {/* Fiscal */}
                 <Route path="/fiscal/nfes" element={<RequireLogin><NotasFiscais /></RequireLogin>} />
-
+                <Route path="/fiscal/ctes" element={<RequireLogin><Ctes /></RequireLogin>} />
 
 
                 <Route path="/contratos" element={<RequireLogin><Contracts /></RequireLogin>} />

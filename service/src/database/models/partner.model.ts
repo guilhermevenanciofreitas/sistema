@@ -1,5 +1,4 @@
 import { Model, Table, Column, DataType, BelongsTo, HasMany, ForeignKey } from "sequelize-typescript";
-import { TabelaPreco } from "./tabelaPreco.model";
 import { PartnerContact } from "./partnerContact.model";
 import { PartnerAddress } from "./partnerAddress.model";
 

@@ -39,7 +39,7 @@ export class ViewFreightCalculation extends ViewFreightCalculationBase {
                         </Grid>
 
                         <Grid md={7}>
-                            <AutoComplete Label='Remetente' Pesquisa={async(Text: string) => await Search.Partner(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.sender} OnChange={(sender: any) => this.setState({sender})}>
+                            <AutoComplete Label='Remetente' Pesquisa={async(Text: string) => await Search.Partner(Text)} Text={(Item: any) => `${Item.surname}` } Value={this.state.sender} OnChange={(sender: any) => this.setState({sender})}>
                                 <PartnerTemplate />
                             </AutoComplete>
                         </Grid>

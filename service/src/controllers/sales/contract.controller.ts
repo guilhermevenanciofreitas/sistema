@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Contrato } from "../../database";
-import { ContratoService } from "../../services/sales/contrato.service";
+import { Contract } from "../../database";
+import { ContractService } from "../../services/sales/contract.service";
 import {Op} from "sequelize";
 
 export default class ContratoController {
@@ -33,11 +33,11 @@ export default class ContratoController {
                     order = [[sort.column, sort.direction]]
                 }
         
-                const contratos = await Contrato.findAndCountAll({attributes: ["id"], where, order, limit, offset, transaction});
+                const contracts = await Contract.findAndCountAll({attributes: ["id"], where, order, limit, offset, transaction});
         
                 sequelize.close();
 
-                res.status(200).json({rows: contratos.rows, count: contratos.count, limit, offset: req.body.offset, filter, sort});
+                res.status(200).json({rows: contracts.rows, count: contracts.count, limit, offset: req.body.offset, filter, sort});
 
             }
             catch (err) {
@@ -55,11 +55,11 @@ export default class ContratoController {
             {
                 const transaction = await sequelize.transaction();
 
-                const contrato = await Contrato.findOne({attributes: ["id"], where: {id: req.body.id}, transaction});
+                const contract = await Contract.findOne({attributes: ["id"], where: {id: req.body.id}, transaction});
     
                 sequelize.close();
     
-                res.status(200).json(contrato);
+                res.status(200).json(contract);
     
             }
             catch (err) {
@@ -77,26 +77,26 @@ export default class ContratoController {
             {
                 const transaction = await sequelize.transaction();
 
-                const Contrato = req.body as Contrato;
+                const contract = req.body as Contract;
 
-                const valid = ContratoService.IsValid(Contrato);
+                const valid = ContractService.IsValid(contract);
 
                 if (!valid.success) {
                     res.status(201).json(valid);
                     return;
                 }
 
-                if (!Contrato.id) {
-                    await ContratoService.Create(Contrato, transaction);
+                if (!contract.id) {
+                    await ContractService.Create(contract, transaction);
                 } else {
-                    await ContratoService.Update(Contrato, transaction);
+                    await ContractService.Update(contract, transaction);
                 }
 
                 await transaction?.commit();
                 
                 sequelize.close();
 
-                res.status(200).json(Contrato);
+                res.status(200).json(contract);
 
             }
             catch (err) {
@@ -116,7 +116,7 @@ export default class ContratoController {
 
                 const transaction = await sequelize.transaction();
 
-                await ContratoService.Delete(req.body.id, transaction);
+                await ContractService.Delete(req.body.id, transaction);
 
                 await transaction?.commit();
 

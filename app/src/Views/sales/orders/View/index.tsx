@@ -7,7 +7,7 @@ import { Alert, FormLabel, Grid } from '@mui/joy';
 import { Search } from '../../../../Search';
 import { CostumerTemplate } from '../../../../Search/Templates/Costumer';
 import { Itens } from './itens';
-import { MunicipioTemplate } from '../../../../Search/Templates/Municipio';
+import { CityTemplate } from '../../../../Search/Templates/City';
 import { Estados } from '../../../../Utils/Estados';
 import { Receivies } from './receivies';
 import { SaleOrderShippingTypeTemplate } from '../../../../Search/Templates/SaleOrderShippingType';
@@ -113,8 +113,8 @@ export class ViewOrder extends ViewOrderBase {
                                             </DropDownList>
                                         </Grid>
                                         <Grid md={5}>
-                                            <AutoComplete Label='Municipio' Pesquisa={async(Text: string) => await Search.Municipio(Text, this.state.shippingAddress?.estadoId)} Text={(Item: any) => `${Item.nome}` } Value={this.state.shippingAddress?.municipio} OnChange={(args: EventArgs) => this.setState({shippingAddress: {...this.state.shippingAddress, municipio: args}})}>
-                                                <MunicipioTemplate />
+                                            <AutoComplete Label='Municipio' Pesquisa={async(Text: string) => await Search.City(Text, this.state.shippingAddress?.estadoId)} Text={(Item: any) => `${Item.nome}` } Value={this.state.shippingAddress?.municipio} OnChange={(args: EventArgs) => this.setState({shippingAddress: {...this.state.shippingAddress, municipio: args}})}>
+                                                <CityTemplate />
                                             </AutoComplete>
                                         </Grid>
                                     </Grid>

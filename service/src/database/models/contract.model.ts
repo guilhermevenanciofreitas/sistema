@@ -1,8 +1,8 @@
 import { Model, Table, Column, DataType, BelongsTo } from "sequelize-typescript";
 import { Partner } from "./partner.model";
 
-@Table({tableName: "contratos"})
-export class Contrato extends Model {
+@Table({tableName: "contract"})
+export class Contract extends Model {
   
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
   id?: string;

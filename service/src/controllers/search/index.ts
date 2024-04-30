@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { BankAccount, Company, PaymentForm, Municipio, Partner, SaleOrderShippingType, Product, ProductCategory, ProductCombination, ProductCombinationGroup, ProductCombinationItem, TabelaPreco, CalledOccurrence, FreightCalculationType, MesoRegion, State, ReceivieForm } from "../../database";
+import { BankAccount, Company, PaymentForm, City, Partner, SaleOrderShippingType, Product, ProductCategory, ProductCombination, ProductCombinationGroup, ProductCombinationItem, CalledOccurrence, FreightCalculationType, MesoRegion, State, ReceivieForm, Vehicle, ProductPrice } from "../../database";
 import { Op } from "sequelize";
 import { Bank } from "../../database/models/bank.model";
 
@@ -34,7 +34,7 @@ export default class SearchController {
         });
     }
 
-    async tabelasPreco(req: Request, res: Response) {
+    async productPrice(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try {
@@ -44,14 +44,14 @@ export default class SearchController {
                 let where: any = {};
    
                 if (req.body?.Search) {
-                    where = {"descricao": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                    where = {'description': {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
         
-                const tabelasPreco = await TabelaPreco.findAll({attributes: ["id", "descricao"], where, order: [["descricao", "asc"]], transaction});
+                const productPrice = await ProductPrice.findAll({attributes: ['id', 'description'], where, order: [['description', "asc"]], transaction});
         
                 sequelize.close();
 
-                res.status(200).json(tabelasPreco);
+                res.status(200).json(productPrice);
 
             }
             catch (err) {
@@ -247,7 +247,7 @@ export default class SearchController {
         });
     }
 
-    async municipio(req: Request, res: Response) {
+    async city(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try {
@@ -257,18 +257,46 @@ export default class SearchController {
                 let where: any = {};
 
                 if (req.body?.Search) {
-                    where = {"nome": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                    where = {"name": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
 
-                if (req.body?.estadoId) {
-                    where = {"estadoId": {[Op.eq]: req.body?.estadoId}};
+                if (req.body?.stateId) {
+                    where = {"stateId": {[Op.eq]: req.body?.stateId}};
                 }
         
-                const municipios = await Municipio.findAll({attributes: ["id", "nome"], where, order: [["nome", "asc"]], transaction});
+                const cities = await City.findAll({attributes: ['id', 'name'], where, order: [['name', 'asc']], transaction});
         
                 sequelize.close();
 
-                res.status(200).json(municipios);
+                res.status(200).json(cities);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async state(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+
+                if (req.body?.Search) {
+                    where = {"description": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+
+                const states = await State.findAll({attributes: ['id', 'description'], where, order: [['description', 'asc']], transaction});
+        
+                sequelize.close();
+
+                res.status(200).json(states);
 
             }
             catch (err) {
@@ -570,6 +598,40 @@ export default class SearchController {
                 sequelize.close();
 
                 res.status(200).json(regions);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async vehicle(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+
+                if (req.body?.Search) {
+                    where = {"name": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+
+                const vehicles = await Vehicle.findAll({
+                    attributes: ['id', 'name', 'plate'], 
+                    include: [],
+                    where,
+                    order: [["plate", "asc"]],
+                    transaction
+                });
+        
+                sequelize.close();
+
+                res.status(200).json(vehicles);
 
             }
             catch (err) {

@@ -1,6 +1,6 @@
 import React from "react";
 import { Service } from "../../../Service";
-import { ViewShippingOrder } from "./View/index";
+import { ViewVehicle } from "./View/index";
 import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
@@ -8,9 +8,9 @@ import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 
-export default class BaseUsuarios extends BaseIndex {
+export default class VehiclesBase extends BaseIndex {
  
-    protected ViewShippingOrder = React.createRef<ViewShippingOrder>();
+    protected ViewVehicle = React.createRef<ViewVehicle>();
 
     protected ViewImportar = React.createRef<ViewImportar>();
     protected ViewFiltro = React.createRef<ViewFiltro>();
@@ -26,8 +26,8 @@ export default class BaseUsuarios extends BaseIndex {
         },
         response: {
             rows: [],
-            count: 0,
-        }
+            count: 0
+        },
     }
 
     componentDidMount = async () =>
@@ -39,7 +39,7 @@ export default class BaseUsuarios extends BaseIndex {
 
             const { id } = queryString.parse(window.location.search);
             if (id) {
-                await this.OpenShippingOrder(id.toString(), false);
+                await this.OpenVehicle(id.toString(), false);
                 history.pushState(null, '', `${window.location.origin}${window.location.pathname}`);
             }
 
@@ -57,7 +57,7 @@ export default class BaseUsuarios extends BaseIndex {
         try
         {
 
-            const r = await this.OpenShippingOrder(id);
+            const r = await this.OpenVehicle(id);
 
             if (r) await this.Pesquisar(this.state.request);
        
@@ -73,7 +73,7 @@ export default class BaseUsuarios extends BaseIndex {
         try
         {
 
-            const r = await this.ViewShippingOrder.current?.Show(undefined);
+            const r = await this.ViewVehicle.current?.Show(undefined);
 
             if (r) await this.Pesquisar(this.state.request);
             
@@ -165,7 +165,7 @@ export default class BaseUsuarios extends BaseIndex {
         try
         {
             this.setState({request: {...this.state.request, limit, offset}},
-                async () => await this.Pesquisar(this.state.request)
+                async() => await this.Pesquisar(this.state.request)
             );
         }
         catch (err: any) 
@@ -188,10 +188,10 @@ export default class BaseUsuarios extends BaseIndex {
         }
     }
 
-    private OpenShippingOrder = async (id: string, isHitoryBack: boolean = true) =>
+    private OpenVehicle = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, '', `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewShippingOrder.current?.Show(id);
+        const r = await this.ViewVehicle.current?.Show(id);
         if (isHitoryBack) history.back();
         return r;
     }
@@ -199,7 +199,7 @@ export default class BaseUsuarios extends BaseIndex {
     protected Pesquisar = async(request: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post('logistic/shipping-order/findAll', request);
+        var r = await Service.Post('registrations/vehicle/findAll', request);
         this.setState({Loading: false, ...r?.data});
     }
 

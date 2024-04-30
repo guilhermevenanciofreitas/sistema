@@ -1,6 +1,6 @@
 import React from "react";
 import { Service } from "../../../Service";
-import { ViewShippingOrder } from "./View/index";
+import { ViewCte } from "./View/index";
 import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
@@ -8,9 +8,9 @@ import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 
-export default class BaseUsuarios extends BaseIndex {
+export default class CtesBase extends BaseIndex {
  
-    protected ViewShippingOrder = React.createRef<ViewShippingOrder>();
+    protected ViewCte = React.createRef<ViewCte>();
 
     protected ViewImportar = React.createRef<ViewImportar>();
     protected ViewFiltro = React.createRef<ViewFiltro>();
@@ -39,7 +39,7 @@ export default class BaseUsuarios extends BaseIndex {
 
             const { id } = queryString.parse(window.location.search);
             if (id) {
-                await this.OpenShippingOrder(id.toString(), false);
+                await this.OpenCte(id.toString(), false);
                 history.pushState(null, '', `${window.location.origin}${window.location.pathname}`);
             }
 
@@ -57,7 +57,7 @@ export default class BaseUsuarios extends BaseIndex {
         try
         {
 
-            const r = await this.OpenShippingOrder(id);
+            const r = await this.OpenCte(id);
 
             if (r) await this.Pesquisar(this.state.request);
        
@@ -73,7 +73,7 @@ export default class BaseUsuarios extends BaseIndex {
         try
         {
 
-            const r = await this.ViewShippingOrder.current?.Show(undefined);
+            const r = await this.ViewCte.current?.Show(undefined);
 
             if (r) await this.Pesquisar(this.state.request);
             
@@ -188,18 +188,18 @@ export default class BaseUsuarios extends BaseIndex {
         }
     }
 
-    private OpenShippingOrder = async (id: string, isHitoryBack: boolean = true) =>
+    private OpenCte = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, '', `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewShippingOrder.current?.Show(id);
+        const r = await this.ViewCte.current?.Show(id);
         if (isHitoryBack) history.back();
         return r;
     }
 
-    protected Pesquisar = async(request: any): Promise<void> =>
+    protected Pesquisar = async(Data: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post('logistic/shipping-order/findAll', request);
+        var r = await Service.Post("cte/findAll", Data);
         this.setState({Loading: false, ...r?.data});
     }
 

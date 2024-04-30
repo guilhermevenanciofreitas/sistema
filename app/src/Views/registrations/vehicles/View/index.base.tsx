@@ -4,19 +4,19 @@ import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
 
-export class ViewShippingOrderBase extends ViewModal<Readonly<{Title: string}>> {
+export class ViewProductBase extends ViewModal<Readonly<{Title: string}>> {
 
     state = {
         open: false,
         id: '',
-        number: '',
-        company: null,
+        name: '',
+        description: '',
+        category: null,
+        isCombination: false,
         value: null,
-        sender: null,
-        recipient: null,
-        driver: null,
-        vehicle: null,
-        weight: null,
+
+        combinations: [],
+        suppliers: []
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -26,7 +26,7 @@ export class ViewShippingOrderBase extends ViewModal<Readonly<{Title: string}>> 
 
         if (id) {
             Loading.Show();
-            const r = await Service.Post("logistic/shipping-order/findOne", {id});
+            const r = await Service.Post("registrations/product/findOne", {id});
             Loading.Hide();
             this.setState(r?.data);
         }
@@ -56,19 +56,38 @@ export class ViewShippingOrderBase extends ViewModal<Readonly<{Title: string}>> 
 
             Loading.Show();
 
-            const request = {
-                id: _.get(this.state, 'id') || null,
-                companyId: _.get(this.state.company, 'id') || null,
-                value: _.get(this.state, 'value') || null,
-                senderId: _.get(this.state.sender, 'id') || null,
-                recipientId: _.get(this.state.recipient, 'id') || null,
-                driverId: _.get(this.state.driver, 'id') || null,
-                vehicleId: _.get(this.state.vehicle, 'id') || null,
-                weight: _.get(this.state, 'weight') || null,
+            let combinations = [];
+            let suppliers = [];
+
+            for (let combination of _.get(this.state, 'combinations')) {
+                combinations.push({
+                    id: _.get(combination, 'id'),
+                    isObrigatorio: _.get(combination, 'isObrigatorio'),
+                    minimo: _.get(combination, 'minimo'),
+                    maximo: _.get(combination, 'maximo'),
+                    combinationGroupId: _.get(combination, 'combinationGroup.id'),
+                });
             }
 
+            for (let supplier of _.get(this.state, 'suppliers')) {
+                suppliers.push({
+                    id: _.get(supplier, 'id'),
+                    supplierId: _.get(supplier, 'supplier.id'),
+                });
+            }
 
-            let response = await Service.Post("logistic/shipping-order/save", request);
+            const request = {
+                id: _.get(this.state, 'id') || null,
+                name: _.get(this.state, 'name') || null,
+                categoryId: _.get(this.state.category, 'id') || null,
+                description: _.get(this.state, 'description') || null,
+                isCombination: _.get(this.state, 'isCombination') || null,
+                value: _.get(this.state, 'value') || null,
+                combinations,
+                suppliers
+            }
+            
+            let response = await Service.Post("registrations/product/save", request);
     
             Loading.Hide();
     
@@ -92,14 +111,14 @@ export class ViewShippingOrderBase extends ViewModal<Readonly<{Title: string}>> 
     {
         this.setState({
             id: '',
-            number: '',
-            company: null,
+            name: '',
+            description: '',
+            category: null,
+            isCombination: false,
             value: null,
-            sender: null,
-            recipient: null,
-            driver: null,
-            vehicle: null,
-            weight: null
+
+            combinations: [],
+            suppliers: []
         });
     }
 
