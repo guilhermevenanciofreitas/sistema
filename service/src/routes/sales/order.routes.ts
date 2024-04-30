@@ -1,9 +1,9 @@
 import { Router } from "express";
-import SaleOrderController from "../../controllers/sales/saleOrder.controller";
+import OrderController from "../../controllers/sales/order.controller";
 
-class saleOrderRoutes {
+class orderRoutes {
   router = Router();
-  controller = new SaleOrderController();
+  controller = new OrderController();
 
   constructor() {
     this.intializeRoutes();
@@ -20,4 +20,4 @@ class saleOrderRoutes {
   }
 }
 
-export default new saleOrderRoutes().router;
+export default new orderRoutes().router;

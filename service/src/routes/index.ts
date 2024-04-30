@@ -19,7 +19,7 @@ import contratoRoutes from "./sales/contract.routes";
 //Financial
 import paymentRoutes from "./financial/payment.routes";
 
-import saleOrderRoutes from "./sales/saleOrder.routes";
+import saleOrderRoutes from "./sales/order.routes";
 
 
 import pedidoEletronicoRoutes from "./pedido-eletronico/index.routes";

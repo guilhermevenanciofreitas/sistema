@@ -6,9 +6,9 @@ import { SaleOrderStatusByFrom } from "../../database/models/saleOrderStatusByFr
 import _ from "lodash";
 import { DisplayError } from "../../errors/DisplayError";
 
-export class SaleOrderService {
+export class OrderService {
 
-    public static IsValid = (pedidoVenda: SaleOrder) => {
+    public static IsValid = (saleOrder: SaleOrder) => {
 
         //if (pedidoVenda.cliente?.id == null) {
         //    return { success: false, message: 'Informe o cliente!' };

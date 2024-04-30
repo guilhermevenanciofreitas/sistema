@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
 import { PaymentForm, Partner, SaleOrder, Product, SaleOrderReceivie, SaleOrderStatus, SaleOrderShippingType, Company, ProductCombination, ProductCombinationGroup, ProductCombinationItem, SaleOrderItemCombination, SaleOrderItemCombinationItem, Nfe } from "../../database";
-import { SaleOrderService } from "../../services/sales/saleOrder.service";
+import { OrderService } from "../../services/sales/order.service";
 import { SaleOrderItem } from "../../database/models/saleOrderItem.model";
 import { Error } from "../../errors";
 import _ from "lodash";
@@ -271,7 +271,7 @@ export default class InvoicingController {
 
                 SaleOrder.value = _.sum(SaleOrder.items?.map(c => parseFloat(c.value?.toString() || '0')));
 
-                const valid = SaleOrderService.IsValid(SaleOrder);
+                const valid = OrderService.IsValid(SaleOrder);
 
                 if (!valid.success) {
                     res.status(201).json(valid);
@@ -279,9 +279,9 @@ export default class InvoicingController {
                 }
 
                 if (!SaleOrder.id) {
-                    await SaleOrderService.Create(SaleOrder, transaction);
+                    await OrderService.Create(SaleOrder, transaction);
                 } else {
-                    await SaleOrderService.Update(SaleOrder, transaction);
+                    await OrderService.Update(SaleOrder, transaction);
                 }
 
                 await transaction?.commit();
@@ -308,7 +308,7 @@ export default class InvoicingController {
 
                 const transaction = await sequelize.transaction();
 
-                await SaleOrderService.Delete(req.body.id, transaction);
+                await OrderService.Delete(req.body.id, transaction);
 
                 await transaction?.commit();
 

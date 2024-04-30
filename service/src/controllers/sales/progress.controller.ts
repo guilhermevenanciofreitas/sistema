@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
 import { Partner, SaleOrder, SaleOrderStatus } from "../../database";
-import { SaleOrderService } from "../../services/sales/saleOrder.service";
+import { OrderService } from "../../services/sales/order.service";
 import { Error } from "../../errors";
 import _ from "lodash";
 import { ProgressService } from "../../services/sales/progress.service";
@@ -125,7 +125,7 @@ export default class ProgressController {
 
                 const transaction = await sequelize.transaction();
 
-                await SaleOrderService.Progress(req.body?.id, req.body?.statusId, transaction);
+                await OrderService.Progress(req.body?.id, req.body?.statusId, transaction);
 
                 await transaction?.commit();
                 
@@ -150,7 +150,7 @@ export default class ProgressController {
 
                 const transaction = await sequelize.transaction();
 
-                await SaleOrderService.Delete(req.body.id, transaction);
+                await OrderService.Delete(req.body.id, transaction);
 
                 await transaction?.commit();
 

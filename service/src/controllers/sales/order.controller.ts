@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
 import { PaymentForm, Partner, SaleOrder, Product, SaleOrderReceivie, SaleOrderStatus, SaleOrderShippingType, Company, Delivery, DeliveryRoute, SaleOrderDeliveryRoute, ProductCombination, ProductCombinationGroup, ProductCombinationItem, SaleOrderItemCombination, SaleOrderItemCombinationItem, ReceivieForm } from "../../database";
-import { SaleOrderService } from "../../services/sales/saleOrder.service";
+import { OrderService } from "../../services/sales/order.service";
 import { SaleOrderItem } from "../../database/models/saleOrderItem.model";
 import {Op, Sequelize} from "sequelize";
 import axios from "axios";
@@ -9,7 +9,7 @@ import { DisplayError } from "../../errors/DisplayError";
 import { Error } from "../../errors";
 import _ from "lodash";
 
-export default class SaleOrderController {
+export default class OrderController {
 
     async findAll(req: Request, res: Response) {
 
@@ -183,7 +183,7 @@ export default class SaleOrderController {
 
                 SaleOrder.value = _.sum(SaleOrder.items?.map(c => (parseFloat(c.value?.toString() || '0') - parseFloat(c.discount?.toString() || '0')) * parseFloat(c.quantity?.toString() || '0')));
 
-                const valid = SaleOrderService.IsValid(SaleOrder);
+                const valid = OrderService.IsValid(SaleOrder);
 
                 if (!valid.success) {
                     res.status(201).json(valid);
@@ -191,9 +191,9 @@ export default class SaleOrderController {
                 }
 
                 if (!SaleOrder.id) {
-                    await SaleOrderService.Create(SaleOrder, transaction);
+                    await OrderService.Create(SaleOrder, transaction);
                 } else {
-                    await SaleOrderService.Update(SaleOrder, transaction);
+                    await OrderService.Update(SaleOrder, transaction);
                 }
 
                 await transaction?.commit();
@@ -219,7 +219,7 @@ export default class SaleOrderController {
 
                 const transaction = await sequelize.transaction();
 
-                await SaleOrderService.Deliveryman(req.body?.id, req.body?.entregadorId, transaction);
+                await OrderService.Deliveryman(req.body?.id, req.body?.entregadorId, transaction);
 
                 await transaction?.commit();
                 
@@ -275,7 +275,7 @@ export default class SaleOrderController {
 
                 delivery.entregadorId = entregadorId;
 
-                await SaleOrderService.Delivery(delivery.dataValues, transaction);
+                await OrderService.Delivery(delivery.dataValues, transaction);
 
                 axios.request(config).then(async (response: any) => {
 
@@ -294,12 +294,12 @@ export default class SaleOrderController {
                         var deliveryRoute = new DeliveryRoute();
                         deliveryRoute.deliveryId = delivery.id;
                         deliveryRoute.ordem = ordem;
-                        await SaleOrderService.DeliveryRoute(deliveryRoute.dataValues, transaction);
+                        await OrderService.DeliveryRoute(deliveryRoute.dataValues, transaction);
                         
                         var pedidoVendaDeliveryRoute = new SaleOrderDeliveryRoute();
                         pedidoVendaDeliveryRoute.saleOrderId = item.id;
                         pedidoVendaDeliveryRoute.deliveryRouteId = deliveryRoute.id;
-                        await SaleOrderService.PedidoVendaDeliveryRoute(pedidoVendaDeliveryRoute.dataValues, transaction);
+                        await OrderService.PedidoVendaDeliveryRoute(pedidoVendaDeliveryRoute.dataValues, transaction);
 
                         ordem++;
                     }
@@ -333,7 +333,7 @@ export default class SaleOrderController {
 
                 const transaction = await sequelize.transaction();
 
-                await SaleOrderService.Delete(req.body.id, transaction);
+                await OrderService.Delete(req.body.id, transaction);
 
                 await transaction?.commit();
 
