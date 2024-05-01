@@ -4,6 +4,14 @@ import Auth, { Accounts, Database } from "../../auth";
 import Sequelize, { Company } from "../../database";
 import { EmpresaService } from "../../services/configuracao/index.service";
 
+import formidable from "formidable";
+import fs from "fs";
+import { Blob } from "buffer";
+
+import pem from "pem";
+import axios from "axios";
+import _ from "lodash";
+
 export default class ConfiguracaoController {
 
     
@@ -15,18 +23,16 @@ export default class ConfiguracaoController {
 
                 const transaction = await sequelize.transaction();
 
-                const empresa = await Company.findOne({attributes: [
-                    "id",
-                    "cpfCnpj",
-                    "name",
-                    "surname",
-                    "pedidoDigital",
-                ],
-                where: {id: req.body.id},
-                transaction
+                let company = await Company.findOne(
+                {
+                    attributes: ['id', 'cpfCnpj', 'name', 'surname', 'certificate', 'pedidoDigital'],
+                    where: {id: req.body.id},
+                    transaction
                 });
+
+                const response = await axios.post('http://localhost:5166/certificate/info', {certificate: company?.certificate.file, password: company?.certificate.password});
     
-                res.status(200).json(empresa);
+                res.status(200).json({certificate: {...response?.data}});
 
                 sequelize.close();
 
@@ -79,6 +85,24 @@ export default class ConfiguracaoController {
         }).catch((err) => {
             res.status(401).json(err);
         });
+    }
+
+    async certificate(req: Request, res: Response) {
+    
+        const form = formidable();
+
+        form.parse(req, async (err, fields: any, files: any) => {
+
+            const certificate = fs.readFileSync(files.file[0].filepath, {encoding: 'base64'});
+            const password = fields.password[0];
+
+            //tcl@04058
+            const response = await axios.post('http://localhost:5166/certificate/info', {certificate, password});
+
+            res.status(200).json({file: certificate, password: password, info: response.data});
+
+        });
+
     }
 
 }

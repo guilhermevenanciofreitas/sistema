@@ -17,7 +17,10 @@ export class Company extends Model {
 
   @Column({type: DataType.JSONB, field: "address"})
   address?: any;
-  
+
+  @Column({type: DataType.JSONB, field: "certificate"})
+  certificate?: any;
+
   @Column({type: DataType.JSONB, field: "pedidoDigital"})
   pedidoDigital?: any;
 

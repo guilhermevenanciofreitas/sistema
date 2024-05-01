@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
 import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
-import { ViewProduct } from "./View/index";
-import ProductsBase from "./index.base";
+import { ViewLocation } from "./View/index";
+import LocationsBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
@@ -10,27 +10,25 @@ import { ViewImportar } from "./importar";
 import { ViewFiltro } from "./filtro";
 
 const Columns = [
+    { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
     { selector: (row: any) => row.name, sort: 'name', name: 'Nome', sortable: true },
-    { selector: (row: any) => row.category?.description, sort: 'description', name: 'Categoria', sortable: true },
-    { selector: (row: any) => row.value ? parseFloat(row.value).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}) : '', sort: 'value', name: 'Valor', sortable: true },
-    { selector: (row: any) => row.stock ? parseFloat(row.stock).toLocaleString("pt-BR", {minimumFractionDigits: 3}) : '', sort: 'stock', name: 'Estoque', sortable: true },
 ];
 
-export default class Products extends ProductsBase {
+export default class Locations extends LocationsBase {
 
     render(): React.ReactNode {
 
         return (
             <>
 
-                <ViewProduct ref={this.ViewProduct} Title='Produto' />
+                <ViewLocation ref={this.ViewLocation} Title="Localização" />
 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
 
                 <JoyLayout>
 
-                    <Title>Produtos</Title>
+                    <Title>Localizações</Title>
 
                     <Container>
                         <Left>

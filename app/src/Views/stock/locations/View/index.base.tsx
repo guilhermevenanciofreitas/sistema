@@ -1,16 +1,15 @@
-import _ from "lodash";
 import { Service } from "../../../../Service";
 import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
 
-export class ViewProductBase extends ViewModal<Readonly<{Title: string}>> {
+export class ViewLocationBase extends ViewModal<Readonly<{Title: string}>> {
 
     state = {
         open: false,
         id: '',
         name: '',
-        plate: '',
+        description: '',
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -20,7 +19,7 @@ export class ViewProductBase extends ViewModal<Readonly<{Title: string}>> {
 
         if (id) {
             Loading.Show();
-            const r = await Service.Post("registrations/vehicle/findOne", {id});
+            const r = await Service.Post('stock/location/findOne', {id});
             Loading.Hide();
             this.setState(r?.data);
         }
@@ -50,24 +49,18 @@ export class ViewProductBase extends ViewModal<Readonly<{Title: string}>> {
 
             Loading.Show();
 
-            const request = {
-                id: _.get(this.state, 'id') || null,
-                name: _.get(this.state, 'name') || null,
-                plate: _.get(this.state, 'plate') || null,
-            }
-            
-            let response = await Service.Post("registrations/product/save", request);
+            let r = await Service.Post('stock/location/save', this.state);
     
             Loading.Hide();
     
-            if (response?.status == 201) {
-                await MessageBox.Show({title: "Info", width: 400, content: response?.data.message, buttons: [{ Text: "OK" }]});
+            if (r?.status == 201) {
+                await MessageBox.Show({title: 'Info', width: 400, content: r?.data.message, buttons: [{ Text: 'OK' }]});
                 return;
             }
     
-            await MessageBox.Show({title: "Info", width: 400, type: "Success", content: "Salvo com sucesso!", buttons: [{ Text: "OK" }]});
+            await MessageBox.Show({title: 'Info', width: 400, type: 'Success', content: 'Salvo com sucesso!', buttons: [{ Text: 'OK' }]});
     
-            this.Close(response?.data.id);
+            this.Close(r?.data.id);
 
         }
         catch(err: any)
@@ -81,7 +74,7 @@ export class ViewProductBase extends ViewModal<Readonly<{Title: string}>> {
         this.setState({
             id: '',
             name: '',
-            plate: '',
+            description: ''
         });
     }
 

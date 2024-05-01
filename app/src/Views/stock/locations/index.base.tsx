@@ -1,6 +1,6 @@
 import React from "react";
 import { Service } from "../../../Service";
-import { ViewUser } from "./View/index";
+import { ViewLocation } from "./View/index";
 import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
@@ -8,9 +8,9 @@ import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 
-export default class UsersBase extends BaseIndex {
+export default class LocationsBase extends BaseIndex {
  
-    protected ViewUser = React.createRef<ViewUser>();
+    protected ViewLocation = React.createRef<ViewLocation>();
 
     protected ViewImportar = React.createRef<ViewImportar>();
     protected ViewFiltro = React.createRef<ViewFiltro>();
@@ -72,7 +72,7 @@ export default class UsersBase extends BaseIndex {
         try
         {
 
-            const r = await this.ViewUser.current?.Show(undefined);
+            const r = await this.ViewLocation.current?.Show(undefined);
 
             if (r) await this.Pesquisar(this.state.request);
             
@@ -189,8 +189,8 @@ export default class UsersBase extends BaseIndex {
 
     private OpenUser = async (id: string) =>
     {
-        history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewUser.current?.Show(id);
+        history.pushState(null, '', `${window.location.origin}${window.location.pathname}?id=${id}`);
+        const r = await this.ViewLocation.current?.Show(id);
         history.back();
         return r;
     }
@@ -198,7 +198,7 @@ export default class UsersBase extends BaseIndex {
     protected Pesquisar = async(request: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("registrations/user/findAll", request);
+        var r = await Service.Post("stock/location/findAll", request);
         this.setState({Loading: false, ...r?.data});
     }
 

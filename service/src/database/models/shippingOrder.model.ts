@@ -4,12 +4,16 @@ import { Company } from "./company.model";
 import { ShippingOrderStatus } from "./shippingOrderStatus.model";
 import { Vehicle } from "./vehicle.model";
 import { ShippingOrderNfe } from "./shippingOrderNfe.model";
+import { ShippingOrderVehicle } from "./shippingOrderVehicle.model";
 
 @Table({tableName: 'shippingOrder'})
 export class ShippingOrder extends Model {
   
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: 'id'})
   id?: string;
+
+  @Column({type: DataType.STRING(30), field: 'number'})
+  number?: string;
 
   @Column({type: DataType.UUID, field: 'companyId'})
   companyId?: string;
@@ -53,6 +57,9 @@ export class ShippingOrder extends Model {
 
   @BelongsTo(() => Vehicle, {as: 'vehicle', foreignKey: 'vehicleId'})
   vehicle?: Vehicle;
+
+  @HasMany(() => ShippingOrderVehicle, {as: 'vehicles', foreignKey: 'shippingOrderId'})
+  vehicles?: ShippingOrderVehicle[];
 
   @HasMany(() => ShippingOrderNfe, {as: 'nfes', foreignKey: 'shippingOrderId'})
   nfes?: ShippingOrderNfe[];

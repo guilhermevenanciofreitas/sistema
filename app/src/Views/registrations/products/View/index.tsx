@@ -47,8 +47,13 @@ export class ViewProduct extends ViewProductBase {
                             
                             <Tab>
                                 <TabItem Title='Principal' Visible={true}>
-                                    <Grid md={2}>
-                                        <NumericBox Label='Valor' Text={this.state.value} Prefix='R$ ' Scale={2} OnChange={(args: EventArgs) => this.setState({value: args.Value})} />
+                                    <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+                                        <Grid md={2}>
+                                            <NumericBox Label='Valor' Text={this.state.value} Prefix='R$ ' Scale={2} OnChange={(args: EventArgs) => this.setState({value: args.Value})} />
+                                        </Grid>
+                                        <Grid md={2}>
+                                            <NumericBox Label='Estoque' Text={this.state.stock} Scale={3} OnChange={(args: EventArgs) => this.setState({stock: args.Value})} />
+                                        </Grid>
                                     </Grid>
                                 </TabItem>
                                 <TabItem Title='Combinação' Visible={this.state.isCombination}>

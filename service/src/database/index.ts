@@ -56,6 +56,9 @@ import { Vehicle } from "./models/vehicle.model";
 import { Cte } from "./models/cte.model";
 import { ShippingOrderNfe } from "./models/shippingOrderNfe.model";
 import { ShippingOrderVehicle } from "./models/shippingOrderVehicle.model";
+import { Stock } from "./models/stock.model";
+import { StockIn } from "./models/stockIn.model";
+import { StockInProduct } from "./models/stockInProduct.model";
 
 
 export { Payment } from "./models/payment.model";
@@ -112,6 +115,9 @@ export { Vehicle } from "./models/vehicle.model";
 export { Cte } from "./models/cte.model";
 export { ShippingOrderNfe } from "./models/shippingOrderNfe.model";
 export { ShippingOrderVehicle } from "./models/shippingOrderVehicle.model";
+export { Stock } from "./models/stock.model";
+export { StockIn } from "./models/stockIn.model";
+export { StockInProduct } from "./models/stockInProduct.model";
 
 
 export default class Sequelize {
@@ -180,6 +186,9 @@ export default class Sequelize {
         ShippingOrderStatus,
         ShippingOrderVehicle,
         State,
+        Stock,
+        StockIn,
+        StockInProduct,
         Task,
         User, 
         Vehicle

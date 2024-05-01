@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Company, Nfe, Partner, ShippingOrder, Vehicle } from "../../database";
+import { Company, Nfe, Partner, ShippingOrder, ShippingOrderVehicle, Vehicle } from "../../database";
 import { ShippingOrderService } from "../../services/logistic/shippingOrder.service";
 import { Op } from "sequelize";
 
@@ -64,13 +64,16 @@ export default class ShippingOrderController {
                 const transaction = await sequelize.transaction();
 
                 const shippingOrder = await ShippingOrder.findOne({
-                    attributes: ['id', 'value', 'weight'],
+                    attributes: ['id', 'number', 'value', 'weight'],
                     include: [
                         {model: Company, as: 'company', attributes: ['id', 'surname']},
                         {model: Partner, as: 'sender', attributes: ['id', 'surname']},
                         {model: Partner, as: 'recipient', attributes: ['id', 'surname']},
                         {model: Partner, as: 'driver', attributes: ['id', 'surname']},
                         {model: Vehicle, as: 'vehicle', attributes: ['id', 'name', 'plate']},
+                        {model: ShippingOrderVehicle, as: 'vehicles', attributes: ['id'],
+                            include: [{model: Vehicle, as: 'vehicle', attributes: ['id', 'name', 'plate']}],
+                        },
                     ],
                     where: {id: req.body.id},
                     transaction

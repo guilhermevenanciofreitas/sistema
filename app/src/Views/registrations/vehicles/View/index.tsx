@@ -26,30 +26,16 @@ export class ViewVehicle extends ViewProductBase {
                             <TextBox Label='Nome' TextTransform='UpperCase' Text={this.state.name} OnChange={(args: EventArgs) => this.setState({name: args.Value})} />
                         </Grid>
                         <Grid md={4}>
-                            <AutoComplete Label='Categoria' Pesquisa={async (Text: string) => await Search.ProductCategory(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.category} OnChange={(category: any) => this.setState({category})}>
-                                <ProductCategoryTemplate />
-                            </AutoComplete>
+                            <TextBox Label='Placa' TextTransform='UpperCase' Text={this.state.plate} OnChange={(args: EventArgs) => this.setState({plate: args.Value})} />
                         </Grid>
 
-                        <Grid md={12}>
-                            <TextBox Label='Descrição' TextTransform='Normal' Text={this.state.description} OnChange={(args: EventArgs) => this.setState({description: args.Value})} />
-                        </Grid>
-                        
-                        <Grid md={12}>
-                            <div style={{display: 'flex'}}>
-                                <CheckBox Label='Combinação' Checked={this.state.isCombination} OnChange={(args: EventArgs) => this.setState({isCombination: args.Value})} />
-                            </div>
-                        </Grid>
-    
                         <Grid md={12}>
                             
                             <Tab>
                                 <TabItem Title='Principal' Visible={true}>
-                                    <Grid md={2}>
-                                        <NumericBox Label='Valor' Text={this.state.value} Prefix='R$ ' Scale={2} OnChange={(args: EventArgs) => this.setState({value: args.Value})} />
-                                    </Grid>
+                                    <></>
                                 </TabItem>
-                                <TabItem Title='Combinação' Visible={this.state.isCombination}>
+                                <TabItem Title='Combinação' Visible={true}>
                                     <></>
                                 </TabItem>
                                 <TabItem Title='Composição' Visible={true}>

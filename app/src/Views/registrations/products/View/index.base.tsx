@@ -14,6 +14,7 @@ export class ViewProductBase extends ViewModal<Readonly<{Title: string}>> {
         category: null,
         isCombination: false,
         value: null,
+        stock: null,
 
         combinations: [],
         suppliers: []
@@ -83,6 +84,7 @@ export class ViewProductBase extends ViewModal<Readonly<{Title: string}>> {
                 description: _.get(this.state, 'description') || null,
                 isCombination: _.get(this.state, 'isCombination') || null,
                 value: _.get(this.state, 'value') || null,
+                stock: _.get(this.state, 'stock') || null,
                 combinations,
                 suppliers
             }

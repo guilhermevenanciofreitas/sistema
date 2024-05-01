@@ -34,6 +34,7 @@ import freightQuotesRoutes from "./logistic/freightQuotes.routes";
 import invoicingRoutes from "./sales/invoicing.routes";
 import cteRoutes from "./fiscal/cte.routes";
 import vehicleRoutes from "./registrations/vehicle.routes";
+import locationRoutes from "./stock/location.routes";
 
 export default class Routes {
   constructor(app: Application) {
@@ -50,6 +51,10 @@ export default class Routes {
     app.use("/api/registrations/supplier", supplierRoutes);
     app.use("/api/registrations/shipping-company", shippingCompanyRoutes);
     app.use("/api/registrations/employee", employeeRoutes);
+
+
+    //Stock
+    app.use("/api/stock/location", locationRoutes);
 
     //Relationships
     app.use("/api/relationships/called", calledRoutes);

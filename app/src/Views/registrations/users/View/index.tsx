@@ -1,10 +1,10 @@
 
-import { ViewUsuarioBase } from './index.base';
+import { ViewUserBase } from './index.base';
 import { Button, Form, Modal, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 
-export class ViewUsuario extends ViewUsuarioBase {
+export class ViewUser extends ViewUserBase {
 
     public Close = () => this.setState({open: false});
     

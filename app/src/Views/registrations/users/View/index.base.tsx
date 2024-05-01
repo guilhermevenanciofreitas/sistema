@@ -3,7 +3,7 @@ import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
 
-export class ViewUsuarioBase extends ViewModal<Readonly<{Title: string}>> {
+export class ViewUserBase extends ViewModal<Readonly<{Title: string}>> {
 
     state = {
         open: false,

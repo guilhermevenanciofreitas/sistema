@@ -11,7 +11,9 @@ export { ControlAutoComplete as AutoComplete } from '../Controls/Form/AutoComple
 export { ControlButton as Button } from '../../Utils/Controls/Form/Button';
 export { ControlCheckBox as CheckBox } from '../../Utils/Controls/Form/CheckBox';
 export { ControlDatePicker as DatePicker } from '../../Utils/Controls/Form/DatePicker';
+export { ControlDateTimePicker as DateTimePicker } from '../../Utils/Controls/Form/DateTimePicker';
 
+export { ControlPasswordBox as PasswordBox } from '../../Utils/Controls/Form/PasswordBox';
 export { ControlTextBox as TextBox } from '../../Utils/Controls/Form/TextBox';
 export { ControlNumericBox as NumericBox } from './Form/NumericBox';
 export { ControlCurrencyBox as CurrencyBox } from './Form/CurrencyBox';

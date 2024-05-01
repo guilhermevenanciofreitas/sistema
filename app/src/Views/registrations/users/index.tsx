@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
 import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
-import { ViewUsuario } from "./View/index";
-import BaseUsuarios from "./index.base";
+import { ViewUser } from "./View/index";
+import UsersBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
@@ -15,14 +15,14 @@ const Columns = [
     { selector: (row: any) => row.email, sort: 'email', name: 'E-mail', sortable: true },
 ];
 
-export default class Usuarios extends BaseUsuarios {
+export default class Users extends UsersBase {
 
     render(): React.ReactNode {
 
         return (
             <>
 
-                <ViewUsuario ref={this.ViewUsuario} Title="Usuário" />
+                <ViewUser ref={this.ViewUser} Title="Usuário" />
 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />

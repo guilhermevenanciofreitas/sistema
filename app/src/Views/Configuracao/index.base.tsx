@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { Service } from "../../Service";
 import { ViewModal, MessageBox } from "../../Utils/Controls";
 import { DisplayError } from "../../Utils/DisplayError";
@@ -7,13 +8,11 @@ export class ViewConfiguracaoBase extends ViewModal<Readonly<{Title: string}>> {
 
     state = {
         open: false,
-        tipo: "CPF",
-        cpfCnpj: "",
-        razaoSocial: "",
-        nomeFantasia: "",
-        pedidoDigital: {
-            frase: "",
-        }
+        type: 'CPF',
+        cpfCnpj: '',
+        name: '',
+        surname: '',
+        certificate: null
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -46,6 +45,23 @@ export class ViewConfiguracaoBase extends ViewModal<Readonly<{Title: string}>> {
         }
     }
 
+    protected Certificate_Change = async (event: any) =>
+    {
+
+        const password = prompt('Senha', 'tcl@04058');
+
+        const file = event.target.files[0];
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('password', password || '');
+        
+        let response = await Service.Post("configuracao/certificate", formData, 'multipart/form-data');
+
+        this.setState({certificate: response?.data});
+       
+    }
+
     protected BtnSalvar_Click = async () =>
     {
         try
@@ -53,7 +69,15 @@ export class ViewConfiguracaoBase extends ViewModal<Readonly<{Title: string}>> {
 
             Loading.Show();
 
-            let r = await Service.Post("configuracao/save", this.state);
+            const request = {
+                id: _.get(this.state, 'id'),
+                certificate: {
+                    file: _.get(this.state.certificate, 'file'),
+                    password: _.get(this.state.certificate, 'password'),
+                }
+            }
+
+            let r = await Service.Post("configuracao/save", request);
     
             Loading.Hide();
     
@@ -76,11 +100,12 @@ export class ViewConfiguracaoBase extends ViewModal<Readonly<{Title: string}>> {
     private Limpar = () =>
     {
         this.setState({
-            id: "",
-            tipo: "CPF",
-            cpfCnpj: "",
-            razaoSocial: "",
-            nomeFantasia: "",
+            id: '',
+            type: 'CPF',
+            cpfCnpj: '',
+            name: '',
+            surname: '',
+            certificate: null,
         });
     }
 

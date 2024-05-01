@@ -11,8 +11,7 @@ import { ViewFiltro } from "./filtro";
 
 const Columns = [
     { selector: (row: any) => row.name, sort: 'name', name: 'Nome', sortable: true },
-    { selector: (row: any) => row.category?.description, sort: 'description', name: 'Categoria', sortable: true },
-    { selector: (row: any) => row.value ? parseFloat(row.value).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}) : '', sort: 'value', name: 'Valor', sortable: true },
+    { selector: (row: any) => row.plate, sort: 'plate', name: 'Placa', sortable: true },
 ];
 
 export default class Vehicles extends VehiclesBase {

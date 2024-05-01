@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { Form, TextBox, Button, DropDownList, DropDownListItem, MessageBox } from "../../Utils/Controls";
+import { Form, TextBox, PasswordBox, Button, DropDownList, DropDownListItem, MessageBox } from "../../Utils/Controls";
 import { EventArgs } from "../../Utils/EventArgs";
 import { Service } from "../../Service";
 import { Layout } from "./layout";
@@ -16,8 +16,8 @@ export class ViewLogin extends React.Component<Readonly<{from: string}>> {
 
     step: "login",
 
-    email: "",
-    password: "",
+    email: "guilherme9180@gmail.com",
+    password: "@Rped94ft",
     accountId: "",
     companyId: "",
 
@@ -76,7 +76,7 @@ export class ViewLogin extends React.Component<Readonly<{from: string}>> {
             </FormControl>
             
             <FormControl>
-              <TextBox Label='Senha' TextTransform='Normal' Text={this.state.password} OnChange={(args: EventArgs) => this.setState({password: args.Value})} />
+              <PasswordBox Label='Senha' Text={this.state.password} OnChange={(args: EventArgs) => this.setState({password: args.Value})} />
             </FormControl>
           </>
           }

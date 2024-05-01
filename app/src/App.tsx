@@ -9,7 +9,7 @@ import Suppliers from "./views/registrations/partners/suppliers";
 import Employees from "./views/registrations/partners/employees";
 import ShippingsCompany from "./views/registrations/partners/shippingsCompany";
 
-import Usuarios from "./views/registrations/users/index";
+import Users from "./views/registrations/users/index";
 
 
 
@@ -38,17 +38,18 @@ import FreightQuotes from "./views/logistics/freightQuotes";
 import Invoicing from "./views/sales/invoicing";
 import Ctes from "./views/fiscal/ctes";
 import Vehicles from "./views/registrations/vehicles";
+import Locations from "./views/stock/locations";
 
 export default class App extends React.Component {
     render(): React.ReactNode {
       return (
         <Routes>
             <Route>
-                <Route path="/" element={<RequireLogin><Usuarios /></RequireLogin>} />
+                <Route path="/" element={<RequireLogin><Users /></RequireLogin>} />
                 <Route path="/login" element={<Login />} />
 
                 {/* Registrations */}
-                <Route path="/registrations/users" element={<Usuarios />} />
+                <Route path="/registrations/users" element={<Users />} />
                 <Route path="/registrations/products" element={<RequireLogin><Products /></RequireLogin>} />
                 <Route path="/registrations/services" element={<RequireLogin><Services /></RequireLogin>} />
                 <Route path="/registrations/vehicles" element={<RequireLogin><Vehicles /></RequireLogin>} />
@@ -60,6 +61,8 @@ export default class App extends React.Component {
                 {/* Relationship */}
                 <Route path="/relationships/calleds" element={<RequireLogin><Calleds /></RequireLogin>} />
 
+                {/* Stock */}
+                <Route path="/stock/locations" element={<RequireLogin><Locations /></RequireLogin>} />
 
                 {/* Sales */}
                 <Route path="/sales/orders" element={<RequireLogin><Orders /></RequireLogin>} />

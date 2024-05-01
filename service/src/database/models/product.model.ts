@@ -21,8 +21,11 @@ export class Product extends Model {
   @Column({type: DataType.BOOLEAN, field: "isCombination"})
   isCombination?: string;
 
-  @Column({type: DataType.DECIMAL(10, 2), field: "value"})
+  @Column({type: DataType.DECIMAL(18, 2), field: "value"})
   value?: number;
+
+  @Column({type: DataType.DECIMAL(18, 3), field: "stock"})
+  stock?: number;
 
   @BelongsTo(() => ProductCategory, {as: 'category', foreignKey: 'categoryId'})
   category?: ProductCategory;

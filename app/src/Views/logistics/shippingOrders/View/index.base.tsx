@@ -11,12 +11,16 @@ export class ViewShippingOrderBase extends ViewModal<Readonly<{Title: string}>> 
         id: '',
         number: '',
         company: null,
+        date: '',
+        status: null,
         value: null,
         sender: null,
         recipient: null,
         driver: null,
         vehicle: null,
         weight: null,
+        vehicles: [],
+        nfes: []
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -56,8 +60,26 @@ export class ViewShippingOrderBase extends ViewModal<Readonly<{Title: string}>> 
 
             Loading.Show();
 
+            let vehicles = [];
+            let nfes = [];
+
+            for (let vehicle of _.get(this.state, 'vehicles') || []) {
+                vehicles.push({
+                    id: _.get(vehicle, 'id'),
+                    vehicleId: _.get(vehicle, 'vehicle.id'),
+                });
+            }
+
+            for (let nfe of _.get(this.state, 'nfes') || []) {
+                nfes.push({
+                    id: _.get(nfe, 'id'),
+                    nfeId: _.get(nfe, 'nfe.id'),
+                });
+            }
+
             const request = {
                 id: _.get(this.state, 'id') || null,
+                number: _.get(this.state, 'number') || null,
                 companyId: _.get(this.state.company, 'id') || null,
                 value: _.get(this.state, 'value') || null,
                 senderId: _.get(this.state.sender, 'id') || null,
@@ -65,6 +87,7 @@ export class ViewShippingOrderBase extends ViewModal<Readonly<{Title: string}>> 
                 driverId: _.get(this.state.driver, 'id') || null,
                 vehicleId: _.get(this.state.vehicle, 'id') || null,
                 weight: _.get(this.state, 'weight') || null,
+                vehicles,
             }
 
 
@@ -99,7 +122,9 @@ export class ViewShippingOrderBase extends ViewModal<Readonly<{Title: string}>> 
             recipient: null,
             driver: null,
             vehicle: null,
-            weight: null
+            weight: null,
+            vehicles: [],
+            nfes: []
         });
     }
 
