@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { Service } from "../../../../Service";
 import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
@@ -9,8 +10,7 @@ export class ViewStockInBase extends ViewModal<Readonly<{Title: string}>> {
         open: false,
         id: '',
         nfe: null,
-        stockLocation: null,
-        status: null,
+        status: 'pending',
         products: []
     }
 
@@ -21,7 +21,7 @@ export class ViewStockInBase extends ViewModal<Readonly<{Title: string}>> {
 
         if (id) {
             Loading.Show();
-            const r = await Service.Post('stock/location/findOne', {id});
+            const r = await Service.Post('stock/in/findOne', {id});
             Loading.Hide();
             this.setState(r?.data);
         }
@@ -49,10 +49,27 @@ export class ViewStockInBase extends ViewModal<Readonly<{Title: string}>> {
         try
         {
 
-            Loading.Show();
+            let products = [];
 
-            let r = await Service.Post('stock/location/save', this.state);
-    
+            for (const product of this.state.products || []) {
+                products.push({
+                    id: _.get(product, 'id') || null,
+                    stockLocationId: _.get(product, 'stockLocation.id') || null,
+                    productId: _.get(product, 'product.id') || null,
+                    quantity: _.get(product, 'quantity') || null,
+                    value: _.get(product, 'value') || null,
+                    discount: _.get(product, 'discount') || null,
+                });
+            }
+
+            const request = {
+                id: _.get(this.state, 'id') || null,
+                nfeId: _.get(this.state, 'nfe.id') || null,
+                products,
+            }
+
+            Loading.Show();
+            let r = await Service.Post('stock/in/save', request);
             Loading.Hide();
     
             if (r?.status == 201) {
@@ -71,13 +88,34 @@ export class ViewStockInBase extends ViewModal<Readonly<{Title: string}>> {
         }
     }
 
+    protected BtnCheckIn_Click = async () => {
+        try
+        {
+            const request = {
+                id: _.get(this.state, 'id') || null
+            }
+
+            Loading.Show();
+            let r = await Service.Post('stock/in/check-in', request);
+            Loading.Hide();
+
+            await MessageBox.Show({title: 'Info', width: 400, type: 'Success', content: 'Confirmado com sucesso!', buttons: [{ Text: 'OK' }]});
+
+            this.Close(request.id);
+
+        }
+        catch(err: any)
+        {
+            await DisplayError.Show(err);
+        }
+    }
+
     private Limpar = () =>
     {
         this.setState({
             id: '',
             nfe: null,
-            stockLocation: null,
-            status: null,
+            status: 'pending',
             products: []
         });
     }

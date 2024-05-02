@@ -14,14 +14,14 @@ export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
         numeroDocumento: "",
         emissao: "",
         vencimento: "",
-        recebedor: null,
+        receiver: null,
         ourNumber: "",
         bankAccount: null,
         paymentForm: null,
         beneficiaryNotice: "",
-        valor: "0.00",
-        juros: "0.00",
-        multa: "0.00",
+        valor: null,
+        juros: null,
+        multa: null,
         data: {
             //Transferência - TED
             accountType: null,
@@ -115,13 +115,13 @@ export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
             emissao: "",
             vencimento: "",
             bankAccount: null,
-            recebedor: null,
+            receiver: null,
             ourNumber: "",
             paymentForm: null,
             beneficiaryNotice: "",
-            valor: "0.00",
-            juros: "0.00",
-            multa: "0.00",
+            valor: null,
+            juros: null,
+            multa: null,
             data: null
         });
     }

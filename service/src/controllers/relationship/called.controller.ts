@@ -48,9 +48,9 @@ export default class CalledController {
                 const calleds = await Called.findAndCountAll({
                     attributes: ['id', 'number', 'priority', 'subject', 'forecast', 'status', 'createdAt'],
                     include: [
-                        {model: Company, attributes: ['id', 'nomeFantasia']},
-                        {model: Partner, as: 'partner', attributes: ['id', 'nome']},
-                        {model: Partner, as: 'responsible', attributes: ['id', 'nome']},
+                        {model: Company, attributes: ['id', 'surname']},
+                        {model: Partner, as: 'partner', attributes: ['id', 'surname']},
+                        {model: Partner, as: 'responsible', attributes: ['id', 'surname']},
                         {model: CalledOccurrence, as: 'occurrence', attributes: ['id', 'description']}
                     ],
                     where, order, limit: pagination.limit, offset: pagination.offset1, transaction
@@ -102,9 +102,9 @@ export default class CalledController {
                 const called = await Called.findOne({
                     attributes: ['id', 'number', 'priority', 'subject', 'forecast', 'status', 'createdAt'],
                     include: [
-                        {model: Company, attributes: ['id', 'nomeFantasia']},
-                        {model: Partner, as: 'partner', attributes: ['id', 'nome']},
-                        {model: Partner, as: 'responsible', attributes: ['id', 'nome']},
+                        {model: Company, attributes: ['id', 'surname']},
+                        {model: Partner, as: 'partner', attributes: ['id', 'surname']},
+                        {model: Partner, as: 'responsible', attributes: ['id', 'surname']},
                         {model: CalledOccurrence, as: 'occurrence', attributes: ['id', 'description']}
                     ],
                     where: {id: req.body.id}, transaction

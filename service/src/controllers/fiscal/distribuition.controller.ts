@@ -105,7 +105,9 @@ export default class DistribuitionController {
                     return;
                 }
                 
-                DistribuitionService.Create(response.data as Dfe, transaction);
+                console.log(response.data);
+
+                await DistribuitionService.Create(response.data as Dfe, transaction);
     
                 res.status(200).json({success: true});
 

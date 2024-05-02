@@ -5,9 +5,7 @@ import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Alert, FormLabel, Grid } from '@mui/joy';
 import { Search } from '../../../../Search';
-import { CostumerTemplate } from '../../../../Search/Templates/Costumer';
 import _ from 'lodash';
-import { StockLocationTemplate } from '../../../../Search/Templates/StockLocation';
 import { NfeTemplate } from '../../../../Search/Templates/Nfe';
 import { Products } from './products';
 
@@ -21,19 +19,26 @@ export class ViewStockIn extends ViewStockInBase {
             <Modal Open={this.state.open} Title={this.props.Title} Width={900} Close={() => this.Close()}>
                 <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
 
-                    <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
-                    <Button Text='Limpar' Type='Reset' Color='white' BackgroundColor='gray' />
+                    {this.state.status == 'pending' && (
+                        <>
+                            <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
+                            <Button Text='Limpar' Type='Reset' Color='white' BackgroundColor='gray' />
+                            {this.state.id && (<Button Text='Confirmar' Type='Button' Color='white' BackgroundColor='blue' OnClick={this.BtnCheckIn_Click} />)}
+                        </>
+                    )}
+                    
+
+                    {this.state.status == 'checkIn' && (
+                        <>
+                            <Button Text='Imprimir etiquetas' Type='Button' Color='white' BackgroundColor='green' />
+                        </>
+                    )}
 
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                        
                         <Grid md={6}>
                             <AutoComplete Label='Nota fiscal' Pesquisa={async(Text: string) => await Search.Nfe(Text)} Text={(Item: any) => `${Item.protNFe?.infProt?.chNFe}` } Value={this.state.nfe} OnChange={(nfe: any) => this.setState({nfe})}>
                                 <NfeTemplate />
-                            </AutoComplete>
-                        </Grid>
-                        <Grid md={3}>
-                            <AutoComplete Label='Localização' Pesquisa={async(Text: string) => await Search.StockLocation(Text)} Text={(Item: any) => `${Item.name}` } Value={this.state.stockLocation} OnChange={(stockLocation: any) => this.setState({stockLocation})}>
-                                <StockLocationTemplate />
                             </AutoComplete>
                         </Grid>
                         <Grid md={3}>
@@ -52,7 +57,7 @@ export class ViewStockIn extends ViewStockInBase {
                             <TabItem Title='Produtos' Visible={true}>
                                 <Products products={this.state.products} OnChange={(products: any[]) => this.setState({products})} />
                             </TabItem>
-                            <TabItem Title='Pagamento' Visible={true}>
+                            <TabItem Title='Saídas' Visible={true}>
                                 <></>
                             </TabItem>
                         </Tab>

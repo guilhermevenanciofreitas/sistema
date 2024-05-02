@@ -19,12 +19,14 @@ export default class StockInsBase extends BaseIndex {
         Loading: true,
         Selecteds: [],
         request: {
+            status: undefined,
             offset: 1,
             limit: 100,
             filter: undefined,
             sort: undefined
         },
         response: {
+            status: [],
             rows: [],
             count: 0
         },
@@ -39,7 +41,8 @@ export default class StockInsBase extends BaseIndex {
 
             const { id } = queryString.parse(window.location.search);
             if (id) {
-                await this.OpenUser(id.toString());
+                await this.OpenStockIn(id.toString(), false);
+                history.pushState(null, "", `${window.location.origin}${window.location.pathname}`);
             }
 
             await this.Pesquisar(this.state.request);
@@ -56,7 +59,7 @@ export default class StockInsBase extends BaseIndex {
         try
         {
 
-            const r = await this.OpenUser(id);
+            const r = await this.OpenStockIn(id);
 
             if (r) await this.Pesquisar(this.state.request);
        
@@ -147,11 +150,27 @@ export default class StockInsBase extends BaseIndex {
         }
     }
 
+    protected CardStatus_Click = async(status: string): Promise<void> =>
+    {
+        try
+        {
+            this.setState({request: {...this.state.request, status}}, 
+                async () => await this.Pesquisar(this.state.request)
+            );
+        }
+        catch (err: any) 
+        {
+            await DisplayError.Show(err);
+        }
+    }
+
     protected BtnPesquisar_Click = async(): Promise<void> =>
     {
         try
         {
-            await this.Pesquisar(this.state.request);
+            this.setState({request: {...this.state.request, status: undefined}}, 
+                async () => await this.Pesquisar(this.state.request)
+            );
         }
         catch (err: any) 
         {
@@ -187,18 +206,18 @@ export default class StockInsBase extends BaseIndex {
         }
     }
 
-    private OpenUser = async (id: string) =>
+    private OpenStockIn = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, '', `${window.location.origin}${window.location.pathname}?id=${id}`);
         const r = await this.ViewStockIn.current?.Show(id);
-        history.back();
+        if (isHitoryBack) history.back();
         return r;
     }
 
     protected Pesquisar = async(request: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("stock/in/findAll", request);
+        var r = await Service.Post('stock/in/findAll', request);
         this.setState({Loading: false, ...r?.data});
     }
 

@@ -1,17 +1,36 @@
 import React from "react";
-import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
+import { Button, CardStatus, Container, Left, ListView, Right } from "../../../Utils/Controls";
 import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
 import { ViewStockIn } from "./View/index";
 import StockInsBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
-import { IconButton } from "@mui/joy";
+import { Grid, IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
 import { ViewImportar } from "./importar";
 import { ViewFiltro } from "./filtro";
+import _ from "lodash";
+
+enum colors {
+    pending = '#00aed1',
+    checkIn = '#4ad185'
+}
+
+const ChNFe = ({ row }: any) => {
+    console.log(row);
+    return (
+        <div style={{display: 'flex', height: 'auto'}}>
+            <div style={{width: '5px', backgroundColor: colors[row.status as keyof typeof colors]}}></div>
+            <div data-tag="allowRowEvents" style={{ paddingLeft: '10px', overflow: 'hidden', textOverflow: 'ellipses' }}>
+                {row.nfe?.protNFe?.infProt?.chNFe}
+            </div>
+        </div>
+    );
+};
 
 const Columns = [
-    { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
-    { selector: (row: any) => row.name, sort: 'name', name: 'Nome', sortable: true },
+    { selector: (row: any) => <ChNFe row={row} />, sort: 'nfe', name: 'Chave de acesso', sortable: true },
+    { selector: (row: any) => row.createdAt, sort: 'createdAt', name: 'Data', sortable: true },
+    { selector: (row: any) => row.status == 'pending' ? 'Pendente' : 'Confirmado', sort: 'status', name: 'Status', sortable: true },
 ];
 
 export default class StockIns extends StockInsBase {
@@ -53,6 +72,15 @@ export default class StockIns extends StockInsBase {
                             <Button Text='Pesquisar' Type='Button' Color='white' BackgroundColor='#0d6efd' StartIcon={<SearchRounded />} OnClick={this.BtnPesquisar_Click} />
                         </Right>
                     </Container>
+
+                    <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+                        <Grid md={2}>
+                            <CardStatus checked={this.state.request.status == "pending"} status="Pendente" bagde={_.get(this.state.response.status, 'pending.count') as any} color={colors.pending} OnClick={() => this.CardStatus_Click('pending')} />
+                        </Grid>
+                        <Grid md={2}>
+                            <CardStatus checked={this.state.request.status == "checkIn"} status="Confirmado" bagde={_.get(this.state.response.status, 'checkIn.count') as any} color={colors.checkIn} OnClick={() => this.CardStatus_Click('checkIn')} />
+                        </Grid>
+                    </Grid>
 
                     <ListView
                         Loading={this.state.Loading}

@@ -24,9 +24,9 @@ const CompanyRecipient = ({ row }: any) => {
         <div style={{display: 'flex', height: 'auto'}}>
             <div style={{width: '5px', backgroundColor: colors[row.status as keyof typeof colors]}}></div>
             <div data-tag="allowRowEvents" style={{ paddingLeft: '10px', overflow: 'hidden', textOverflow: 'ellipses' }}>
-                {row.company?.nomeFantasia}
+                {row.company?.surname}
                 <br />
-                {row.recebedor?.nome}
+                {row.receiver?.surname}
             </div>
         </div>
     );

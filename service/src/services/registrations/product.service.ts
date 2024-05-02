@@ -18,6 +18,7 @@ export class ProductService {
     public static Create = async (product: Product, transaction: Transaction | undefined) => {
 
         product.id = crypto.randomUUID();
+        product.stock = 0;
         
         for (let combination of product?.combinations || []) {
             combination.id = crypto.randomUUID();

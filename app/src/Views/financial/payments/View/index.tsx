@@ -1,6 +1,6 @@
 
 import { ViewContaPagarBase } from './index.base';
-import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, Modal, TextBox } from '../../../../Utils/Controls';
+import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, Modal, NumericBox, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
@@ -48,13 +48,13 @@ export class ViewPayment extends ViewContaPagarBase {
                             </Grid>
 
                             <Grid md={4}>
-                                <AutoComplete Label='Empresa' Pesquisa={async(Text: string) => await Search.Company(Text)} Text={(Item: any) => `${Item.nomeFantasia}` } Value={this.state.company} OnChange={(company: any) => this.setState({company})}>
+                                <AutoComplete Label='Empresa' Pesquisa={async(Text: string) => await Search.Company(Text)} Text={(Item: any) => `${Item.surname}` } Value={this.state.company} OnChange={(company: any) => this.setState({company})}>
                                     <CompanyTemplate />
                                 </AutoComplete>
                             </Grid>
 
                             <Grid md={4}>
-                                <AutoComplete Label='Beneficiário' Pesquisa={async(Text: string) => await Search.Costumer(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.recebedor} OnChange={(recebedor: any) => this.setState({recebedor})}>
+                                <AutoComplete Label='Beneficiário' Pesquisa={async(Text: string) => await Search.Costumer(Text)} Text={(Item: any) => `${Item.surname}` } Value={this.state.receiver} OnChange={(receiver: any) => this.setState({receiver})}>
                                     <CostumerTemplate />
                                 </AutoComplete>
                             </Grid>
@@ -72,7 +72,7 @@ export class ViewPayment extends ViewContaPagarBase {
                                 <TextBox Label='Moeda' TextTransform='Normal' Text={'BRL (Real)'} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} ReadOnly={true} />
                             </Grid>
                             <Grid md={2}>
-                                <TextBox Label='Valor' TextTransform='Normal' Text={this.state.valor} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} />
+                                <NumericBox Label='Valor' Text={this.state.valor} Prefix='R$ ' Scale={2} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} />
                             </Grid>
                             <Grid md={5}>
                                 <TextBox Label='Aviso ao benificiário' TextTransform='Normal' Text={this.state.beneficiaryNotice} OnChange={(args: EventArgs) => this.setState({beneficiaryNotice: args.Value})} />

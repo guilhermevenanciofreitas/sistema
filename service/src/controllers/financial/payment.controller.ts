@@ -32,8 +32,8 @@ export default class PaymentController {
                 {
                     attributes: ["id", "numeroDocumento", "valor", "emissao", "vencimento", "status"],
                     include: [
-                        {model: Company, attributes: ["id", "cpfCnpj", "nomeFantasia"]},
-                        {model: Partner, attributes: ["id", "cpfCnpj", "nome"]},
+                        {model: Company, attributes: ["id", "cpfCnpj", "surname"]},
+                        {model: Partner, attributes: ["id", "cpfCnpj", "surname"]},
                         {model: PaymentForm, attributes: ["id", "description"]},
                         {model: BankAccount, attributes: ["id", "agency", "agencyDigit", "account", "accountDigit"],
                             include: [{model: Bank, attributes: ["id", "description", "logo"]}],
@@ -88,8 +88,8 @@ export default class PaymentController {
                 const contaPagar = await Payment.findOne({
                     attributes: ["id", "numeroDocumento", "valor", "emissao", "vencimento", "ourNumber", "data"],
                     include: [
-                        {model: Partner, attributes: ["id", "nome"]},
-                        {model: Company, attributes: ["id", "nomeFantasia"]},
+                        {model: Partner, as: 'receiver', attributes: ["id", "surname"]},
+                        {model: Company, as: 'company', attributes: ["id", "surname"]},
                         {model: BankAccount, attributes: ["id", "agency", "agencyDigit", "account", "accountDigit"], include: [{model: Bank, attributes: ["description"]}]},
                         {model: PaymentForm, attributes: ["id", "description", "type"]},
                     ],

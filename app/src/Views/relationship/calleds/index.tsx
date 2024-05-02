@@ -33,10 +33,10 @@ export default class Calleds extends CalledsBase {
     private Columns = [
         { selector: (row: any) => <Number row={row} />, sort: 'number', name: 'Número', sortable: true, maxWidth:"100px" },
         { selector: (row: any) => row.createdAt, sort: 'createdAt', name: 'Criado em', sortable: true, maxWidth:"200px" },
-        { selector: (row: any) => row.company?.nomeFantasia, sort: 'nome', name: 'Empresa', sortable: true },
-        { selector: (row: any) => row.partner?.nome, sort: 'nome', name: 'Solicitante', sortable: true },
+        { selector: (row: any) => row.company?.surname, sort: 'company', name: 'Empresa', sortable: true },
+        { selector: (row: any) => row.partner?.surname, sort: 'partner', name: 'Solicitante', sortable: true },
         { selector: (row: any) => row.subject, sort: 'subject', name: 'Assunto', sortable: true },
-        { selector: (row: any) => row.responsible?.nome, sort: 'nome', name: 'Responsável', sortable: true, maxWidth:"300px" },
+        { selector: (row: any) => row.responsible?.surname, sort: 'responsible', name: 'Responsável', sortable: true, maxWidth:"300px" },
         { selector: (row: any) => row.occurrence?.description, sort: '$status.descricao', name: 'Ocorrência', sortable: true },
         { selector: (row: any) => row.forecast, sort: 'forecast', name: 'Prev. fechar', sortable: true, maxWidth:"200px" },
     ];

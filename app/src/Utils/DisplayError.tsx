@@ -21,11 +21,14 @@ export class DisplayError {
 
         const r = await MessageBox.Show({title: "Ops!", width: 400, type: "Error", content: "Ocorreu um erro inesperado!",
             buttons: [
-                { Text: "Mostrar detalhes", OnClick: () => "yes"},
+                //{ Text: "Mostrar detalhes", OnClick: () => "yes"},
                 { Text: "Ok" },
             ]
         });
 
+        console.error(err?.message);
+
+        /*
         if (r == "yes") {
             await MessageBox.Show({title: "Ops!", width: 400, type: "Error", content: err?.message,
                 buttons: [
@@ -33,6 +36,8 @@ export class DisplayError {
                 ]
             });
         }
+        */
+
     }
 
 }
