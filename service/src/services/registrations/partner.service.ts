@@ -22,6 +22,7 @@ export class PartnerService {
         for (let contact of partner?.contacts || []) {
             contact.id = crypto.randomUUID();
             contact.partnerId = partner.id;
+            await PartnerContact.create({...contact}, {transaction});
         }
 
         await Partner.create({...partner}, {transaction});

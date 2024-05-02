@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { StockLocation } from "../../database";
-import { LocationService } from "../../services/stock/location.service";
+import { StockIn } from "../../database";
+import { StockInService } from "../../services/stock/in.service";
 import {Op} from "sequelize";
 import { Error } from "../../errors";
 
-export default class LocationController {
+export default class StockInController {
 
     async findAll(req: Request, res: Response) {
 
@@ -21,8 +21,8 @@ export default class LocationController {
                     order = [[pagination.sort.column, pagination.sort.direction]]
                 }
         
-                const stockLocations = await StockLocation.findAndCountAll({
-                    attributes: ['id', 'name', 'description'],
+                const stockIns = await StockIn.findAndCountAll({
+                    attributes: ['id'],
                     where,
                     order,
                     limit: pagination.limit,
@@ -37,7 +37,7 @@ export default class LocationController {
                         ...pagination
                     },
                     response: {
-                        rows: stockLocations.rows, count: stockLocations.count
+                        rows: stockIns.rows, count: stockIns.count
                     }
                 });
 
@@ -57,11 +57,11 @@ export default class LocationController {
             {
                 const transaction = await sequelize.transaction();
 
-                const stockLocation = await StockLocation.findOne({attributes: ['id', 'name', 'description'], where: {id: req.body.id}, transaction});
+                const stock = await StockIn.findOne({attributes: ['id', 'name', 'description'], where: {id: req.body.id}, transaction});
     
                 sequelize.close();
     
-                res.status(200).json(stockLocation);
+                res.status(200).json(stock);
     
             }
             catch (error: any) {
@@ -79,26 +79,26 @@ export default class LocationController {
             {
                 const transaction = await sequelize.transaction();
 
-                const stockLocation = req.body as StockLocation;
+                const stockin = req.body as StockIn;
 
-                const valid = LocationService.IsValid(stockLocation);
+                const valid = StockInService.IsValid(stockin);
 
                 if (!valid.success) {
                     res.status(201).json(valid);
                     return;
                 }
 
-                if (!stockLocation.id) {
-                    await LocationService.Create(stockLocation, transaction);
+                if (!stockin.id) {
+                    await StockInService.Create(stockin, transaction);
                 } else {
-                    await LocationService.Update(stockLocation, transaction);
+                    await StockInService.Update(stockin, transaction);
                 }
 
                 await transaction?.commit();
                 
                 sequelize.close();
 
-                res.status(200).json(stockLocation);
+                res.status(200).json(stockin);
 
             }
             catch (error: any) {
@@ -118,7 +118,7 @@ export default class LocationController {
 
                 const transaction = await sequelize.transaction();
 
-                await LocationService.Delete(req.body.id, transaction);
+                await StockInService.Delete(req.body.id, transaction);
 
                 await transaction?.commit();
 

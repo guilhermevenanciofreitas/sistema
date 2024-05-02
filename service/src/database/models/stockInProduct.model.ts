@@ -18,7 +18,4 @@ export class StockInProduct extends Model {
   @Column({type: DataType.DECIMAL(18, 3), field: "balance"})
   balance?: string;
 
-  @Column({type: DataType.STRING(20), field: "status"})
-  status?: 'pending' | 'checkIn';
-
 }

@@ -42,6 +42,10 @@ class SearchRoutes {
     this.router.post("/meso-region", (req, res) => this.controller.mesoRegion(req, res));
 
     this.router.post("/vehicle", (req, res) => this.controller.vehicle(req, res));
+    
+    this.router.post("/stock-location", (req, res) => this.controller.stockLocation(req, res));
+
+    this.router.post("/nfe", (req, res) => this.controller.nfe(req, res));
 
   }
 }

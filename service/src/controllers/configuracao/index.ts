@@ -25,14 +25,14 @@ export default class ConfiguracaoController {
 
                 let company = await Company.findOne(
                 {
-                    attributes: ['id', 'cpfCnpj', 'name', 'surname', 'certificate', 'pedidoDigital'],
+                    attributes: ['id', 'cpfCnpj', 'name', 'surname', 'address', 'certificate'],
                     where: {id: req.body.id},
                     transaction
                 });
 
-                const response = await axios.post('http://localhost:5166/certificate/info', {certificate: company?.certificate.file, password: company?.certificate.password});
+                const response = await axios.post('http://localhost:5277/certificate/info', {file: company?.certificate.file, password: company?.certificate.password});
     
-                res.status(200).json({certificate: {...response?.data}});
+                res.status(200).json({...company?.dataValues, certificate: {info: response?.data}});
 
                 sequelize.close();
 
@@ -93,13 +93,12 @@ export default class ConfiguracaoController {
 
         form.parse(req, async (err, fields: any, files: any) => {
 
-            const certificate = fs.readFileSync(files.file[0].filepath, {encoding: 'base64'});
+            const file = fs.readFileSync(files.file[0].filepath, {encoding: 'base64'});
             const password = fields.password[0];
 
-            //tcl@04058
-            const response = await axios.post('http://localhost:5166/certificate/info', {certificate, password});
+            const response = await axios.post('http://localhost:5277/certificate/info', {file, password});
 
-            res.status(200).json({file: certificate, password: password, info: response.data});
+            res.status(200).json({info: response.data});
 
         });
 

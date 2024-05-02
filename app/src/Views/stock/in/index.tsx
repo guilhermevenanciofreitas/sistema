@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
 import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
-import { ViewNotaFiscal } from "./View/index";
-import BaseNotasFiscais from "./index.base";
+import { ViewStockIn } from "./View/index";
+import StockInsBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
@@ -11,37 +11,30 @@ import { ViewFiltro } from "./filtro";
 
 const Columns = [
     { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
-    { selector: (row: any) => row.numero, sort: 'numero', name: 'Numero', sortable: true },
-    { selector: (row: any) => row.serie, sort: 'serie', name: 'Série', sortable: true },
-    { selector: (row: any) => row.emitente, sort: 'emitente', name: 'Emitente', sortable: true },
-    { selector: (row: any) => row.destinatario, sort: 'destinatario', name: 'Destinatário', sortable: true },
-    { selector: (row: any) => row.valor, sort: 'valor', name: 'Valor', sortable: true },
+    { selector: (row: any) => row.name, sort: 'name', name: 'Nome', sortable: true },
 ];
 
-export default class NotasFiscais extends BaseNotasFiscais {
+export default class StockIns extends StockInsBase {
 
     render(): React.ReactNode {
 
         return (
             <>
 
-                <ViewNotaFiscal ref={this.ViewNotaFiscal} Title="Nota Fiscal" />
+                <ViewStockIn ref={this.ViewStockIn} Title="Entrada" />
 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
 
                 <JoyLayout>
 
-                    <Title>Notas fiscais</Title>
+                    <Title>Entradas</Title>
 
                     <Container>
                         <Left>
                             {this.state.Selecteds.length == 0 && (
                                 <Button Text='Novo' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnNovo_Click} />
                             )}
-
-                            <Button Text='Status' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnStatusService_Click} />
-
                             {this.state.Selecteds.length >= 1 && (
                                 <>
                                 <Button Text='Excluir' Type='Button' Color='white' BackgroundColor='red' StartIcon={<Delete />} OnClick={this.BtnDelete_Click} />
@@ -65,11 +58,11 @@ export default class NotasFiscais extends BaseNotasFiscais {
                         Loading={this.state.Loading}
 
                         Columns={Columns}
-                        Rows={this.state.Data.rows}
+                        Rows={this.state.response.rows}
+                        Count={this.state.response.count}
 
-                        Count={this.state.Data.count}
-                        Limit={this.state.Data.limit}
-                        OffSet={this.state.Data.offset}
+                        Limit={this.state.request.limit}
+                        OffSet={this.state.request.offset}
 
                         Records={[10, 50, 100, 500]}
 

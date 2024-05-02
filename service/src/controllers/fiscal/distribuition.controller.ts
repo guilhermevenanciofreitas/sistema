@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Company, Nfe, State } from "../../database";
+import { Company, Dfe, Nfe, State } from "../../database";
 import { NfeService } from "../../services/fiscal/nfe.service";
 import { Op } from "sequelize";
 import axios from "axios";
+import { DistribuitionService } from "../../services/fiscal/distribuition.service";
 
-export default class NfeController {
+export default class DistribuitionController {
 
     async findAll(req: Request, res: Response) {
 
@@ -74,7 +75,7 @@ export default class NfeController {
         });
     }
 
-    async statusService(req: Request, res: Response) {
+    async interest(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize, companyId}) => {
             try
@@ -91,11 +92,22 @@ export default class NfeController {
 
                 const state = await State.findOne({attributes: ['id', 'acronym'], where: {id: company?.address?.stateId}, transaction});
 
-                const request = {certificate: {file: company?.certificate.file, password: company?.certificate.password}, acronym: state?.acronym};
+                const dfe = await Dfe.findOne({attributes: ['ultNSU'], order: [['ultNSU', 'desc']], transaction});
 
-                const response = await axios.post('http://localhost:5277/nfe/status-service', request);
+                const ultNSU = dfe == null ? '000000000000000' : dfe.ultNSU;
 
-                res.status(response.status).json(response.data);
+                const request = {certificate: {file: company?.certificate.file, password: company?.certificate.password}, cpfCnpj: company?.cpfCnpj, acronym: state?.acronym, ultNSU};
+
+                const response = await axios.post('http://localhost:5277/nfe/interest', request);
+
+                if (response.status == 201) {
+                    res.status(201).json(response.data);
+                    return;
+                }
+                
+                DistribuitionService.Create(response.data as Dfe, transaction);
+    
+                res.status(200).json({success: true});
 
                 sequelize.close();
 
@@ -108,26 +120,6 @@ export default class NfeController {
             res.status(401).json(err);
         });
         
-    }
-
-    async upload(req: Request, res: Response) {
-        
-        Auth(req, res).then(async ({sequelize}) => {
-            try
-            {
-                const transaction = await sequelize.transaction();
-
-                //const nfes = await NfeService.Update(undefined, transaction);
-    
-                //res.status(200).json(nfes);
-    
-            }
-            catch (err) {
-                res.status(500).json(err);
-            }
-        }).catch((err) => {
-            res.status(401).json({message: err.message});
-        });
     }
 
     async save(req: Request, res: Response) {

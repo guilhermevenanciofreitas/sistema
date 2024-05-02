@@ -39,6 +39,8 @@ import Invoicing from "./views/sales/invoicing";
 import Ctes from "./views/fiscal/ctes";
 import Vehicles from "./views/registrations/vehicles";
 import Locations from "./views/stock/locations";
+import StockIns from "./views/stock/in";
+import Distributions from "./views/fiscal/distributions";
 
 export default class App extends React.Component {
     render(): React.ReactNode {
@@ -63,6 +65,7 @@ export default class App extends React.Component {
 
                 {/* Stock */}
                 <Route path="/stock/locations" element={<RequireLogin><Locations /></RequireLogin>} />
+                <Route path="/stock/in" element={<RequireLogin><StockIns /></RequireLogin>} />
 
                 {/* Sales */}
                 <Route path="/sales/orders" element={<RequireLogin><Orders /></RequireLogin>} />
@@ -81,6 +84,7 @@ export default class App extends React.Component {
                 <Route path="/financial/shippings" element={<RequireLogin><Shippings /></RequireLogin>} />
 
                 {/* Fiscal */}
+                <Route path="/fiscal/distributions" element={<RequireLogin><Distributions /></RequireLogin>} />
                 <Route path="/fiscal/nfes" element={<RequireLogin><NotasFiscais /></RequireLogin>} />
                 <Route path="/fiscal/ctes" element={<RequireLogin><Ctes /></RequireLogin>} />
 

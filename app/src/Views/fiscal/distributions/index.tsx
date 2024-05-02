@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
 import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
 import { ViewNotaFiscal } from "./View/index";
-import BaseNotasFiscais from "./index.base";
+import DistributionsBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
@@ -18,29 +18,25 @@ const Columns = [
     { selector: (row: any) => row.valor, sort: 'valor', name: 'Valor', sortable: true },
 ];
 
-export default class NotasFiscais extends BaseNotasFiscais {
+export default class Distributions extends DistributionsBase {
 
     render(): React.ReactNode {
 
         return (
             <>
 
-                <ViewNotaFiscal ref={this.ViewNotaFiscal} Title="Nota Fiscal" />
+                <ViewNotaFiscal ref={this.ViewNotaFiscal} Title="Distribuições" />
 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
 
                 <JoyLayout>
 
-                    <Title>Notas fiscais</Title>
+                    <Title>Distribuição - NFe</Title>
 
                     <Container>
                         <Left>
-                            {this.state.Selecteds.length == 0 && (
-                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnNovo_Click} />
-                            )}
-
-                            <Button Text='Status' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnStatusService_Click} />
+                            <Button Text='Sefaz' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnInterest_Click} />
 
                             {this.state.Selecteds.length >= 1 && (
                                 <>
@@ -65,11 +61,12 @@ export default class NotasFiscais extends BaseNotasFiscais {
                         Loading={this.state.Loading}
 
                         Columns={Columns}
-                        Rows={this.state.Data.rows}
 
-                        Count={this.state.Data.count}
-                        Limit={this.state.Data.limit}
-                        OffSet={this.state.Data.offset}
+                        Rows={this.state.response.rows}
+                        Count={this.state.response.count}
+
+                        Limit={this.state.request.limit}
+                        OffSet={this.state.request.offset}
 
                         Records={[10, 50, 100, 500]}
 

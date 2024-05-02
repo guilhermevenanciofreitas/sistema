@@ -1,32 +1,32 @@
 import { Transaction } from "sequelize";
-import { Stock } from "../../database/models/stock.model";
+import { StockLocation } from "../../database/models/stockLocation.model";
 import crypto from "crypto";
 
 export class LocationService {
 
-    public static IsValid = (stock: Stock) => {
+    public static IsValid = (stockLocation: StockLocation) => {
 
         return { success: true };
 
     }
 
-    public static Create = async (stock: Stock, transaction?: Transaction) => {
+    public static Create = async (stockLocation: StockLocation, transaction?: Transaction) => {
 
-        stock.id = crypto.randomUUID();
+        stockLocation.id = crypto.randomUUID();
         
-        await Stock.create({...stock}, {transaction});
+        await StockLocation.create({...stockLocation}, {transaction});
 
     }
 
-    public static Update = async (stock: Stock, transaction?: Transaction) => {
+    public static Update = async (stockLocation: StockLocation, transaction?: Transaction) => {
 
-        await Stock.update(stock, {where: {id: stock.id}, transaction});
+        await StockLocation.update(stockLocation, {where: {id: stockLocation.id}, transaction});
 
     }
 
     public static Delete = async (id: string, transaction?: Transaction) => {
 
-        await Stock.update({ativo: false}, {where: {id: id}, transaction});
+        await StockLocation.update({ativo: false}, {where: {id: id}, transaction});
         
     }
 

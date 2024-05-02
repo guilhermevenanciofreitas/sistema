@@ -4,7 +4,7 @@ export class Service {
 
     private static url: string = "http://localhost:4000/api/";
 
-    static Post = async (path: string, data: any, contentType: string = 'application/json', responseType: string = 'json'): Promise<AxiosResponse|undefined> => {
+    static Post = async (path: string, data: any = undefined, contentType: string = 'application/json', responseType: string = 'json'): Promise<AxiosResponse|undefined> => {
 
         let config = {};
 

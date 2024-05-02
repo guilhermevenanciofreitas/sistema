@@ -35,6 +35,8 @@ import invoicingRoutes from "./sales/invoicing.routes";
 import cteRoutes from "./fiscal/cte.routes";
 import vehicleRoutes from "./registrations/vehicle.routes";
 import locationRoutes from "./stock/location.routes";
+import stockinRoutes from "./stock/in.routes";
+import distribuitionRoutes from "./fiscal/distribuition.routes";
 
 export default class Routes {
   constructor(app: Application) {
@@ -55,6 +57,7 @@ export default class Routes {
 
     //Stock
     app.use("/api/stock/location", locationRoutes);
+    app.use("/api/stock/in", stockinRoutes);
 
     //Relationships
     app.use("/api/relationships/called", calledRoutes);
@@ -68,6 +71,7 @@ export default class Routes {
     app.use("/api/sales/invoicing", invoicingRoutes);
 
     //Fiscal
+    app.use("/api/distribuition", distribuitionRoutes);
     app.use("/api/nfe", nfeRoutes);
     app.use("/api/cte", cteRoutes);
 

@@ -1,17 +1,16 @@
 import React from "react";
 import { Service } from "../../../Service";
-import { ViewNotaFiscal } from "./View/index";
+import { ViewStockIn } from "./View/index";
 import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
 import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
-import { Loading } from "../../../Utils/Loading";
 
-export default class BaseNotasFiscais extends BaseIndex {
+export default class StockInsBase extends BaseIndex {
  
-    protected ViewNotaFiscal = React.createRef<ViewNotaFiscal>();
+    protected ViewStockIn = React.createRef<ViewStockIn>();
 
     protected ViewImportar = React.createRef<ViewImportar>();
     protected ViewFiltro = React.createRef<ViewFiltro>();
@@ -19,13 +18,15 @@ export default class BaseNotasFiscais extends BaseIndex {
     state = {
         Loading: true,
         Selecteds: [],
-        Data: {
-            rows: [],
-            count: 0,
+        request: {
             offset: 1,
             limit: 100,
             filter: undefined,
             sort: undefined
+        },
+        response: {
+            rows: [],
+            count: 0
         },
     }
 
@@ -38,39 +39,14 @@ export default class BaseNotasFiscais extends BaseIndex {
 
             const { id } = queryString.parse(window.location.search);
             if (id) {
-                await this.OpenUsuario(id.toString());
+                await this.OpenUser(id.toString());
             }
 
-            await this.Pesquisar(this.state.Data);
+            await this.Pesquisar(this.state.request);
 
             this.componentDidMountFinish();
 
         } catch (err: any) {
-            await DisplayError.Show(err);
-        }
-    }
-
-    
-    protected BtnStatusService_Click = async (id: string): Promise<void> =>
-    {
-        try
-        {
-
-            Loading.Show();
-            var response = await Service.Post("nfe/status-service");
-            Loading.Hide();
-
-            if (response?.status == 200) {
-                await MessageBox.Show({title: "Info", width: 300, type: "Success", content: `${response.data.cStat} - ${response.data.xMotivo}`, buttons: [{ Text: "OK" }]});
-            }
-
-            if (response?.status == 201) {
-                await MessageBox.Show({title: "Info", width: 300, type: "Warning", content: `${response.data.cStat} - ${response.data.xMotivo}`, buttons: [{ Text: "OK" }]});
-            }
-
-        } 
-        catch (err: any) 
-        {
             await DisplayError.Show(err);
         }
     }
@@ -80,9 +56,9 @@ export default class BaseNotasFiscais extends BaseIndex {
         try
         {
 
-            const r = await this.OpenUsuario(id);
+            const r = await this.OpenUser(id);
 
-            if (r) this.Pesquisar(this.state.Data);
+            if (r) await this.Pesquisar(this.state.request);
        
         } 
         catch (err: any) 
@@ -96,9 +72,9 @@ export default class BaseNotasFiscais extends BaseIndex {
         try
         {
 
-            const r = await this.ViewNotaFiscal.current?.Show(undefined);
+            const r = await this.ViewStockIn.current?.Show(undefined);
 
-            if (r) this.Pesquisar(this.state.Data);
+            if (r) await this.Pesquisar(this.state.request);
             
         }
         catch (err: any) 
@@ -137,12 +113,12 @@ export default class BaseNotasFiscais extends BaseIndex {
     {
         try
         {
-            const data = await this.ViewImportar.current?.Show(this.state.Data.filter);
+            const data = await this.ViewImportar.current?.Show(this.state.request.filter);
 
             if (data === null) return;
 
-            this.setState((state: any) => ({Data: {...state.Data, offset: 1}}),
-                () => this.Pesquisar(this.state.Data)
+            this.setState({request: {...this.state.request, offset: 1}},
+                async () => await this.Pesquisar(this.state.request)
             );
     
         }
@@ -156,12 +132,12 @@ export default class BaseNotasFiscais extends BaseIndex {
     {
         try
         {
-            const filter = await this.ViewFiltro.current?.Show(this.state.Data.filter);
+            const filter = await this.ViewFiltro.current?.Show(this.state.request.filter);
 
             if (filter === null) return;
 
-            this.setState((state: any) => ({Data: {...state.Data, offset: 1, filter}}),
-                () => this.Pesquisar(this.state.Data)
+            this.setState({request: {...this.state.request, offset: 1, filter}},
+                async () => await this.Pesquisar(this.state.request)
             );
     
         }
@@ -175,7 +151,7 @@ export default class BaseNotasFiscais extends BaseIndex {
     {
         try
         {
-            await this.Pesquisar(this.state.Data);
+            await this.Pesquisar(this.state.request);
         }
         catch (err: any) 
         {
@@ -187,8 +163,8 @@ export default class BaseNotasFiscais extends BaseIndex {
     {
         try
         {
-            this.setState((state: any) => ({Data: {...state.Data, limit, offset}}),
-                () => this.Pesquisar(this.state.Data)
+            this.setState({request: {...this.state.request, limit, offset}},
+                async () => await this.Pesquisar(this.state.request)
             );
         }
         catch (err: any) 
@@ -201,8 +177,8 @@ export default class BaseNotasFiscais extends BaseIndex {
     {
         try
         {
-            this.setState((state: any) => ({Data: {...state.Data, sort}}),
-                () => this.Pesquisar(this.state.Data)
+            this.setState({request: {...this.state.request, sort}},
+                async () => await this.Pesquisar(this.state.request)
             );
         }
         catch (err: any) 
@@ -211,19 +187,19 @@ export default class BaseNotasFiscais extends BaseIndex {
         }
     }
 
-    private OpenUsuario = async (id: string) =>
+    private OpenUser = async (id: string) =>
     {
-        history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewNotaFiscal.current?.Show(id);
+        history.pushState(null, '', `${window.location.origin}${window.location.pathname}?id=${id}`);
+        const r = await this.ViewStockIn.current?.Show(id);
         history.back();
         return r;
     }
 
-    protected Pesquisar = async(Data: any): Promise<void> =>
+    protected Pesquisar = async(request: any): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("nfe/findAll", Data);
-        this.setState({Loading: false, Data: r?.data});
+        var r = await Service.Post("stock/in/findAll", request);
+        this.setState({Loading: false, ...r?.data});
     }
 
 }

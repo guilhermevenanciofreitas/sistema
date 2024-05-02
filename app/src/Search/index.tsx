@@ -101,5 +101,15 @@ export const Search = {
     {
         return (await Service.Post("search/vehicle", {Search}))?.data;
     },
+
+    StockLocation: async (Search: string) =>
+    {
+        return (await Service.Post("search/stock-location", {Search}))?.data;
+    },
+
+    Nfe: async (Search: string) =>
+    {
+        return (await Service.Post("search/nfe", {Search}))?.data;
+    },
     
 }

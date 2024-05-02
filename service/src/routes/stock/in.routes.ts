@@ -1,9 +1,9 @@
 import { Router } from "express";
-import NfeController from "../../controllers/fiscal/nfe.controller";
+import StockInController from "../../controllers/stock/in.controller";
 
-class NfeRoutes {
+class stockInRoutes {
   router = Router();
-  controller = new NfeController();
+  controller = new StockInController();
 
   constructor() {
     this.intializeRoutes();
@@ -12,10 +12,9 @@ class NfeRoutes {
   intializeRoutes() {
     this.router.post("/findAll", (req, res) => this.controller.findAll(req, res));
     this.router.post("/findOne", (req, res) => this.controller.findOne(req, res));
-    this.router.post("/status-service", (req, res) => this.controller.statusService(req, res));
     this.router.post("/save", (req, res) => this.controller.save(req, res));
     this.router.post("/delete", (req, res) => this.controller.delete(req, res));
   }
 }
 
-export default new NfeRoutes().router;
+export default new stockInRoutes().router;
