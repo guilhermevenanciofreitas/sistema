@@ -1,9 +1,9 @@
 import React from "react";
 import { Service } from "../../../Service";
-import { ViewFiltro } from "./filtro";
+//import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
-import { ViewImportar } from "./importar";
+//import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 import { ViewCalled } from "./View";

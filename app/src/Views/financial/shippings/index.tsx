@@ -6,8 +6,8 @@ import BaseUsuarios from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
-import { ViewImportar } from "./importar";
-import { ViewFiltro } from "./filtro";
+//import { ViewImportar } from "./importar";
+//import { ViewFiltro } from "./filtro";
 import _ from "lodash";
 
 enum colors {

@@ -1,10 +1,10 @@
 import React, { ComponentClass } from "react";
 import { Service } from "../../../Service";
 import { ViewPartner } from "./View/index";
-import { ViewFiltro } from "./filtro";
+//import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
-import { ViewImportar } from "./importar";
+//import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 
@@ -12,8 +12,8 @@ export default class PartnersBase extends BaseIndex<Readonly<{Title: string, Typ
 
     protected ViewPartner = React.createRef<ViewPartner>();
 
-    protected ViewImportar = React.createRef<ViewImportar>();
-    protected ViewFiltro = React.createRef<ViewFiltro>();
+    //protected ViewImportar = React.createRef<ViewImportar>();
+    //protected ViewFiltro = React.createRef<ViewFiltro>();
 
     state = {
         Loading: true,

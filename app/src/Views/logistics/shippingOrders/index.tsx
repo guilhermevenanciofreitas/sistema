@@ -6,8 +6,8 @@ import BaseUsuarios from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
-import { ViewImportar } from "./importar";
-import { ViewFiltro } from "./filtro";
+//import { ViewImportar } from "./importar";
+//import { ViewFiltro } from "./filtro";
 
 const Columns = [
     { selector: (row: any) => row.company?.surname, sort: 'company', name: 'Empresa', sortable: true },
@@ -28,8 +28,10 @@ export default class ShippingOrders extends BaseUsuarios {
 
                 <ViewShippingOrder ref={this.ViewShippingOrder} Title="Ordem de carga" />
 
+                {/*
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
+                */}
 
                 <JoyLayout>
 

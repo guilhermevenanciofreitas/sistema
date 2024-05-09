@@ -1,13 +1,14 @@
 import React from "react";
 import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
-import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
+import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle, AddCircleOutline } from "@mui/icons-material";
 import { ViewProduct } from "./View/index";
 import ProductsBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
-import { ViewImportar } from "./importar";
-import { ViewFiltro } from "./filtro";
+//import { ViewImportar } from "./importar";
+//import { ViewFiltro } from "./filtro";
+import { color } from "../../../Utils/color";
 
 const Columns = [
     { selector: (row: any) => row.name, sort: 'name', name: 'Nome', sortable: true },
@@ -23,10 +24,10 @@ export default class Products extends ProductsBase {
         return (
             <>
 
-                <ViewProduct ref={this.ViewProduct} Title='Produto' />
+                <ViewProduct />
 
-                <ViewImportar ref={this.ViewImportar} />
-                <ViewFiltro ref={this.ViewFiltro} />
+                {/*<ViewImportar ref={this.ViewImportar} />*/}
+                {/*<ViewFiltro ref={this.ViewFiltro} />*/}
 
                 <JoyLayout>
 
@@ -35,7 +36,7 @@ export default class Products extends ProductsBase {
                     <Container>
                         <Left>
                             {this.state.Selecteds.length == 0 && (
-                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnNovo_Click} />
+                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor={color.success} StartIcon={<AddCircleOutline />} OnClick={this.BtnNovo_Click} />
                             )}
                             {this.state.Selecteds.length >= 1 && (
                                 <>

@@ -5,8 +5,8 @@ import PartnersBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
-import { ViewImportar } from "./importar";
-import { ViewFiltro } from "./filtro";
+//import { ViewImportar } from "./importar";
+//import { ViewFiltro } from "./filtro";
 import { ViewPartner } from "./View";
 
 const Columns = [
@@ -24,8 +24,10 @@ export default class Partners extends PartnersBase {
 
                 {React.createElement(ViewPartner, {...this.props.ViewPartner.props, ref: this.ViewPartner })}
                 
+                {/*
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
+                */}
 
                 <JoyLayout>
 

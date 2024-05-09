@@ -6,8 +6,8 @@ import LocationsBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
-import { ViewImportar } from "./importar";
-import { ViewFiltro } from "./filtro";
+//import { ViewImportar } from "./importar";
+//import { ViewFiltro } from "./filtro";
 
 const Columns = [
     { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
@@ -23,8 +23,10 @@ export default class Locations extends LocationsBase {
 
                 <ViewLocation ref={this.ViewLocation} Title="Localização" />
 
+                {/*
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
+                */}
 
                 <JoyLayout>
 

@@ -50,7 +50,7 @@ export class StockInService {
             attributes: ['id'],
             where: {id},
             include: [{model: StockInProduct, as: 'products', attributes: ['id', 'quantity'], 
-                include: [{model: Product, as: 'product', attributes: ['id', 'stock']}]
+                include: [{model: Product, as: 'product', attributes: ['id', 'stockBalance']}]
             }],
             transaction
         });

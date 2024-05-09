@@ -1,4 +1,6 @@
-import React from 'react';
+export {};
+
+/*import React from 'react';
 
 export class ControlViewUpload extends React.Component {
 
@@ -27,3 +29,4 @@ export class ControlViewUpload extends React.Component {
     protected Close: Function = () => undefined;
 
 }
+*/

@@ -6,8 +6,8 @@ import BaseContasPagar from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { Grid, IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
-import { ViewImportar } from "./importar";
-import { ViewFiltro } from "./filtro";
+//import { ViewImportar } from "./importar";
+//import { ViewFiltro } from "./filtro";
 import _ from "lodash";
 
 enum colors {
@@ -69,8 +69,10 @@ export default class Payments extends BaseContasPagar {
 
                 <ViewPayment ref={this.ViewPayment} Title="Conta a pagar" />
 
+                {/* 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
+                */}
 
                 <JoyLayout>
 

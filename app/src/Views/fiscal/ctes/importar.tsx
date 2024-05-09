@@ -1,4 +1,5 @@
-
+export {};
+/*
 import { ReactNode } from 'react';
 import { Upload, TextBox, ViewUpload } from '../../../Utils/Controls';
 import { EventArgs } from '../../../Utils/EventArgs';
@@ -28,3 +29,4 @@ export class ViewImportar extends ViewUpload {
     }
 
 }
+*/

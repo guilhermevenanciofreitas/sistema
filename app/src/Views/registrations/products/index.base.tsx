@@ -1,10 +1,10 @@
 import React from "react";
 import { Service } from "../../../Service";
 import { ViewProduct } from "./View/index";
-import { ViewFiltro } from "./filtro";
+//import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
-import { ViewImportar } from "./importar";
+//import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 
@@ -12,8 +12,8 @@ export default class ProductsBase extends BaseIndex {
  
     protected ViewProduct = React.createRef<ViewProduct>();
 
-    protected ViewImportar = React.createRef<ViewImportar>();
-    protected ViewFiltro = React.createRef<ViewFiltro>();
+    //protected ViewImportar = React.createRef<ViewImportar>();
+    //protected ViewFiltro = React.createRef<ViewFiltro>();
 
     state = {
         Loading: true,
@@ -73,7 +73,7 @@ export default class ProductsBase extends BaseIndex {
         try
         {
 
-            const r = await this.ViewProduct.current?.Show(undefined);
+            const r = await this.ViewProduct.current?.New({});
 
             if (r) await this.Pesquisar(this.state.request);
             
@@ -112,7 +112,7 @@ export default class ProductsBase extends BaseIndex {
 
     protected BtnImportar_Click = async() =>
     {
-        try
+        /*try
         {
             const data = await this.ViewImportar.current?.Show(this.state.request.filter);
 
@@ -126,12 +126,12 @@ export default class ProductsBase extends BaseIndex {
         catch (err: any) 
         {
             await DisplayError.Show(err);
-        }
+        }*/
     }
 
     protected BtnFiltro_Click = async() =>
     {
-        try
+        /*try
         {
             const filter = await this.ViewFiltro.current?.Show(this.state.request.filter);
 
@@ -145,7 +145,7 @@ export default class ProductsBase extends BaseIndex {
         catch (err: any) 
         {
             await DisplayError.Show(err);
-        }
+        }*/
     }
 
     protected BtnPesquisar_Click = async(): Promise<void> =>
@@ -191,7 +191,7 @@ export default class ProductsBase extends BaseIndex {
     private OpenProduct = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, '', `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewProduct.current?.Show(id);
+        const r = await this.ViewProduct.current?.Edit(id);
         if (isHitoryBack) history.back();
         return r;
     }

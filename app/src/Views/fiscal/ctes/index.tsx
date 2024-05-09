@@ -6,8 +6,8 @@ import CtesBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
-import { ViewImportar } from "./importar";
-import { ViewFiltro } from "./filtro";
+//import { ViewImportar } from "./importar";
+//import { ViewFiltro } from "./filtro";
 
 const Columns = [
     { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
@@ -27,9 +27,10 @@ export default class Ctes extends CtesBase {
 
                 <ViewCte ref={this.ViewCte} Title="Conhecimento de transporte" />
 
+                {/* 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
-
+                */}
                 <JoyLayout>
 
                     <Title>Conhecimentos de transporte</Title>

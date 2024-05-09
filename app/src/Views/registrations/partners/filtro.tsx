@@ -1,3 +1,6 @@
+export {};
+
+/*
 import { ReactNode } from 'react';
 import { Filter, TextBox, ViewFilter } from '../../../Utils/Controls';
 import { EventArgs } from '../../../Utils/EventArgs';
@@ -30,3 +33,4 @@ export class ViewFiltro extends ViewFilter {
     }
 
 }
+*/

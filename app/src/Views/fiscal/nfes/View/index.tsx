@@ -1,6 +1,6 @@
 
 import { ViewNotaFiscalBase } from './index.base';
-import { Button, CheckBox, Form, Modal, Tab, TabItem, TextBox, DropDownList, DropDownListItem, AutoComplete, DatePicker, GridView } from '../../../../Utils/Controls';
+import { Button, CheckBox, Form, Modal, Tab, TabItem, TextBox, DropDownList, DropDownListItem, AutoComplete, DatePicker, GridView, Content, Actions } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
@@ -8,6 +8,8 @@ import { Grid } from '@mui/joy';
 import { Search } from '../../../../Search';
 import { TabelaPrecoTemplate } from '../../../../Search/Templates/TabelaPreco';
 import _ from 'lodash';
+import { color } from '../../../../Utils/color';
+import { CheckCircleOutlined } from '@mui/icons-material';
 
 
 export class ViewNotaFiscal extends ViewNotaFiscalBase {
@@ -18,13 +20,10 @@ export class ViewNotaFiscal extends ViewNotaFiscalBase {
 
         return (
             <Modal Open={this.state.open} Title={this.props.Title} Width={1150} Close={this.Close}>
-                <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
-
-                    <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
-                    <Button Text='Limpar' Type='Reset' Color='white' BackgroundColor='gray' />
+               
+                <Content>
 
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
-                        
                         <Grid md={12}>
                             <input type="file" onChange={this.BtnXml_Click} />
                         </Grid>
@@ -51,7 +50,11 @@ export class ViewNotaFiscal extends ViewNotaFiscalBase {
                         </Grid>
                     </Grid>
 
-                </Form>
+                </Content>
+                <Actions>
+                    <Button Text='Salvar' StartIcon={<CheckCircleOutlined />} Color={'white'} BackgroundColor={color.success} OnClick={this.BtnSalvar_Click} />
+                </Actions>
+                
             </Modal>
         );
 

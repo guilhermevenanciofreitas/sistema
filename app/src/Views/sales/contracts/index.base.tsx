@@ -1,10 +1,10 @@
 import React from "react";
 import { Service } from "../../../Service";
 import { ViewContrato } from "./View/index";
-import { ViewFiltro } from "./filtro";
+//import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
-import { ViewImportar } from "./importar";
+//import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 
@@ -12,8 +12,8 @@ export default class BaseContratos extends BaseIndex {
  
     protected ViewContrato = React.createRef<ViewContrato>();
 
-    protected ViewImportar = React.createRef<ViewImportar>();
-    protected ViewFiltro = React.createRef<ViewFiltro>();
+    //protected ViewImportar = React.createRef<ViewImportar>();
+    //protected ViewFiltro = React.createRef<ViewFiltro>();
 
     state = {
         Loading: true,
@@ -109,6 +109,7 @@ export default class BaseContratos extends BaseIndex {
 
     protected BtnImportar_Click = async() =>
     {
+        /*
         try
         {
             const data = await this.ViewImportar.current?.Show(this.state.Data.filter);
@@ -124,10 +125,12 @@ export default class BaseContratos extends BaseIndex {
         {
             await DisplayError.Show(err);
         }
+        */
     }
 
     protected BtnFiltro_Click = async() =>
     {
+        /*
         try
         {
             const filter = await this.ViewFiltro.current?.Show(this.state.Data.filter);
@@ -143,6 +146,7 @@ export default class BaseContratos extends BaseIndex {
         {
             await DisplayError.Show(err);
         }
+        */
     }
 
     protected BtnPesquisar_Click = async(): Promise<void> =>

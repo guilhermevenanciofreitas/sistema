@@ -6,8 +6,8 @@ import OrdersBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { Grid, IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
-import { ViewImportar } from "./importar";
-import { ViewFiltro } from "./filtro";
+//import { ViewImportar } from "./importar";
+//import { ViewFiltro } from "./filtro";
 import _ from "lodash";
 
 const Number = ({ row }: any) => {
@@ -40,8 +40,10 @@ export default class Invoicing extends OrdersBase {
 
                 <ViewOrderInvoicing ref={this.ViewOrderInvoicing} Title="Faturar" />
 
+                {/* 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
+                */}
 
                 <JoyLayout>
 

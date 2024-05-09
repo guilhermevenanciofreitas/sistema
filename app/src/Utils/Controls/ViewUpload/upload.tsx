@@ -1,3 +1,6 @@
+export {};
+
+/*
 import React from "react";
 import { DialogContent, DialogTitle, Divider, Drawer, ModalClose, Sheet, Stack } from "@mui/joy";
 import { Button } from "..";
@@ -31,3 +34,4 @@ export class ControlUpload extends React.Component<Readonly<{children: any, Titl
     }
 
 }
+*/

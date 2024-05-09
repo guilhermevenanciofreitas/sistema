@@ -1,6 +1,6 @@
 
 import { ViewProductBase } from './index.base';
-import { AutoComplete, Button, CheckBox, Form, Modal, Tab, TabItem, TextBox, NumericBox } from '../../../../Utils/Controls';
+import { AutoComplete, Button, CheckBox, Form, Modal, Tab, TabItem, TextBox, NumericBox, Content, Actions } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
@@ -8,6 +8,8 @@ import { Combinations } from './combinations';
 import { ProductCategoryTemplate } from '../../../../Search/Templates/ProductCategory';
 import { Search } from '../../../../Search';
 import { Suppliers } from './suppliers';
+import { CheckCircleOutline, DeleteForever, TaskAltOutlined } from '@mui/icons-material';
+import { color } from '../../../../Utils/color';
 
 export class ViewProduct extends ViewProductBase {
 
@@ -16,12 +18,10 @@ export class ViewProduct extends ViewProductBase {
     public render(): ReactNode {
 
         return (
+        
             <Modal Open={this.state.open} Title={this.props.Title} Width={1000} Close={() => this.Close()}>
-                <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
-
-                    <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
-                    <Button Text='Limpar' Type='Reset' Color='white' BackgroundColor='gray' />
-
+                <Content>
+                
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
 
                         <Grid md={8}>
@@ -42,7 +42,7 @@ export class ViewProduct extends ViewProductBase {
                                 <CheckBox Label='Combinação' Checked={this.state.isCombination} OnChange={(args: EventArgs) => this.setState({isCombination: args.Value})} />
                             </div>
                         </Grid>
-    
+
                         <Grid md={12}>
                             
                             <Tab>
@@ -88,12 +88,18 @@ export class ViewProduct extends ViewProductBase {
                                     <Suppliers suppliers={this.state.suppliers} OnChange={(suppliers: any[]) => this.setState({suppliers})} />
                                 </TabItem>
                             </Tab>
-                           
+                        
                         </Grid>
                         
                     </Grid>
 
-                </Form>
+                </Content>
+
+                <Actions>
+                    {this.state.id && <Button Text='Excluir' StartIcon={<DeleteForever></DeleteForever>} Color='white' BackgroundColor='#dc3545' OnClick={this.BtnSalvar_Click} />}
+                    <Button Text='Salvar' StartIcon={<TaskAltOutlined></TaskAltOutlined>} Color='white' BackgroundColor={color.success} OnClick={this.BtnSalvar_Click} />
+                </Actions>
+                
             </Modal>
         );
 

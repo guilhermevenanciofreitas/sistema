@@ -6,8 +6,8 @@ import VehiclesBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
-import { ViewImportar } from "./importar";
-import { ViewFiltro } from "./filtro";
+//import { ViewImportar } from "./importar";
+//import { ViewFiltro } from "./filtro";
 
 const Columns = [
     { selector: (row: any) => row.name, sort: 'name', name: 'Nome', sortable: true },
@@ -23,8 +23,10 @@ export default class Vehicles extends VehiclesBase {
 
                 <ViewVehicle ref={this.ViewVehicle} Title='Veículo' />
 
+                {/* 
                 <ViewImportar ref={this.ViewImportar} />
                 <ViewFiltro ref={this.ViewFiltro} />
+                */}
 
                 <JoyLayout>
 

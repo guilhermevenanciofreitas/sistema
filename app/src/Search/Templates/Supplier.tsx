@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResultContext } from '../../Utils/Controls/Form/AutoComplete/base';
+import { ResultContext } from '../../Utils/Controls/Form/AutoComplete/index.base';
 
 export class SupplierTemplate extends React.Component {
 

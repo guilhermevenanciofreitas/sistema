@@ -4,10 +4,11 @@ import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
 
-export class ViewProductBase extends ViewModal<Readonly<{Title: string}>> {
+export class ViewProductBase extends ViewModal<Readonly<{Title?: string}>> {
 
     state = {
         open: false,
+        
         id: '',
         name: '',
         description: '',
@@ -25,13 +26,18 @@ export class ViewProductBase extends ViewModal<Readonly<{Title: string}>> {
         suppliers: []
     }
 
-    //public New = async (product: any) =>
-    //{
-    //    this.setState({open: true, ...product});
-    //    return this.Initialize(this.Close);
-    //}
+    public New = async (product: any) =>
+    {
+        
+        this.Limpar();
 
-    public Show = async (id?: string): Promise<any> =>
+        this.setState({open: true, ...product});
+
+        return this.Initialize(this.Close);
+
+    }
+
+    public Edit = async (id?: string): Promise<any> =>
     {
  
         this.Limpar();
@@ -40,10 +46,8 @@ export class ViewProductBase extends ViewModal<Readonly<{Title: string}>> {
             Loading.Show();
             const r = await Service.Post("registrations/product/findOne", {id});
             Loading.Hide();
-            this.setState(r?.data);
+            this.setState({open: true, ...r?.data});
         }
-
-        this.setState({open: true});
 
         return this.Initialize(this.Close);
  

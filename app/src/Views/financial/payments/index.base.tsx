@@ -1,10 +1,10 @@
 import React from "react";
 import { Service } from "../../../Service";
 import { ViewPayment } from "./View/index";
-import { ViewFiltro } from "./filtro";
+//import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
-import { ViewImportar } from "./importar";
+//import { ViewImportar } from "./importar";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 import _ from "lodash";
@@ -13,8 +13,8 @@ export default class BaseContasPagar extends BaseIndex {
  
     protected ViewPayment = React.createRef<ViewPayment>();
 
-    protected ViewImportar = React.createRef<ViewImportar>();
-    protected ViewFiltro = React.createRef<ViewFiltro>();
+    //protected ViewImportar = React.createRef<ViewImportar>();
+    //protected ViewFiltro = React.createRef<ViewFiltro>();
 
     state = {
         Loading: false,
@@ -117,6 +117,7 @@ export default class BaseContasPagar extends BaseIndex {
 
     protected BtnImportar_Click = async() =>
     {
+        /*
         try
         {
             const data = await this.ViewImportar.current?.Show(this.state.request.filter);
@@ -132,10 +133,12 @@ export default class BaseContasPagar extends BaseIndex {
         {
             await DisplayError.Show(err);
         }
+        */
     }
 
     protected BtnFiltro_Click = async() =>
     {
+        /*
         try
         {
             const filter = await this.ViewFiltro.current?.Show(this.state.request.filter);
@@ -151,6 +154,7 @@ export default class BaseContasPagar extends BaseIndex {
         {
             await DisplayError.Show(err);
         }
+        */
     }
 
     protected CardStatus_Click = async(status: string): Promise<void> =>

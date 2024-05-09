@@ -1,14 +1,13 @@
 import React from "react";
 import { Button, CardStatus, Container, Left, ListView, Right } from "../../../Utils/Controls";
-import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
+import { AddCircleOutline, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
 import { ViewStockIn } from "./View/index";
 import StockInsBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { Grid, IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
-import { ViewImportar } from "./importar";
-import { ViewFiltro } from "./filtro";
 import _ from "lodash";
+import { color } from "../../../Utils/color";
 
 enum colors {
     pending = '#00aed1',
@@ -16,12 +15,11 @@ enum colors {
 }
 
 const ChNFe = ({ row }: any) => {
-    console.log(row);
     return (
         <div style={{display: 'flex', height: 'auto'}}>
             <div style={{width: '5px', backgroundColor: colors[row.status as keyof typeof colors]}}></div>
-            <div data-tag="allowRowEvents" style={{ paddingLeft: '10px', overflow: 'hidden', textOverflow: 'ellipses' }}>
-                {row.nfe?.protNFe?.infProt?.chNFe}
+            <div style={{ paddingLeft: '10px', overflow: 'hidden', textOverflow: 'ellipses' }}>
+                {row.nfe?.protNFe?.infProt?.chNFe || '[Nenhum]'}
             </div>
         </div>
     );
@@ -43,7 +41,7 @@ export default class StockIns extends StockInsBase {
                 <ViewStockIn ref={this.ViewStockIn} Title="Entrada" />
 
                 {/*<ViewImportar ref={this.ViewImportar} />*/}
-                <ViewFiltro ref={this.ViewFiltro} />
+                {/*<ViewFiltro ref={this.ViewFiltro} />*/}
 
                 <JoyLayout>
 
@@ -52,7 +50,7 @@ export default class StockIns extends StockInsBase {
                     <Container>
                         <Left>
                             {this.state.Selecteds.length == 0 && (
-                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnNovo_Click} />
+                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor={color.success} StartIcon={<AddCircleOutline />} OnClick={this.BtnNovo_Click} />
                             )}
                             {this.state.Selecteds.length >= 1 && (
                                 <>
