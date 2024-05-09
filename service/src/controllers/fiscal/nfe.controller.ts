@@ -4,6 +4,8 @@ import { Company, Nfe, State } from "../../database";
 import { NfeService } from "../../services/fiscal/nfe.service";
 import { Op } from "sequelize";
 import axios from "axios";
+import formidable from "formidable";
+import fs from "fs";
 
 export default class NfeController {
 
@@ -28,11 +30,11 @@ export default class NfeController {
         
                 const produtos = await Nfe.findAndCountAll({attributes: [
                     "id",
-                    [sequelize.json('ide.nNF'), 'numero'],
-                    [sequelize.json('ide.serie'), 'serie'],
-                    [sequelize.json('emit.xFant'), 'emitente'],
-                    [sequelize.json('dest.xNome'), 'destinatario'],
-                    [sequelize.json('total.ICMSTot.vNF'), 'valor'],
+                    [sequelize.json('NFe.infNFe.ide.nNF'), 'numero'],
+                    [sequelize.json('NFe.infNFe.ide.serie'), 'serie'],
+                    [sequelize.json('NFe.infNFe.emit.xFant'), 'emitente'],
+                    [sequelize.json('NFe.infNFe.dest.xNome'), 'destinatario'],
+                    [sequelize.json('NFe.infNFe.total.ICMSTot.vNF'), 'valor'],
                 ],
                     where, order, limit, offset, transaction
                 });
@@ -57,13 +59,15 @@ export default class NfeController {
             {
                 const transaction = await sequelize.transaction();
 
-                const nfes = await Nfe.findOne({attributes: ["id"], 
-                    where: {id: req.body.id}, transaction
+                const nfe = await Nfe.findOne({
+                    attributes: ['id', 'NFe'], 
+                    where: {id: req.body.id},
+                    transaction
                 });
 
                 sequelize.close();
     
-                res.status(200).json(nfes);
+                res.status(200).json(nfe);
     
             }
             catch (err) {
@@ -108,6 +112,22 @@ export default class NfeController {
             res.status(401).json(err);
         });
         
+    }
+
+    async xml(req: Request, res: Response) {
+        
+        const form = formidable();
+
+        form.parse(req, async (err, fields: any, files: any) => {
+
+            const xml = fs.readFileSync(files.file[0].filepath, 'utf8');
+
+            const nfe = await NfeService.XmlToJson(xml);
+
+            res.status(200).json({NFe: nfe.nfeProc?.NFe, protNFe: nfe.nfeProc?.protNFe});
+
+        });
+
     }
 
     async upload(req: Request, res: Response) {

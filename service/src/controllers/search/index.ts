@@ -692,8 +692,8 @@ export default class SearchController {
                 const nfes = await Nfe.findAll({
                     attributes: [
                         'id',
-                        'protNFe',
-                        'det'
+                        'NFe',
+                        'protNFe'
                     ], 
                     include: [],
                     where,

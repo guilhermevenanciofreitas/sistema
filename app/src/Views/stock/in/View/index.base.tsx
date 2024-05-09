@@ -59,6 +59,7 @@ export class ViewStockInBase extends ViewModal<Readonly<{Title: string}>> {
                     quantity: _.get(product, 'quantity') || null,
                     value: _.get(product, 'value') || null,
                     discount: _.get(product, 'discount') || null,
+                    prod: _.get(product, 'prod') || null,
                 });
             }
 
@@ -91,6 +92,21 @@ export class ViewStockInBase extends ViewModal<Readonly<{Title: string}>> {
     protected BtnCheckIn_Click = async () => {
         try
         {
+
+            for (const product of this.state.products || []) {
+                
+                if (!_.get(product, 'product.id')) {
+                    await MessageBox.Show({title: 'Info', width: 400, type: 'Warning', content: `Item ${_.get(product, 'product.name')} sem vincular!`, buttons: [{ Text: 'OK' }]});
+                    return;
+                }
+
+                if (!_.get(product, 'stockLocation.id')) {
+                    await MessageBox.Show({title: 'Info', width: 400, type: 'Warning', content: `Item ${_.get(product, 'product.name')} sem localização!`, buttons: [{ Text: 'OK' }]});
+                    return;
+                }
+
+            }
+
             const request = {
                 id: _.get(this.state, 'id') || null
             }

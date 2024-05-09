@@ -1,9 +1,12 @@
 import React from "react";
-import { Autocomplete, AutocompleteOption, CircularProgress, FormLabel, autocompleteClasses } from "@mui/joy";
-import Search from '@mui/icons-material/Search';
+import { Autocomplete, AutocompleteOption, CircularProgress, FormLabel, IconButton } from "@mui/joy";
 import { AutoCompleteBase, ResultContext } from "./base";
+import { Search, AddCircleRounded } from '@mui/icons-material';
+import { ViewProduct } from "../../../../views/registrations/products/View";
 
 export class ControlAutoComplete extends AutoCompleteBase {
+
+  protected ViewProduct = React.createRef<ViewProduct>();
 
   private Search = async (Text: string) =>
   {
@@ -15,6 +18,9 @@ export class ControlAutoComplete extends AutoCompleteBase {
   render(): React.ReactNode {
     return (
       <>
+
+        {/*<ViewProduct ref={this.ViewProduct} Title='Produto' />*/}
+
         <FormLabel sx={{fontWeight: 400}}>{this.props.Label}</FormLabel>
         <Autocomplete
 
@@ -31,6 +37,8 @@ export class ControlAutoComplete extends AutoCompleteBase {
           onOpen={async () => {
             await this.Search('');
           }}
+
+          startDecorator={<IconButton onClick={() => null /*this.ViewProduct.current?.New({name: 'TESTE'}) */}><AddCircleRounded style={{color: '#93bf85'}} /></IconButton>}
 
           popupIcon={<Search />}
 

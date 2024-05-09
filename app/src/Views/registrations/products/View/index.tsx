@@ -49,10 +49,32 @@ export class ViewProduct extends ViewProductBase {
                                 <TabItem Title='Principal' Visible={true}>
                                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                                         <Grid md={2}>
-                                            <NumericBox Label='Valor' Text={this.state.value} Prefix='R$ ' Scale={2} OnChange={(args: EventArgs) => this.setState({value: args.Value})} />
+                                            <NumericBox Label='Custo' Text={this.state.cost} Prefix='R$ ' Scale={2} OnChange={(args: EventArgs) => {
+                                                const markup: number = (((parseFloat((this.state.value as any || '0')) / parseFloat(args.Value || '0')) - 1) * 100);
+                                                this.setState({cost: args.Value, markup: this.state.value == null ? null : markup.toString()})
+                                            }} />
                                         </Grid>
                                         <Grid md={2}>
-                                            <NumericBox Label='Estoque' Text={this.state.stock} Scale={3} ReadOnly={true} />
+                                            <NumericBox Label='Markup' Text={this.state.markup} Prefix='% ' Scale={2} OnChange={(args: EventArgs) => {
+                                                const value: number = ((parseFloat(args.Value || '0') / 100) + 1) * parseFloat(this.state.cost as any || '0');
+                                                if (value != 0)
+                                                this.setState({markup: args.Value, value: value.toString()});
+                                            }} />
+                                        </Grid>
+                                        <Grid md={2}>
+                                            <NumericBox Label='Valor' Text={this.state.value} Prefix='R$ ' Scale={2} OnChange={(args: EventArgs) => {
+                                                const markup: number = (((parseFloat((args.Value as any || '0')) / parseFloat(this.state.cost || '0')) - 1) * 100);
+                                                this.setState({value: args.Value, markup: this.state.cost == null ? null : markup.toString()})
+                                            }} />
+                                        </Grid>
+                                        <Grid md={2}>
+                                            <NumericBox Label='Estoque' Text={this.state.stockBalance} Scale={3} ReadOnly={true} />
+                                        </Grid>
+                                        <Grid md={2}>
+                                            <NumericBox Label='Estoque Mínimo' Text={this.state.stockMin} OnChange={(args: EventArgs) => this.setState({stockMin: args.Value})} />
+                                        </Grid>
+                                        <Grid md={2}>
+                                            <NumericBox Label='Estoque Máximo' Text={this.state.stockMax} OnChange={(args: EventArgs) => this.setState({stockMax: args.Value})} />
                                         </Grid>
                                     </Grid>
                                 </TabItem>

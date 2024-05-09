@@ -78,7 +78,7 @@ export default class StockInController {
                     attributes: ['id', 'status'],
                     include: [
                         {model: Nfe, as: 'nfe', attributes: ['id', 'protNFe']},
-                        {model: StockInProduct, as: 'products', attributes: ['id', 'stockInId', 'quantity', 'value'],
+                        {model: StockInProduct, as: 'products', attributes: ['id', 'stockInId', 'quantity', 'value', 'prod'],
                             include: [
                                 {model: StockLocation, as: 'stockLocation', attributes: ['id', 'name']},
                                 {model: Product, as: 'product', attributes: ['id', 'name']}

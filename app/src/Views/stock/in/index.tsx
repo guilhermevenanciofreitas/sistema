@@ -42,7 +42,7 @@ export default class StockIns extends StockInsBase {
 
                 <ViewStockIn ref={this.ViewStockIn} Title="Entrada" />
 
-                <ViewImportar ref={this.ViewImportar} />
+                {/*<ViewImportar ref={this.ViewImportar} />*/}
                 <ViewFiltro ref={this.ViewFiltro} />
 
                 <JoyLayout>

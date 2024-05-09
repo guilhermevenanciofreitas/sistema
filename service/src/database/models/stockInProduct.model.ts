@@ -27,6 +27,9 @@ export class StockInProduct extends Model {
   @Column({type: DataType.DECIMAL(18, 3), field: "balance"})
   balance?: number;
 
+  @Column({type: DataType.JSONB, field: "prod"})
+  prod?: any;
+
   
   @BelongsTo(() => StockIn, {as: 'stockIn', foreignKey: 'stockInId'})
   stockIn?: StockIn;

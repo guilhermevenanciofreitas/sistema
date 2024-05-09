@@ -56,8 +56,8 @@ export default class Payments extends BaseContasPagar {
         { selector: (row: any) => <CompanyRecipient row={row} />, sort: 'id', name: 'Empresa / Benificiário', sortable: true },
         { selector: (row: any) => row.paymentForm?.description, sort: 'description', name: 'Tipo', sortable: true, maxWidth: "300px" },
         { selector: (row: any) => row.numeroDocumento, sort: 'numeroDocumento', name: 'Nº Documento', sortable: true, maxWidth:"150px" },
-        { selector: (row: any) => row.vencimento, sort: 'emissao', name: 'Vencimento', sortable: true, maxWidth: "160px" },
-        { selector: (row: any) => row.vencimento, sort: 'vencimento', name: 'Agendamento', sortable: true, maxWidth: "160px" },
+        { selector: (row: any) => row.dueDate, sort: 'emissao', name: 'Vencimento', sortable: true, maxWidth: "160px" },
+        { selector: (row: any) => row.dueDate, sort: 'dueDate', name: 'Agendamento', sortable: true, maxWidth: "160px" },
         { selector: (row: any) => parseFloat(row.valor).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}), sort: 'valor', name: 'Valor', sortable: true, right: true, maxWidth:"120px" },
         { selector: (row: any) => <BankAccount row={row} />, sort: 'recebedor', name: 'Agência / Conta', sortable: true, maxWidth: "250px" },
     ];

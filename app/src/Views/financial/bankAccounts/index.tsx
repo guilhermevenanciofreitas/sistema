@@ -14,7 +14,7 @@ export default class BankAccount extends BankAccountBase {
     protected Saldos = (c: any) => {
 
         const balance = parseFloat(c?.balance);
-        const payments = _.sum(this.state.response.payments.filter((item: any) => item?.bankAccount?.id == c?.id).map((item: any) => parseFloat(item.valor)));
+        const payments = _.sum(this.state.response.payments.filter((item: any) => item?.bankAccount?.id == c?.id).map((item: any) => parseFloat(item.value)));
 
         return (
             <div style={{position: 'absolute', padding: '10px', bottom: '0px', width: '100%'}}>
@@ -84,11 +84,11 @@ export default class BankAccount extends BankAccountBase {
                                     <div style={{overflowX: 'auto', height: c?.bank.id != null ? 'calc(100% - 165px)' : '100%'}}>
                                         {this.state.response.payments.filter((item: any) => item?.bankAccount?.id == c?.id).map((item: any) => (
                                             <div style={{cursor: 'move', paddingTop: '3px'}} draggable onDragStart={(e) => this.onDragStart(e, item?.id, item?.bankAccount?.id)}>
-                                                <Card sx={{ backgroundColor: new Date(item.vencimento) >= new Date() ? '#f6e1e1' : 'white', gap: 0, padding: '10px', width: '100%', height: '100%' }}>
+                                                <Card sx={{ backgroundColor: new Date(item.dueDate) >= new Date() ? '#f6e1e1' : 'white', gap: 0, padding: '10px', width: '100%', height: '100%' }}>
                                                     <label style={{fontSize: 14}}><b>{item.paymentForm?.description}</b></label>
-                                                    <label style={{fontSize: 14, position: 'absolute', right: '0.5rem'}}><b>{parseFloat(item.valor).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'})}</b></label>
-                                                    <label style={{fontSize: 12}}>{item.recebedor?.nome}</label>
-                                                    <label style={{fontSize: 12}}>Vencimento: {item.vencimento}</label>
+                                                    <label style={{fontSize: 14, position: 'absolute', right: '0.5rem'}}><b>{parseFloat(item.value).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'})}</b></label>
+                                                    <label style={{fontSize: 12}}>{item.receiver?.surname}</label>
+                                                    <label style={{fontSize: 12}}>Vencimento: {item.dueDate}</label>
                                                     <IconButton size="sm" sx={{position: 'absolute', top: '2.5rem', right: '0.5rem'}} onClick={() => this.BtnEditPayment_Click(item.id)}>
                                                         <EditRounded style={{fontSize: 16}} />
                                                     </IconButton>

@@ -1,7 +1,7 @@
 import { Transaction } from "sequelize";
 import { Nfe } from "../../database";
 import crypto from "crypto";
-import { Op } from "sequelize";
+import { parseStringPromise, Builder } from "xml2js";
 
 export class NfeService {
 
@@ -15,7 +15,7 @@ export class NfeService {
 
     }
 
-    public static Create = async (nfe: Nfe, transaction: Transaction | undefined) => {
+    public static Create = async (nfe: Nfe, transaction?: Transaction) => {
 
         nfe.id = crypto.randomUUID();
         //produto.categoriaId = produto.categoria?.id;
@@ -52,12 +52,21 @@ export class NfeService {
 
     }
 
-    public static Upload = async (nfe: Nfe, transaction: Transaction | undefined) => {
+    public static XmlToJson = async (xml: any) => {
 
-       
+        return await parseStringPromise(xml, {explicitArray: false});
+
     }
 
-    public static Delete = async (id: string, transaction: Transaction | undefined) => {
+    public static JsonToXml = async (json: any) => {
+
+        const builder = new Builder( { headless: false, renderOpts: { pretty: true } });
+
+        return builder.buildObject(json);
+
+    }
+
+    public static Delete = async (id: string, transaction?: Transaction) => {
         await Nfe.update({ativo: false}, {where: {id: id}, transaction});
     }
 

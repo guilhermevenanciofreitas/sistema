@@ -7,6 +7,7 @@ import { Grid } from '@mui/joy';
 
 import { Search } from '../../../../Search';
 import { TabelaPrecoTemplate } from '../../../../Search/Templates/TabelaPreco';
+import _ from 'lodash';
 
 
 export class ViewNotaFiscal extends ViewNotaFiscalBase {
@@ -19,13 +20,17 @@ export class ViewNotaFiscal extends ViewNotaFiscalBase {
             <Modal Open={this.state.open} Title={this.props.Title} Width={1150} Close={this.Close}>
                 <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
 
-                    <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' Enable={this.state.nome != ''} />
+                    <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
                     <Button Text='Limpar' Type='Reset' Color='white' BackgroundColor='gray' />
 
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                         
+                        <Grid md={12}>
+                            <input type="file" onChange={this.BtnXml_Click} />
+                        </Grid>
+
                         <Grid md={2}>
-                            <TextBox Label='Número' TextTransform='Normal' Text={this.state.id} OnChange={(args: EventArgs) => this.setState({id: args.Value})} />
+                            <TextBox Label='Número' TextTransform='Normal' Text={_.get(this.state, 'NFe.infNFe.ide.nNF')} OnChange={(args: EventArgs) => this.setState({id: args.Value})} />
                         </Grid>
                         
                         <Grid md={12}>

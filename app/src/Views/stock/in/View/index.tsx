@@ -37,7 +37,17 @@ export class ViewStockIn extends ViewStockInBase {
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                        
                         <Grid md={6}>
-                            <AutoComplete Label='Nota fiscal' Pesquisa={async(Text: string) => await Search.Nfe(Text)} Text={(Item: any) => `${Item.protNFe?.infProt?.chNFe}` } Value={this.state.nfe} OnChange={(nfe: any) => this.setState({nfe})}>
+                            <AutoComplete Label='Nota fiscal' Pesquisa={async(Text: string) => await Search.Nfe(Text)} Text={(Item: any) => `${Item.protNFe?.infProt?.chNFe}` } Value={this.state.nfe} OnChange={(nfe: any) => {
+
+                                var products: any[] = [];
+
+                                for(const det of nfe?.NFe?.infNFe?.det || []) {
+                                    products.push({quantity: det.prod.qCom, value: det.prod.vProd, prod: det.prod});
+                                }
+
+                                this.setState({nfe, products});
+
+                            }}>
                                 <NfeTemplate />
                             </AutoComplete>
                         </Grid>

@@ -21,11 +21,26 @@ export class Product extends Model {
   @Column({type: DataType.BOOLEAN, field: "isCombination"})
   isCombination?: string;
 
+  @Column({type: DataType.DECIMAL(18, 2), field: "cost"})
+  cost?: number;
+
+  @Column({type: DataType.DECIMAL(18, 2), field: "markup"})
+  markup?: number;
+
   @Column({type: DataType.DECIMAL(18, 2), field: "value"})
   value?: number;
 
-  @Column({type: DataType.DECIMAL(18, 3), field: "stock"})
-  stock?: number;
+  @Column({type: DataType.ENUM('day', 'balance'), field: "stockControlType"})
+  stockControlType?: 'day' | 'balance';
+
+  @Column({type: DataType.DECIMAL(18, 3), field: "stockBalance"})
+  stockBalance?: number;
+
+  @Column({type: DataType.INTEGER, field: "stockMin"})
+  stockMin?: number;
+
+  @Column({type: DataType.INTEGER, field: "stockMax"})
+  stockMax?: number;
 
   @BelongsTo(() => ProductCategory, {as: 'category', foreignKey: 'categoryId'})
   category?: ProductCategory;

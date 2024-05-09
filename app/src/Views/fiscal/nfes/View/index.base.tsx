@@ -8,8 +8,8 @@ export class ViewNotaFiscalBase extends ViewModal<Readonly<{Title: string}>> {
     state = {
         open: false,
         id: "",
-        nome: "",
-        email: "",
+        NFe: null,
+        protNFe: null,
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -69,9 +69,27 @@ export class ViewNotaFiscalBase extends ViewModal<Readonly<{Title: string}>> {
         }
     }
 
+    protected BtnXml_Click = async (event: any) =>
+    {
+
+        const file = event.target.files[0];
+
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        const response = await Service.Post("nfe/xml", formData, 'multipart/form-data');
+
+        this.setState({...response?.data});
+
+    }
+
     private Limpar = () =>
     {
-        this.setState({id: "", nome: "", email: ""});
+        this.setState({
+            id: '',
+            NFe: null,
+            protNFe: null,
+        });
     }
 
 }

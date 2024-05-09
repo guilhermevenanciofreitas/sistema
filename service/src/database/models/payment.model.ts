@@ -34,17 +34,17 @@ export class Payment extends Model {
   @Column({type: DataType.UUID, field: "bankAccountId"})
   bankAccountId?: string;
 
-  @Column({type: DataType.DATE, field: "emissao"})
-  emissao?: Date;
+  @Column({type: DataType.DATE, field: "dueDate"})
+  dueDate?: Date;
 
-  @Column({type: DataType.DATE, field: "vencimento"})
-  vencimento?: Date;
+  @Column({type: DataType.DATE, field: "scheduleDate"})
+  scheduleDate?: Date;
 
   @Column({type: DataType.STRING(20), field: "ourNumber"})
   ourNumber?: string;
 
-  @Column({type: DataType.DECIMAL(18, 2), field: "valor"})
-  valor?: number;
+  @Column({type: DataType.DECIMAL(18, 2), field: "value"})
+  value?: number;
 
   @Column({type: DataType.UUID, field: "pagamentoId"})
   pagamentoId?: string;

@@ -10,7 +10,6 @@ import { ViewImportar } from "./importar";
 import { ViewFiltro } from "./filtro";
 
 const Columns = [
-    { selector: (row: any) => row.id, sort: 'id', name: 'ID', sortable: true },
     { selector: (row: any) => row.numero, sort: 'numero', name: 'Numero', sortable: true },
     { selector: (row: any) => row.serie, sort: 'serie', name: 'Série', sortable: true },
     { selector: (row: any) => row.emitente, sort: 'emitente', name: 'Emitente', sortable: true },

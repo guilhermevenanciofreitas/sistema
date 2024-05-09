@@ -38,7 +38,7 @@ export class ViewConfiguracao extends ViewConfiguracaoBase {
                                 </TabItem>
                                 <TabItem Title='Certificado' Visible={true}>
 
-                                    <input type="file" name="fileUploaded" onChange={this.Certificate_Change} />
+                                    <input type="file" onChange={this.Certificate_Change} />
 
                                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                                         <Grid md={5}>

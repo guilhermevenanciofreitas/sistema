@@ -8,12 +8,23 @@ import _ from "lodash";
 import { FormLabel, Grid, Input } from "@mui/joy";
 import { StockLocationTemplate } from "../../../../Search/Templates/StockLocation";
 
+const Item = ({ row }: any) => {
+    return (
+        <div style={{display: 'flex', height: 'auto'}}>
+            <div data-tag="allowRowEvents" style={{ overflow: 'hidden', textOverflow: 'ellipses', gap: 2 }}>
+                {<b>{row.product?.name || <span style={{color: '#ec5353'}}>[Selecione]</span>}</b>}
+                <br />
+                <i><span style={{fontSize: 12}}>Item NF: {row.prod?.xProd}</span></i>
+            </div>
+        </div>
+    );
+};
+
 const Columns = [
-    { selector: (row: any) => row.product?.name, name: 'Item' },
+    { selector: (row: any) => <Item row={row} />, name: 'Item' },
     { selector: (row: any) => parseFloat(row.quantity).toLocaleString('pt-BR', {minimumFractionDigits: 3}), name: 'Quantidade', maxWidth: '90px', right: true },
     { selector: (row: any) => parseFloat(row.value).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}), name: 'Valor', maxWidth: '110px', right: true },
-    { selector: (row: any) => parseFloat(row.discount).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}), name: 'Desconto', maxWidth: '110px', right: true },
-    { selector: (row: any) => ((parseFloat(row.value) - parseFloat(row.discount)) * parseFloat(row.quantity)).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}), name: 'Total', maxWidth: '110px', right: true },
+    { selector: (row: any) => (parseFloat(row.value) * parseFloat(row.quantity)).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}), name: 'Total', maxWidth: '110px', right: true },
 ];
 
 class ViewItem extends ViewModal {
@@ -28,8 +39,8 @@ class ViewItem extends ViewModal {
         stockLocation: null,
         product: null,
         quantity: null,
-        discount: null,
-        value: null
+        value: null,
+        prod: null
     }
 
     public Show = async (item?: any): Promise<any> =>
@@ -50,6 +61,10 @@ class ViewItem extends ViewModal {
                 <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                     
                     <Grid md={12}>
+                        {_.get(this.state, 'prod.xProd')}
+                    </Grid>
+                    
+                    <Grid md={12}>
                         <AutoComplete Label='Localização' Pesquisa={async(Text: string) => await Search.StockLocation(Text)} Text={(Item: any) => `${Item.name}` } Value={this.state.stockLocation} OnChange={(stockLocation: any) => this.setState({stockLocation})}>
                             <StockLocationTemplate />
                         </AutoComplete>
@@ -57,24 +72,21 @@ class ViewItem extends ViewModal {
                     
                     <Grid md={12}>
                         <AutoComplete Label='Item' Pesquisa={async(Text: string) => await Search.Product(Text)} Text={(Item: any) => `${Item.name || ''}` } Value={this.state.product} OnChange={(product: any) => {
-                                this.setState({product, discount: '0.00', value: product?.value});
+                                this.setState({product, value: product?.value || this.state.value});
                                 this.TxtQuantidade.current?.Focus();
                             }}>
                             <ProductTemplate />
                         </AutoComplete>
                     </Grid>
 
-                    <Grid md={3}>
+                    <Grid md={4}>
                         <NumericBox ref={this.TxtQuantidade} Label='Quantidade' Text={this.state.quantity} Scale={3} OnChange={(args: EventArgs) => this.setState({quantity: args.Value})} />
                     </Grid>
-                    <Grid md={3}>
-                        <NumericBox Label='Desconto' Text={this.state.discount} Prefix="R$ " Scale={2} OnChange={(args: EventArgs) => this.setState({discount: args.Value})} />
-                    </Grid>
-                    <Grid md={3}>
+                    <Grid md={4}>
                         <NumericBox Label='Valor' Text={this.state.value} Prefix="R$ " Scale={2} OnChange={(args: EventArgs) => this.setState({value: args.Value})} />
                     </Grid>
-                    <Grid md={3}>
-                        <NumericBox Label='Total' Text={((parseFloat(this.state.value || '0') - parseFloat(this.state.discount || '0')) * parseFloat(this.state.quantity || '0')).toString()} Prefix="R$ " Scale={2} ReadOnly={true} />
+                    <Grid md={4}>
+                        <NumericBox Label='Total' Text={(parseFloat(this.state.value || '0') * parseFloat(this.state.quantity || '0')).toString()} Prefix="R$ " Scale={2} ReadOnly={true} />
                     </Grid>
 
                     <Grid md={3}>
@@ -99,8 +111,8 @@ export class Products extends BaseDetails<Readonly<{products: any[], OnChange?: 
             stockLocation: null,
             product: null,
             quantity: null,
-            discount: null,
-            value: null
+            value: null,
+            prod: null
         });
 
         if (item == null) return;
@@ -119,7 +131,6 @@ export class Products extends BaseDetails<Readonly<{products: any[], OnChange?: 
         args.stockLocation = item.stockLocation;
         args.product = item.product;
         args.quantity = item.quantity;
-        args.discount = item.discount;
         args.value = item.value;
 
         this.props.OnChange(this.props.products);

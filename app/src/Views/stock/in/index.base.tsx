@@ -12,7 +12,7 @@ export default class StockInsBase extends BaseIndex {
  
     protected ViewStockIn = React.createRef<ViewStockIn>();
 
-    protected ViewImportar = React.createRef<ViewImportar>();
+    //protected ViewImportar = React.createRef<ViewImportar>();
     protected ViewFiltro = React.createRef<ViewFiltro>();
 
     state = {
@@ -116,6 +116,7 @@ export default class StockInsBase extends BaseIndex {
     {
         try
         {
+            /*
             const data = await this.ViewImportar.current?.Show(this.state.request.filter);
 
             if (data === null) return;
@@ -123,6 +124,7 @@ export default class StockInsBase extends BaseIndex {
             this.setState({request: {...this.state.request, offset: 1}},
                 async () => await this.Pesquisar(this.state.request)
             );
+            */
     
         }
         catch (err: any) 

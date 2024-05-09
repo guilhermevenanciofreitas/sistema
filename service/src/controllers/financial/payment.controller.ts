@@ -18,7 +18,7 @@ export default class PaymentController {
                 const status = req.body.status || undefined;
         
                 let where: any = {};
-                let order: any = [["vencimento", "asc"]];
+                let order: any = [["dueDate", "asc"]];
         
                 if (status) {
                     where = {"status": status};
@@ -30,32 +30,32 @@ export default class PaymentController {
         
                 const contasPagar = await Payment.findAndCountAll(
                 {
-                    attributes: ["id", "numeroDocumento", "valor", "emissao", "vencimento", "status"],
+                    attributes: ['id', 'numeroDocumento', 'value', 'dueDate', 'scheduleDate', 'status'],
                     include: [
-                        {model: Company, attributes: ["id", "cpfCnpj", "surname"]},
-                        {model: Partner, attributes: ["id", "cpfCnpj", "surname"]},
-                        {model: PaymentForm, attributes: ["id", "description"]},
-                        {model: BankAccount, attributes: ["id", "agency", "agencyDigit", "account", "accountDigit"],
-                            include: [{model: Bank, attributes: ["id", "description", "logo"]}],
+                        {model: Company, attributes: ['id', 'cpfCnpj', 'surname']},
+                        {model: Partner, attributes: ['id', 'cpfCnpj', 'surname']},
+                        {model: PaymentForm, attributes: ['id', 'description']},
+                        {model: BankAccount, attributes: ['id', 'agency', 'agencyDigit', 'account', 'accountDigit'],
+                            include: [{model: Bank, attributes: ['id', 'description', 'logo']}],
                         }
                     ],
                     where, order, limit: pagination.limit, offset: pagination.offset1, transaction
                 });
 
-                const pending = await Payment.findAndCountAll({attributes: ["valor"], where: {status: 'pending'}, transaction});
-                const open = await Payment.findAndCountAll({attributes: ["valor"], where: {status: 'open'}, transaction});
-                const shipping = await Payment.findAndCountAll({attributes: ["valor"], where: {status: 'shipping'}, transaction});
-                const send = await Payment.findAndCountAll({attributes: ["valor"], where: {status: 'send'}, transaction});
-                const scheduled = await Payment.findAndCountAll({attributes: ["valor"], where: {status: 'scheduled'}, transaction});
-                const paid = await Payment.findAndCountAll({attributes: ["valor"], where: {status: 'paid'}, transaction});
+                const pending = await Payment.findAndCountAll({attributes: ["value"], where: {status: 'pending'}, transaction});
+                const open = await Payment.findAndCountAll({attributes: ["value"], where: {status: 'open'}, transaction});
+                const shipping = await Payment.findAndCountAll({attributes: ["value"], where: {status: 'shipping'}, transaction});
+                const send = await Payment.findAndCountAll({attributes: ["value"], where: {status: 'send'}, transaction});
+                const scheduled = await Payment.findAndCountAll({attributes: ["value"], where: {status: 'scheduled'}, transaction});
+                const paid = await Payment.findAndCountAll({attributes: ["value"], where: {status: 'paid'}, transaction});
 
                 const status2 = {
-                    pending: {count: pending.count, ammount: _.sum(pending.rows.map(c => parseFloat(c.valor as any)))},
-                    open: {count: open.count, ammount: _.sum(open.rows.map(c => parseFloat(c.valor as any)))},
-                    shipping: {count: shipping.count, ammount: _.sum(shipping.rows.map(c => parseFloat(c.valor as any)))},
-                    send: {count: send.count, ammount: _.sum(send.rows.map(c => parseFloat(c.valor as any)))},
-                    scheduled: {count: scheduled.count, ammount: _.sum(scheduled.rows.map(c => parseFloat(c.valor as any)))},
-                    paid: {count: paid.count, ammount: _.sum(paid.rows.map(c => parseFloat(c.valor as any)))},
+                    pending: {count: pending.count, ammount: _.sum(pending.rows.map(c => parseFloat(c.value as any)))},
+                    open: {count: open.count, ammount: _.sum(open.rows.map(c => parseFloat(c.value as any)))},
+                    shipping: {count: shipping.count, ammount: _.sum(shipping.rows.map(c => parseFloat(c.value as any)))},
+                    send: {count: send.count, ammount: _.sum(send.rows.map(c => parseFloat(c.value as any)))},
+                    scheduled: {count: scheduled.count, ammount: _.sum(scheduled.rows.map(c => parseFloat(c.value as any)))},
+                    paid: {count: paid.count, ammount: _.sum(paid.rows.map(c => parseFloat(c.value as any)))},
                 }
 
                 sequelize.close();
@@ -86,7 +86,7 @@ export default class PaymentController {
                 const transaction = await sequelize.transaction();
 
                 const contaPagar = await Payment.findOne({
-                    attributes: ["id", "numeroDocumento", "valor", "emissao", "vencimento", "ourNumber", "data"],
+                    attributes: ['id', 'numeroDocumento', 'value', 'dueDate', 'scheduleDate', 'ourNumber', 'data'],
                     include: [
                         {model: Partner, as: 'receiver', attributes: ["id", "surname"]},
                         {model: Company, as: 'company', attributes: ["id", "surname"]},

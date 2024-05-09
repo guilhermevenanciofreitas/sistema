@@ -38,10 +38,10 @@ export class ViewPayment extends ViewContaPagarBase {
                                 </AutoComplete>
                             </Grid>
                             <Grid md={2}>
-                                <DatePicker Label='Vencimento' Text={this.state.emissao} OnChange={(args: EventArgs) => this.setState({emissao: args.Value})} />
+                                <DatePicker Label='Vencimento' Text={this.state.dueDate} OnChange={(args: EventArgs) => this.setState({dueDate: args.Value})} />
                             </Grid>
                             <Grid md={2}>
-                                <DatePicker Label='Agendamento' Text={this.state.vencimento} OnChange={(args: EventArgs) => this.setState({vencimento: args.Value})} />
+                                <DatePicker Label='Agendamento' Text={this.state.dueDate} OnChange={(args: EventArgs) => this.setState({dueDate: args.Value})} />
                             </Grid>
                             <Grid md={2}>
                                 <TextBox Label='Nosso número' TextTransform='Normal' Text={this.state.ourNumber} OnChange={(args: EventArgs) => this.setState({ourNumber: args.Value})} ReadOnly={true} />

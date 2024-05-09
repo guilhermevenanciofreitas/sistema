@@ -26,7 +26,7 @@ export default class BankAccountController {
                     attributes: ['id', 'dueDate', 'value'],
                     include: [
                         {model: PaymentForm, attributes: ['id', 'description']},
-                        {model: Partner, attributes: ['id', 'surname']},
+                        {model: Partner, as: 'receiver', attributes: ['id', 'surname']},
                         {model: BankAccount, attributes: ['id']},
                     ],
                     where: {status: 'open'},

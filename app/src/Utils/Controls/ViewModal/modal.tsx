@@ -2,6 +2,8 @@ import React from "react";
 import { DialogActions, DialogContent, DialogTitle, Divider, IconButton, Modal, ModalDialog } from "@mui/joy";
 import CloseIcon from '@mui/icons-material/Close';
 
+
+
 export class ControlModal extends React.Component<Readonly<{children: any, Open: boolean, Title: string, Width: number, Close: any}>> {
 
     render(): React.ReactNode {
@@ -16,6 +18,9 @@ export class ControlModal extends React.Component<Readonly<{children: any, Open:
                             {this.props.children}
                         </div>
                     </DialogContent>
+                    <DialogActions>
+                        
+                    </DialogActions>
                 </ModalDialog>
             </Modal>
         );

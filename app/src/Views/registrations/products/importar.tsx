@@ -7,7 +7,6 @@ export class ViewImportar extends ViewUpload {
 
     state = {
         open: false,
-
         files: []
     }
 

@@ -1,6 +1,7 @@
 import { Transaction } from "sequelize";
 import { Product, StockIn, StockInProduct } from "../../database";
 import crypto from "crypto";
+import { Op } from "sequelize";
 
 export class StockInService {
 
@@ -29,6 +30,16 @@ export class StockInService {
 
     public static Update = async (stockIn: StockIn, transaction?: Transaction) => {
 
+        for (let product of stockIn?.products || []) {
+            if (!product.id) {
+                product.id = crypto.randomUUID();
+                await StockInProduct.create({...product}, {transaction});
+            } else {
+                await StockInProduct.update(product, {where: {id: product.id}, transaction});
+            }
+            await StockInProduct.destroy({where: {stockInId: stockIn.id, id: {[Op.notIn]: stockIn?.products?.filter((c: any) => c.id != '').map(c => c.id)}}, transaction})
+        }
+
         await StockIn.update(stockIn, {where: {id: stockIn.id}, transaction});
 
     }
@@ -47,11 +58,9 @@ export class StockInService {
 
         for (const product of stockIn?.products || []) {
 
-            const stock = (parseFloat(product.product?.stock as any) || 0) + (parseFloat(product?.quantity as any) || 0);
+            const stockBalance = (parseFloat(product.product?.stockBalance as any) || 0) + (parseFloat(product?.quantity as any) || 0);
 
-            console.log(stock);
-
-            await Product.update({stock}, {where: {id: product.product?.id}, transaction});
+            await Product.update({stockBalance}, {where: {id: product.product?.id}, transaction});
         }
 
         await StockIn.update({status: 'checkIn'}, {where: {id: stockIn?.id}, transaction});

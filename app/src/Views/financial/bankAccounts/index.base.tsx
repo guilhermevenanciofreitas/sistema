@@ -21,8 +21,7 @@ export default class BankAccountBase extends BaseIndex {
 
         response: {
             bankAccounts: [],
-            payments: [],
-            
+            payments: []
         },
 
     }
@@ -185,7 +184,7 @@ export default class BankAccountBase extends BaseIndex {
     protected Pesquisar = async(): Promise<void> =>
     {
         this.setState({Loading: true});
-        var r = await Service.Post("financial/bank-account/findAll", null);
+        var r = await Service.Post("financial/bank-account/findAll");
 
         let bankAccounts = [];
 

@@ -26,7 +26,7 @@ export default class ProductController {
                 }
         
                 const products = await Product.findAndCountAll({
-                    attributes: ['id', 'name', 'value', 'stock'],
+                    attributes: ['id', 'name', 'value', 'stockBalance'],
                     include: [{model: ProductCategory, attributes: ['id', 'description']}],
                     where,
                     order,
@@ -63,7 +63,7 @@ export default class ProductController {
                 const transaction = await sequelize.transaction();
 
                 const product = await Product.findOne({
-                    attributes: ['id', 'name', 'description', 'isCombination', 'value', 'stock'], 
+                    attributes: ['id', 'name', 'description', 'isCombination', 'cost', 'markup', 'value', 'stockBalance', 'stockMin', 'stockMax'], 
                     include: [
                         {model: ProductCategory, as: 'category', attributes: ['id', 'description']}, 
                         {model: ProductCombination, as: 'combinations', attributes: ['id', 'isObrigatorio', 'minimo', 'maximo'],
