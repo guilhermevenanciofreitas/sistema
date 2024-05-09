@@ -30,8 +30,8 @@ export class Product extends Model {
   @Column({type: DataType.DECIMAL(18, 2), field: "value"})
   value?: number;
 
-  @Column({type: DataType.ENUM('day', 'balance'), field: "stockControlType"})
-  stockControlType?: 'day' | 'balance';
+  @Column({type: DataType.STRING(20), field: "stockType"})
+  stockType?: 'day' | 'balance';
 
   @Column({type: DataType.DECIMAL(18, 3), field: "stockBalance"})
   stockBalance?: number;

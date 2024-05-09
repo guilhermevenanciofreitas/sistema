@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { AutoComplete, Button, CheckBox, GridView, Modal, TextBox, ViewModal } from "../../../../Utils/Controls";
+import { AutoComplete, Button, CheckBox, GridView, ViewModal, TextBox } from "../../../../Utils/Controls";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
 import { Grid } from "@mui/joy";
@@ -10,12 +10,11 @@ const Columns = [
     { selector: (row: any) => `${row.recipientMesoRegion?.description} - ${row.recipientMesoRegion?.state?.acronym}`, name: 'Região' },
 ];
 
-class ViewRecipient extends ViewModal {
+class ViewRecipient extends React.Component {
 
-    public Close = (recipient: any) => this.setState({open: false});
+    protected ViewModal = React.createRef<ViewModal>();
 
     state = {
-        open: false,
         id: "",
         recipientMesoRegion: null,
     }
@@ -23,17 +22,17 @@ class ViewRecipient extends ViewModal {
     public Show = async (item?: any): Promise<any> =>
     {
 
-        this.setState({open: true, ...item});
+        this.setState({...item});
 
-        return this.Initialize(this.Close);
+        return await this.ViewModal.current?.Show();
 
     }
 
-    protected BtnConfirmar_Click = async () => this.Close(this.state);
+    protected BtnConfirmar_Click = async () => this.ViewModal.current?.Close(this.state);
 
     render(): React.ReactNode {
         return (
-            <Modal Open={this.state.open} Title='Destinatário (Região)' Width={450} Close={this.Close}>
+            <ViewModal ref={this.ViewModal} Title='Destinatário (Região)' Width={450}>
                 
                 <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                     <Grid md={12}>
@@ -45,7 +44,7 @@ class ViewRecipient extends ViewModal {
 
                 <Button Text='Confirmar' Type='Submit' Color='white' BackgroundColor='green' OnClick={this.BtnConfirmar_Click} />
 
-            </Modal>
+            </ViewModal>
         );
     }
 

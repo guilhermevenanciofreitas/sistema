@@ -59,6 +59,8 @@ export default class ProductsBase extends BaseIndex {
 
             const r = await this.OpenProduct(id);
 
+            console.log(r);
+
             if (r) await this.Pesquisar(this.state.request);
        
         } 
@@ -74,6 +76,8 @@ export default class ProductsBase extends BaseIndex {
         {
 
             const r = await this.ViewProduct.current?.New({});
+
+            console.log(r);
 
             if (r) await this.Pesquisar(this.state.request);
             

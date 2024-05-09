@@ -34,8 +34,7 @@ export { ControlFilter as Filter } from '../../Utils/Controls/ViewFilter/filter'
 //export { ControlViewUpload as ViewUpload } from '../../Utils/Controls/ViewUpload';
 //export { ControlUpload as Upload } from '../../Utils/Controls/ViewUpload/upload';
 
-export { ControlViewModal as ViewModal } from '../../Utils/Controls/ViewModal';
-export { ControlModal as Modal } from '../../Utils/Controls/ViewModal/modal';
+export { ControlViewModal as ViewModal } from './ViewModal';
 
 export { Content } from '../../Utils/Controls/ViewModal/content';
 export { Actions } from '../../Utils/Controls/ViewModal/actions';

@@ -9,9 +9,9 @@ export class NfeTemplate extends React.Component {
                 {({ args }: any) => (
                     <>
                         <span>
-                            <b>Número:</b> {args.NFe.infNFe.ide.nNF} - <b>Série:</b> {args.NFe.infNFe.ide.serie} - {args.NFe.infNFe.emit.xFant}
+                            <b>Número:</b> {args.NFe?.infNFe?.ide?.nNF} - <b>Série:</b> {args.NFe?.infNFe?.ide?.serie} - {args.NFe?.infNFe?.emit?.xFant}
                             <br />
-                            {args.protNFe.infProt.chNFe}
+                            {args.protNFe?.infProt?.chNFe}
                         </span>
                     </>
                 )}

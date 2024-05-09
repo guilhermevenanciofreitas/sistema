@@ -1,11 +1,12 @@
 import React from "react";
 import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
-import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
+import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle, AddCircleOutline } from "@mui/icons-material";
 import { ViewNotaFiscal } from "./View/index";
 import BaseNotasFiscais from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
+import { color } from "../../../Utils/color";
 //import { ViewImportar } from "./importar";
 //import { ViewFiltro } from "./filtro";
 
@@ -38,7 +39,7 @@ export default class NotasFiscais extends BaseNotasFiscais {
                     <Container>
                         <Left>
                             {this.state.Selecteds.length == 0 && (
-                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnNovo_Click} />
+                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor={color.success} StartIcon={<AddCircleOutline />} OnClick={this.BtnNovo_Click} />
                             )}
 
                             <Button Text='Status' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnStatusService_Click} />

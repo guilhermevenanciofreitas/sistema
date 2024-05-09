@@ -3,12 +3,14 @@ import { Service } from "../../../../Service";
 import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
+import React from "react";
 
-export class ViewProductBase extends ViewModal<Readonly<{Title?: string}>> {
+export class ViewProductBase extends React.Component<Readonly<{Title?: string}>> {
+
+    protected ViewModal = React.createRef<ViewModal>();
 
     state = {
-        open: false,
-        
+
         id: '',
         name: '',
         description: '',
@@ -33,7 +35,7 @@ export class ViewProductBase extends ViewModal<Readonly<{Title?: string}>> {
 
         this.setState({open: true, ...product});
 
-        return this.Initialize(this.Close);
+        return await this.ViewModal.current?.Show();
 
     }
 
@@ -49,8 +51,8 @@ export class ViewProductBase extends ViewModal<Readonly<{Title?: string}>> {
             this.setState({open: true, ...r?.data});
         }
 
-        return this.Initialize(this.Close);
- 
+        return await this.ViewModal.current?.Show();
+
     }
 
     protected BtnLimpar_Click = async () =>
@@ -118,7 +120,7 @@ export class ViewProductBase extends ViewModal<Readonly<{Title?: string}>> {
     
             await MessageBox.Show({title: "Info", width: 400, type: "Success", content: "Salvo com sucesso!", buttons: [{ Text: "OK" }]});
     
-            this.Close(response?.data.id);
+            this.ViewModal.current?.Close(response?.data);
 
         }
         catch(err: any)

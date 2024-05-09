@@ -1,6 +1,6 @@
 
 import { ViewProductBase } from './index.base';
-import { AutoComplete, Button, CheckBox, Form, Modal, Tab, TabItem, TextBox, NumericBox, Content, Actions } from '../../../../Utils/Controls';
+import { AutoComplete, Button, CheckBox, Form, ViewModal, Tab, TabItem, TextBox, NumericBox, Content, Actions } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
@@ -13,13 +13,10 @@ import { color } from '../../../../Utils/color';
 
 export class ViewProduct extends ViewProductBase {
 
-    public Close = () => this.setState({open: false});
-    
     public render(): ReactNode {
 
         return (
-        
-            <Modal Open={this.state.open} Title={this.props.Title} Width={1000} Close={() => this.Close()}>
+            <ViewModal ref={this.ViewModal} Title={this.props.Title} Width={1000}>
                 <Content>
                 
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
@@ -96,11 +93,11 @@ export class ViewProduct extends ViewProductBase {
                 </Content>
 
                 <Actions>
-                    {this.state.id && <Button Text='Excluir' StartIcon={<DeleteForever></DeleteForever>} Color='white' BackgroundColor='#dc3545' OnClick={this.BtnSalvar_Click} />}
-                    <Button Text='Salvar' StartIcon={<TaskAltOutlined></TaskAltOutlined>} Color='white' BackgroundColor={color.success} OnClick={this.BtnSalvar_Click} />
+                    {this.state.id && <Button Text='Excluir' StartIcon={<DeleteForever />} Color='white' BackgroundColor='#dc3545' OnClick={this.BtnSalvar_Click} />}
+                    <Button Text='Salvar' StartIcon={<TaskAltOutlined />} Color='white' BackgroundColor={color.success} OnClick={this.BtnSalvar_Click} />
                 </Actions>
                 
-            </Modal>
+            </ViewModal>
         );
 
     }

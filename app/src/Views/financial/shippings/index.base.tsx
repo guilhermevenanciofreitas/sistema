@@ -1,6 +1,6 @@
 import React from "react";
 import { Service } from "../../../Service";
-import { ViewUsuario } from "./View/index";
+import { ViewShipping } from "./View/index";
 //import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
@@ -11,7 +11,7 @@ import { Loading } from "../../../Utils/Loading";
 
 export default class BaseUsuarios extends BaseIndex {
  
-    protected ViewUsuario = React.createRef<ViewUsuario>();
+    protected ViewShipping = React.createRef<ViewShipping>();
 
     //protected ViewImportar = React.createRef<ViewImportar>();
     //protected ViewFiltro = React.createRef<ViewFiltro>();
@@ -73,7 +73,7 @@ export default class BaseUsuarios extends BaseIndex {
         try
         {
 
-            const r = await this.ViewUsuario.current?.Show(undefined);
+            const r = await this.ViewShipping.current?.Show(undefined);
 
             if (r) this.Pesquisar(this.state.request);
             
@@ -205,7 +205,7 @@ export default class BaseUsuarios extends BaseIndex {
     private OpenUsuario = async (id: string) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewUsuario.current?.Show(id);
+        const r = await this.ViewShipping.current?.Show(id);
         history.back();
         return r;
     }

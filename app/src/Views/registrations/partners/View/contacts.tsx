@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Button, GridView, Modal, TextBox, ViewModal } from "../../../../Utils/Controls";
+import { Button, GridView, ViewModal, TextBox } from "../../../../Utils/Controls";
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Divider } from "@mui/joy";
@@ -10,37 +10,36 @@ const Columns = [
     { selector: (row: any) => row.email, name: 'Email' },
 ];
 
-class ViewContact extends ViewModal {
+class ViewContact extends React.Component {
 
-    public Close = (contato: any) => this.setState({open: false});
+    protected ViewModal = React.createRef<ViewModal>();
 
     state = {
-        open: false,
         id: "",
         name: "",
         phone: "",
         email: ""
     }
 
-    public Show = async (contato?: any): Promise<any> =>
+    public Show = async (contact?: any): Promise<any> =>
     {
 
-        this.setState({open: true, ...contato});
+        this.setState({...contact});
 
-        return this.Initialize(this.Close);
+        return await this.ViewModal.current?.Show();
 
     }
 
-    protected BtnConfirmar_Click = async () => this.Close(this.state);
+    protected BtnConfirmar_Click = async () => this.ViewModal.current?.Close(this.state);
 
     render(): React.ReactNode {
         return (
-            <Modal Open={this.state.open} Title='Contato' Width={400} Close={this.Close}>
+            <ViewModal ref={this.ViewModal} Title='Contato' Width={400}>
                 <TextBox Label='Nome' TextTransform='UpperCase' Text={this.state.name} OnChange={(args: EventArgs) => this.setState({name: args.Value})} />
                 <TextBox Label='Telefone' TextTransform='UpperCase' Text={this.state.phone} OnChange={(args: EventArgs) => this.setState({phone: args.Value})} />
                 <TextBox Label='Email' TextTransform='LowerCase' Text={this.state.email} OnChange={(args: EventArgs) => this.setState({email: args.Value})} />
                 <Button Text='Confirmar' Type='Submit' Color='white' BackgroundColor='green' OnClick={this.BtnConfirmar_Click} />
-            </Modal>
+            </ViewModal>
         );
     }
 

@@ -1,6 +1,6 @@
 
 import { ViewContaPagarBase } from './index.base';
-import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, Modal, NumericBox, TextBox } from '../../../../Utils/Controls';
+import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, ViewModal, NumericBox, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
@@ -14,12 +14,10 @@ import _ from 'lodash';
 
 export class ViewPayment extends ViewContaPagarBase {
 
-    public Close = () => this.setState({open: false});
-    
     public render(): ReactNode {
 
         return (
-            <Modal Open={this.state.open} Title={this.props.Title} Width={1100} Close={() => this.Close()}>
+            <ViewModal ref={this.ViewModal} Title={this.props.Title} Width={1100}>
                 <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
 
                     <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
@@ -217,7 +215,7 @@ export class ViewPayment extends ViewContaPagarBase {
                     </fieldset>
                     
                 </Form>
-            </Modal>
+            </ViewModal>
         );
 
     }

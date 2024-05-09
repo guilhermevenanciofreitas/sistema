@@ -3,13 +3,16 @@ import { Service } from "../../../../Service";
 import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
+import React from "react";
 
-export class ViewStockInBase extends ViewModal<Readonly<{Title: string}>> {
+export class ViewStockInBase extends React.Component<Readonly<{Title: string}>> {
+
+    protected ViewModal = React.createRef<ViewModal>();
 
     state = {
-        open: false,
         id: '',
         nfe: null,
+        supplier: null,
         status: 'pending',
         products: []
     }
@@ -26,9 +29,7 @@ export class ViewStockInBase extends ViewModal<Readonly<{Title: string}>> {
             this.setState(r?.data);
         }
 
-        this.setState({open: true});
-
-        return this.Initialize(this.Close);
+        return await this.ViewModal.current?.Show();
  
     }
 
@@ -39,6 +40,35 @@ export class ViewStockInBase extends ViewModal<Readonly<{Title: string}>> {
             this.Limpar();
         }
         catch (err: any)
+        {
+            await DisplayError.Show(err);
+        }
+    }
+
+    protected TxtNfe_Change = async (nfe: any) =>
+    {
+        try
+        {
+            var products: any[] = [];
+
+            if (nfe == null) {
+                this.setState({nfe: null, products: []});
+                return;
+            }
+
+            if (_.isArray(nfe?.NFe?.infNFe?.det)) {
+                for(const det of nfe?.NFe?.infNFe?.det || []) {
+                    products.push({quantity: det?.prod?.qCom, value: det?.prod?.vProd, prod: det?.prod});
+                }
+            } else {
+                const det = nfe?.NFe?.infNFe?.det;
+                products.push({quantity: det?.prod?.qCom, value: det?.prod?.vProd, prod: det?.prod});
+            }
+            
+            this.setState({nfe, products});
+        
+        }
+        catch(err: any)
         {
             await DisplayError.Show(err);
         }
@@ -66,6 +96,7 @@ export class ViewStockInBase extends ViewModal<Readonly<{Title: string}>> {
             const request = {
                 id: _.get(this.state, 'id') || null,
                 nfeId: _.get(this.state, 'nfe.id') || null,
+                supplierId: _.get(this.state, 'supplier.id') || null,
                 products,
             }
 
@@ -80,7 +111,7 @@ export class ViewStockInBase extends ViewModal<Readonly<{Title: string}>> {
     
             await MessageBox.Show({title: 'Info', width: 400, type: 'Success', content: 'Salvo com sucesso!', buttons: [{ Text: 'OK' }]});
     
-            this.Close(r?.data.id);
+            this.ViewModal.current?.Close(r?.data);
 
         }
         catch(err: any)
@@ -117,7 +148,7 @@ export class ViewStockInBase extends ViewModal<Readonly<{Title: string}>> {
 
             await MessageBox.Show({title: 'Info', width: 400, type: 'Success', content: 'Confirmado com sucesso!', buttons: [{ Text: 'OK' }]});
 
-            this.Close(request.id);
+            this.ViewModal.current?.Close(request);
 
         }
         catch(err: any)
@@ -131,6 +162,7 @@ export class ViewStockInBase extends ViewModal<Readonly<{Title: string}>> {
         this.setState({
             id: '',
             nfe: null,
+            supplier: null,
             status: 'pending',
             products: []
         });

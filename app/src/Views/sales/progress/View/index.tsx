@@ -1,6 +1,6 @@
 
 import { ViewSaleOrderStatusBase } from './index.base';
-import { AutoComplete, Button, DatePicker, Form, Modal, TextBox } from '../../../../Utils/Controls';
+import { AutoComplete, Button, DatePicker, Form, ViewModal, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
@@ -8,13 +8,11 @@ import { Search } from '../../../../Search';
 import { BankTemplate } from '../../../../Search/Templates/Bank';
 
 export class ViewSaleOrderStatus extends ViewSaleOrderStatusBase {
-
-    public Close = () => this.setState({open: false});
-    
+ 
     public render(): ReactNode {
 
         return (
-            <Modal Open={this.state.open} Title={this.props.Title} Width={500} Close={() => this.Close()}>
+            <ViewModal ref={this.ViewModal} Title={this.props.Title} Width={500}>
                 <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
 
                     <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
@@ -30,7 +28,7 @@ export class ViewSaleOrderStatus extends ViewSaleOrderStatusBase {
                     </Grid>
 
                 </Form>
-            </Modal>
+            </ViewModal>
         );
 
     }

@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Button, GridView, Modal, TextBox, ViewModal } from "../../../../Utils/Controls";
+import { Button, GridView, ViewModal, TextBox } from "../../../../Utils/Controls";
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 
@@ -9,9 +9,9 @@ const Columns = [
     { selector: (row: any) => row.numero, name: 'Número' },
 ];
 
-class ViewAddress extends ViewModal {
+class ViewAddress extends React.Component {
 
-    public Close = (address: any) => this.setState({open: false});
+    protected ViewModal = React.createRef<ViewModal>();
 
     state = {
         open: false,
@@ -27,20 +27,20 @@ class ViewAddress extends ViewModal {
 
         this.setState({open: true, ...address});
 
-        return this.Initialize(this.Close);
+        return await this.ViewModal.current?.Show();
 
     }
 
-    protected BtnConfirmar_Click = async () => this.Close(this.state);
+    protected BtnConfirmar_Click = async () => this.ViewModal.current?.Close(this.state);
 
     render(): React.ReactNode {
         return (
-            <Modal Open={this.state.open} Title='Contato' Width={400} Close={this.Close}>
+            <ViewModal ref={this.ViewModal} Title='Contato' Width={400}>
                 <TextBox Label='CEP' TextTransform='UpperCase' Text={this.state.cep} OnChange={(args: EventArgs) => this.setState({cep: args.Value})} />
                 <TextBox Label='Logradouro' TextTransform='UpperCase' Text={this.state.logradouro} OnChange={(args: EventArgs) => this.setState({logradouro: args.Value})} />
                 <TextBox Label='Número' TextTransform='LowerCase' Text={this.state.numero} OnChange={(args: EventArgs) => this.setState({numero: args.Value})} />
                 <Button Text='Confirmar' Type='Submit' Color='white' BackgroundColor='green' OnClick={this.BtnConfirmar_Click} />
-            </Modal>
+            </ViewModal>
         );
     }
 

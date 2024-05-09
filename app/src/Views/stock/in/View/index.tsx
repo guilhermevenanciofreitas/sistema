@@ -1,6 +1,6 @@
 
 import { ViewStockInBase } from './index.base';
-import { Actions, AutoComplete, Button, Content, Form, Modal, Tab, TabItem, TextBox } from '../../../../Utils/Controls';
+import { Actions, AutoComplete, Button, Content, Form, ViewModal, Tab, TabItem, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Alert, FormLabel, Grid } from '@mui/joy';
@@ -10,43 +10,42 @@ import { NfeTemplate } from '../../../../Search/Templates/Nfe';
 import { Products } from './products';
 import { color } from '../../../../Utils/color';
 import { CheckCircleOutlined, TaskAltOutlined, PlaylistAddCheckCircleRounded, DeleteForever, BookmarksOutlined } from '@mui/icons-material';
+import { SupplierTemplate } from '../../../../Search/Templates/Supplier';
 
 export class ViewStockIn extends ViewStockInBase {
 
-    public Close = () => this.setState({open: false});
-    
     public render(): ReactNode {
 
         return (
-            <Modal Open={this.state.open} Title={this.props.Title} Width={950} Close={() => this.Close()}>
+            <ViewModal ref={this.ViewModal} Title={this.props.Title} Width={1050}>
                
                 <Content>
                     
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                        
-                        <Grid md={6}>
-                            <AutoComplete Label='Nota fiscal' Pesquisa={async(Text: string) => await Search.Nfe(Text)} Text={(Item: any) => `${Item.protNFe?.infProt?.chNFe}` } Value={this.state.nfe} OnChange={(nfe: any) => {
-
-                                var products: any[] = [];
-
-                                if (nfe == null) {
-                                    this.setState({nfe: null, products: []});
-                                    return;
-                                }
-
-                                if (_.isArray(nfe?.NFe?.infNFe?.det)) {
-                                    for(const det of nfe?.NFe?.infNFe?.det || []) {
-                                        products.push({quantity: det?.prod?.qCom, value: det?.prod?.vProd, prod: det?.prod});
-                                    }
-                                } else {
-                                    const det = nfe?.NFe?.infNFe?.det;
-                                    products.push({quantity: det?.prod?.qCom, value: det?.prod?.vProd, prod: det?.prod});
-                                }
-                                
-                                this.setState({nfe, products});
-                             
-                            }}>
+                        <Grid md={5}>
+                            <AutoComplete 
+                                New={{
+                                    Type: 'Nfe',
+                                    Values: {}
+                                }}
+                                Label='Nota fiscal' Pesquisa={async(Text: string) => await Search.Nfe(Text)} Text={(Item: any) => `${Item.protNFe?.infProt?.chNFe}`} Value={this.state.nfe} OnChange={this.TxtNfe_Change}>
                                 <NfeTemplate />
+                            </AutoComplete>
+                        </Grid>
+                        <Grid md={4}>
+                            <AutoComplete 
+                                New={{
+                                    Type: 'Supplier',
+                                    Values: {
+                                        cpfCnpj: _.get(this.state, 'nfe.NFe.infNFe.emit.CNPJ'),
+                                        name: _.get(this.state, 'nfe.NFe.infNFe.emit.xNome'),
+                                        surname: _.get(this.state, 'nfe.NFe.infNFe.emit.xFant'),
+                                        isBloquearCompra: false,
+                                    }
+                                }}
+                                Label='Fornecedor' Pesquisa={async(Text: string) => await Search.Supplier(Text)} Text={(Item: any) => `${Item.surname}`} Value={this.state.supplier} OnChange={(supplier: any[]) => this.setState({supplier})}>
+                                <SupplierTemplate />
                             </AutoComplete>
                         </Grid>
                         <Grid md={3}>
@@ -89,7 +88,7 @@ export class ViewStockIn extends ViewStockInBase {
                 </Actions>
 
             
-            </Modal>
+            </ViewModal>
         );
 
     }

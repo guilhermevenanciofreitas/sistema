@@ -1,17 +1,15 @@
 
-import { ViewUsuarioBase } from './index.base';
-import { Button, Form, Modal, TextBox } from '../../../../Utils/Controls';
+import { ViewShippingBase } from './index.base';
+import { Button, Form, ViewModal, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 
-export class ViewUsuario extends ViewUsuarioBase {
+export class ViewShipping extends ViewShippingBase {
 
-    public Close = () => this.setState({open: false});
-    
     public render(): ReactNode {
 
         return (
-            <Modal Open={this.state.open} Title={this.props.Title} Width={1000} Close={() => this.Close()}>
+            <ViewModal ref={this.ViewModal} Title={this.props.Title} Width={1000}>
                 <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
 
                     <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' Enable={this.state.nome != ''} />
@@ -39,7 +37,7 @@ export class ViewUsuario extends ViewUsuarioBase {
                     */}
 
                 </Form>
-            </Modal>
+            </ViewModal>
         );
 
     }

@@ -4,6 +4,8 @@ import { AutoCompleteBase, ResultContext } from "./index.base";
 import { Search, AddCircleRounded } from '@mui/icons-material';
 import { ViewProduct } from "../../../../views/registrations/products/View";
 import { ViewServico } from "../../../../views/registrations/services/View";
+import { ViewNotaFiscal } from "../../../../views/fiscal/nfes/View";
+import { ViewPartner } from "../../../../views/registrations/partners/View";
 
 export class ControlAutoComplete extends AutoCompleteBase {
 
@@ -11,7 +13,13 @@ export class ControlAutoComplete extends AutoCompleteBase {
     return (
       <>
 
-        {React.createElement(ViewProduct, {ref: this.ViewProduct })}
+        {this.props.New?.Type == 'Product' && <ViewProduct ref={this.ViewProduct} Title='Produto' />}
+
+        {this.props.New?.Type == 'Nfe' && <ViewNotaFiscal ref={this.ViewNotaFiscal} Title='Nota Fiscal' />}
+
+        {this.props.New?.Type == 'Customer' && <ViewPartner ref={this.ViewCustomer} Type='customer' Title='Cliente' />}
+        {this.props.New?.Type == 'Supplier' && <ViewPartner ref={this.ViewSupplier} Type='supplier' Title='Fornecedor' />}
+        
 
         <FormLabel sx={{fontWeight: 400}}>{this.props.Label}</FormLabel>
         <Autocomplete
@@ -30,7 +38,32 @@ export class ControlAutoComplete extends AutoCompleteBase {
             await this.Search('');
           }}
 
-          startDecorator={<IconButton onClick={() => null}><AddCircleRounded style={{color: '#93bf85'}} /></IconButton>}
+          startDecorator={!this.props.Value && <IconButton onClick={async() => {
+
+            switch (this.props.New?.Type || '')
+            {
+              case 'Product':
+                const product = await this.ViewProduct.current?.New(this.props.New?.Values);
+                if (product) {
+                  this.props.OnChange?.call(null, product);
+                }
+                break;
+              case 'Nfe':
+                  const nfe = await this.ViewNotaFiscal.current?.New(this.props.New?.Values);
+                  if (nfe) {
+                    this.props.OnChange?.call(null, nfe);
+                  }
+                  break;
+              case 'Supplier':
+                const supplier = await this.ViewSupplier.current?.New(this.props.New?.Values);
+                if (supplier) {
+                  this.props.OnChange?.call(null, supplier);
+                }
+                break;
+            }
+
+          }}><AddCircleRounded style={{color: '#93bf85'}} />
+          </IconButton>}
 
           popupIcon={<Search />}
 

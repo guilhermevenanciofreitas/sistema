@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { AutoComplete, Button, DatePicker, GridView, Modal, NumericBox, TextBox, ViewModal } from "../../../../Utils/Controls";
+import { AutoComplete, Button, DatePicker, GridView, ViewModal, NumericBox, TextBox } from "../../../../Utils/Controls";
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
@@ -12,12 +12,11 @@ const Columns = [
     { selector: (row: any) => parseFloat(row.value).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}), name: 'Valor', right: true },
 ];
 
-class ViewReceivie extends ViewModal {
+class ViewReceivie extends React.Component {
 
-    public Close = (endereco: any) => this.setState({open: false});
+    protected ViewModal = React.createRef<ViewModal>();
 
     state = {
-        open: false,
         id: "",
         receivieForm: null,
         dueDate: null,
@@ -29,15 +28,15 @@ class ViewReceivie extends ViewModal {
 
         this.setState({open: true, ...item});
 
-        return this.Initialize(this.Close);
+        return await this.ViewModal.current?.Show();
 
     }
 
-    protected BtnConfirmar_Click = async () => this.Close(this.state);
+    protected BtnConfirmar_Click = async () => this.ViewModal.current?.Close(this.state);
 
     render(): React.ReactNode {
         return (
-            <Modal Open={this.state.open} Title='Forma de pagamento' Width={400} Close={this.Close}>
+            <ViewModal ref={this.ViewModal} Title='Forma de pagamento' Width={400}>
                 
                 <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                     <Grid md={12}>
@@ -55,7 +54,7 @@ class ViewReceivie extends ViewModal {
 
                 <Button Text='Confirmar' Type='Submit' Color='white' BackgroundColor='green' OnClick={this.BtnConfirmar_Click} />
                 
-            </Modal>
+            </ViewModal>
         );
     }
 

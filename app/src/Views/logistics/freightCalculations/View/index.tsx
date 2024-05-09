@@ -1,6 +1,6 @@
 
 import { ViewFreightCalculationBase } from './index.base';
-import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, Modal, NumericBox, Tab, TabItem, TextBox } from '../../../../Utils/Controls';
+import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, ViewModal, NumericBox, Tab, TabItem, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
@@ -12,12 +12,10 @@ import { Weights } from './weights';
 
 export class ViewFreightCalculation extends ViewFreightCalculationBase {
 
-    public Close = () => this.setState({open: false});
-    
     public render(): ReactNode {
 
         return (
-            <Modal Open={this.state.open} Title={this.props.Title} Width={1100} Close={() => this.Close()}>
+            <ViewModal ref={this.ViewModal} Title={this.props.Title} Width={1100}>
                 <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
 
                     <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
@@ -57,7 +55,7 @@ export class ViewFreightCalculation extends ViewFreightCalculationBase {
                     </Grid>
 
                 </Form>
-            </Modal>
+            </ViewModal>
         );
 
     }

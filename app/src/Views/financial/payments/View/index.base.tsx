@@ -3,11 +3,13 @@ import { Service } from "../../../../Service";
 import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
+import React from "react";
 
-export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
+export class ViewContaPagarBase extends React.Component<Readonly<{Title: string}>> {
 
+    protected ViewModal = React.createRef<ViewModal>();
+    
     state = {
-        open: false,
         id: "",
         company: null,
         number: "",
@@ -53,9 +55,7 @@ export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
             this.setState({company: JSON.parse(localStorage.getItem("Session") || "null")?.empresa});
         }
 
-        this.setState({open: true});
-
-        return this.Initialize(this.Close);
+        return await this.ViewModal.current?.Show();
  
     }
 
@@ -96,7 +96,7 @@ export class ViewContaPagarBase extends ViewModal<Readonly<{Title: string}>> {
     
             await MessageBox.Show({title: "Info", width: 400, type: "Success", content: "Salvo com sucesso!", buttons: [{ Text: "OK" }]});
     
-            this.Close(r?.data.id);
+            this.ViewModal.current?.Close(r?.data);
 
         }
         catch(err: any)

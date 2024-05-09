@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { AutoComplete, Button, DropDownList, DropDownListItem, GridView, Modal, NumericBox, TextBox, ViewModal } from "../../../../Utils/Controls";
+import { AutoComplete, Button, DropDownList, DropDownListItem, GridView, ViewModal, NumericBox, TextBox, Content, Actions } from "../../../../Utils/Controls";
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
@@ -7,6 +7,9 @@ import { ProductTemplate } from "../../../../Search/Templates/Product";
 import _ from "lodash";
 import { FormLabel, Grid, Input } from "@mui/joy";
 import { StockLocationTemplate } from "../../../../Search/Templates/StockLocation";
+import { ViewProduct } from "../../../registrations/products/View";
+import { color } from "../../../../Utils/color";
+import { AddCircleOutline, TaskAltOutlined } from "@mui/icons-material";
 
 const Item = ({ row }: any) => {
     return (
@@ -22,19 +25,18 @@ const Item = ({ row }: any) => {
 
 const Columns = [
     { selector: (row: any) => <Item row={row} />, name: 'Item' },
+    { selector: (row: any) => row.stockLocation?.name, name: 'Localização', maxWidth: '180px' },
     { selector: (row: any) => parseFloat(row.quantity).toLocaleString('pt-BR', {minimumFractionDigits: 3}), name: 'Quantidade', maxWidth: '90px', right: true },
     { selector: (row: any) => parseFloat(row.value).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}), name: 'Valor', maxWidth: '110px', right: true },
     { selector: (row: any) => (parseFloat(row.value) * parseFloat(row.quantity)).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}), name: 'Total', maxWidth: '110px', right: true },
 ];
 
-class ViewItem extends ViewModal {
+class ViewItem extends React.Component {
 
+    protected ViewModal = React.createRef<ViewModal>();
     protected TxtQuantidade = React.createRef<NumericBox>();
 
-    public Close = (item: any) => this.setState({open: false});
-
     state = {
-        open: false,
         id: '',
         stockLocation: null,
         product: null,
@@ -46,55 +48,66 @@ class ViewItem extends ViewModal {
     public Show = async (item?: any): Promise<any> =>
     {
         
-        this.setState({open: true, ...item});
+        this.setState({...item});
 
-        return this.Initialize(this.Close);
+        return await this.ViewModal.current?.Show();
 
     }
 
-    protected BtnConfirmar_Click = async () => this.Close(this.state);
+    protected BtnConfirmar_Click = async () => this.ViewModal.current?.Close(this.state);
 
     render(): React.ReactNode {
         return (
-            <Modal Open={this.state.open} Title='Item' Width={550} Close={this.Close}>
+            <ViewModal ref={this.ViewModal} Title='Item' Width={550}>
+                <Content>
+                    <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+                        
+                        <Grid md={12}>
+                            {_.get(this.state, 'prod.xProd')}
+                        </Grid>
+                        
+                        <Grid md={12}>
+                            <AutoComplete Label='Localização' Pesquisa={async(Text: string) => await Search.StockLocation(Text)} Text={(Item: any) => `${Item.name}` } Value={this.state.stockLocation} OnChange={(stockLocation: any) => this.setState({stockLocation})}>
+                                <StockLocationTemplate />
+                            </AutoComplete>
+                        </Grid>
+                        
+                        <Grid md={12}>
+                            <AutoComplete 
+                                New={{
+                                    Type: 'Product',
+                                    Values: {
+                                        name: _.get(this.state, 'prod.xProd'),
+                                        cost: _.get(this.state, 'prod.vUnCom')
+                                    }}}
+                                    Label='Item'
+                                    Pesquisa={async(Text: string) => await Search.Product(Text)} Text={(Item: any) => `${Item.name || ''}` }
+                                    Value={this.state.product}
+                                    OnChange={(product: any) => {
+                                        this.setState({product, value: product?.value || this.state.value});
+                                        this.TxtQuantidade.current?.Focus();
+                                    }}
+                                >
+                                <ProductTemplate />
+                            </AutoComplete>
+                        </Grid>
+
+                        <Grid md={4}>
+                            <NumericBox ref={this.TxtQuantidade} Label='Quantidade' Text={this.state.quantity} Scale={3} OnChange={(args: EventArgs) => this.setState({quantity: args.Value})} />
+                        </Grid>
+                        <Grid md={4}>
+                            <NumericBox Label='Valor' Text={this.state.value} Prefix="R$ " Scale={2} OnChange={(args: EventArgs) => this.setState({value: args.Value})} />
+                        </Grid>
+                        <Grid md={4}>
+                            <NumericBox Label='Total' Text={(parseFloat(this.state.value || '0') * parseFloat(this.state.quantity || '0')).toString()} Prefix="R$ " Scale={2} ReadOnly={true} />
+                        </Grid>
+                    </Grid>
+                </Content>
+                <Actions>
+                    <Button Text='Confirmar' StartIcon={<TaskAltOutlined />} Color='white' BackgroundColor={color.success} OnClick={this.BtnConfirmar_Click} />
+                </Actions>
                 
-                <Grid container spacing={1} sx={{ flexGrow: 1 }}>
-                    
-                    <Grid md={12}>
-                        {_.get(this.state, 'prod.xProd')}
-                    </Grid>
-                    
-                    <Grid md={12}>
-                        <AutoComplete Label='Localização' Pesquisa={async(Text: string) => await Search.StockLocation(Text)} Text={(Item: any) => `${Item.name}` } Value={this.state.stockLocation} OnChange={(stockLocation: any) => this.setState({stockLocation})}>
-                            <StockLocationTemplate />
-                        </AutoComplete>
-                    </Grid>
-                    
-                    <Grid md={12}>
-                        <AutoComplete Label='Item' Pesquisa={async(Text: string) => await Search.Product(Text)} Text={(Item: any) => `${Item.name || ''}` } Value={this.state.product} OnChange={(product: any) => {
-                                this.setState({product, value: product?.value || this.state.value});
-                                this.TxtQuantidade.current?.Focus();
-                            }}>
-                            <ProductTemplate />
-                        </AutoComplete>
-                    </Grid>
-
-                    <Grid md={4}>
-                        <NumericBox ref={this.TxtQuantidade} Label='Quantidade' Text={this.state.quantity} Scale={3} OnChange={(args: EventArgs) => this.setState({quantity: args.Value})} />
-                    </Grid>
-                    <Grid md={4}>
-                        <NumericBox Label='Valor' Text={this.state.value} Prefix="R$ " Scale={2} OnChange={(args: EventArgs) => this.setState({value: args.Value})} />
-                    </Grid>
-                    <Grid md={4}>
-                        <NumericBox Label='Total' Text={(parseFloat(this.state.value || '0') * parseFloat(this.state.quantity || '0')).toString()} Prefix="R$ " Scale={2} ReadOnly={true} />
-                    </Grid>
-
-                    <Grid md={3}>
-                        <Button Text='Confirmar' Type='Submit' Color='white' BackgroundColor='green' OnClick={this.BtnConfirmar_Click} />
-                    </Grid>
-                    
-                </Grid>
-            </Modal>
+            </ViewModal>
         );
     }
 
@@ -145,7 +158,7 @@ export class Products extends BaseDetails<Readonly<{products: any[], OnChange?: 
         return (
             <>
                 <ViewItem ref={this.ViewItem} />
-                <Button Text='Adicionar' Color='white' BackgroundColor='green' OnClick={this.BtnAdicionar_Click} />
+                <Button Text='Adicionar' Color='white' BackgroundColor={color.success} StartIcon={<AddCircleOutline />} OnClick={this.BtnAdicionar_Click} />
                 {this.state.Selecteds.length >= 1 && <Button Text='Remover' Color='white' BackgroundColor='red' OnClick={this.BtnRemover_Click} />}
                 <GridView Columns={Columns} Rows={this.props.products} OnItem={this.GridView_OnItem} OnSelected={this.GridView_Selected} />
             </>

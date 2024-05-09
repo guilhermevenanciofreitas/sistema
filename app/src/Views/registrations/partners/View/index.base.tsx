@@ -3,11 +3,13 @@ import { Service } from "../../../../Service";
 import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
+import React from "react";
 
-export class ViewPartnerBase extends ViewModal<Readonly<{Title: string, Type: "customer" | "supplier" | "shipping-company" | "employee"}>> {
+export class ViewPartnerBase extends React.Component<Readonly<{Title: string, Type: "customer" | "supplier" | "shipping-company" | "employee"}>> {
+
+    protected ViewModal = React.createRef<ViewModal>();
 
     state = {
-        open: false,
         type: "CPF",
         cpfCnpj: '',
         name: '',
@@ -34,7 +36,18 @@ export class ViewPartnerBase extends ViewModal<Readonly<{Title: string, Type: "c
         address: []
     }
 
-    public Show = async (id?: string): Promise<any> =>
+    public New = async (partner: any): Promise<any> =>
+    {
+    
+        this.Limpar();
+
+        this.setState({...partner});
+
+        return await this.ViewModal.current?.Show();
+    
+    }
+
+    public Edit = async (id?: string): Promise<any> =>
     {
  
         this.Limpar();
@@ -46,9 +59,7 @@ export class ViewPartnerBase extends ViewModal<Readonly<{Title: string, Type: "c
             this.setState(r?.data);
         }
 
-        this.setState({open: true});
-
-        return this.Initialize(this.Close);
+        return await this.ViewModal.current?.Show();
  
     }
 
@@ -95,7 +106,7 @@ export class ViewPartnerBase extends ViewModal<Readonly<{Title: string, Type: "c
     
             await MessageBox.Show({title: "Info", width: 400, type: "Success", content: "Salvo com sucesso!", buttons: [{ Text: "OK" }]});
     
-            this.Close(response?.data.id);
+            this.ViewModal.current?.Close(response?.data);
 
         }
         catch(err: any)

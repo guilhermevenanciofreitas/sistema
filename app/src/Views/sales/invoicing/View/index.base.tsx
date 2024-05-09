@@ -3,13 +3,14 @@ import { Service } from "../../../../Service";
 import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
+import React from "react";
 
-export class ViewOrderInvoicingBase extends ViewModal<Readonly<{Title: string}>> {
+export class ViewOrderInvoicingBase extends React.Component<Readonly<{Title: string}>> {
+
+    protected ViewModal = React.createRef<ViewModal>();
 
     state = {
-        open: false,
         orders: [],
-        
     }
 
     public Show = async (id?: string[]): Promise<any> =>
@@ -25,9 +26,7 @@ export class ViewOrderInvoicingBase extends ViewModal<Readonly<{Title: string}>>
             this.setState({orders: r?.data});
         }
 
-        this.setState({open: true});
-        
-        return this.Initialize(this.Close);
+        return await this.ViewModal.current?.Show();
  
     }
 
@@ -69,7 +68,7 @@ export class ViewOrderInvoicingBase extends ViewModal<Readonly<{Title: string}>>
     
             await MessageBox.Show({title: "Info", width: 400, type: "Success", content: "Salvo com sucesso!", buttons: [{ Text: "OK" }]});
     
-            this.Close(r?.data.id);
+            this.ViewModal.current?.Close(r?.data);
 
             */
 

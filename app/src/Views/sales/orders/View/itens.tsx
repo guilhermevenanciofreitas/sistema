@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { AutoComplete, Button, DropDownList, DropDownListItem, GridView, Modal, NumericBox, TextBox, ViewModal } from "../../../../Utils/Controls";
+import { AutoComplete, Button, DropDownList, DropDownListItem, GridView, ViewModal, NumericBox, TextBox } from "../../../../Utils/Controls";
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
@@ -15,14 +15,12 @@ const Columns = [
     { selector: (row: any) => ((parseFloat(row.value) - parseFloat(row.discount)) * parseFloat(row.quantity)).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}), name: 'Total', maxWidth: '110px', right: true },
 ];
 
-class ViewItem extends ViewModal {
+class ViewItem extends React.Component {
 
+    protected ViewModal = React.createRef<ViewModal>();
     protected TxtQuantidade = React.createRef<NumericBox>();
 
-    public Close = (item: any) => this.setState({open: false});
-
     state = {
-        open: false,
         id: "",
         product: null,
         quantity: null,
@@ -34,13 +32,13 @@ class ViewItem extends ViewModal {
     public Show = async (item?: any): Promise<any> =>
     {
         
-        this.setState({open: true, ...item, itemCombinacoes: item.itemCombinacoes});
+        this.setState({...item, itemCombinacoes: item.itemCombinacoes});
 
-        return this.Initialize(this.Close);
+        return await this.ViewModal.current?.Show();
 
     }
 
-    protected BtnConfirmar_Click = async () => this.Close(this.state);
+    protected BtnConfirmar_Click = async () => this.ViewModal.current?.Close(this.state);
 
     protected TxtQuantidade_Change = (produtoCombinacao: any, combinacaoItem: any, quantidade: number, action: string) => {
 
@@ -87,7 +85,7 @@ class ViewItem extends ViewModal {
 
     render(): React.ReactNode {
         return (
-            <Modal Open={this.state.open} Title='Item' Width={550} Close={this.Close}>
+            <ViewModal ref={this.ViewModal} Title='Item' Width={550}>
                 
                 <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                     
@@ -187,7 +185,7 @@ class ViewItem extends ViewModal {
                     </Grid>
                     
                 </Grid>
-            </Modal>
+            </ViewModal>
         );
     }
 

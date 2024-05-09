@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
 import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle, DeleteOutline, DownloadOutlined } from "@mui/icons-material";
-import { ViewUsuario } from "./View/index";
+import { ViewShipping } from "./View/index";
 import BaseUsuarios from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";

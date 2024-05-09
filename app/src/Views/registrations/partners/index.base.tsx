@@ -72,7 +72,7 @@ export default class PartnersBase extends BaseIndex<Readonly<{Title: string, Typ
         try
         {
 
-            const r = await this.ViewPartner.current?.Show(undefined);
+            const r = await this.ViewPartner.current?.New({});
 
             if (r) await this.Pesquisar(this.state.request);
             
@@ -178,7 +178,7 @@ export default class PartnersBase extends BaseIndex<Readonly<{Title: string, Typ
     private OpenPartner = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewPartner.current?.Show(id);
+        const r = await this.ViewPartner.current?.Edit(id);
         if (isHitoryBack) history.back();
         return r;
     }

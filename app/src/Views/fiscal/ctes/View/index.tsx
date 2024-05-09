@@ -1,6 +1,6 @@
 
 import { ViewCteBase } from './index.base';
-import { Button, CheckBox, Form, Modal, Tab, TabItem, TextBox, DropDownList, DropDownListItem, AutoComplete, DatePicker, GridView } from '../../../../Utils/Controls';
+import { Button, CheckBox, Form, ViewModal, Tab, TabItem, TextBox, DropDownList, DropDownListItem, AutoComplete, DatePicker, GridView } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
@@ -12,12 +12,10 @@ import _ from 'lodash';
 
 export class ViewCte extends ViewCteBase {
 
-    public Close = () => this.setState({open: false});
-    
     public render(): ReactNode {
 
         return (
-            <Modal Open={this.state.open} Title={this.props.Title} Width={1150} Close={this.Close}>
+            <ViewModal ref={this.ViewModal} Title={this.props.Title} Width={1150}>
                 <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
 
                     <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
@@ -49,7 +47,7 @@ export class ViewCte extends ViewCteBase {
                     </Grid>
 
                 </Form>
-            </Modal>
+            </ViewModal>
         );
 
     }

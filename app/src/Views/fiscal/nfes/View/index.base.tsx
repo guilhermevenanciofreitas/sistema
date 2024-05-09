@@ -1,9 +1,12 @@
+import React from "react";
 import { Service } from "../../../../Service";
 import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
 
-export class ViewNotaFiscalBase extends ViewModal<Readonly<{Title: string}>> {
+export class ViewNotaFiscalBase extends React.Component<Readonly<{Title: string}>> {
+
+    protected ViewModal = React.createRef<ViewModal>();
 
     state = {
         open: false,
@@ -12,7 +15,18 @@ export class ViewNotaFiscalBase extends ViewModal<Readonly<{Title: string}>> {
         protNFe: null,
     }
 
-    public Show = async (id?: string): Promise<any> =>
+    public New = async (nfe: any): Promise<any> =>
+    {
+
+        this.Limpar();
+
+        this.setState({...nfe});
+
+        return await this.ViewModal.current?.Show();
+
+    }
+
+    public Edit = async (id?: string): Promise<any> =>
     {
  
         this.Limpar();
@@ -24,9 +38,7 @@ export class ViewNotaFiscalBase extends ViewModal<Readonly<{Title: string}>> {
             this.setState(r?.data);
         }
 
-        this.setState({open: true});
-
-        return this.Initialize(this.Close);
+        return await this.ViewModal.current?.Show();
  
     }
 
@@ -60,7 +72,7 @@ export class ViewNotaFiscalBase extends ViewModal<Readonly<{Title: string}>> {
     
             await MessageBox.Show({title: "Info", width: 400, type: "Success", content: "Salvo com sucesso!", buttons: [{ Text: "OK" }]});
     
-            this.Close(r?.data.id);
+            this.ViewModal.current?.Close(r?.data);
 
         }
         catch(err: any)

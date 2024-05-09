@@ -1,6 +1,6 @@
 
 import { ViewLocationBase } from './index.base';
-import { Button, Form, Modal, TextBox } from '../../../../Utils/Controls';
+import { Button, Form, ViewModal, TextBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 
@@ -11,7 +11,7 @@ export class ViewLocation extends ViewLocationBase {
     public render(): ReactNode {
 
         return (
-            <Modal Open={this.state.open} Title={this.props.Title} Width={1000} Close={() => this.Close()}>
+            <ViewModal ref={this.ViewModal} Title={this.props.Title} Width={1000}>
                 <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
 
                     <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' Enable={this.state.name != ''} />
@@ -22,7 +22,7 @@ export class ViewLocation extends ViewLocationBase {
                     <TextBox Label='Descrição' TextTransform='LowerCase' Text={this.state.description} OnChange={(args: EventArgs) => this.setState({description: args.Value})} />
 
                 </Form>
-            </Modal>
+            </ViewModal>
         );
 
     }

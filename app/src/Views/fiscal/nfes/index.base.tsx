@@ -96,7 +96,7 @@ export default class BaseNotasFiscais extends BaseIndex {
         try
         {
 
-            const r = await this.ViewNotaFiscal.current?.Show(undefined);
+            const r = await this.ViewNotaFiscal.current?.New({});
 
             if (r) this.Pesquisar(this.state.Data);
             
@@ -218,7 +218,7 @@ export default class BaseNotasFiscais extends BaseIndex {
     private OpenUsuario = async (id: string) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewNotaFiscal.current?.Show(id);
+        const r = await this.ViewNotaFiscal.current?.Edit(id);
         history.back();
         return r;
     }

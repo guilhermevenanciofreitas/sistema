@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Nfe, Product, StockIn, StockInProduct, StockLocation } from "../../database";
+import { Nfe, Partner, Product, StockIn, StockInProduct, StockLocation } from "../../database";
 import { StockInService } from "../../services/stock/in.service";
 import {Op} from "sequelize";
 import { Error } from "../../errors";
@@ -77,7 +77,8 @@ export default class StockInController {
                 const stock = await StockIn.findOne({
                     attributes: ['id', 'status'],
                     include: [
-                        {model: Nfe, as: 'nfe', attributes: ['id', 'protNFe']},
+                        {model: Nfe, as: 'nfe', attributes: ['id', 'NFe', 'protNFe']},
+                        {model: Partner, as: 'supplier', attributes: ['id', 'surname']},
                         {model: StockInProduct, as: 'products', attributes: ['id', 'stockInId', 'quantity', 'value', 'prod'],
                             include: [
                                 {model: StockLocation, as: 'stockLocation', attributes: ['id', 'name']},

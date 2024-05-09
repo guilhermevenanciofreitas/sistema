@@ -24,7 +24,7 @@ export default class Products extends ProductsBase {
         return (
             <>
 
-                <ViewProduct />
+                <ViewProduct ref={this.ViewProduct} Title='Produto' />
 
                 {/*<ViewImportar ref={this.ViewImportar} />*/}
                 {/*<ViewFiltro ref={this.ViewFiltro} />*/}
