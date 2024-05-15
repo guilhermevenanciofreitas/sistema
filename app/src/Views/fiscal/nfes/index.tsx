@@ -15,7 +15,7 @@ const Columns = [
     { selector: (row: any) => row.serie, sort: 'serie', name: 'Série', sortable: true },
     { selector: (row: any) => row.emitente, sort: 'emitente', name: 'Emitente', sortable: true },
     { selector: (row: any) => row.destinatario, sort: 'destinatario', name: 'Destinatário', sortable: true },
-    { selector: (row: any) => row.valor, sort: 'valor', name: 'Valor', sortable: true },
+    { selector: (row: any) => parseFloat(row.valor).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}), sort: 'valor', name: 'Valor', sortable: true },
 ];
 
 export default class NotasFiscais extends BaseNotasFiscais {

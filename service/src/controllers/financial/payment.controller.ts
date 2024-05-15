@@ -30,7 +30,7 @@ export default class PaymentController {
         
                 const contasPagar = await Payment.findAndCountAll(
                 {
-                    attributes: ['id', 'numeroDocumento', 'value', 'dueDate', 'scheduleDate', 'status'],
+                    attributes: ['id', 'documentNumber', 'value', 'dueDate', 'scheduleDate', 'status'],
                     include: [
                         {model: Company, attributes: ['id', 'cpfCnpj', 'surname']},
                         {model: Partner, attributes: ['id', 'cpfCnpj', 'surname']},
@@ -86,10 +86,11 @@ export default class PaymentController {
                 const transaction = await sequelize.transaction();
 
                 const contaPagar = await Payment.findOne({
-                    attributes: ['id', 'numeroDocumento', 'value', 'dueDate', 'scheduleDate', 'ourNumber', 'data'],
+                    //attributes: ['id', 'numeroDocumento', 'value', 'dueDate', 'scheduleDate', 'ourNumber', 'data'],
+                    attributes: ['id', 'number', 'dueDate', 'scheduleDate', 'documentNumber', 'value', 'beneficiaryNotice', 'status'],
                     include: [
-                        {model: Partner, as: 'receiver', attributes: ["id", "surname"]},
                         {model: Company, as: 'company', attributes: ["id", "surname"]},
+                        {model: Partner, as: 'receiver', attributes: ["id", "surname"]},
                         {model: BankAccount, attributes: ["id", "agency", "agencyDigit", "account", "accountDigit"], include: [{model: Bank, attributes: ["description"]}]},
                         {model: PaymentForm, attributes: ["id", "description", "type"]},
                     ],

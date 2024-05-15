@@ -10,6 +10,7 @@ import { Search } from '../../../../Search';
 import { Suppliers } from './suppliers';
 import { CheckCircleOutline, DeleteForever, TaskAltOutlined } from '@mui/icons-material';
 import { color } from '../../../../Utils/color';
+import _ from 'lodash';
 
 export class ViewProduct extends ViewProductBase {
 
@@ -21,11 +22,16 @@ export class ViewProduct extends ViewProductBase {
                 
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
 
-                        <Grid md={8}>
+                        <Grid md={6}>
                             <TextBox Label='Nome' TextTransform='UpperCase' Text={this.state.name} OnChange={(args: EventArgs) => this.setState({name: args.Value})} />
                         </Grid>
-                        <Grid md={4}>
-                            <AutoComplete Label='Categoria' Pesquisa={async (Text: string) => await Search.ProductCategory(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.category} OnChange={(category: any) => this.setState({category})}>
+                        <Grid md={3}>
+                            <AutoComplete Label='Categoria' Action={{Type: 'ProductCategory', New: {Values: {}}, Edit: {Id: _.get(this.state.category, 'id')}}} Pesquisa={async (Text: string) => await Search.ProductCategory(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.category} OnChange={(category: any) => this.setState({category})}>
+                                <ProductCategoryTemplate />
+                            </AutoComplete>
+                        </Grid>
+                        <Grid md={3}>
+                            <AutoComplete Label='Sub-categoria' Action={{Type: 'ProductCategory', New: {Values: {}}, Edit: {Id: _.get(this.state.category, 'id')}}} Pesquisa={async (Text: string) => await Search.ProductCategory(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.category} OnChange={(category: any) => this.setState({category})}>
                                 <ProductCategoryTemplate />
                             </AutoComplete>
                         </Grid>

@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, CardStatus, Container, Left, ListView, Right } from "../../../Utils/Controls";
-import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
+import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle, AddCircleOutline } from "@mui/icons-material";
 import { ViewPayment } from "./View/index";
 import BaseContasPagar from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
@@ -9,6 +9,7 @@ import { Title } from "../../../Layout/JoyLayout/Ttitle";
 //import { ViewImportar } from "./importar";
 //import { ViewFiltro } from "./filtro";
 import _ from "lodash";
+import { color } from "../../../Utils/color";
 
 enum colors {
     pending = '#a0a0a0',
@@ -55,10 +56,10 @@ export default class Payments extends BaseContasPagar {
     private Columns = [
         { selector: (row: any) => <CompanyRecipient row={row} />, sort: 'id', name: 'Empresa / Benificiário', sortable: true },
         { selector: (row: any) => row.paymentForm?.description, sort: 'description', name: 'Tipo', sortable: true, maxWidth: "300px" },
-        { selector: (row: any) => row.numeroDocumento, sort: 'numeroDocumento', name: 'Nº Documento', sortable: true, maxWidth:"150px" },
+        { selector: (row: any) => row.documentNumber, sort: 'documentNumber', name: 'Nº Documento', sortable: true, maxWidth:"150px" },
         { selector: (row: any) => row.dueDate, sort: 'emissao', name: 'Vencimento', sortable: true, maxWidth: "160px" },
-        { selector: (row: any) => row.dueDate, sort: 'dueDate', name: 'Agendamento', sortable: true, maxWidth: "160px" },
-        { selector: (row: any) => parseFloat(row.valor).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}), sort: 'valor', name: 'Valor', sortable: true, right: true, maxWidth:"120px" },
+        { selector: (row: any) => row.scheduleDate, sort: 'scheduleDate', name: 'Agendamento', sortable: true, maxWidth: "160px" },
+        { selector: (row: any) => row.value ? parseFloat(row.value).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}) : '', sort: 'value', name: 'Valor', sortable: true, right: true, maxWidth:"120px" },
         { selector: (row: any) => <BankAccount row={row} />, sort: 'recebedor', name: 'Agência / Conta', sortable: true, maxWidth: "250px" },
     ];
 
@@ -81,7 +82,7 @@ export default class Payments extends BaseContasPagar {
                     <Container>
                         <Left>
                             {_.size(this.state.selecteds) == 0 && (
-                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnNovo_Click} />
+                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor={color.success} StartIcon={<AddCircleOutline />} OnClick={this.BtnNovo_Click} />
                             )}
                             {_.size(this.state.selecteds) >= 1 && (
                                 <>

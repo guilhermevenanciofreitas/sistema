@@ -39,7 +39,7 @@ export default class LocationsBase extends BaseIndex {
 
             const { id } = queryString.parse(window.location.search);
             if (id) {
-                await this.OpenUser(id.toString());
+                await this.OpenStockLocation(id.toString());
             }
 
             await this.Pesquisar(this.state.request);
@@ -56,7 +56,7 @@ export default class LocationsBase extends BaseIndex {
         try
         {
 
-            const r = await this.OpenUser(id);
+            const r = await this.OpenStockLocation(id);
 
             if (r) await this.Pesquisar(this.state.request);
        
@@ -72,7 +72,7 @@ export default class LocationsBase extends BaseIndex {
         try
         {
 
-            const r = await this.ViewLocation.current?.Show(undefined);
+            const r = await this.ViewLocation.current?.New({});
 
             if (r) await this.Pesquisar(this.state.request);
             
@@ -191,10 +191,10 @@ export default class LocationsBase extends BaseIndex {
         }
     }
 
-    private OpenUser = async (id: string) =>
+    private OpenStockLocation = async (id: string) =>
     {
         history.pushState(null, '', `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewLocation.current?.Show(id);
+        const r = await this.ViewLocation.current?.Edit(id);
         history.back();
         return r;
     }

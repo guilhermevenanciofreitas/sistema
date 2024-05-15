@@ -7,6 +7,7 @@ class Parameters {
     Text?: string;
     Mask?: any;
     TextTransform?: "Normal" | "UpperCase" | "LowerCase";
+    EndDecorator?: React.ReactNode;
     OnChange?: Function;
 }
 

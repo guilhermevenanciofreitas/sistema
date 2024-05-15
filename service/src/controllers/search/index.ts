@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { BankAccount, Company, PaymentForm, City, Partner, SaleOrderShippingType, Product, ProductCategory, ProductCombination, ProductCombinationGroup, ProductCombinationItem, CalledOccurrence, FreightCalculationType, MesoRegion, State, ReceivieForm, Vehicle, ProductPrice, StockLocation, Nfe } from "../../database";
+import { BankAccount, Company, PaymentForm, City, Partner, SaleOrderShippingType, Product, ProductCategory, ProductCombination, ProductCombinationItem, CalledOccurrence, FreightCalculationType, MesoRegion, State, ReceivieForm, Vehicle, ProductPrice, StockLocation, Nfe, ProductSupplier, MeasurementUnit, EconomicActivity, LegalNature, Combination, StockIn } from "../../database";
 import { Op } from "sequelize";
 import { Bank } from "../../database/models/bank.model";
 
@@ -90,7 +90,7 @@ export default class SearchController {
         });
     }
 
-    async costumer(req: Request, res: Response) {
+    async customer(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try {
@@ -99,7 +99,7 @@ export default class SearchController {
 
                 let where: any = {};
    
-                where = {"isCostumer": true};
+                where = {"isCustomer": true};
 
                 if (req.body?.Search) {
                     where = {"surname": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
@@ -224,10 +224,10 @@ export default class SearchController {
                 }
         
                 const products = await Product.findAll({attributes: ['id', 'name', 'value'],
-                    include: [{model: ProductCombination, attributes: ['id', 'isObrigatorio', 'minimo', 'maximo', 'ordem'],
-                        include: [{model: ProductCombinationGroup, attributes: ['id', 'description'],
-                            include: [{model: ProductCombinationItem, attributes: ['id', 'name']}]    
-                        }]
+                    include: [{model: ProductCombination, attributes: ['id', 'isRequired', 'min', 'max', 'order'],
+                        //include: [{model: ProductCombinationGroup, attributes: ['id', 'description'],
+                        //    include: [{model: ProductCombinationItem, attributes: ['id', 'name']}]    
+                        //}]
                     }],
                     where,
                     order: [['name', 'asc']],
@@ -264,7 +264,11 @@ export default class SearchController {
                     where = {"stateId": {[Op.eq]: req.body?.stateId}};
                 }
         
-                const cities = await City.findAll({attributes: ['id', 'name'], where, order: [['name', 'asc']], transaction});
+                const cities = await City.findAll({
+                    attributes: ['id', 'name'],
+                    where, order: [['name', 'asc']],
+                    transaction
+                });
         
                 sequelize.close();
 
@@ -482,7 +486,7 @@ export default class SearchController {
         });
     }
 
-    async productCombinationGroup(req: Request, res: Response) {
+    async combination(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
             try {
@@ -492,14 +496,14 @@ export default class SearchController {
                 let where: any = {};
 
                 if (req.body?.Search) {
-                    where = {'description': {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                    where = {'name': {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
                 }
 
-                const productCombinationGroup = await ProductCombinationGroup.findAll({attributes: ['id', 'description'], where, order: [['description', 'asc']], transaction});
+                const combinations = await Combination.findAll({attributes: ['id', 'name'], where, order: [['name', 'asc']], transaction});
         
                 sequelize.close();
 
-                res.status(200).json(productCombinationGroup);
+                res.status(200).json(combinations);
 
             }
             catch (err) {
@@ -695,15 +699,165 @@ export default class SearchController {
                         'NFe',
                         'protNFe'
                     ], 
-                    include: [],
+                    include: [
+                        {model: StockIn, as: 'stockIns', attributes: ['id']}
+                    ],
                     where,
                     //order: [["name", "asc"]],
                     transaction
                 });
+
+                var response: any[] = [];
+
+                for (const nfe of nfes) {
+
+                    let emit = null;
+
+                    if (nfe?.NFe?.infNFe?.emit?.CNPJ) {
+                        emit = await Partner.findOne({
+                            attributes: ['id', 'surname'],
+                            where: {cpfCnpj: nfe?.NFe?.infNFe?.emit?.CNPJ}, 
+                            include: [{model: ProductSupplier, as: 'products', attributes: ['id', 'code', 'contain'],
+                                include: [
+                                    {model: Product, as: 'product', attributes: ['id', 'name']},
+                                    {model: MeasurementUnit, as: 'measurementUnit', attributes: ['id', 'name']}
+                                ]
+                            }],
+                            transaction
+                        });
+                    }
+
+                    let enderEmit = null;
+
+                    if (nfe?.NFe?.infNFe?.emit?.enderEmit?.cMun) {
+                        const city = await City.findOne({
+                            attributes: ['id', 'name'],
+                            where: {ibge: nfe?.NFe?.infNFe?.emit?.enderEmit?.cMun}, 
+                            include: [
+                                {model: State, as: 'state', attributes: ['id', 'description']}
+                            ],
+                            transaction
+                        });
+
+                        enderEmit = {
+                            city: {
+                                id: city?.id,
+                                name: city?.name
+                            },
+                            state: {
+                                id: city?.state?.id,
+                                description: city?.state?.description,
+                            }
+                        }
+
+                    }
+
+                    response.push({...nfe.dataValues, emit, enderEmit});
+
+                }
         
                 sequelize.close();
 
-                res.status(200).json(nfes);
+                res.status(200).json(response);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async economicActivity(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+
+                if (req.body?.Search) {
+                    where = {[Op.or]: [
+                        {"cnae": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}},
+                        {"name": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}}
+                    ]};
+                }
+
+                const economicActivitys = await EconomicActivity.findAll({attributes: ['id', 'cnae', 'name'], 
+                where,
+                order: [["name", "asc"]],
+                transaction});
+        
+                sequelize.close();
+
+                res.status(200).json(economicActivitys);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async legalNature(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+
+                if (req.body?.Search) {
+                    where = {[Op.or]: [
+                        {"code": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}},
+                        {"name": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}}
+                    ]};
+                }
+
+                const legalNatures = await LegalNature.findAll({attributes: ['id', 'code', 'name'], 
+                where,
+                order: [["name", "asc"]],
+                transaction});
+        
+                sequelize.close();
+
+                res.status(200).json(legalNatures);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async measurementUnit(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+
+                if (req.body?.Search) {
+                    where = {"name": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+
+                const measurementUnits = await MeasurementUnit.findAll({attributes: ['id', 'name'], 
+                where,
+                order: [["name", "asc"]],
+                transaction});
+        
+                sequelize.close();
+
+                res.status(200).json(measurementUnits);
 
             }
             catch (err) {

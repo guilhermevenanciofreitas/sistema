@@ -1,7 +1,8 @@
 import { Transaction } from "sequelize";
-import { Product, StockIn, StockInProduct } from "../../database";
+import { MeasurementUnit, Partner, Product, ProductSupplier, StockIn, StockInProduct } from "../../database";
 import crypto from "crypto";
 import { Op } from "sequelize";
+import _ from "lodash";
 
 export class StockInService {
 
@@ -19,23 +20,27 @@ export class StockInService {
         
         await StockIn.create({...stockIn}, {transaction});
 
-        for (let product of stockIn?.products || []) {
-            product.id = crypto.randomUUID();
-            product.stockInId = stockIn.id;
-            product.balance = product.quantity;
-            await StockInProduct.create({...product}, {transaction});
+        for (let stockInProduct of stockIn?.products || []) {
+            stockInProduct.id = crypto.randomUUID();
+            stockInProduct.stockInId = stockIn.id;
+            stockInProduct.balance = (stockInProduct?.quantity || 0) * (stockInProduct?.contain || 0);
+            await StockInProduct.create({...stockInProduct}, {transaction});
         }
 
     }
 
     public static Update = async (stockIn: StockIn, transaction?: Transaction) => {
 
-        for (let product of stockIn?.products || []) {
-            if (!product.id) {
-                product.id = crypto.randomUUID();
-                await StockInProduct.create({...product}, {transaction});
+        for (let stockInProduct of stockIn?.products || []) {
+
+            stockInProduct.stockInId = stockIn.id;
+            stockInProduct.balance = (stockInProduct?.quantity || 0) * (stockInProduct?.contain || 0);
+
+            if (!stockInProduct.id) {
+                stockInProduct.id = crypto.randomUUID();
+                await StockInProduct.create({...stockInProduct}, {transaction});
             } else {
-                await StockInProduct.update(product, {where: {id: product.id}, transaction});
+                await StockInProduct.update(stockInProduct, {where: {id: stockInProduct.id}, transaction});
             }
             await StockInProduct.destroy({where: {stockInId: stockIn.id, id: {[Op.notIn]: stockIn?.products?.filter((c: any) => c.id != '').map(c => c.id)}}, transaction})
         }
@@ -49,18 +54,39 @@ export class StockInService {
         const stockIn = await StockIn.findOne({
             attributes: ['id'],
             where: {id},
-            include: [{model: StockInProduct, as: 'products', attributes: ['id', 'quantity'], 
-                include: [{model: Product, as: 'product', attributes: ['id', 'stockBalance']}]
-            }],
+            include: [
+                {model: StockInProduct, as: 'products', attributes: ['id', 'quantity', 'value', 'contain', 'prod'], 
+                    include: [
+                        {model: Product, as: 'product', attributes: ['id', 'stockBalance'], 
+                            include: [{model: ProductSupplier, as: 'suppliers', attributes: ['id', 'supplierId']}]
+                        },
+                        {model: MeasurementUnit, as: 'measurementUnit', attributes: ['id', 'surname']}
+                    ]
+                },
+                {model: Partner, as: 'supplier', attributes: ['id', 'surname']},
+            ],
             transaction
         });
 
 
-        for (const product of stockIn?.products || []) {
+        for (const stockInProduct of stockIn?.products || []) {
 
-            const stockBalance = (parseFloat(product.product?.stockBalance as any) || 0) + (parseFloat(product?.quantity as any) || 0);
+            const stockBalance = (parseFloat(stockInProduct?.product?.stockBalance as any) || 0) + ((parseFloat(stockInProduct?.quantity as any) || 0) * (parseFloat(stockInProduct?.contain as any) || 0));
 
-            await Product.update({stockBalance}, {where: {id: product.product?.id}, transaction});
+            await Product.update({stockBalance}, {where: {id: stockInProduct?.product?.id}, transaction});
+
+            const productSuppliers = stockInProduct.product?.suppliers?.filter((c) => c.supplierId == stockIn?.supplier?.id);
+
+            if (_.size(productSuppliers) == 0) {
+                console.log(stockInProduct);
+                await ProductSupplier.create({id: crypto.randomUUID(), code: stockInProduct?.prod?.cProd, productId: stockInProduct?.product?.id, supplierId: stockIn?.supplier?.id, value: (stockInProduct?.value || 0) / (stockInProduct?.contain || 0), measurementUnitId: stockInProduct?.measurementUnit?.id, contain: stockInProduct?.contain}, {transaction});
+            }
+
+            if (productSuppliers && _.size(productSuppliers) == 1) {
+                console.log(stockInProduct);
+                await ProductSupplier.update({productId: stockInProduct?.product?.id, supplierId: stockIn?.supplier?.id, value: (stockInProduct?.value || 0) / (stockInProduct?.contain || 0), measurementUnitId: stockInProduct?.measurementUnit?.id, contain: stockInProduct?.contain}, {where: {id: productSuppliers[0].id}, transaction});
+            }
+            
         }
 
         await StockIn.update({status: 'checkIn'}, {where: {id: stockIn?.id}, transaction});

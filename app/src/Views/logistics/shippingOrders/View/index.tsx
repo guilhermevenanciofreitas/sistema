@@ -1,6 +1,6 @@
 
 import { ViewShippingOrderBase } from './index.base';
-import { AutoComplete, Button, DatePicker, DateTimePicker, Form, ViewModal, NumericBox, Tab, TabItem, TextBox } from '../../../../Utils/Controls';
+import { AutoComplete, Button, DatePicker, DateTimePicker, Form, ViewModal, NumericBox, Tab, TabItem, TextBox, Content, Actions } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Alert, FormLabel, Grid } from '@mui/joy';
@@ -11,6 +11,8 @@ import { VehicleTemplate } from '../../../../Search/Templates/Vehicle';
 import { Vehicles } from './vehicles';
 import { Nfes } from './nfes';
 import _ from 'lodash';
+import { color } from '../../../../Utils/color';
+import { TaskAltOutlined } from '@mui/icons-material';
 
 export class ViewShippingOrder extends ViewShippingOrderBase {
 
@@ -20,10 +22,7 @@ export class ViewShippingOrder extends ViewShippingOrderBase {
 
         return (
             <ViewModal ref={this.ViewModal} Title={this.props.Title} Width={900}>
-                <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
-
-                    <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
-                    <Button Text='Limpar' Type='Reset' Color='white' BackgroundColor='gray' />
+                <Content>
 
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                         <Grid md={2}>
@@ -60,12 +59,12 @@ export class ViewShippingOrder extends ViewShippingOrderBase {
                             </AutoComplete>
                         </Grid>
                         <Grid md={5}>
-                            <AutoComplete Label='Motorista' Pesquisa={async(Text: string) => await Search.Employee(Text)} Text={(Item: any) => `${Item.surname}` } Value={this.state.driver} OnChange={(driver: any) => this.setState({driver})}>
+                            <AutoComplete Label='Motorista' Action={{Type: 'Employee', New: {Values: {}}, Edit: {Id: _.get(this.state.driver, 'id')}}} Pesquisa={async(Text: string) => await Search.Employee(Text)} Text={(Item: any) => `${Item.surname}` } Value={this.state.driver} OnChange={(driver: any) => this.setState({driver})}>
                                 <PartnerTemplate />
                             </AutoComplete>
                         </Grid>
                         <Grid md={3}>
-                            <AutoComplete Label='Veículo' Pesquisa={async(Text: string) => await Search.Vehicle(Text)} Text={(Item: any) => `${Item.name} - ${Item.plate}` } Value={this.state.vehicle} OnChange={(vehicle: any) => this.setState({vehicle})}>
+                            <AutoComplete Label='Veículo' Action={{Type: 'Vehicle', New: {Values: {}}, Edit: {Id: _.get(this.state.vehicle, 'id')}}} Pesquisa={async(Text: string) => await Search.Vehicle(Text)} Text={(Item: any) => `${Item.name} - ${Item.plate}` } Value={this.state.vehicle} OnChange={(vehicle: any) => this.setState({vehicle})}>
                                 <VehicleTemplate />
                             </AutoComplete>
                         </Grid>
@@ -88,12 +87,15 @@ export class ViewShippingOrder extends ViewShippingOrderBase {
                                     <Nfes nfes={this.state.nfes} OnChange={(nfes: any[]) => this.setState({nfes})} />
                                 </TabItem>
                             </Tab>
-                           
+                        
                         </Grid>
 
                     </Grid>
-                  
-                </Form>
+
+                </Content>
+                <Actions>
+                    <Button Text='Salvar' StartIcon={<TaskAltOutlined />} Color='white' BackgroundColor={color.success} OnClick={this.BtnSalvar_Click} />
+                </Actions>
             </ViewModal>
         );
 

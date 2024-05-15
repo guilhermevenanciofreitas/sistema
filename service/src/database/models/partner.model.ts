@@ -1,6 +1,8 @@
-import { Model, Table, Column, DataType, BelongsTo, HasMany, ForeignKey } from "sequelize-typescript";
+import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-typescript";
 import { PartnerContact } from "./partnerContact.model";
-import { PartnerAddress } from "./partnerAddress.model";
+//import { PartnerAddress } from "./partnerAddress.model";
+import { ProductSupplier } from "./productSupplier.model";
+import { City } from "./city.model";
 
 @Table({tableName: "partner"})
 export class Partner extends Model {
@@ -8,8 +10,8 @@ export class Partner extends Model {
   @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
   id?: string;
 
-  @Column({type: DataType.BOOLEAN, field: 'isCostumer'})
-  isCostumer?: boolean;
+  @Column({type: DataType.BOOLEAN, field: 'isCustomer'})
+  isCustomer?: boolean;
 
   @Column({type: DataType.BOOLEAN, field: 'isSupplier'})
   isSupplier?: boolean;
@@ -35,8 +37,8 @@ export class Partner extends Model {
   @Column({type: DataType.SMALLINT, field: 'sex'})
   sex?: number;
 
-  @Column({type: DataType.SMALLINT, field: 'estadoCivil'})
-  estadoCivil?: number;
+  @Column({type: DataType.SMALLINT, field: 'maritalStatus'})
+  maritalStatus?: number;
 
   @Column({type: DataType.STRING(20), field: 'rg'})
   rg?: string;
@@ -47,29 +49,40 @@ export class Partner extends Model {
   @Column({type: DataType.STRING(30), field: 'im'})
   im?: string;
 
-  @Column({type: DataType.STRING(80), field: 'profissao'})
-  profissao?: string;
+  @Column({type: DataType.SMALLINT, field: 'scholarity'})
+  scholarity?: number;
 
-  @Column({type: DataType.INTEGER, field: 'tabelaPrecoId'})
-  tabelaPrecoId?: number;
+  @Column({type: DataType.STRING(80), field: 'profession'})
+  profession?: string;
 
-  @Column({type: DataType.SMALLINT, field: 'escolaridade'})
-  escolaridade?: number;
+  @Column({type: DataType.STRING(80), field: 'naturalness'})
+  naturalness?: number;
 
-  @Column({type: DataType.BOOLEAN, field: 'isAtivo'})
-  isAtivo?: boolean;
+  @Column({type: DataType.STRING(80), field: 'nationality'})
+  nationality?: number;
+
+  @Column({type: DataType.JSONB, field: 'address'})
+  address?: any;
+
+  @Column({type: DataType.BOOLEAN, field: 'isActive'})
+  isActive?: boolean;
 
   @Column({type: DataType.BOOLEAN, field: 'isBlockSale'})
   isBlockSale?: boolean;
 
-  @Column({type: DataType.BOOLEAN, field: 'isBloquearCompra'})
-  isBloquearCompra?: boolean;
+  @Column({type: DataType.BOOLEAN, field: 'isBlockBuy'})
+  isBlockBuy?: boolean;
   
+  //@BelongsTo(() => City, {as: 'city', foreignKey: "(address->>'cityId')::UUID"})
+  //city?: City;
 
   @HasMany(() => PartnerContact, {as: 'contacts', foreignKey: 'partnerId'})
   contacts?: PartnerContact[];
 
-  @HasMany(() => PartnerAddress, {as: 'address', foreignKey: 'partnerId'})
-  address?: PartnerAddress[];
+  //@HasMany(() => PartnerAddress, {as: 'address', foreignKey: 'partnerId'})
+  //address?: PartnerAddress[];
+
+  @HasMany(() => ProductSupplier, {as: 'products', foreignKey: 'supplierId'})
+  products?: ProductSupplier[];
 
 }

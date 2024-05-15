@@ -1,11 +1,11 @@
 
 import { ViewOrderBase } from './index.base';
-import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, MessageBox, ViewModal, Tab, TabItem, TextBox } from '../../../../Utils/Controls';
+import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, MessageBox, ViewModal, Tab, TabItem, TextBox, Content, Actions } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
-import { Alert, FormLabel, Grid } from '@mui/joy';
+import { Alert, FormLabel, Grid, IconButton } from '@mui/joy';
 import { Search } from '../../../../Search';
-import { CostumerTemplate } from '../../../../Search/Templates/Costumer';
+import { CustomerTemplate } from '../../../../Search/Templates/Customer';
 import { Itens } from './itens';
 import { CityTemplate } from '../../../../Search/Templates/City';
 import { Estados } from '../../../../Utils/Estados';
@@ -14,6 +14,9 @@ import { SaleOrderShippingTypeTemplate } from '../../../../Search/Templates/Sale
 import { EmployeeTemplate } from '../../../../Search/Templates/Employee';
 import _ from 'lodash';
 import { CompanyTemplate } from '../../../../Search/Templates/Company';
+import { StateTemplate } from '../../../../Search/Templates/State';
+import { TaskAltOutlined, TravelExplore } from '@mui/icons-material';
+import { color } from '../../../../Utils/color';
 
 export class ViewOrder extends ViewOrderBase {
 
@@ -21,24 +24,21 @@ export class ViewOrder extends ViewOrderBase {
 
         return (
             <ViewModal ref={this.ViewModal} Title={this.props.Title} Width={1000}>
-                <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
-
-                    <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
-                    <Button Text='Limpar' Type='Reset' Color='white' BackgroundColor='gray' />
+                <Content>
 
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                         <Grid md={2}>
                             <TextBox Label='Número' TextTransform='UpperCase' Text={this.state.number} OnChange={(args: EventArgs) => this.setState({number: args.Value})} />
                         </Grid>
                         <Grid md={4}>
-                            <AutoComplete Label='Cliente' Pesquisa={async(Text: string) => await Search.Costumer(Text)} Text={(Item: any) => `${Item.surname}` } Value={this.state.costumer} OnChange={async (costumer: any) => {
-                                if (costumer?.isBlockSale) {
+                            <AutoComplete Label='Cliente' Action={{Type: 'Customer', New: {Values: {}}, Edit: {Id: _.get(this.state.customer, 'id')}}} Pesquisa={async(Text: string) => await Search.Customer(Text)} Text={(Item: any) => `${Item.surname}` } Value={this.state.customer} OnChange={async (customer: any) => {
+                                if (customer?.isBlockSale) {
                                     await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Cliente bloqueado para venda!", buttons: [{ Text: "OK" }]});
                                     return;
                                 }
-                                this.setState({costumer})
+                                this.setState({customer})
                             }}>
-                                <CostumerTemplate />
+                                <CustomerTemplate />
                             </AutoComplete>
                         </Grid>
                         <Grid md={3}>
@@ -65,7 +65,7 @@ export class ViewOrder extends ViewOrderBase {
                         </Grid>
 
                         <Grid md={4}>
-                            <AutoComplete Label='Vendedor' Pesquisa={async(Text: string) => await Search.Employee(Text)} Text={(Item: any) => `${Item.surname}` } Value={this.state.seller} OnChange={(seller: any) => this.setState({seller})}>
+                            <AutoComplete Label='Vendedor' Action={{Type: 'Employee', New: {Values: {}}, Edit: {Id: _.get(this.state.seller, 'id')}}} Pesquisa={async(Text: string) => await Search.Employee(Text)} Text={(Item: any) => `${Item.surname}` } Value={this.state.seller} OnChange={(seller: any) => this.setState({seller})}>
                                 <EmployeeTemplate />
                             </AutoComplete>
                         </Grid>
@@ -87,31 +87,46 @@ export class ViewOrder extends ViewOrderBase {
                                 <>
                                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
                                         <Grid md={2}>
-                                            <TextBox Label='CEP' TextTransform='UpperCase' Text={this.state.shippingAddress?.cep} OnChange={(args: EventArgs) => this.setState({shippingAddress: {...this.state.shippingAddress, cep: args.Value}})} />
+                                            <TextBox Label='CEP' TextTransform='UpperCase' Mask='##.###-###' Text={_.get(this.state.shippingAddress, 'cep')} EndDecorator={<IconButton onClick={this.BtnConsultarCep_Click} ><TravelExplore /></IconButton>} OnChange={(args: EventArgs) => this.setState((state) => _.set(state, 'shippingAddress.cep', args.Value))} />
                                         </Grid>
                                         <Grid md={5}>
-                                            <TextBox Label='Logradouro' TextTransform='UpperCase' Text={this.state.shippingAddress?.logradouro} OnChange={(args: EventArgs) => this.setState({shippingAddress: {...this.state.shippingAddress, logradouro: args.Value}})} />
+                                            <TextBox Label='Logradouro' TextTransform='UpperCase' Text={_.get(this.state.shippingAddress, 'logradouro')} OnChange={(args: EventArgs) => this.setState((state) => _.set(state, 'shippingAddress.logradouro', args.Value))} />
                                         </Grid>
                                         <Grid md={2}>
-                                            <TextBox Label='Número' TextTransform='UpperCase' Text={this.state.shippingAddress?.numero} OnChange={(args: EventArgs) => this.setState({shippingAddress: {...this.state.shippingAddress, numero: args.Value}})} />
+                                            <TextBox Label='Número' TextTransform='UpperCase' Text={_.get(this.state.shippingAddress, 'number')} OnChange={(args: EventArgs) => this.setState((state) => _.set(state, 'shippingAddress.number', args.Value))} />
                                         </Grid>
                                         <Grid md={3}>
-                                            <TextBox Label='Complemento' TextTransform='UpperCase' Text={this.state.shippingAddress?.complemento} OnChange={(args: EventArgs) => this.setState({shippingAddress: {...this.state.shippingAddress, complemento: args.Value}})} />
+                                            <TextBox Label='Complemento' TextTransform='UpperCase' Text={_.get(this.state.shippingAddress, 'complement')} OnChange={(args: EventArgs) => this.setState((state) => _.set(state, 'shippingAddress.complement', args.Value))} />
                                         </Grid>
 
                                         <Grid md={5}>
-                                            <TextBox Label='Bairro' TextTransform='UpperCase' Text={this.state.shippingAddress?.bairro} OnChange={(args: EventArgs) => this.setState({shippingAddress: {...this.state.shippingAddress, bairro: args.Value}})} />
+                                            <TextBox Label='Bairro' TextTransform='UpperCase' Text={_.get(this.state.shippingAddress, 'neighborhood')} OnChange={(args: EventArgs) => this.setState((state) => _.set(state, 'shippingAddress.neighborhood', args.Value))} />
                                         </Grid>
                                         <Grid md={2}>
-                                            <DropDownList Label='Estado' SelectedValue={this.state.shippingAddress?.estadoId} OnChange={(args: EventArgs) => this.setState({shippingAddress: {...this.state.shippingAddress, estadoId: args.Value}})}>
-                                                <DropDownListItem Label='[Selecione]' Value={null} />
-                                                {
-                                                    Estados.map((args) => <DropDownListItem Label={args.nome} Value={args.id} />)
-                                                }
-                                            </DropDownList>
+                                            <AutoComplete Label='Estado' Pesquisa={async(Text: string) => await Search.State(Text)} Text={(Item: any) => `${Item.description}` } Value={_.get(this.state, 'shippingAddress.state')} OnChange={(state1: any) => {
+                                                this.setState((state) => {
+                                                    if (state1 == null) {
+                                                        _.set(state, 'shippingAddress.city', null)
+                                                    }
+                                                    _.set(state, 'shippingAddress.state', state1);
+                                                    return state;
+                                                })
+                                            }} >
+                                                <StateTemplate />
+                                            </AutoComplete>
                                         </Grid>
                                         <Grid md={5}>
-                                            <AutoComplete Label='Municipio' Pesquisa={async(Text: string) => await Search.City(Text, this.state.shippingAddress?.estadoId)} Text={(Item: any) => `${Item.nome}` } Value={this.state.shippingAddress?.municipio} OnChange={(args: EventArgs) => this.setState({shippingAddress: {...this.state.shippingAddress, municipio: args}})}>
+                                            <AutoComplete Label='Municipio' Pesquisa={async(Text: string) => {
+                                                    if (!_.get(this.state, 'shippingAddress.state.id')) {
+                                                        await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: 'Informe o estado!', buttons: [{ Text: "OK" }]});
+                                                        return [];
+                                                    }
+                                                    return await Search.City(Text, _.toString(_.get(this.state, 'shippingAddress.state.id')))
+                                                }}
+                                                Text={(Item: any) => `${Item.name}` }
+                                                Value={_.get(this.state, 'shippingAddress.city')}
+                                                OnChange={(city: any) => this.setState((state) => _.set(state, 'shippingAddress.city', city))} 
+                                            >
                                                 <CityTemplate />
                                             </AutoComplete>
                                         </Grid>
@@ -130,7 +145,10 @@ export class ViewOrder extends ViewOrderBase {
                         
                     </Grid>
 
-                </Form>
+                </Content>
+                <Actions>
+                    <Button Text='Salvar' StartIcon={<TaskAltOutlined />} Color='white' BackgroundColor={color.success} OnClick={this.BtnSalvar_Click} />
+                </Actions>
             </ViewModal>
         );
 

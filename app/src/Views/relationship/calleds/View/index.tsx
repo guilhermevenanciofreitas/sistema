@@ -1,18 +1,21 @@
 
 import { ViewCalledBase } from './index.base';
-import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, ViewModal, TextBox } from '../../../../Utils/Controls';
+import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, ViewModal, TextBox, Actions, Content } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Alert, FormLabel, Grid } from '@mui/joy';
 import { Search } from '../../../../Search';
 import { BankTemplate } from '../../../../Search/Templates/Bank';
 import { CompanyTemplate } from '../../../../Search/Templates/Company';
-import { CostumerTemplate } from '../../../../Search/Templates/Costumer';
+import { CustomerTemplate } from '../../../../Search/Templates/Customer';
 import { EmployeeTemplate } from '../../../../Search/Templates/Employee';
 import { PartnerTemplate } from '../../../../Search/Templates/Partner';
 import { CalledOccurrenceTemplate } from '../../../../Search/Templates/CalledOccurrence';
 import { colors } from '..';
 import dayjs from 'dayjs';
+import _ from 'lodash';
+import { TaskAltOutlined } from '@mui/icons-material';
+import { color } from '../../../../Utils/color';
 
 export class ViewCalled extends ViewCalledBase {
 
@@ -20,10 +23,8 @@ export class ViewCalled extends ViewCalledBase {
 
         return (
             <ViewModal ref={this.ViewModal} Title={this.props.Title} Width={1000}>
-                <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
+                <Content>
 
-                    <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
-          
                     <Grid container spacing={1} sx={{ flexGrow: 1 }}>
 
                         <Grid md={2}>
@@ -52,7 +53,7 @@ export class ViewCalled extends ViewCalledBase {
                         </Grid>
 
                         <Grid md={4}>
-                            <AutoComplete Label='Responsável' Pesquisa={async(Text: string) => await Search.Employee(Text)} Text={(Item: any) => `${Item.nome}` } Value={this.state.responsible} OnChange={(responsible: any) => this.setState({responsible})}>
+                            <AutoComplete Label='Responsável' Action={{Type: 'Employee', New: {Values: {}}, Edit: {Id: _.get(this.state.responsible, 'id')}}} Pesquisa={async(Text: string) => await Search.Employee(Text)} Text={(Item: any) => `${Item.surname}` } Value={this.state.responsible} OnChange={(responsible: any) => this.setState({responsible})}>
                                 <EmployeeTemplate />
                             </AutoComplete>
                         </Grid>
@@ -85,10 +86,12 @@ export class ViewCalled extends ViewCalledBase {
                             <TextBox Label='Assunto' TextTransform='Normal' Text={this.state.subject} OnChange={(args: EventArgs) => this.setState({subject: args.Value})} />
                         </Grid>
                         
-                
                     </Grid>
 
-                </Form>
+                </Content>
+                <Actions>
+                    <Button Text='Salvar' StartIcon={<TaskAltOutlined />} Color='white' BackgroundColor={color.success} OnClick={this.BtnSalvar_Click} />
+                </Actions>
             </ViewModal>
         );
 

@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Nfe, Partner, Product, StockIn, StockInProduct, StockLocation } from "../../database";
+import { City, MeasurementUnit, Nfe, Partner, Product, State, StockIn, StockInProduct, StockLocation } from "../../database";
 import { StockInService } from "../../services/stock/in.service";
 import {Op} from "sequelize";
 import { Error } from "../../errors";
+import _ from "lodash";
 
 export default class StockInController {
 
@@ -79,17 +80,45 @@ export default class StockInController {
                     include: [
                         {model: Nfe, as: 'nfe', attributes: ['id', 'NFe', 'protNFe']},
                         {model: Partner, as: 'supplier', attributes: ['id', 'surname']},
-                        {model: StockInProduct, as: 'products', attributes: ['id', 'stockInId', 'quantity', 'value', 'prod'],
+                        {model: StockInProduct, as: 'products', attributes: ['id', 'stockInId', 'quantity', 'value', 'contain', 'prod'],
                             include: [
                                 {model: StockLocation, as: 'stockLocation', attributes: ['id', 'name']},
-                                {model: Product, as: 'product', attributes: ['id', 'name']}
+                                {model: Product, as: 'product', attributes: ['id', 'name']},
+                                {model: MeasurementUnit, as: 'measurementUnit', attributes: ['id', 'name']},
                             ]
                         }
                     ],
                     where: {id: req.body.id},
                     transaction
                 });
-    
+
+                let enderEmit = null;
+
+                if (stock?.nfe?.NFe?.infNFe?.emit?.enderEmit?.cMun) {
+                    const city = await City.findOne({
+                        attributes: ['id', 'name'],
+                        where: {ibge: stock?.nfe?.NFe?.infNFe?.emit?.enderEmit?.cMun}, 
+                        include: [
+                            {model: State, as: 'state', attributes: ['id', 'description']}
+                        ],
+                        transaction
+                    });
+
+                    enderEmit = {
+                        city: {
+                            id: city?.id,
+                            name: city?.name
+                        },
+                        state: {
+                            id: city?.state?.id,
+                            description: city?.state?.description,
+                        }
+                    }
+
+                    _.set(stock.nfe.dataValues, 'enderEmit', enderEmit);
+
+                }
+
                 sequelize.close();
     
                 res.status(200).json(stock);

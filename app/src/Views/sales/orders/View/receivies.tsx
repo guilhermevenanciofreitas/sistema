@@ -1,10 +1,12 @@
 import React, { ReactNode } from "react";
-import { AutoComplete, Button, DatePicker, GridView, ViewModal, NumericBox, TextBox } from "../../../../Utils/Controls";
+import { AutoComplete, Button, DatePicker, GridView, ViewModal, NumericBox, TextBox, Content, Actions } from "../../../../Utils/Controls";
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
 import { Grid } from "@mui/joy";
 import { ReceiveFormTemplate } from "../../../../Search/Templates/ReceiveForm";
+import { TaskAltOutlined } from "@mui/icons-material";
+import { color } from "../../../../Utils/color";
 
 const Columns = [
     { selector: (row: any) => row.receivieForm?.description, name: 'Forma de pagamento' },
@@ -37,23 +39,24 @@ class ViewReceivie extends React.Component {
     render(): React.ReactNode {
         return (
             <ViewModal ref={this.ViewModal} Title='Forma de pagamento' Width={400}>
-                
-                <Grid container spacing={1} sx={{ flexGrow: 1 }}>
-                    <Grid md={12}>
-                        <AutoComplete Label='Forma de pagamento' Pesquisa={async(Text: string) => await Search.ReceivieForm(Text)} Text={(Item: any) => `${Item?.description}` } Value={this.state.receivieForm} OnChange={(receivieForm: any) => this.setState({receivieForm})}>
-                            <ReceiveFormTemplate />
-                        </AutoComplete>
+                <Content>
+                    <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+                        <Grid md={12}>
+                            <AutoComplete Label='Forma de pagamento' Pesquisa={async(Text: string) => await Search.ReceivieForm(Text)} Text={(Item: any) => `${Item?.description}` } Value={this.state.receivieForm} OnChange={(receivieForm: any) => this.setState({receivieForm})}>
+                                <ReceiveFormTemplate />
+                            </AutoComplete>
+                        </Grid>
+                        <Grid md={6}>
+                            <DatePicker Label='Vencimento' Text={this.state.dueDate} OnChange={(args: EventArgs) => this.setState({dueDate: args.Value})} />
+                        </Grid>
+                        <Grid md={6}>
+                            <NumericBox Label='Valor' Text={this.state.value} Prefix="R$ " Scale={2} OnChange={(args: EventArgs) => this.setState({value: args.Value})} />
+                        </Grid>
                     </Grid>
-                    <Grid md={6}>
-                        <DatePicker Label='Vencimento' Text={this.state.dueDate} OnChange={(args: EventArgs) => this.setState({dueDate: args.Value})} />
-                    </Grid>
-                    <Grid md={6}>
-                        <NumericBox Label='Valor' Text={this.state.value} Prefix="R$ " Scale={2} OnChange={(args: EventArgs) => this.setState({value: args.Value})} />
-                    </Grid>
-                </Grid>
-
-                <Button Text='Confirmar' Type='Submit' Color='white' BackgroundColor='green' OnClick={this.BtnConfirmar_Click} />
-                
+                </Content>
+                <Actions>
+                    <Button Text='Confirmar' StartIcon={<TaskAltOutlined />} Color='white' BackgroundColor={color.success} OnClick={this.BtnConfirmar_Click} />
+                </Actions>
             </ViewModal>
         );
     }

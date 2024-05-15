@@ -14,7 +14,18 @@ export class ViewLocationBase extends React.Component<Readonly<{Title: string}>>
         description: '',
     }
 
-    public Show = async (id?: string): Promise<any> =>
+    public New = async (stockLocation: any): Promise<any> =>
+    {
+
+        this.Limpar();
+
+        this.setState({...stockLocation});
+
+        return await this.ViewModal.current?.Show();
+
+    }
+
+    public Edit = async (id?: string): Promise<any> =>
     {
  
         this.Limpar();

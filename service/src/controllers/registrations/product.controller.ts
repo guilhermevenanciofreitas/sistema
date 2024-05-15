@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Partner, Product, ProductCategory, ProductCombination, ProductCombinationGroup, ProductSupplier } from "../../database";
+import { Combination, MeasurementUnit, Partner, Product, ProductCategory, ProductCombination, ProductCombinationItem, ProductSupplier } from "../../database";
 import { ProductService } from "../../services/registrations/product.service";
 import { Op } from "sequelize";
 import { Error } from "../../errors";
@@ -65,12 +65,20 @@ export default class ProductController {
                 const product = await Product.findOne({
                     attributes: ['id', 'name', 'description', 'isCombination', 'cost', 'markup', 'value', 'stockBalance', 'stockMin', 'stockMax'], 
                     include: [
-                        {model: ProductCategory, as: 'category', attributes: ['id', 'description']}, 
-                        {model: ProductCombination, as: 'combinations', attributes: ['id', 'isObrigatorio', 'minimo', 'maximo'],
-                            include: [{model: ProductCombinationGroup, as: 'combinationGroup', attributes: ['description']}]    
+                        {model: ProductCategory, as: 'category', attributes: ['id', 'description']},
+
+                        {model: ProductCombination, as: 'combinations', attributes: ['id', 'isRequired', 'min', 'max', 'order'],
+                            include: [
+                                {model: Combination, as: 'combination', attributes: ['id', 'name']},
+                                {model: ProductCombinationItem, as: 'combinationItems', attributes: ['id', 'name', 'description']}
+                            ]    
                         },
-                        {model: ProductSupplier, as: 'suppliers', attributes: ['id'],
-                            include: [{model: Partner, as: 'supplier', attributes: ['id', 'surname']}]
+
+                        {model: ProductSupplier, as: 'suppliers', attributes: ['id', 'contain', 'value'],
+                            include: [
+                                {model: Partner, as: 'supplier', attributes: ['id', 'surname']},
+                                {model: MeasurementUnit, as: 'measurementUnit', attributes: ['id', 'name']},
+                            ]
                         }, 
                     ],
                     where: {id: req.body.id},

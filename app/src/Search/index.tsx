@@ -12,9 +12,9 @@ export const Search = {
         return (await Service.Post("search/partner", {Search}))?.data;
     },
     
-    Costumer: async (Search: string) =>
+    Customer: async (Search: string) =>
     {
-        return (await Service.Post("search/costumer", {Search}))?.data;
+        return (await Service.Post("search/customer", {Search}))?.data;
     },
 
     Employee: async (Search: string) =>
@@ -47,6 +47,11 @@ export const Search = {
         return (await Service.Post("search/city", {Search, stateId}))?.data;
     },
 
+    State: async (Search: string) =>
+    {
+        return (await Service.Post("search/state", {Search}))?.data;
+    },
+
     Bank: async (Search: string) =>
     {
         return (await Service.Post("search/bank", {Search}))?.data;
@@ -77,9 +82,9 @@ export const Search = {
         return (await Service.Post("search/product-category", {Search}))?.data;
     },
 
-    ProductCombinationGroup: async (Search: string) =>
+    Combination: async (Search: string) =>
     {
-        return (await Service.Post("search/product-combination-group", {Search}))?.data;
+        return (await Service.Post("search/combination", {Search}))?.data;
     },
 
     CalledOccurrence: async (Search: string) =>
@@ -110,6 +115,21 @@ export const Search = {
     Nfe: async (Search: string) =>
     {
         return (await Service.Post("search/nfe", {Search}))?.data;
+    },
+
+    EconomicActivity: async (Search: string) =>
+    {
+        return (await Service.Post("search/economic-activity", {Search}))?.data;
+    },
+
+    LegalNature: async (Search: string) =>
+    {
+        return (await Service.Post("search/legal-nature", {Search}))?.data;
+    },
+    
+    MeasurementUnit: async (Search: string) =>
+    {
+        return (await Service.Post("search/measurement-unit", {Search}))?.data;
     },
     
 }

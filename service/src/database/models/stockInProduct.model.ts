@@ -2,6 +2,7 @@ import { Model, Table, Column, DataType, HasMany, ForeignKey, BelongsTo } from "
 import { StockLocation } from "./stockLocation.model";
 import { StockIn } from "./stockIn.model";
 import { Product } from "./product.model";
+import { MeasurementUnit } from "./measurementUnit.model";
 
 @Table({tableName: "stockInProduct"})
 export class StockInProduct extends Model {
@@ -24,6 +25,12 @@ export class StockInProduct extends Model {
   @Column({type: DataType.DECIMAL(18, 2), field: "value"})
   value?: number;
 
+  @Column({type: DataType.UUID, field: "measurementUnitId"})
+  measurementUnitId?: string;
+
+  @Column({type: DataType.DECIMAL(18, 3), field: "contain"})
+  contain?: number;
+
   @Column({type: DataType.DECIMAL(18, 3), field: "balance"})
   balance?: number;
 
@@ -39,5 +46,8 @@ export class StockInProduct extends Model {
 
   @BelongsTo(() => Product, {as: 'product', foreignKey: 'productId'})
   product?: Product;
+
+  @BelongsTo(() => MeasurementUnit, {as: 'measurementUnit', foreignKey: 'measurementUnitId'})
+  measurementUnit?: MeasurementUnit;
 
 }

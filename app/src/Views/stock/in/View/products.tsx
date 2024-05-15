@@ -10,6 +10,7 @@ import { StockLocationTemplate } from "../../../../Search/Templates/StockLocatio
 import { ViewProduct } from "../../../registrations/products/View";
 import { color } from "../../../../Utils/color";
 import { AddCircleOutline, TaskAltOutlined } from "@mui/icons-material";
+import { MeasurementUnitTemplate } from "../../../../Search/Templates/MeasurementUnit";
 
 const Item = ({ row }: any) => {
     return (
@@ -42,6 +43,8 @@ class ViewItem extends React.Component {
         product: null,
         quantity: null,
         value: null,
+        measurementUnit: null,
+        contain: null,
         prod: null
     }
 
@@ -65,28 +68,27 @@ class ViewItem extends React.Component {
                         <Grid md={12}>
                             {_.get(this.state, 'prod.xProd')}
                         </Grid>
-                        
-                        <Grid md={12}>
-                            <AutoComplete Label='Localização' Pesquisa={async(Text: string) => await Search.StockLocation(Text)} Text={(Item: any) => `${Item.name}` } Value={this.state.stockLocation} OnChange={(stockLocation: any) => this.setState({stockLocation})}>
-                                <StockLocationTemplate />
-                            </AutoComplete>
-                        </Grid>
+
                         
                         <Grid md={12}>
                             <AutoComplete 
-                                New={{
+                                Action={{
                                     Type: 'Product',
-                                    Values: {
-                                        name: _.get(this.state, 'prod.xProd'),
-                                        cost: _.get(this.state, 'prod.vUnCom')
-                                    }}}
-                                    Label='Item'
-                                    Pesquisa={async(Text: string) => await Search.Product(Text)} Text={(Item: any) => `${Item.name || ''}` }
-                                    Value={this.state.product}
-                                    OnChange={(product: any) => {
-                                        this.setState({product, value: product?.value || this.state.value});
-                                        this.TxtQuantidade.current?.Focus();
-                                    }}
+                                    New: {
+                                        Values: {
+                                            name: _.toUpper(_.get(this.state, 'prod.xProd')),
+                                        }
+                                    },
+                                    Edit: {Id: _.get(this.state.product, 'id')}
+                                    }
+                                }
+                                Label='Item'
+                                Pesquisa={async(Text: string) => await Search.Product(Text)} Text={(Item: any) => `${Item.name || ''}` }
+                                Value={this.state.product}
+                                OnChange={(product: any) => {
+                                    this.setState({product, value: product?.value || this.state.value});
+                                    this.TxtQuantidade.current?.Focus();
+                                }}
                                 >
                                 <ProductTemplate />
                             </AutoComplete>
@@ -101,6 +103,25 @@ class ViewItem extends React.Component {
                         <Grid md={4}>
                             <NumericBox Label='Total' Text={(parseFloat(this.state.value || '0') * parseFloat(this.state.quantity || '0')).toString()} Prefix="R$ " Scale={2} ReadOnly={true} />
                         </Grid>
+                        
+                        <Grid md={12}>
+                            <AutoComplete Label='Localização' Action={{Type: 'StockLocation', New: {Values: {}}, Edit: {Id: _.get(this.state.stockLocation, 'id')}}} Pesquisa={async(Text: string) => await Search.StockLocation(Text)} Text={(Item: any) => `${Item.name}` } Value={this.state.stockLocation} OnChange={(stockLocation: any) => this.setState({stockLocation})}>
+                                <StockLocationTemplate />
+                            </AutoComplete>
+                        </Grid>
+
+                        <Grid md={6}>
+                            <AutoComplete Label='Unidade de medida' Pesquisa={async(Text: string) => await Search.MeasurementUnit(Text)} Text={(Item: any) => `${Item.name}` } Value={this.state.measurementUnit} OnChange={(measurementUnit: any) => this.setState({measurementUnit})}>
+                                <MeasurementUnitTemplate />
+                            </AutoComplete>
+                        </Grid>
+                        <Grid md={3}>
+                            <NumericBox Label='Contém' Text={this.state.contain} Scale={3} OnChange={(args: EventArgs) => this.setState({contain: args.Value})} />
+                        </Grid>
+                        <Grid md={3}>
+                            <NumericBox Label='Entrada' Text={(parseFloat(this.state.quantity || '') * parseFloat(this.state.contain || '')).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})} Scale={3} ReadOnly={true} />
+                        </Grid>
+                        
                     </Grid>
                 </Content>
                 <Actions>
@@ -125,6 +146,8 @@ export class Products extends BaseDetails<Readonly<{products: any[], OnChange?: 
             product: null,
             quantity: null,
             value: null,
+            measurementUnit: null,
+            contain: null,
             prod: null
         });
 
@@ -145,6 +168,8 @@ export class Products extends BaseDetails<Readonly<{products: any[], OnChange?: 
         args.product = item.product;
         args.quantity = item.quantity;
         args.value = item.value;
+        args.measurementUnit = item.measurementUnit;
+        args.contain = item.contain;
 
         this.props.OnChange(this.props.products);
        
@@ -160,7 +185,9 @@ export class Products extends BaseDetails<Readonly<{products: any[], OnChange?: 
                 <ViewItem ref={this.ViewItem} />
                 <Button Text='Adicionar' Color='white' BackgroundColor={color.success} StartIcon={<AddCircleOutline />} OnClick={this.BtnAdicionar_Click} />
                 {this.state.Selecteds.length >= 1 && <Button Text='Remover' Color='white' BackgroundColor='red' OnClick={this.BtnRemover_Click} />}
-                <GridView Columns={Columns} Rows={this.props.products} OnItem={this.GridView_OnItem} OnSelected={this.GridView_Selected} />
+                <div style={{height: '300px'}}>
+                    <GridView Columns={Columns} Rows={this.props.products} OnItem={this.GridView_OnItem} OnSelected={this.GridView_Selected} />
+                </div>
             </>
         )
     }

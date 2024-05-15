@@ -52,20 +52,22 @@ export class ViewStockInBase extends React.Component<Readonly<{Title: string}>> 
             var products: any[] = [];
 
             if (nfe == null) {
-                this.setState({nfe: null, products: []});
+                this.setState({nfe: null, supplier: null, products: []});
                 return;
             }
 
             if (_.isArray(nfe?.NFe?.infNFe?.det)) {
                 for(const det of nfe?.NFe?.infNFe?.det || []) {
-                    products.push({quantity: det?.prod?.qCom, value: det?.prod?.vProd, prod: det?.prod});
+                    const product = _.filter(nfe.emit?.products, (c) => c.code == det?.prod?.cProd);
+                    products.push({product: product[0]?.product, quantity: det?.prod?.qCom, value: det?.prod?.vUnCom, measurementUnit: product[0]?.measurementUnit, contain: product[0]?.contain || '1.000', prod: det?.prod});
                 }
             } else {
                 const det = nfe?.NFe?.infNFe?.det;
-                products.push({quantity: det?.prod?.qCom, value: det?.prod?.vProd, prod: det?.prod});
+                const product = _.filter(nfe.emit?.products, (c) => c.code == det?.prod?.cProd);
+                products.push({product: product[0]?.product, quantity: det?.prod?.qCom, value: det?.prod?.vUnCom, measurementUnit: product[0]?.measurementUnit, contain: product[0]?.contain || '1.000', prod: det?.prod});
             }
             
-            this.setState({nfe, products});
+            this.setState({nfe, supplier: nfe?.emit, products});
         
         }
         catch(err: any)
@@ -88,7 +90,8 @@ export class ViewStockInBase extends React.Component<Readonly<{Title: string}>> 
                     productId: _.get(product, 'product.id') || null,
                     quantity: _.get(product, 'quantity') || null,
                     value: _.get(product, 'value') || null,
-                    discount: _.get(product, 'discount') || null,
+                    measurementUnitId: _.get(product, 'measurementUnit.id') || null,
+                    contain: _.get(product, 'contain') || null,
                     prod: _.get(product, 'prod') || null,
                 });
             }
@@ -127,12 +130,32 @@ export class ViewStockInBase extends React.Component<Readonly<{Title: string}>> 
             for (const product of this.state.products || []) {
                 
                 if (!_.get(product, 'product.id')) {
-                    await MessageBox.Show({title: 'Info', width: 400, type: 'Warning', content: `Item ${_.get(product, 'product.name')} sem vincular!`, buttons: [{ Text: 'OK' }]});
+                    await MessageBox.Show({title: 'Info', width: 400, type: 'Warning', content: `Item ${_.get(product, 'prod.xProd')} sem vincular!`, buttons: [{ Text: 'OK' }]});
+                    return;
+                }
+
+                if (!_.get(product, 'quantity')) {
+                    await MessageBox.Show({title: 'Info', width: 400, type: 'Warning', content: `Item ${_.get(product, 'product.name')} informe a quantidade!`, buttons: [{ Text: 'OK' }]});
+                    return;
+                }
+
+                if (!_.get(product, 'value')) {
+                    await MessageBox.Show({title: 'Info', width: 400, type: 'Warning', content: `Item ${_.get(product, 'product.name')} informe o valor!`, buttons: [{ Text: 'OK' }]});
                     return;
                 }
 
                 if (!_.get(product, 'stockLocation.id')) {
-                    await MessageBox.Show({title: 'Info', width: 400, type: 'Warning', content: `Item ${_.get(product, 'product.name')} sem localização!`, buttons: [{ Text: 'OK' }]});
+                    await MessageBox.Show({title: 'Info', width: 400, type: 'Warning', content: `Item ${_.get(product, 'product.name')} informe a localização!`, buttons: [{ Text: 'OK' }]});
+                    return;
+                }
+
+                if (!_.get(product, 'measurementUnit.id')) {
+                    await MessageBox.Show({title: 'Info', width: 400, type: 'Warning', content: `Item ${_.get(product, 'product.name')} informe a unidade de medida!`, buttons: [{ Text: 'OK' }]});
+                    return;
+                }
+
+                if (!_.get(product, 'contain')) {
+                    await MessageBox.Show({title: 'Info', width: 400, type: 'Warning', content: `Item ${_.get(product, 'product.name')} informe a quantidade que contém!`, buttons: [{ Text: 'OK' }]});
                     return;
                 }
 

@@ -1,11 +1,13 @@
 import React from "react";
 import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
-import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
+import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle, AddCircleOutline } from "@mui/icons-material";
 import { ViewShippingOrder } from "./View/index";
 import BaseUsuarios from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
 import { Title } from "../../../Layout/JoyLayout/Ttitle";
+import _ from "lodash";
+import { color } from "../../../Utils/color";
 //import { ViewImportar } from "./importar";
 //import { ViewFiltro } from "./filtro";
 
@@ -39,14 +41,14 @@ export default class ShippingOrders extends BaseUsuarios {
 
                     <Container>
                         <Left>
-                            {this.state.Selecteds.length == 0 && (
-                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnNovo_Click} />
+                            {_.size(this.state.Selecteds) == 0 && (
+                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor={color.success} StartIcon={<AddCircleOutline />} OnClick={this.BtnNovo_Click} />
                             )}
-                            {this.state.Selecteds.length >= 1 && (
+                            {_.size(this.state.Selecteds) >= 1 && (
                                 <>
                                 <Button Text='Excluir' Type='Button' Color='white' BackgroundColor='red' StartIcon={<Delete />} OnClick={this.BtnDelete_Click} />
                                 <Button Text='Editar' Type='Button' Color='white' BackgroundColor='#0d6efd' StartIcon={<ChangeCircle />} OnClick={this.BtnNovo_Click} />
-                                &nbsp;&nbsp;({this.state.Selecteds.length}) registro(s) selecionado(s)
+                                &nbsp;&nbsp;({_.size(this.state.Selecteds)}) registro(s) selecionado(s)
                                 </>
                             )}
                         </Left>

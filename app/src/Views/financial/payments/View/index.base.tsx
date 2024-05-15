@@ -10,18 +10,20 @@ export class ViewContaPagarBase extends React.Component<Readonly<{Title: string}
     protected ViewModal = React.createRef<ViewModal>();
     
     state = {
-        id: "",
-        company: null,
-        number: "",
-        numeroDocumento: "",
-        emissao: "",
-        dueDate: '',
-        receiver: null,
-        ourNumber: "",
-        bankAccount: null,
+        id: '',
+        number: '',
         paymentForm: null,
+        dueDate: '',
+        scheduleDate: '',
+        ourNumber: '',
+        company: null,
+        receiver: null,
+        bankAccount: null,
+        documentNumber: '',
+        value: null,
+
+        
         beneficiaryNotice: "",
-        valor: null,
         juros: null,
         multa: null,
         data: {
@@ -79,10 +81,17 @@ export class ViewContaPagarBase extends React.Component<Readonly<{Title: string}
             Loading.Show();
 
             const request = {
-                ...this.state,
-                companyId: _.get(this.state.company, 'id') || null,
-                bankAccountId: _.get(this.state.bankAccount, 'id') || null,
+                id: _.get(this.state, 'id') || null,
+                number: _.get(this.state, 'number') || null,
                 paymentFormId: _.get(this.state.paymentForm, 'id') || null,
+                dueDate: _.get(this.state, 'dueDate') || null,
+                scheduleDate: _.get(this.state, 'scheduleDate') || null,
+                ourNumber: _.get(this.state, 'ourNumber') || null,
+                companyId: _.get(this.state.company, 'id') || null,
+                receiverId: _.get(this.state.receiver, 'id') || null,
+                bankAccountId: _.get(this.state.bankAccount, 'id') || null,
+                documentNumber: _.get(this.state, 'documentNumber') || null,
+                value: _.get(this.state, 'value') || null,
             }
 
             let r = await Service.Post("financial/payment/save", request);
@@ -108,21 +117,17 @@ export class ViewContaPagarBase extends React.Component<Readonly<{Title: string}
     private Limpar = () =>
     {
         this.setState({
-            id: "",
-            company: null,
-            number: "",
-            numeroDocumento: "",
-            emissao: "",
-            dueDate: '',
-            bankAccount: null,
-            receiver: null,
-            ourNumber: "",
+            id: '',
+            number: '',
             paymentForm: null,
-            beneficiaryNotice: "",
-            valor: null,
-            juros: null,
-            multa: null,
-            data: null
+            dueDate: '',
+            scheduleDate: '',
+            ourNumber: '',
+            company: null,
+            receiver: null,
+            bankAccount: null,
+            documentNumber: '',
+            value: null,
         });
     }
 

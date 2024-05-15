@@ -62,9 +62,9 @@ export default class BankAccountBase extends BaseIndex {
         try
         {
 
-            const r = await this.ViewBankAccount.current?.Show(undefined);
+            const r = await this.ViewBankAccount.current?.New({});
 
-            if (r) this.Pesquisar();
+            if (r) await this.Pesquisar();
             
         }
         catch (err: any) 
@@ -80,7 +80,7 @@ export default class BankAccountBase extends BaseIndex {
 
             const r = await this.OpenBankAccount(id);
 
-            if (r) this.Pesquisar();
+            if (r) await this.Pesquisar();
        
         } 
         catch (err: any) 
@@ -168,7 +168,7 @@ export default class BankAccountBase extends BaseIndex {
     private OpenBankAccount = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, "", `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewBankAccount.current?.Show(id);
+        const r = await this.ViewBankAccount.current?.Edit(id);
         if (isHitoryBack) history.back();
         return r;
     }

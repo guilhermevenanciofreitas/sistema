@@ -4,11 +4,14 @@ import loginRoutes from "./login/login.routes";
 
 import configuracaoRoutes from "./configuracao/index.routes"
 
+import cepRoutes from "./cep/index.routes";
+
 //registrations
 import userRoutes from "./registrations/user.routes";
 import productRoutes from "./registrations/product.routes";
+import productCategoryRoutes from "./registrations/productCategory.routes";
 import serviceRoutes from "./registrations/service.routes";
-import customerRoutes from "./registrations/costumer.routes";
+import customerRoutes from "./registrations/customer.routes";
 import supplierRoutes from "./registrations/supplier.routes";
 import employeeRoutes from "./registrations/employee.routes";
 import shippingCompanyRoutes from "./registrations/shippingsCompany.routes";
@@ -37,6 +40,7 @@ import vehicleRoutes from "./registrations/vehicle.routes";
 import locationRoutes from "./stock/location.routes";
 import stockinRoutes from "./stock/in.routes";
 import distribuitionRoutes from "./fiscal/distribuition.routes";
+import combinationRoutes from "./registrations/combination.routes";
 
 export default class Routes {
   constructor(app: Application) {
@@ -44,9 +48,15 @@ export default class Routes {
 
     app.use("/api/configuracao", configuracaoRoutes);
 
+    
+    //Registrations
+    app.use("/api/cep", cepRoutes);
+
     //Registrations
     app.use("/api/registrations/user", userRoutes);
+    app.use("/api/registrations/combination", combinationRoutes);
     app.use("/api/registrations/product", productRoutes);
+    app.use("/api/registrations/product-category", productCategoryRoutes)
     app.use("/api/registrations/vehicle", vehicleRoutes);
     app.use("/api/registrations/service", serviceRoutes);
     app.use("/api/registrations/customer", customerRoutes);

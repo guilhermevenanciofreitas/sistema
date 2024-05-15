@@ -1,9 +1,9 @@
 import { Router } from "express";
-import ParceiroController from "../../controllers/registrations/partner.controller";
+import PartnerController from "../../controllers/registrations/partner.controller";
 
 class shippingCompanyRoutes {
   router = Router();
-  controller = new ParceiroController();
+  controller = new PartnerController();
 
   constructor() {
     this.intializeRoutes();
@@ -12,6 +12,7 @@ class shippingCompanyRoutes {
   intializeRoutes() {
     this.router.post("/findAll", (req, res) => this.controller.findAll(req, res, "isShippingCompany"));
     this.router.post("/findOne", (req, res) => this.controller.findOne(req, res, "isShippingCompany"));
+    this.router.post("/consult", (req, res) => this.controller.consult(req, res));
     this.router.post("/save", (req, res) => this.controller.save(req, res));
     //this.router.post("/delete", (req, res) => this.controller.delete(req, res));
   }

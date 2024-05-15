@@ -13,13 +13,15 @@ class SearchRoutes {
 
     this.router.post("/company", (req, res) => this.controller.company(req, res));
 
-    this.router.post("/product", (req, res) => this.controller.product(req, res));
+
     this.router.post("/product-category", (req, res) => this.controller.productCategory(req, res));
+    this.router.post("/combination", (req, res) => this.controller.combination(req, res));
+    this.router.post("/product", (req, res) => this.controller.product(req, res));
     this.router.post("/product-price", (req, res) => this.controller.productPrice(req, res));
-    this.router.post("/product-combination-group", (req, res) => this.controller.productCombinationGroup(req, res));
+
 
     this.router.post("/partner", (req, res) => this.controller.partner(req, res));
-    this.router.post("/costumer", (req, res) => this.controller.costumer(req, res));
+    this.router.post("/customer", (req, res) => this.controller.customer(req, res));
     this.router.post("/employee", (req, res) => this.controller.employee(req, res));
     this.router.post("/supplier", (req, res) => this.controller.supplier(req, res));
     this.router.post("/shipping-company", (req, res) => this.controller.shippingCompany(req, res));
@@ -46,6 +48,12 @@ class SearchRoutes {
     this.router.post("/stock-location", (req, res) => this.controller.stockLocation(req, res));
 
     this.router.post("/nfe", (req, res) => this.controller.nfe(req, res));
+
+    this.router.post("/economic-activity", (req, res) => this.controller.economicActivity(req, res));
+
+    this.router.post("/legal-nature", (req, res) => this.controller.legalNature(req, res));
+
+    this.router.post("/measurement-unit", (req, res) => this.controller.measurementUnit(req, res));
 
   }
 }

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 import { Accounts, Database } from "../../auth";
-import Sequelize, { Company, Product, ProductCategory, ProductCombination, ProductCombinationGroup, ProductCombinationItem } from "../../database";
+import Sequelize, { Company, Product, ProductCategory, ProductCombination, Combination, ProductCombinationItem } from "../../database";
 
 async function Auth(id: string): Promise<any> {
 
@@ -33,11 +33,13 @@ export default class IndexController {
 
             const productCategory = await ProductCategory.findAll({attributes: ["id", "description", "image"], 
                 include: [{model: Product, attributes: ["id", "name", "description", "value"],
-                    include: [{model: ProductCombination, attributes: ["id", "isObrigatorio", "minimo", "maximo", "ordem"],
-                        include: [{model: ProductCombinationGroup, attributes: ["id", "description"],
-                            include: [{model: ProductCombinationItem, attributes: ["id", "name", "description"]}]
-                        }]    
-                    }]
+                    include: [
+                        {model: ProductCombination, attributes: ["id", "isObrigatorio", "minimo", "maximo", "ordem"],
+                        //include: [{model: ProductCombinationGroup, attributes: ["id", "description"],
+                        //    include: [{model: ProductCombinationItem, attributes: ["id", "name", "description"]}]
+                        //}]    
+                        }
+                    ]
                 }],
                 order: [['ordem', 'ASC']],
                 transaction

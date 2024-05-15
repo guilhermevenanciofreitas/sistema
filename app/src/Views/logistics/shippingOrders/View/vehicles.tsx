@@ -1,10 +1,12 @@
 import React, { ReactNode } from "react";
-import { AutoComplete, Button, CheckBox, GridView, ViewModal, TextBox } from "../../../../Utils/Controls";
+import { AutoComplete, Button, CheckBox, GridView, ViewModal, TextBox, Content, Actions } from "../../../../Utils/Controls";
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
 import { Grid } from "@mui/joy";
 import { VehicleTemplate } from "../../../../Search/Templates/Vehicle";
+import { CheckCircleOutlined } from "@mui/icons-material";
+import { color } from "../../../../Utils/color";
 
 const Columns = [
     { selector: (row: any) => row.vehicle?.name, name: 'Veículo' },
@@ -33,18 +35,19 @@ class ViewVehicle extends React.Component {
 
     render(): React.ReactNode {
         return (
-            <ViewModal ref={this.ViewModal} Title='Combinação' Width={450}>
-                
-                <Grid container spacing={1} sx={{ flexGrow: 1 }}>
-                    <Grid md={12}>
-                        <AutoComplete Label='Veículo' Pesquisa={async(Text: string) => await Search.Vehicle(Text)} Text={(Item: any) => `${Item.plate}` } Value={this.state.vehicle} OnChange={(vehicle: any) => this.setState({vehicle})}>
-                            <VehicleTemplate />
-                        </AutoComplete>
+            <ViewModal ref={this.ViewModal} Title='Reboque' Width={450}>
+                <Content>
+                    <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+                        <Grid md={12}>
+                            <AutoComplete Label='Veículo' Pesquisa={async(Text: string) => await Search.Vehicle(Text)} Text={(Item: any) => `${Item.plate}` } Value={this.state.vehicle} OnChange={(vehicle: any) => this.setState({vehicle})}>
+                                <VehicleTemplate />
+                            </AutoComplete>
+                        </Grid>
                     </Grid>
-                </Grid>
-
-                <Button Text='Confirmar' Type='Submit' Color='white' BackgroundColor='green' OnClick={this.BtnConfirmar_Click} />
-
+                </Content>
+                <Actions>
+                    <Button Text='Confirmar' StartIcon={<CheckCircleOutlined />} Color={'white'} BackgroundColor={color.success} OnClick={this.BtnConfirmar_Click} />
+                </Actions>
             </ViewModal>
         );
     }

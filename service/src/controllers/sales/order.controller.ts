@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { PaymentForm, Partner, SaleOrder, Product, SaleOrderReceivie, SaleOrderStatus, SaleOrderShippingType, Company, Delivery, DeliveryRoute, SaleOrderDeliveryRoute, ProductCombination, ProductCombinationGroup, ProductCombinationItem, SaleOrderItemCombination, SaleOrderItemCombinationItem, ReceivieForm } from "../../database";
+import { PaymentForm, Partner, SaleOrder, Product, SaleOrderReceivie, SaleOrderStatus, SaleOrderShippingType, Company, Delivery, DeliveryRoute, SaleOrderDeliveryRoute, ProductCombination, Combination, ProductCombinationItem, SaleOrderItemCombination, SaleOrderItemCombinationItem, ReceivieForm } from "../../database";
 import { OrderService } from "../../services/sales/order.service";
 import { SaleOrderItem } from "../../database/models/saleOrderItem.model";
-import {Op, Sequelize} from "sequelize";
 import axios from "axios";
 import { DisplayError } from "../../errors/DisplayError";
 import { Error } from "../../errors";
@@ -34,7 +33,7 @@ export default class OrderController {
                 const saleOrders = await SaleOrder.findAndCountAll({
                     attributes: ['id', 'number', 'statusId', 'createdAt', 'value'],
                     include: [
-                        {model: Partner, as: 'costumer', attributes: ['id', 'surname']},
+                        {model: Partner, as: 'customer', attributes: ['id', 'surname']},
                         {model: Company, as: 'company', attributes: ['id', 'surname']},
                         {model: Partner, as: 'seller', attributes: ['id', 'surname']},
                         {model: SaleOrderStatus, as: 'status', attributes: ['id', 'description', 'color']}
@@ -135,23 +134,25 @@ export default class OrderController {
                 const saleOrder = await SaleOrder.findOne({
                     attributes: ['id', 'number', 'createdAt', 'shippingAddress'], 
                     include: [
-                        {model: Partner, as: "costumer", attributes: ["id", "surname"]},
+                        {model: Partner, as: "customer", attributes: ["id", "surname"]},
                         {model: Company, as: 'company', attributes: ['id', 'surname']},
                         {model: Partner, as: "seller", attributes: ["id", "surname"]},
                         {model: Partner, as: "shippingCompany", attributes: ["id", "surname"]},
                         {model: SaleOrderStatus, attributes: ['id', 'description', 'color']},
                         {model: SaleOrderShippingType, attributes: ["id", "description"]},
                         {model: SaleOrderItem, attributes: ['id', 'quantity', 'value', 'discount'], 
-                            include: [{model: Product, attributes: ["id", "name", "description"],
-                                include: [{model: ProductCombination, attributes: ["id", "isObrigatorio", "minimo", "maximo"],
-                                    include: [{model: ProductCombinationGroup, attributes: ['id', 'description'],
-                                        include: [{model: ProductCombinationItem, attributes: ['id', 'name']}]
-                                    }]    
-                                }],
-                            },
-                            {model: SaleOrderItemCombination, attributes: ['id', 'saleOrderItemId', 'combinationId'],
-                                include: [{model: SaleOrderItemCombinationItem, attributes: ['id', 'saleOrderItemCombinationId', 'itemCombinationId', 'quantity']}]
-                            }]
+                            include: [
+                                {model: Product, attributes: ["id", "name", "description"],
+                                    include: [{model: ProductCombination, attributes: ["id", "isRequired", "min", "max"],
+                                        //include: [{model: ProductCombinationGroup, attributes: ['id', 'description'],
+                                        //    include: [{model: ProductCombinationItem, attributes: ['id', 'name']}]
+                                        //}]    
+                                    }],
+                                },
+                                //{model: SaleOrderItemCombination, attributes: ['id', 'saleOrderItemId', 'combinationId'],
+                                //    include: [{model: SaleOrderItemCombinationItem, attributes: ['id', 'saleOrderItemCombinationId', 'itemCombinationId', 'quantity']}]
+                                //}
+                            ]
                         },
                         {model: SaleOrderReceivie, attributes: ['id', 'dueDate', 'value'], include: [{model: ReceivieForm, attributes: ['id', 'description']}]},
                      

@@ -2,6 +2,7 @@ import { Transaction } from "sequelize";
 import { Nfe } from "../../database";
 import crypto from "crypto";
 import { parseStringPromise, Builder } from "xml2js";
+import { DisplayError } from "../../errors/DisplayError";
 
 export class NfeService {
 
@@ -17,16 +18,13 @@ export class NfeService {
 
     public static Create = async (nfe: Nfe, transaction?: Transaction) => {
 
-        nfe.id = crypto.randomUUID();
-        //produto.categoriaId = produto.categoria?.id;
-        
-        /*
-        for (let item of nfe?.combinacoes || []) {
-            item.id = crypto.randomUUID();
-            item.produtoId = produto.id;
-            item.combinacaoId = item.combinacao?.id;
+        const exist = await Nfe.findOne({attributes: ['id'], where: {'protNFe.infProt.chNFe': nfe.protNFe.infProt.chNFe}});
+
+        if (exist) {
+            throw new DisplayError('Nota fiscal já está cadastrada!', 201);
         }
-        */
+
+        nfe.id = crypto.randomUUID();
 
         await Nfe.create({...nfe}, {transaction});
 

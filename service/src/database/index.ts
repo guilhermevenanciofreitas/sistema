@@ -22,7 +22,7 @@ import { Delivery } from "./models/delivery.model";
 import { DeliveryRoute } from "./models/deliveryRoute.model";
 import { SaleOrderDeliveryRoute } from "./models/SaleOrderDeliveryRoute.model";
 import { ProductCombination } from "./models/productCombination.model";
-import { ProductCombinationGroup } from "./models/productCombinationGroup.model";
+import { Combination } from "./models/combination.model";
 import { ProductCombinationItem } from "./models/productCombinationItem.model";
 import { SaleOrderItemCombination } from "./models/saleOrderItemCombination.model";
 import { SaleOrderItemCombinationItem } from "./models/saleOrderItemCombinationItem.model";
@@ -62,6 +62,9 @@ import { StockInProduct } from "./models/stockInProduct.model";
 import { Dfe } from "./models/dfe.model";
 import { DfeProcNfe } from "./models/dfeProcNfe.model";
 import { DfeResNfe } from "./models/dfeResNfe.model";
+import { MeasurementUnit } from "./models/measurementUnit.model";
+import { LegalNature } from "./models/legalNature.model";
+import { EconomicActivity } from "./models/economicActivity.model";
 
 export { Payment } from "./models/payment.model";
 export { Contract } from "./models/contract.model";
@@ -84,7 +87,7 @@ export { Delivery } from "./models/delivery.model";
 export { DeliveryRoute } from "./models/deliveryRoute.model";
 export { SaleOrderDeliveryRoute } from "./models/SaleOrderDeliveryRoute.model";
 export { ProductCombination } from "./models/productCombination.model";
-export { ProductCombinationGroup } from "./models/productCombinationGroup.model";
+export { Combination } from "./models/combination.model";
 export { ProductCombinationItem } from "./models/productCombinationItem.model";
 export { SaleOrderItemCombination } from "./models/saleOrderItemCombination.model";
 export { SaleOrderItemCombinationItem } from "./models/saleOrderItemCombinationItem.model";
@@ -123,6 +126,9 @@ export { StockInProduct } from "./models/stockInProduct.model";
 export { Dfe } from "./models/dfe.model";
 export { DfeProcNfe } from "./models/dfeProcNfe.model";
 export { DfeResNfe } from "./models/dfeResNfe.model";
+export { MeasurementUnit } from "./models/measurementUnit.model";
+export { LegalNature } from "./models/legalNature.model";
+export { EconomicActivity } from "./models/economicActivity.model";
 
 export default class Sequelize {
   
@@ -147,6 +153,7 @@ export default class Sequelize {
         CalledOccurrence,
         CalledTask,
         City,
+        Combination,
         Company,
         Contract,
         Cte, 
@@ -155,11 +162,14 @@ export default class Sequelize {
         Dfe,
         DfeProcNfe,
         DfeResNfe,
+        EconomicActivity,
         FreightCalculation,
         FreightCalculationRecipient,
         FreightCalculationType,
         FreightCalculationWeight,
         FreightQuote,
+        LegalNature,
+        MeasurementUnit,
         MesoRegion,
         Nfe,
         Partner,
@@ -171,7 +181,6 @@ export default class Sequelize {
         Product,
         ProductCategory,
         ProductCombination,
-        ProductCombinationGroup,
         ProductCombinationItem,
         ProductPrice,
         ProductSupplier,

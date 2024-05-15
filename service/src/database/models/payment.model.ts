@@ -16,23 +16,8 @@ export class Payment extends Model {
   @Column({type: DataType.STRING(30), field: "number"})
   number?: string;
 
-  @Column({type: DataType.STRING, field: "numeroDocumento"})
-  numeroDocumento?: string;
-
-  @Column({type: DataType.STRING, field: "status"})
-  status?: "pending" | "open" | "shipping" | "send" | "paid";
-
-  @Column({type: DataType.UUID, field: "receiverId"})
-  receiverId?: string;
-
-  @Column({type: DataType.STRING(100), field: "beneficiaryNotice"})
-  beneficiaryNotice?: string;
-
   @Column({type: DataType.UUID, field: "paymentFormId"})
   paymentFormId?: string;
-
-  @Column({type: DataType.UUID, field: "bankAccountId"})
-  bankAccountId?: string;
 
   @Column({type: DataType.DATE, field: "dueDate"})
   dueDate?: Date;
@@ -43,18 +28,35 @@ export class Payment extends Model {
   @Column({type: DataType.STRING(20), field: "ourNumber"})
   ourNumber?: string;
 
+  @Column({type: DataType.UUID, field: "receiverId"})
+  receiverId?: string;
+
+  @Column({type: DataType.UUID, field: "bankAccountId"})
+  bankAccountId?: string;
+
+  @Column({type: DataType.STRING(20), field: "documentNumber"})
+  documentNumber?: string;
+
   @Column({type: DataType.DECIMAL(18, 2), field: "value"})
   value?: number;
+  
+  @Column({type: DataType.STRING(100), field: "beneficiaryNotice"})
+  beneficiaryNotice?: string;
 
-  @Column({type: DataType.UUID, field: "pagamentoId"})
-  pagamentoId?: string;
+  @Column({type: DataType.STRING, field: "status"})
+  status?: "pending" | "open" | "shipping" | "send" | "paid";
+
+
+  //@Column({type: DataType.UUID, field: "pagamentoId"})
+  //pagamentoId?: string;
 
   @Column({type: DataType.JSONB, field: "data"})
   data?: any;
 
+
+
   @BelongsTo(() => Company, {as: 'company', foreignKey: 'companyId'})
   company?: Company;
-
 
   @BelongsTo(() => Partner, {as: 'receiver', foreignKey: 'receiverId'})
   receiver?: Partner;

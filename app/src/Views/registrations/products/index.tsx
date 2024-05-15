@@ -9,6 +9,7 @@ import { Title } from "../../../Layout/JoyLayout/Ttitle";
 //import { ViewImportar } from "./importar";
 //import { ViewFiltro } from "./filtro";
 import { color } from "../../../Utils/color";
+import _ from "lodash";
 
 const Columns = [
     { selector: (row: any) => row.name, sort: 'name', name: 'Nome', sortable: true },
@@ -35,14 +36,14 @@ export default class Products extends ProductsBase {
 
                     <Container>
                         <Left>
-                            {this.state.Selecteds.length == 0 && (
+                            {_.size(this.state.Selecteds) == 0 && (
                                 <Button Text='Novo' Type='Button' Color='white' BackgroundColor={color.success} StartIcon={<AddCircleOutline />} OnClick={this.BtnNovo_Click} />
                             )}
-                            {this.state.Selecteds.length >= 1 && (
+                            {_.size(this.state.Selecteds) >= 1 && (
                                 <>
                                 <Button Text='Excluir' Type='Button' Color='white' BackgroundColor='red' StartIcon={<Delete />} OnClick={this.BtnDelete_Click} />
                                 <Button Text='Editar' Type='Button' Color='white' BackgroundColor='#0d6efd' StartIcon={<ChangeCircle />} OnClick={this.BtnNovo_Click} />
-                                &nbsp;&nbsp;({this.state.Selecteds.length}) registro(s) selecionado(s)
+                                &nbsp;&nbsp;({_.size(this.state.Selecteds)}) registro(s) selecionado(s)
                                 </>
                             )}
                         </Left>

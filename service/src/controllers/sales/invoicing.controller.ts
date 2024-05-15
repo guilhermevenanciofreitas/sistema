@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { PaymentForm, Partner, SaleOrder, Product, SaleOrderReceivie, SaleOrderStatus, SaleOrderShippingType, Company, ProductCombination, ProductCombinationGroup, ProductCombinationItem, SaleOrderItemCombination, SaleOrderItemCombinationItem, Nfe } from "../../database";
+import { Partner, SaleOrder, SaleOrderStatus, Company } from "../../database";
 import { OrderService } from "../../services/sales/order.service";
-import { SaleOrderItem } from "../../database/models/saleOrderItem.model";
 import { Error } from "../../errors";
 import _ from "lodash";
-import { SaleOrderNfe } from "../../database/models/saleOrderNfe.model";
 
 export default class InvoicingController {
 
@@ -88,7 +86,7 @@ export default class InvoicingController {
                 let saleOrders = await SaleOrder.findAll({
                     attributes: ['id', 'number', 'value'], 
                     include: [
-                        {model: Partner, as: 'costumer', attributes: ['id', 'nome']}
+                        {model: Partner, as: 'customer', attributes: ['id', 'surname']}
                     ],
                     where: {id: req.body.id}, transaction}
                 );
@@ -100,7 +98,7 @@ export default class InvoicingController {
                     var saleOrder: any = {
                         saleOrderId: item.id,
                         number: item.number,
-                        costumer: item.costumer?.name,
+                        costumer: item.customer?.surname,
                         saleOrderNfe: [],
                     };
 

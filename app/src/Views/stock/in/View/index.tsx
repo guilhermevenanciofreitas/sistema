@@ -17,7 +17,7 @@ export class ViewStockIn extends ViewStockInBase {
     public render(): ReactNode {
 
         return (
-            <ViewModal ref={this.ViewModal} Title={this.props.Title} Width={1050}>
+            <ViewModal ref={this.ViewModal} Title={this.props.Title} Width={1100}>
                
                 <Content>
                     
@@ -25,24 +25,38 @@ export class ViewStockIn extends ViewStockInBase {
                        
                         <Grid md={5}>
                             <AutoComplete 
-                                New={{
+                                Action={{
                                     Type: 'Nfe',
-                                    Values: {}
+                                    New: {Values: {}},
+                                    Edit: {Id: _.get(this.state.nfe, 'id')}
                                 }}
-                                Label='Nota fiscal' Pesquisa={async(Text: string) => await Search.Nfe(Text)} Text={(Item: any) => `${Item.protNFe?.infProt?.chNFe}`} Value={this.state.nfe} OnChange={this.TxtNfe_Change}>
+                                Label='Nota fiscal' Pesquisa={async(Text: string) => _.filter(await Search.Nfe(Text), (c) => _.size(c.stockIns) == 0)} Text={(Item: any) => `${Item.protNFe?.infProt?.chNFe}`} Value={this.state.nfe} OnChange={this.TxtNfe_Change}>
                                 <NfeTemplate />
                             </AutoComplete>
                         </Grid>
                         <Grid md={4}>
                             <AutoComplete 
-                                New={{
+                                Action={{
                                     Type: 'Supplier',
-                                    Values: {
-                                        cpfCnpj: _.get(this.state, 'nfe.NFe.infNFe.emit.CNPJ'),
-                                        name: _.get(this.state, 'nfe.NFe.infNFe.emit.xNome'),
-                                        surname: _.get(this.state, 'nfe.NFe.infNFe.emit.xFant'),
-                                        isBloquearCompra: false,
-                                    }
+                                    New: {
+                                        Values: {
+                                            cpfCnpj: _.toUpper(_.get(this.state, 'nfe.NFe.infNFe.emit.CNPJ')),
+                                            name: _.toUpper(_.get(this.state, 'nfe.NFe.infNFe.emit.xNome')),
+                                            surname: _.toUpper(_.get(this.state, 'nfe.NFe.infNFe.emit.xFant')),
+                                            ie: _.get(this.state, 'nfe.NFe.infNFe.emit.IE'),
+                                            isBloquearCompra: false,
+                                            address: {
+                                                cep: _.get(this.state, 'nfe.NFe.infNFe.emit.enderEmit.CEP'),
+                                                logradouro: _.toUpper(_.get(this.state, 'nfe.NFe.infNFe.emit.enderEmit.xLgr')),
+                                                number: _.toUpper(_.get(this.state, 'nfe.NFe.infNFe.emit.enderEmit.nro')),
+                                                complement: _.toUpper(_.get(this.state, 'nfe.NFe.infNFe.emit.enderEmit.xCpl')),
+                                                neighborhood: _.toUpper(_.get(this.state, 'nfe.NFe.infNFe.emit.enderEmit.xBairro')),
+                                                city: _.get(this.state, 'nfe.enderEmit.city'),
+                                                state: _.get(this.state, 'nfe.enderEmit.state'),
+                                            }
+                                        }
+                                    },
+                                    Edit: {Id: _.get(this.state.supplier, 'id')}
                                 }}
                                 Label='Fornecedor' Pesquisa={async(Text: string) => await Search.Supplier(Text)} Text={(Item: any) => `${Item.surname}`} Value={this.state.supplier} OnChange={(supplier: any[]) => this.setState({supplier})}>
                                 <SupplierTemplate />

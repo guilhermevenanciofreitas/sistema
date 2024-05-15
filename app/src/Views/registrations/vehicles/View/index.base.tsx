@@ -15,7 +15,18 @@ export class ViewProductBase extends React.Component<Readonly<{Title: string}>> 
         plate: '',
     }
 
-    public Show = async (id?: string): Promise<any> =>
+    public New = async (vehicle: any): Promise<any> =>
+    {
+    
+        this.Limpar();
+
+        this.setState({...vehicle})
+
+        return await this.ViewModal.current?.Show();
+    
+    }
+
+    public Edit = async (id?: string): Promise<any> =>
     {
  
         this.Limpar();

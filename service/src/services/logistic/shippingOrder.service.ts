@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { Nfe, ShippingOrder, ShippingOrderVehicle } from "../../database";
+import { Nfe, ShippingOrder, ShippingOrderNfe, ShippingOrderVehicle } from "../../database";
 import crypto from "crypto";
 import { Op } from "sequelize";
 
@@ -24,6 +24,12 @@ export class ShippingOrderService {
             vehicle.shippingOrderId = shippingOrder.id;
             await ShippingOrderVehicle.create({...vehicle}, {transaction});
         }
+
+        for (let nfe of shippingOrder?.nfes || []) {
+            nfe.id = crypto.randomUUID();
+            nfe.shippingOrderId = shippingOrder.id;
+            await ShippingOrderNfe.create({...nfe}, {transaction});
+        }
        
         await ShippingOrder.create({...shippingOrder}, {transaction});
 
@@ -40,6 +46,17 @@ export class ShippingOrderService {
                 await ShippingOrderVehicle.update(vehicle, {where: {id: vehicle.id}, transaction});
             }
             await ShippingOrderVehicle.destroy({where: {shippingOrderId: shippingOrder.id, id: {[Op.notIn]: shippingOrder?.vehicles?.filter((c: any) => c.id != '').map(c => c.id)}}, transaction})
+        }
+
+        for (let nfe of shippingOrder?.nfes || []) {
+            if (!nfe.id) {
+                nfe.id = crypto.randomUUID();
+                nfe.shippingOrderId = shippingOrder.id;
+                await ShippingOrderNfe.create({...nfe}, {transaction});
+            } else {
+                await ShippingOrderNfe.update(nfe, {where: {id: nfe.id}, transaction});
+            }
+            await ShippingOrderNfe.destroy({where: {shippingOrderId: shippingOrder.id, id: {[Op.notIn]: shippingOrder?.nfes?.filter((c: any) => c.id != '').map(c => c.id)}}, transaction})
         }
      
         await ShippingOrder.update(shippingOrder, {where: {id: shippingOrder.id}, transaction});

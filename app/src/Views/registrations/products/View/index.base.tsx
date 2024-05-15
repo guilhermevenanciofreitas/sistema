@@ -33,7 +33,7 @@ export class ViewProductBase extends React.Component<Readonly<{Title?: string}>>
         
         this.Limpar();
 
-        this.setState({open: true, ...product});
+        this.setState({...product});
 
         return await this.ViewModal.current?.Show();
 
@@ -48,23 +48,11 @@ export class ViewProductBase extends React.Component<Readonly<{Title?: string}>>
             Loading.Show();
             const r = await Service.Post("registrations/product/findOne", {id});
             Loading.Hide();
-            this.setState({open: true, ...r?.data});
+            this.setState({...r?.data});
         }
 
         return await this.ViewModal.current?.Show();
 
-    }
-
-    protected BtnLimpar_Click = async () =>
-    {
-        try
-        {
-            this.Limpar();
-        }
-        catch (err: any)
-        {
-            await DisplayError.Show(err);
-        }
     }
 
     protected BtnSalvar_Click = async () =>
@@ -78,19 +66,33 @@ export class ViewProductBase extends React.Component<Readonly<{Title?: string}>>
             let suppliers = [];
 
             for (let combination of _.get(this.state, 'combinations')) {
+
+                let combinationItems = [];
+
+                for (let combinationItem of _.get(combination, 'combinationItems')) {
+                    combinationItems.push({
+                        name: _.get(combinationItem, 'name' || null),
+                        description: _.get(combinationItem, 'description') || null,
+                    });
+                }
+
                 combinations.push({
-                    id: _.get(combination, 'id'),
-                    isObrigatorio: _.get(combination, 'isObrigatorio'),
-                    minimo: _.get(combination, 'minimo'),
-                    maximo: _.get(combination, 'maximo'),
-                    combinationGroupId: _.get(combination, 'combinationGroup.id'),
+                    id: _.get(combination, 'id') || null,
+                    combinationId: _.get(combination, 'combination.id') || null,
+                    isRequired: _.get(combination, 'isRequired') || null,
+                    min: _.get(combination, 'min') || null,
+                    max: _.get(combination, 'max') || null,
+                    combinationItems: combinationItems
                 });
             }
 
             for (let supplier of _.get(this.state, 'suppliers')) {
                 suppliers.push({
-                    id: _.get(supplier, 'id'),
-                    supplierId: _.get(supplier, 'supplier.id'),
+                    id: _.get(supplier, 'id') || null,
+                    supplierId: _.get(supplier, 'supplier.id') || null,
+                    measurementUnitId: _.get(supplier, 'measurementUnit.id') || null,
+                    contain: _.get(supplier, 'contain') || null,
+                    value: _.get(supplier, 'value') || null,
                 });
             }
 

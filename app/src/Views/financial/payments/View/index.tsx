@@ -1,16 +1,18 @@
 
 import { ViewContaPagarBase } from './index.base';
-import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, ViewModal, NumericBox, TextBox } from '../../../../Utils/Controls';
+import { AutoComplete, Button, DatePicker, DropDownList, DropDownListItem, Form, ViewModal, NumericBox, TextBox, Content, Actions } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
-import { CostumerTemplate } from '../../../../Search/Templates/Costumer';
+import { CustomerTemplate } from '../../../../Search/Templates/Customer';
 import { Search } from '../../../../Search';
 import { PaymentFormTemplate } from '../../../../Search/Templates/PaymentForm';
 import { BankAccountTemplate } from '../../../../Search/Templates/BankAccount';
 import { CompanyTemplate } from '../../../../Search/Templates/Company';
 import { BankTemplate } from '../../../../Search/Templates/Bank';
 import _ from 'lodash';
+import { TaskAltOutlined } from '@mui/icons-material';
+import { color } from '../../../../Utils/color';
 
 export class ViewPayment extends ViewContaPagarBase {
 
@@ -18,10 +20,7 @@ export class ViewPayment extends ViewContaPagarBase {
 
         return (
             <ViewModal ref={this.ViewModal} Title={this.props.Title} Width={1100}>
-                <Form OnSubmit={this.BtnSalvar_Click} OnReset={this.BtnLimpar_Click}>
-
-                    <Button Text='Salvar' Type='Submit' Color='white' BackgroundColor='green' />
-                    <Button Text='Limpar' Type='Reset' Color='white' BackgroundColor='gray' />
+                <Content>
 
                     <fieldset>
                         <legend>Informações gerais</legend>
@@ -36,10 +35,10 @@ export class ViewPayment extends ViewContaPagarBase {
                                 </AutoComplete>
                             </Grid>
                             <Grid md={2}>
-                                <DatePicker Label='Vencimento' Text={this.state.dueDate} OnChange={(args: EventArgs) => this.setState({dueDate: args.Value})} />
+                                <DatePicker Label='Vencimento' Text={this.state.dueDate} OnChange={(args: EventArgs) => this.setState({dueDate: args.Value, scheduleDate: args.Value})} />
                             </Grid>
                             <Grid md={2}>
-                                <DatePicker Label='Agendamento' Text={this.state.dueDate} OnChange={(args: EventArgs) => this.setState({dueDate: args.Value})} />
+                                <DatePicker Label='Agendamento' Text={this.state.scheduleDate} OnChange={(args: EventArgs) => this.setState({scheduleDate: args.Value})} />
                             </Grid>
                             <Grid md={2}>
                                 <TextBox Label='Nosso número' TextTransform='Normal' Text={this.state.ourNumber} OnChange={(args: EventArgs) => this.setState({ourNumber: args.Value})} ReadOnly={true} />
@@ -52,25 +51,25 @@ export class ViewPayment extends ViewContaPagarBase {
                             </Grid>
 
                             <Grid md={4}>
-                                <AutoComplete Label='Beneficiário' Pesquisa={async(Text: string) => await Search.Costumer(Text)} Text={(Item: any) => `${Item.surname}` } Value={this.state.receiver} OnChange={(receiver: any) => this.setState({receiver})}>
-                                    <CostumerTemplate />
+                                <AutoComplete Label='Beneficiário' Action={{Type: 'Customer', New: {Values: {}}, Edit: {Id: _.get(this.state.receiver, 'id')}}} Pesquisa={async(Text: string) => await Search.Customer(Text)} Text={(Item: any) => `${Item.surname}` } Value={this.state.receiver} OnChange={(receiver: any) => this.setState({receiver})}>
+                                    <CustomerTemplate />
                                 </AutoComplete>
                             </Grid>
 
                             <Grid md={4}>
-                                <AutoComplete Label='Conta bancária' Pesquisa={async(Text: string) => await Search.BankAccount(Text)} Text={(Item: any) => `${Item.bank?.description} - ${Item.agency}-${Item.agencyDigit} / ${Item.account}-${Item.accountDigit}` } Value={this.state.bankAccount} OnChange={(bankAccount: any) => this.setState({bankAccount})}>
+                                <AutoComplete Label='Conta bancária' Action={{Type: 'BankAccount', New: {Values: {}}, Edit: {Id: _.get(this.state.bankAccount, 'id')}}} Pesquisa={async(Text: string) => await Search.BankAccount(Text)} Text={(Item: any) => `${Item.bank?.description} - ${Item.agency}-${Item.agencyDigit} / ${Item.account}-${Item.accountDigit}` } Value={this.state.bankAccount} OnChange={(bankAccount: any) => this.setState({bankAccount})}>
                                     <BankAccountTemplate />
                                 </AutoComplete>
                             </Grid>
 
                             <Grid md={3}>
-                                <TextBox Label='Nº Documento' TextTransform='Normal' Text={this.state.numeroDocumento} OnChange={(args: EventArgs) => this.setState({numeroDocumento: args.Value})} />
+                                <TextBox Label='Nº Documento' TextTransform='Normal' Text={this.state.documentNumber} OnChange={(args: EventArgs) => this.setState({documentNumber: args.Value})} />
                             </Grid>
                             <Grid md={2}>
-                                <TextBox Label='Moeda' TextTransform='Normal' Text={'BRL (Real)'} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} ReadOnly={true} />
+                                <TextBox Label='Moeda' TextTransform='Normal' Text={'BRL (Real)'} OnChange={() => null} ReadOnly={true} />
                             </Grid>
                             <Grid md={2}>
-                                <NumericBox Label='Valor' Text={this.state.valor} Prefix='R$ ' Scale={2} OnChange={(args: EventArgs) => this.setState({valor: args.Value})} />
+                                <NumericBox Label='Valor' Text={this.state.value} Prefix='R$ ' Scale={2} OnChange={(args: EventArgs) => this.setState({value: args.Value})} />
                             </Grid>
                             <Grid md={5}>
                                 <TextBox Label='Aviso ao benificiário' TextTransform='Normal' Text={this.state.beneficiaryNotice} OnChange={(args: EventArgs) => this.setState({beneficiaryNotice: args.Value})} />
@@ -111,7 +110,7 @@ export class ViewPayment extends ViewContaPagarBase {
                                     <TextBox Label='Valor do desconto' TextTransform='Normal' Text={this.state.data?.discount || "0.00"} OnChange={(args: EventArgs) => this.setState({data: {...this.state.data, discount: args.Value}})} />
                                 </Grid>
                                 <Grid md={3}>
-                                    <TextBox Label='Valor total' TextTransform='Normal' Text={((parseFloat(this.state.valor || "0")) + (parseFloat(this.state.data?.fine || "0")) + (parseFloat(this.state.data?.interest || "0")) - (parseFloat(this.state.data?.discount || "0"))).toLocaleString("pt-BR", {minimumFractionDigits: 2})} ReadOnly={true} />
+                                    <TextBox Label='Valor total' TextTransform='Normal' Text={((parseFloat(this.state.value || "0")) + (parseFloat(this.state.data?.fine || "0")) + (parseFloat(this.state.data?.interest || "0")) - (parseFloat(this.state.data?.discount || "0"))).toLocaleString("pt-BR", {minimumFractionDigits: 2})} ReadOnly={true} />
                                 </Grid>
 
                                 {/*
@@ -214,7 +213,10 @@ export class ViewPayment extends ViewContaPagarBase {
 
                     </fieldset>
                     
-                </Form>
+                </Content>
+                <Actions>
+                    <Button Text='Salvar' StartIcon={<TaskAltOutlined />} Color='white' BackgroundColor={color.success} OnClick={this.BtnSalvar_Click} />
+                </Actions>
             </ViewModal>
         );
 

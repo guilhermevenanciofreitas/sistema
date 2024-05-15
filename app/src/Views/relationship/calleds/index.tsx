@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, CardStatus, Container, Left, ListView, Right } from "../../../Utils/Controls";
-import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
+import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle, AddCircleOutline } from "@mui/icons-material";
 import CalledsBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { Grid, IconButton } from "@mui/joy";
@@ -9,6 +9,7 @@ import { Title } from "../../../Layout/JoyLayout/Ttitle";
 //import { ViewFiltro } from "./filtro";
 import _ from "lodash";
 import { ViewCalled } from "./View";
+import { color } from "../../../Utils/color";
 
 export enum colors {
     open = 'rgb(0, 174, 209)',
@@ -57,14 +58,14 @@ export default class Calleds extends CalledsBase {
 
                     <Container>
                         <Left>
-                            {this.state.Selecteds.length == 0 && (
-                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnNovo_Click} />
+                            {_.size(this.state.Selecteds) == 0 && (
+                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor={color.success} StartIcon={<AddCircleOutline />} OnClick={this.BtnNovo_Click} />
                             )}
-                            {this.state.Selecteds.length >= 1 && (
+                            {_.size(this.state.Selecteds) >= 1 && (
                                 <>
                                 <Button Text='Excluir' Type='Button' Color='white' BackgroundColor='red' StartIcon={<Delete />} OnClick={this.BtnDelete_Click} />
                                 <Button Text='Editar' Type='Button' Color='white' BackgroundColor='#0d6efd' StartIcon={<ChangeCircle />} OnClick={this.BtnNovo_Click} />
-                                &nbsp;&nbsp;({this.state.Selecteds.length}) registro(s) selecionado(s)
+                                &nbsp;&nbsp;({_.size(this.state.Selecteds)}) registro(s) selecionado(s)
                                 </>
                             )}
                         </Left>

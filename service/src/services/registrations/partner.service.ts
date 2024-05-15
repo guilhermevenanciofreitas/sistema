@@ -2,6 +2,7 @@ import { Transaction } from "sequelize";
 import { Partner, PartnerContact } from "../../database";
 import crypto from "crypto";
 import {Op} from "sequelize";
+import { DisplayError } from "../../errors/DisplayError";
 
 export class PartnerService {
 
@@ -15,8 +16,16 @@ export class PartnerService {
 
     }
 
-    public static Create = async (partner: Partner, transaction: Transaction | undefined) => {
+    public static Create = async (partner: Partner, transaction?: Transaction) => {
 
+        if (partner.cpfCnpj) {
+            const exist = await Partner.findOne({attributes: ['id'], where: {cpfCnpj: partner.cpfCnpj}, transaction});
+
+            if (exist) {
+                throw new DisplayError('Já existe um cadastro com esse CPF/CNPJ!', 201);
+            }
+        }
+        
         partner.id = crypto.randomUUID();
 
         for (let contact of partner?.contacts || []) {
@@ -29,7 +38,7 @@ export class PartnerService {
 
     }
 
-    public static Update = async (partner: Partner, transaction: Transaction | undefined) => {
+    public static Update = async (partner: Partner, transaction?: Transaction) => {
 
         for (let contact of partner?.contacts || []) {
             if (!contact.id) {
@@ -46,7 +55,7 @@ export class PartnerService {
 
     }
 
-    public static Delete = async (id: string, transaction: Transaction | undefined) => {
+    public static Delete = async (id: string, transaction?: Transaction) => {
         await Partner.update({ativo: false}, {where: {id: id}, transaction});
     }
 

@@ -13,7 +13,7 @@ export class ViewOrderBase extends React.Component<Readonly<{Title: string}>> {
         id: '',
         number: '',
         value: '0.00',
-        costumer: null,
+        customer: null,
         company: null,
         seller: null,
         status: null,
@@ -24,15 +24,7 @@ export class ViewOrderBase extends React.Component<Readonly<{Title: string}>> {
 
         shippingType: null,
         shippingCompany: null,
-        shippingAddress: {
-            cep: '',
-            logradouro: '',
-            numero: '',
-            complemento: '',
-            estadoId: '',
-            bairro: '',
-            municipio: null,
-        },
+        shippingAddress: null,
     }
 
     public Show = async (id?: string): Promise<any> =>
@@ -63,6 +55,24 @@ export class ViewOrderBase extends React.Component<Readonly<{Title: string}>> {
         }
     }
 
+    protected BtnConsultarCep_Click = async () =>
+    {
+        try
+        {
+                
+            Loading.Show();
+            const r = await Service.Post(`cep/consult`, {cep: _.toString(_.get(this.state.shippingAddress, 'cep')).replace(/[^0-9]/g,'')});
+            Loading.Hide();
+
+            this.setState({shippingAddress: {..._.get(this.state, 'shippingAddress') as any, ...r?.data}});
+    
+        }
+        catch (err: any)
+        {
+            await DisplayError.Show(err);
+        }
+    }
+
     protected BtnSalvar_Click = async () =>
     {
         try
@@ -73,7 +83,7 @@ export class ViewOrderBase extends React.Component<Readonly<{Title: string}>> {
                 return;
             }
 
-            if (this.state.costumer == null) {
+            if (this.state.customer == null) {
                 await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Informe o cliente para venda!", buttons: [{ Text: "OK" }]});
                 return;
             }
@@ -102,10 +112,20 @@ export class ViewOrderBase extends React.Component<Readonly<{Title: string}>> {
                 });
             }
 
+            const shippingAddress = {
+                cep: _.get(this.state, 'shippingAddress.cep') || null,
+                logradouro: _.get(this.state, 'shippingAddress.logradouro') || null,
+                number: _.get(this.state, 'shippingAddress.number') || null,
+                complement: _.get(this.state, 'shippingAddress.complement') || null,
+                neighborhood: _.get(this.state, 'shippingAddress.neighborhood') || null,
+                stateId: _.get(this.state, 'shippingAddress.state.id') || null,
+                cityId: _.get(this.state, 'shippingAddress.city.id') || null,
+            }
+
             const request = {
                 id: _.get(this.state, 'id') || null,
                 number: _.get(this.state, 'number') || null,
-                costumerId: _.get(this.state.costumer, 'id') || null,
+                customerId: _.get(this.state.customer, 'id') || null,
                 companyId: _.get(this.state.company, 'id') || null,
                 sellerId: _.get(this.state.seller, 'id') || null,
               
@@ -114,7 +134,7 @@ export class ViewOrderBase extends React.Component<Readonly<{Title: string}>> {
 
                 shippingTypeId: _.get(this.state.shippingType, 'id') || null,
                 shippingCompanyId: _.get(this.state.shippingCompany, 'id') || null,
-                shippingAddress: _.get(this.state, 'shippingAddress') || null,
+                shippingAddress: shippingAddress,
             }
 
             let r = await Service.Post("sales/order/save", request);
@@ -143,7 +163,7 @@ export class ViewOrderBase extends React.Component<Readonly<{Title: string}>> {
             id: '',
             number: '',
             value: '0.00',
-            costumer: null,
+            customer: null,
             company: null,
             seller: null,
             

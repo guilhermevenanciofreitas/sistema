@@ -19,8 +19,8 @@ export class SaleOrder extends Model {
   @Column({type: DataType.STRING(30), field: "number"})
   number?: string;
 
-  @Column({type: DataType.UUID, field: "costumerId"})
-  costumerId?: string;
+  @Column({type: DataType.UUID, field: "customerId"})
+  customerId?: string;
 
   @Column({type: DataType.UUID, field: "sellerId"})
   sellerId?: string;
@@ -47,8 +47,8 @@ export class SaleOrder extends Model {
   @BelongsTo(() => Company, {as: 'company', foreignKey: 'companyId'})
   company?: Company;
   
-  @BelongsTo(() => Partner, {as: 'costumer', foreignKey: 'costumerId'})
-  costumer?: Partner;
+  @BelongsTo(() => Partner, {as: 'customer', foreignKey: 'customerId'})
+  customer?: Partner;
 
   @BelongsTo(() => Partner, {as: 'seller', foreignKey: 'sellerId'})
   seller?: Partner;

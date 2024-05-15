@@ -4,8 +4,8 @@ import { State } from "./state.model";
 @Table({tableName: "city"})
 export class City extends Model {
   
-  @Column({type: DataType.INTEGER, primaryKey: true, autoIncrement: true, field: "id"})
-  id?: number;
+  @Column({type: DataType.UUID, primaryKey: true, autoIncrement: true, field: "id"})
+  id?: string;
 
   @Column({type: DataType.STRING(100), field: "name"})
   name?: string;

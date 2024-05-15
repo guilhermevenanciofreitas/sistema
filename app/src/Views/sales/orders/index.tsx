@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, CardStatus, Container, Left, ListView, Right } from "../../../Utils/Controls";
-import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
+import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle, AddCircleOutline } from "@mui/icons-material";
 import { ViewOrder } from "./View/index";
 import OrdersBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
@@ -9,6 +9,7 @@ import { Title } from "../../../Layout/JoyLayout/Ttitle";
 //import { ViewImportar } from "./importar";
 //import { ViewFiltro } from "./filtro";
 import _ from "lodash";
+import { color } from "../../../Utils/color";
 
 const Number = ({ row }: any) => {
     return (
@@ -27,7 +28,7 @@ export default class Orders extends OrdersBase {
         { selector: (row: any) => <Number row={row} />, sort: 'number', name: 'Número', sortable: true, maxWidth:"100px" },
         { selector: (row: any) => row.createdAt, sort: 'surname', name: 'Criado em', sortable: true, maxWidth:"200px" },
         { selector: (row: any) => row.company?.surname, sort: 'surname', name: 'Empresa', sortable: true },
-        { selector: (row: any) => row.costumer?.surname, sort: 'surname', name: 'Nome', sortable: true },
+        { selector: (row: any) => row.customer?.surname, sort: 'surname', name: 'Nome', sortable: true },
         { selector: (row: any) => row.seller?.surname, sort: 'surname', name: 'Vendedor', sortable: true, maxWidth:"300px" },
         { selector: (row: any) => row.status?.description || 'PENDENTE', sort: '$status.descricao', name: 'Status', sortable: true },
         { selector: (row: any) => parseFloat(row.value).toLocaleString("pt-BR", {style: 'currency', currency: 'BRL'}), sort: 'value', name: 'Valor', right: true, sortable: true, maxWidth:"120px" },
@@ -51,14 +52,14 @@ export default class Orders extends OrdersBase {
 
                     <Container>
                         <Left>
-                            {this.state.Selecteds.length == 0 && (
-                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor='green' StartIcon={<Add />} OnClick={this.BtnNovo_Click} />
+                            {_.size(this.state.Selecteds) == 0 && (
+                                <Button Text='Novo' Type='Button' Color='white' BackgroundColor={color.success} StartIcon={<AddCircleOutline />} OnClick={this.BtnNovo_Click} />
                             )}
-                            {this.state.Selecteds.length >= 1 && (
+                            {_.size(this.state.Selecteds) >= 1 && (
                                 <>
-                                <Button Text='Excluir' Type='Button' Color='white' BackgroundColor='red' StartIcon={<Delete />} OnClick={this.BtnDelete_Click} />
-                                <Button Text='Editar' Type='Button' Color='white' BackgroundColor='#0d6efd' StartIcon={<ChangeCircle />} OnClick={this.BtnNovo_Click} />
-                                &nbsp;&nbsp;({this.state.Selecteds.length}) registro(s) selecionado(s)
+                                <Button Text='Excluir' Type='Button' Color='white' BackgroundColor={color.danger} StartIcon={<Delete />} OnClick={this.BtnDelete_Click} />
+                                <Button Text='Editar' Type='Button' Color='white' BackgroundColor={color.primary} StartIcon={<ChangeCircle />} OnClick={this.BtnNovo_Click} />
+                                &nbsp;&nbsp;({_.size(this.state.Selecteds)}) registro(s) selecionado(s)
                                 </>
                             )}
                         </Left>

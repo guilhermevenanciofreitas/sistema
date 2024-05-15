@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { Product, ProductCombination, ProductSupplier } from "../../database";
+import { Product, ProductCombination, ProductCombinationItem, ProductSupplier } from "../../database";
 import crypto from "crypto";
 import { Op } from "sequelize";
 
@@ -26,6 +26,14 @@ export class ProductService {
             await ProductCombination.create({...combination}, {transaction});
         }
 
+        for (let combination of product?.combinations || []) {
+            for (let combinationItem of combination?.combinationItems || []) {
+                combinationItem.id = crypto.randomUUID();
+                combinationItem.productCombinationId = combination.id;
+                await ProductCombinationItem.create({...combinationItem}, {transaction});
+            }
+        }
+
         for (let supplier of product?.suppliers || []) {
             supplier.id = crypto.randomUUID();
             supplier.productId = product.id;
@@ -46,7 +54,20 @@ export class ProductService {
             } else {
                 await ProductCombination.update(combination, {where: {id: combination.id}, transaction});
             }
-            await ProductCombination.destroy({where: {productId: product.id, id: {[Op.notIn]: product?.combinations?.filter((c: any) => c.id != '').map(c => c.id)}}, transaction})
+            await ProductCombination.destroy({where: {productId: product.id, id: {[Op.notIn]: product?.combinations?.filter((c: any) => c.id != '').map(c => c.id)}}, transaction});
+        }
+
+        for (let combination of product?.combinations || []) {
+            for (let combinationItem of combination?.combinationItems || []) {
+                if (!combinationItem.id) {
+                    combinationItem.id = crypto.randomUUID();
+                    combinationItem.productCombinationId = combination.id;
+                    await ProductCombinationItem.create({...combinationItem}, {transaction});
+                } else {
+                    await ProductCombinationItem.update(combinationItem, {where: {id: combinationItem.id}, transaction});
+                }
+                await ProductCombinationItem.destroy({where: {productCombinationId: combination.id, id: {[Op.notIn]: combination?.combinationItems?.filter((c: any) => c.id != '').map(c => c.id)}}, transaction});
+            }
         }
 
         for (let supplier of product?.suppliers || []) {

@@ -73,7 +73,7 @@ export default class VehiclesBase extends BaseIndex {
         try
         {
 
-            const r = await this.ViewVehicle.current?.Show(undefined);
+            const r = await this.ViewVehicle.current?.New({});
 
             if (r) await this.Pesquisar(this.state.request);
             
@@ -195,7 +195,7 @@ export default class VehiclesBase extends BaseIndex {
     private OpenVehicle = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, '', `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewVehicle.current?.Show(id);
+        const r = await this.ViewVehicle.current?.Edit(id);
         if (isHitoryBack) history.back();
         return r;
     }

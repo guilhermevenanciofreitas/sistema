@@ -3,13 +3,13 @@ import { Service } from "../../../../Service";
 import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
+import _ from "lodash";
 
 export class ViewNotaFiscalBase extends React.Component<Readonly<{Title: string}>> {
 
     protected ViewModal = React.createRef<ViewModal>();
 
     state = {
-        open: false,
         id: "",
         NFe: null,
         protNFe: null,
@@ -54,19 +54,64 @@ export class ViewNotaFiscalBase extends React.Component<Readonly<{Title: string}
         }
     }
 
+    private ValidarChaveAcesso = (chNFe: string): boolean =>
+    {
+        // Verifica se a chave tem 44 caracteres
+        if (chNFe.length !== 44) {
+            return false; // Chave com tamanho incorreto
+        }
+
+        // Obtém o dígito verificador
+        var digitoVerificador = parseInt(chNFe.charAt(43), 10);
+
+        // Calcula o dígito verificador esperado
+        var soma = 0;
+        var peso = 2;
+        for (var i = 42; i >= 0; i--) {
+            soma += parseInt(chNFe.charAt(i), 10) * peso;
+            peso = (peso < 9) ? peso + 1 : 2;
+        }
+        var resto = soma % 11;
+        var digitoVerificadorEsperado = (resto === 0 || resto === 1) ? 0 : 11 - resto;
+
+        // Verifica se o dígito verificador informado coincide com o dígito verificador calculado
+        return digitoVerificador === digitoVerificadorEsperado;
+
+    }
+
     protected BtnSalvar_Click = async () =>
     {
         try
         {
 
-            Loading.Show();
+            const chNFe = (_.get(this.state, 'protNFe.infProt.chNFe') as any).replaceAll(' ', '');
 
-            let r = await Service.Post("nfe/save", this.state);
-    
+            if (_.isEmpty(chNFe)) {
+                await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Informe a chave de acesso!", buttons: [{ Text: "OK" }]});
+                return;
+            }
+
+            if (!this.ValidarChaveAcesso(chNFe)) {
+                await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Chave de acesso inválida!", buttons: [{ Text: "OK" }]});
+                return;
+            }
+
+            let protNFe: any = _.cloneDeep(_.get(this.state, 'protNFe'));
+
+            _.set(protNFe, 'infProt.chNFe', (_.get(protNFe, 'infProt.chNFe') as any).replaceAll(' ', ''));
+
+            const request = {
+                id: _.get(this.state, 'id') || null,
+                NFe: _.get(this.state, 'NFe') || null,
+                protNFe: protNFe,
+            }
+
+            Loading.Show();
+            let r = await Service.Post("nfe/save", request);
             Loading.Hide();
     
             if (r?.status == 201) {
-                await MessageBox.Show({title: "Info", width: 400, content: r?.data.message, buttons: [{ Text: "OK" }]});
+                await MessageBox.Show({title: "Info", width: 400, type: 'Warning', content: r?.data.message, buttons: [{ Text: "OK" }]});
                 return;
             }
     
@@ -89,7 +134,22 @@ export class ViewNotaFiscalBase extends React.Component<Readonly<{Title: string}
         const formData = new FormData();
         formData.append('file', file);
         
-        const response = await Service.Post("nfe/xml", formData, 'multipart/form-data');
+        const response = await Service.Post('nfe/xml', formData, 'multipart/form-data');
+
+        this.setState({...response?.data});
+
+    }
+
+    protected BtnConsultar = async () => {
+
+        if (_.isEmpty(_.get(this.state, 'protNFe.infProt.chNFe'))) {
+            await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Informe a chave de acesso!", buttons: [{ Text: "OK" }]});
+            return;
+        }
+
+        Loading.Show();
+        const response = await Service.Post('nfe/consult', {chNFe: (_.get(this.state, 'protNFe.infProt.chNFe') as any).replaceAll(' ', '')});
+        Loading.Hide();
 
         this.setState({...response?.data});
 

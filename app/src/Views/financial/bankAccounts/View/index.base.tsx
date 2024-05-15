@@ -17,7 +17,18 @@ export class ViewBankAccountBase extends React.Component<Readonly<{Title: string
         accountDigit: ""
     }
 
-    public Show = async (id?: string): Promise<any> =>
+    public New = async (bankAccount: any): Promise<any> =>
+    {
+
+        this.Limpar();
+
+        this.setState({...bankAccount});
+
+        return await this.ViewModal.current?.Show();
+
+    }
+
+    public Edit = async (id?: string): Promise<any> =>
     {
  
         this.Limpar();
@@ -31,18 +42,6 @@ export class ViewBankAccountBase extends React.Component<Readonly<{Title: string
 
         return await this.ViewModal.current?.Show();
  
-    }
-
-    protected BtnLimpar_Click = async () =>
-    {
-        try
-        {
-            this.Limpar();
-        }
-        catch (err: any)
-        {
-            await DisplayError.Show(err);
-        }
     }
 
     protected BtnSalvar_Click = async () =>

@@ -1,11 +1,13 @@
 import React, { ReactNode } from "react";
-import { AutoComplete, Button, DropDownList, DropDownListItem, GridView, ViewModal, NumericBox, TextBox } from "../../../../Utils/Controls";
+import { AutoComplete, Button, DropDownList, DropDownListItem, GridView, ViewModal, NumericBox, TextBox, Content, Actions } from "../../../../Utils/Controls";
 import { EventArgs } from "../../../../Utils/EventArgs";
 import { BaseDetails } from "../../../../Utils/Base/details";
 import { Search } from "../../../../Search";
 import { ProductTemplate } from "../../../../Search/Templates/Product";
 import _ from "lodash";
 import { FormLabel, Grid, Input } from "@mui/joy";
+import { Edit, TaskAltOutlined } from "@mui/icons-material";
+import { color } from "../../../../Utils/color";
 
 const Columns = [
     { selector: (row: any) => row.product?.name, name: 'Item' },
@@ -86,105 +88,105 @@ class ViewItem extends React.Component {
     render(): React.ReactNode {
         return (
             <ViewModal ref={this.ViewModal} Title='Item' Width={550}>
-                
-                <Grid container spacing={1} sx={{ flexGrow: 1 }}>
-                    
-                    <Grid md={12}>
-                        <AutoComplete Label='Item' Pesquisa={async(Text: string) => await Search.Product(Text)} Text={(Item: any) => `${Item.name || ''}` } Value={this.state.product} OnChange={(product: any) => {
-                                this.setState({product, discount: '0.00', value: product?.value});
-                                this.TxtQuantidade.current?.Focus();
-                            }}>
-                            <ProductTemplate />
-                        </AutoComplete>
-                    </Grid>
+                <Content>
+                    <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+                        
+                        <Grid md={12}>
+                            <AutoComplete Label='Item' Action={{Type: 'Product', New: {Values: {}}, Edit: {Id: _.get(this.state.product, 'id')}}} Pesquisa={async(Text: string) => await Search.Product(Text)} Text={(Item: any) => `${Item.name || ''}` } Value={this.state.product} OnChange={(product: any) => {
+                                    this.setState({product, discount: '0.00', value: product?.value});
+                                    this.TxtQuantidade.current?.Focus();
+                                }}>
+                                <ProductTemplate />
+                            </AutoComplete>
+                        </Grid>
 
-                    {_.orderBy((this.state.product as any)?.combinacoes, ['ordem'], ['asc'])?.map((produtoCombinacao: any) =>
-                        <>
-                            {produtoCombinacao.maximo == 1 && (
-                                <Grid md={12}>
-                                    <FormLabel>{produtoCombinacao.combinacao.descricao}&nbsp;&nbsp;{produtoCombinacao.isObrigatorio ? <div style={{color: 'red', fontWeight: 400}}>Obrigatório</div> : <div style={{color: 'gray', fontWeight: 400}}>Opcional</div>}</FormLabel>
-                                    <DropDownList
-                                        SelectedValue={_.map(((_.filter(this.state.itemCombinations, (itemCombinacao: any) => itemCombinacao.combinacaoId == produtoCombinacao.combinacao.id) as any)[0])?.combinacaoItems, (c: any) => c.itemCombinacaoId)[0]}
-                                        OnChange={(args: EventArgs) => {
+                        {_.orderBy((this.state.product as any)?.combinacoes, ['ordem'], ['asc'])?.map((produtoCombinacao: any) =>
+                            <>
+                                {produtoCombinacao.maximo == 1 && (
+                                    <Grid md={12}>
+                                        <FormLabel>{produtoCombinacao.combinacao.descricao}&nbsp;&nbsp;{produtoCombinacao.isObrigatorio ? <div style={{color: 'red', fontWeight: 400}}>Obrigatório</div> : <div style={{color: 'gray', fontWeight: 400}}>Opcional</div>}</FormLabel>
+                                        <DropDownList
+                                            SelectedValue={_.map(((_.filter(this.state.itemCombinations, (itemCombinacao: any) => itemCombinacao.combinacaoId == produtoCombinacao.combinacao.id) as any)[0])?.combinacaoItems, (c: any) => c.itemCombinacaoId)[0]}
+                                            OnChange={(args: EventArgs) => {
 
-                                            let itemCombinacoes: any[] = _.cloneDeep(this.state.itemCombinations);
+                                                let itemCombinacoes: any[] = _.cloneDeep(this.state.itemCombinations);
 
-                                            let itemCombinacao = _.filter(itemCombinacoes, (itemCombinacao: any) => itemCombinacao.combinacaoId == produtoCombinacao.combinacao.id)[0];
+                                                let itemCombinacao = _.filter(itemCombinacoes, (itemCombinacao: any) => itemCombinacao.combinacaoId == produtoCombinacao.combinacao.id)[0];
 
-                                            _.remove(itemCombinacoes, (itemCombinacao: any) => itemCombinacao.combinacaoId == produtoCombinacao.combinacao.id);
+                                                _.remove(itemCombinacoes, (itemCombinacao: any) => itemCombinacao.combinacaoId == produtoCombinacao.combinacao.id);
 
-                                            itemCombinacoes?.push({
-                                                id: itemCombinacao?.id,
-                                                pedidoVendaItemId: itemCombinacao?.pedidoVendaItemId,
-                                                combinacaoId: produtoCombinacao?.combinacao?.id,
-                                                combinacaoItems: [{id: itemCombinacao?.combinacaoItems[0]?.id, itemCombinacaoId: args.Value, quantidade: 1}]
-                                            });
-                                            
-                                            this.setState({itemCombinacoes});
-                                        }}
-                                    >
-                                        <DropDownListItem Label='[Selecione]' Value={null} />
+                                                itemCombinacoes?.push({
+                                                    id: itemCombinacao?.id,
+                                                    pedidoVendaItemId: itemCombinacao?.pedidoVendaItemId,
+                                                    combinacaoId: produtoCombinacao?.combinacao?.id,
+                                                    combinacaoItems: [{id: itemCombinacao?.combinacaoItems[0]?.id, itemCombinacaoId: args.Value, quantidade: 1}]
+                                                });
+                                                
+                                                this.setState({itemCombinacoes});
+                                            }}
+                                        >
+                                            <DropDownListItem Label='[Selecione]' Value={null} />
+                                            {produtoCombinacao.combinacao.combinacaoItems?.map((combinacaoItem: any) => {
+                                                return <DropDownListItem Label={combinacaoItem.nome} Value={combinacaoItem.id} />
+                                            })}
+                                        </DropDownList>
+                                    </Grid>
+                                )}
+
+                                {produtoCombinacao.maximo > 1 && (<>
+                                    <Grid md={12}>
+                                        <FormLabel>{produtoCombinacao.combinacao.descricao}&nbsp;&nbsp;{produtoCombinacao.isObrigatorio ? <div style={{color: 'red', fontWeight: 400}}>Obrigatório</div> : <div style={{color: 'gray', fontWeight: 400}}>Opcional</div>}&nbsp;&nbsp;<div style={{color: 'gray', fontWeight: 400}}>{`[Min: ${produtoCombinacao.minimo} Max: ${produtoCombinacao.maximo}]`}</div></FormLabel>
+                                        
                                         {produtoCombinacao.combinacao.combinacaoItems?.map((combinacaoItem: any) => {
-                                            return <DropDownListItem Label={combinacaoItem.nome} Value={combinacaoItem.id} />
+
+                                            return (
+                                            <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+                                                <Grid md={3}>
+                                                    <Input
+                                                        value={this.Quantidade(produtoCombinacao, combinacaoItem)}
+                                                        startDecorator={
+                                                            <Button Text="-" OnClick={() => this.TxtQuantidade_Change(produtoCombinacao, combinacaoItem, this.Quantidade(produtoCombinacao, combinacaoItem) - 1, "-")} />
+                                                        }
+                                                        endDecorator={
+                                                            <Button Text="+" OnClick={() => this.TxtQuantidade_Change(produtoCombinacao, combinacaoItem, this.Quantidade(produtoCombinacao, combinacaoItem) + 1, "+")} />
+                                                        }
+                                                        sx={{
+                                                        '--Input-decoratorChildHeight': `28px`,
+                                                        }}
+                                                        onChange={(args: any) => this.TxtQuantidade_Change(produtoCombinacao, combinacaoItem, args.target.value, "+")}
+                                                    />
+                                                </Grid>
+                                                <Grid md={9}>
+                                                    <div style={{marginTop: '5px'}}>
+                                                        {combinacaoItem.nome}
+                                                    </div>
+                                                </Grid>
+                                            </Grid>
+                                            );
                                         })}
-                                    </DropDownList>
-                                </Grid>
-                            )}
+                                    </Grid>
+                                </>)}
+                            </>
+                        )}
 
-                            {produtoCombinacao.maximo > 1 && (<>
-                                <Grid md={12}>
-                                    <FormLabel>{produtoCombinacao.combinacao.descricao}&nbsp;&nbsp;{produtoCombinacao.isObrigatorio ? <div style={{color: 'red', fontWeight: 400}}>Obrigatório</div> : <div style={{color: 'gray', fontWeight: 400}}>Opcional</div>}&nbsp;&nbsp;<div style={{color: 'gray', fontWeight: 400}}>{`[Min: ${produtoCombinacao.minimo} Max: ${produtoCombinacao.maximo}]`}</div></FormLabel>
-                                    
-                                    {produtoCombinacao.combinacao.combinacaoItems?.map((combinacaoItem: any) => {
+                        <Grid md={3}>
+                            <NumericBox ref={this.TxtQuantidade} Label='Quantidade' Text={this.state.quantity} Scale={3} OnChange={(args: EventArgs) => this.setState({quantity: args.Value})} />
+                        </Grid>
+                        <Grid md={3}>
+                            <NumericBox Label='Desconto' Text={this.state.discount} Prefix="R$ " Scale={2} OnChange={(args: EventArgs) => this.setState({discount: args.Value})} />
+                        </Grid>
+                        <Grid md={3}>
+                            <NumericBox Label='Valor' Text={this.state.value} Prefix="R$ " Scale={2} OnChange={(args: EventArgs) => this.setState({value: args.Value})} />
+                        </Grid>
+                        <Grid md={3}>
+                            <NumericBox Label='Total' Text={((parseFloat(this.state.value || '0') - parseFloat(this.state.discount || '0')) * parseFloat(this.state.quantity || '0')).toString()} Prefix="R$ " Scale={2} ReadOnly={true} />
+                        </Grid>
 
-                                        return (
-                                        <Grid container spacing={1} sx={{ flexGrow: 1 }}>
-                                            <Grid md={3}>
-                                                <Input
-                                                    value={this.Quantidade(produtoCombinacao, combinacaoItem)}
-                                                    startDecorator={
-                                                        <Button Text="-" OnClick={() => this.TxtQuantidade_Change(produtoCombinacao, combinacaoItem, this.Quantidade(produtoCombinacao, combinacaoItem) - 1, "-")} />
-                                                    }
-                                                    endDecorator={
-                                                        <Button Text="+" OnClick={() => this.TxtQuantidade_Change(produtoCombinacao, combinacaoItem, this.Quantidade(produtoCombinacao, combinacaoItem) + 1, "+")} />
-                                                    }
-                                                    sx={{
-                                                    '--Input-decoratorChildHeight': `28px`,
-                                                    }}
-                                                    onChange={(args: any) => this.TxtQuantidade_Change(produtoCombinacao, combinacaoItem, args.target.value, "+")}
-                                                />
-                                            </Grid>
-                                            <Grid md={9}>
-                                                <div style={{marginTop: '5px'}}>
-                                                    {combinacaoItem.nome}
-                                                </div>
-                                            </Grid>
-                                        </Grid>
-                                        );
-                                    })}
-                                </Grid>
-                            </>)}
-                        </>
-                    )}
-
-                    <Grid md={3}>
-                        <NumericBox ref={this.TxtQuantidade} Label='Quantidade' Text={this.state.quantity} Scale={3} OnChange={(args: EventArgs) => this.setState({quantity: args.Value})} />
                     </Grid>
-                    <Grid md={3}>
-                        <NumericBox Label='Desconto' Text={this.state.discount} Prefix="R$ " Scale={2} OnChange={(args: EventArgs) => this.setState({discount: args.Value})} />
-                    </Grid>
-                    <Grid md={3}>
-                        <NumericBox Label='Valor' Text={this.state.value} Prefix="R$ " Scale={2} OnChange={(args: EventArgs) => this.setState({value: args.Value})} />
-                    </Grid>
-                    <Grid md={3}>
-                        <NumericBox Label='Total' Text={((parseFloat(this.state.value || '0') - parseFloat(this.state.discount || '0')) * parseFloat(this.state.quantity || '0')).toString()} Prefix="R$ " Scale={2} ReadOnly={true} />
-                    </Grid>
-
-                    <Grid md={3}>
-                        <Button Text='Confirmar' Type='Submit' Color='white' BackgroundColor='green' OnClick={this.BtnConfirmar_Click} />
-                    </Grid>
-                    
-                </Grid>
+                </Content>
+                <Actions>
+                    <Button Text='Confirmar' StartIcon={<TaskAltOutlined />} Color='white' BackgroundColor={color.success} OnClick={this.BtnConfirmar_Click} />
+                </Actions>
             </ViewModal>
         );
     }

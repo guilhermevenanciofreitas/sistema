@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Company, Nfe, Partner, ShippingOrder, ShippingOrderVehicle, Vehicle } from "../../database";
+import { Company, Nfe, Partner, ShippingOrder, ShippingOrderNfe, ShippingOrderVehicle, Vehicle } from "../../database";
 import { ShippingOrderService } from "../../services/logistic/shippingOrder.service";
 import { Op } from "sequelize";
 
@@ -73,6 +73,9 @@ export default class ShippingOrderController {
                         {model: Vehicle, as: 'vehicle', attributes: ['id', 'name', 'plate']},
                         {model: ShippingOrderVehicle, as: 'vehicles', attributes: ['id'],
                             include: [{model: Vehicle, as: 'vehicle', attributes: ['id', 'name', 'plate']}],
+                        },
+                        {model: ShippingOrderNfe, as: 'nfes', attributes: ['id'],
+                            include: [{model: Nfe, as: 'nfe', attributes: ['id', 'NFe', 'protNFe']}],
                         },
                     ],
                     where: {id: req.body.id},

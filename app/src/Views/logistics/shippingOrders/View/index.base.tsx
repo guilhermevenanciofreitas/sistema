@@ -88,6 +88,7 @@ export class ViewShippingOrderBase extends React.Component<Readonly<{Title: stri
                 vehicleId: _.get(this.state.vehicle, 'id') || null,
                 weight: _.get(this.state, 'weight') || null,
                 vehicles,
+                nfes
             }
 
 
