@@ -11,6 +11,8 @@ import { ViewProductCategory } from "../../../../views/registrations/productCate
 import { ViewLocation } from "../../../../views/stock/locations/View";
 import { ViewBankAccount } from "../../../../views/financial/bankAccounts/View";
 import { ViewCombination } from "../../../../views/registrations/combinations/View";
+import { ViewProductSubCategory } from "../../../../views/registrations/productSubCategories/View";
+import { ViewShippingOrder } from "../../../../views/logistics/shippingOrders/View";
 
 export class ControlAutoComplete extends AutoCompleteBase {
 
@@ -21,6 +23,7 @@ export class ControlAutoComplete extends AutoCompleteBase {
         {this.props.Action?.Type == 'Combination' && <ViewCombination ref={this.ViewCombination} Title='Combinação' />}
         {this.props.Action?.Type == 'Product' && <ViewProduct ref={this.ViewProduct} Title='Produto' />}
         {this.props.Action?.Type == 'ProductCategory' && <ViewProductCategory ref={this.ViewProductCategory} Title='Categoria' />}
+        {this.props.Action?.Type == 'ProductSubCategory' && <ViewProductSubCategory ref={this.ViewProductSubCategory} Title='Sub-Categoria' />}
 
         {this.props.Action?.Type == 'StockLocation' && <ViewLocation ref={this.ViewStockLocation} Title='Localização' />}
 
@@ -33,6 +36,8 @@ export class ControlAutoComplete extends AutoCompleteBase {
         {this.props.Action?.Type == 'Vehicle' && <ViewVehicle ref={this.ViewVehicle} Title='Veículo' />}
 
         {this.props.Action?.Type == 'BankAccount' && <ViewBankAccount ref={this.ViewBankAccount} Title='Conta bancária' />}
+
+        {this.props.Action?.Type == 'ShippingOrder' && <ViewShippingOrder ref={this.ViewShippingOrder} Title='Ordem decarga' />}
 
         <FormLabel sx={{fontWeight: 400}}>{this.props.Label}</FormLabel>
         <Autocomplete
@@ -69,6 +74,9 @@ export class ControlAutoComplete extends AutoCompleteBase {
               case 'ProductCategory':
                 value = this.props.Value ? await this.ViewProductCategory.current?.Edit(Id) : await this.ViewProductCategory.current?.New(Values);
                 break;
+              case 'ProductSubCategory':
+                value = this.props.Value ? await this.ViewProductSubCategory.current?.Edit(Id) : await this.ViewProductSubCategory.current?.New(Values);
+                break;
               case 'StockLocation':
                 value = this.props.Value ? await this.ViewStockLocation.current?.Edit(Id) : await this.ViewStockLocation.current?.New(Values);
                 break;
@@ -89,6 +97,9 @@ export class ControlAutoComplete extends AutoCompleteBase {
                 break;
               case 'BankAccount':
                 value = this.props.Value ? await this.ViewBankAccount.current?.Edit(Id) : await this.ViewBankAccount.current?.New(Values);
+                break;
+              case 'ShippingOrder':
+                value = this.props.Value ? await this.ViewShippingOrder.current?.Edit(Id) : await this.ViewShippingOrder.current?.New(Values);
                 break;
             }
 

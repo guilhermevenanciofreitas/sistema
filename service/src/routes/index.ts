@@ -10,6 +10,7 @@ import cepRoutes from "./cep/index.routes";
 import userRoutes from "./registrations/user.routes";
 import productRoutes from "./registrations/product.routes";
 import productCategoryRoutes from "./registrations/productCategory.routes";
+import productSubCategoryRoutes from "./registrations/productSubCategory.routes";
 import serviceRoutes from "./registrations/service.routes";
 import customerRoutes from "./registrations/customer.routes";
 import supplierRoutes from "./registrations/supplier.routes";
@@ -41,6 +42,8 @@ import locationRoutes from "./stock/location.routes";
 import stockinRoutes from "./stock/in.routes";
 import distribuitionRoutes from "./fiscal/distribuition.routes";
 import combinationRoutes from "./registrations/combination.routes";
+import tripRoutes from "./logistic/trip.routes";
+
 
 export default class Routes {
   constructor(app: Application) {
@@ -57,6 +60,7 @@ export default class Routes {
     app.use("/api/registrations/combination", combinationRoutes);
     app.use("/api/registrations/product", productRoutes);
     app.use("/api/registrations/product-category", productCategoryRoutes)
+    app.use("/api/registrations/product-subcategory", productSubCategoryRoutes)
     app.use("/api/registrations/vehicle", vehicleRoutes);
     app.use("/api/registrations/service", serviceRoutes);
     app.use("/api/registrations/customer", customerRoutes);
@@ -89,7 +93,7 @@ export default class Routes {
     app.use("/api/logistic/freight-calculation", freightCalculationRoutes);
     app.use("/api/logistic/freight-quote", freightQuotesRoutes);
     app.use("/api/logistic/shipping-order", shippingOrderRoutes);
-    app.use("/api/logistic/trip", shippingOrderRoutes);
+    app.use("/api/logistic/trip", tripRoutes);
 
     //Financial
     app.use("/api/financial/payment", paymentRoutes);

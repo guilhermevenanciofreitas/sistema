@@ -15,6 +15,7 @@ class SearchRoutes {
 
 
     this.router.post("/product-category", (req, res) => this.controller.productCategory(req, res));
+    this.router.post("/product-subcategory", (req, res) => this.controller.productSubCategory(req, res));
     this.router.post("/combination", (req, res) => this.controller.combination(req, res));
     this.router.post("/product", (req, res) => this.controller.product(req, res));
     this.router.post("/product-price", (req, res) => this.controller.productPrice(req, res));
@@ -54,6 +55,8 @@ class SearchRoutes {
     this.router.post("/legal-nature", (req, res) => this.controller.legalNature(req, res));
 
     this.router.post("/measurement-unit", (req, res) => this.controller.measurementUnit(req, res));
+
+    this.router.post("/shipping-order", (req, res) => this.controller.shippingOrder(req, res));
 
   }
 }

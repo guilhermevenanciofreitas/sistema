@@ -15,6 +15,7 @@ export class ViewProductBase extends React.Component<Readonly<{Title?: string}>>
         name: '',
         description: '',
         category: null,
+        subCategory: null,
         isCombination: false,
 
         cost: null,
@@ -100,6 +101,7 @@ export class ViewProductBase extends React.Component<Readonly<{Title?: string}>>
                 id: _.get(this.state, 'id') || null,
                 name: _.get(this.state, 'name') || null,
                 categoryId: _.get(this.state, 'category.id') || null,
+                subCategoryId: _.get(this.state, 'subCategory.id') || null,
                 description: _.get(this.state, 'description') || null,
                 isCombination: _.get(this.state, 'isCombination') || null,
                 cost: _.get(this.state, 'cost') || null,
@@ -116,7 +118,7 @@ export class ViewProductBase extends React.Component<Readonly<{Title?: string}>>
             Loading.Hide();
     
             if (response?.status == 201) {
-                await MessageBox.Show({title: "Info", width: 400, content: response?.data.message, buttons: [{ Text: "OK" }]});
+                await MessageBox.Show({title: "Info", width: 400, type: 'Warning', content: response?.data.message, buttons: [{ Text: "OK" }]});
                 return;
             }
     
@@ -138,6 +140,7 @@ export class ViewProductBase extends React.Component<Readonly<{Title?: string}>>
             name: '',
             description: '',
             category: null,
+            subCategory: null,
             isCombination: false,
 
             cost: null,

@@ -2,6 +2,7 @@ import { Transaction } from "sequelize";
 import { Cte } from "../../database";
 import crypto from "crypto";
 import { Op } from "sequelize";
+import { Builder, parseStringPromise } from "xml2js";
 
 export class CteService {
 
@@ -25,29 +26,21 @@ export class CteService {
 
     public static Update = async (cte: Cte, transaction?: Transaction) => {
 
-        /*produto.categoriaId = produto.categoria?.id;
-
-        for (let item of produto?.combinacoes || []) {
-            if (!item.id) {
-                item.id = crypto.randomUUID();
-                item.produtoId = produto.id;
-                item.combinacaoId = item.combinacao?.id;
-                ProdutoCombinacao.create({...item}, {transaction});
-            } else {
-                ProdutoCombinacao.update(item, {where: {id: item.id}, transaction});
-            }
-            ProdutoCombinacao.destroy({where: {produtoId: produto.id, id: {[Op.notIn]: produto?.combinacoes?.filter((c: any) => c.id != "").map(c => c.id)}}, transaction})
-        }
-        */
         await Cte.update(cte, {where: {id: cte.id}, transaction});
 
     }
 
-    public static Upload = async (cte: Cte, transaction?: Transaction) => {
+    public static XmlToJson = async (xml: any) => {
+
+        return await parseStringPromise(xml, {explicitArray: false});
 
     }
 
-    public static Xml = async (cte: Cte, transaction?: Transaction) => {
+    public static JsonToXml = async (json: any) => {
+
+        const builder = new Builder( { headless: false, renderOpts: { pretty: true } });
+
+        return builder.buildObject(json);
 
     }
 

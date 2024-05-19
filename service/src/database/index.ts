@@ -55,7 +55,6 @@ import { ShippingOrderStatus } from "./models/shippingOrderStatus.model";
 import { Vehicle } from "./models/vehicle.model";
 import { Cte } from "./models/cte.model";
 import { ShippingOrderNfe } from "./models/shippingOrderNfe.model";
-import { ShippingOrderVehicle } from "./models/shippingOrderVehicle.model";
 import { StockLocation } from "./models/stockLocation.model";
 import { StockIn } from "./models/stockIn.model";
 import { StockInProduct } from "./models/stockInProduct.model";
@@ -65,6 +64,11 @@ import { DfeResNfe } from "./models/dfeResNfe.model";
 import { MeasurementUnit } from "./models/measurementUnit.model";
 import { LegalNature } from "./models/legalNature.model";
 import { EconomicActivity } from "./models/economicActivity.model";
+import { ProductSubCategory } from "./models/productSubCategory.model";
+import { Trip } from "./models/trip.model";
+import { TripCte } from "./models/tripCte.model";
+import { TripShippingOrder } from "./models/tripShippingOrder.model";
+import { TripVehicle } from "./models/tripVehicle.model";
 
 export { Payment } from "./models/payment.model";
 export { Contract } from "./models/contract.model";
@@ -119,7 +123,6 @@ export { ShippingOrderStatus } from "./models/shippingOrderStatus.model";
 export { Vehicle } from "./models/vehicle.model";
 export { Cte } from "./models/cte.model";
 export { ShippingOrderNfe } from "./models/shippingOrderNfe.model";
-export { ShippingOrderVehicle } from "./models/shippingOrderVehicle.model";
 export { StockLocation } from "./models/stockLocation.model";
 export { StockIn } from "./models/stockIn.model";
 export { StockInProduct } from "./models/stockInProduct.model";
@@ -129,6 +132,12 @@ export { DfeResNfe } from "./models/dfeResNfe.model";
 export { MeasurementUnit } from "./models/measurementUnit.model";
 export { LegalNature } from "./models/legalNature.model";
 export { EconomicActivity } from "./models/economicActivity.model";
+export { ProductSubCategory } from "./models/productSubCategory.model";
+export { Trip } from "./models/trip.model";
+export { TripCte } from "./models/tripCte.model";
+export { TripShippingOrder } from "./models/tripShippingOrder.model";
+export { TripVehicle } from "./models/tripVehicle.model";
+
 
 export default class Sequelize {
   
@@ -183,6 +192,7 @@ export default class Sequelize {
         ProductCombination,
         ProductCombinationItem,
         ProductPrice,
+        ProductSubCategory,
         ProductSupplier,
         ReceivieForm,
         SaleOrder,
@@ -200,12 +210,15 @@ export default class Sequelize {
         ShippingOrder,
         ShippingOrderNfe,
         ShippingOrderStatus,
-        ShippingOrderVehicle,
         State,
         StockIn,
         StockInProduct,
         StockLocation,
         Task,
+        Trip,
+        TripCte,
+        TripShippingOrder,
+        TripVehicle,
         User, 
         Vehicle
       ],

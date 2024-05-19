@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { Combination, MeasurementUnit, Partner, Product, ProductCategory, ProductCombination, ProductCombinationItem, ProductSupplier } from "../../database";
+import { Combination, MeasurementUnit, Partner, Product, ProductCategory, ProductCombination, ProductCombinationItem, ProductSubCategory, ProductSupplier } from "../../database";
 import { ProductService } from "../../services/registrations/product.service";
 import { Op } from "sequelize";
 import { Error } from "../../errors";
@@ -27,7 +27,10 @@ export default class ProductController {
         
                 const products = await Product.findAndCountAll({
                     attributes: ['id', 'name', 'value', 'stockBalance'],
-                    include: [{model: ProductCategory, attributes: ['id', 'description']}],
+                    include: [
+                        {model: ProductCategory, as: 'category', attributes: ['id', 'description']},
+                        {model: ProductSubCategory, as: 'subCategory', attributes: ['id', 'name']},
+                    ],
                     where,
                     order,
                     limit: pagination.limit,
@@ -66,6 +69,7 @@ export default class ProductController {
                     attributes: ['id', 'name', 'description', 'isCombination', 'cost', 'markup', 'value', 'stockBalance', 'stockMin', 'stockMax'], 
                     include: [
                         {model: ProductCategory, as: 'category', attributes: ['id', 'description']},
+                        {model: ProductSubCategory, as: 'subCategory', attributes: ['id', 'name']},
 
                         {model: ProductCombination, as: 'combinations', attributes: ['id', 'isRequired', 'min', 'max', 'order'],
                             include: [

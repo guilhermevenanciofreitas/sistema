@@ -79,7 +79,7 @@ export class ViewOrderBase extends React.Component<Readonly<{Title: string}>> {
         {
 
             if (this.state.status != null) {
-                await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: <>Venda com status {_.get(this.state.status, 'descricao')}<br />Não e possível editar!</>, buttons: [{ Text: "OK" }]});
+                await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: `Venda com status ${_.get(this.state.status, 'descricao')}<br />Não e possível editar!`, buttons: [{ Text: "OK" }]});
                 return;
             }
 

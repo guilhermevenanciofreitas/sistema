@@ -82,6 +82,11 @@ export const Search = {
         return (await Service.Post("search/product-category", {Search}))?.data;
     },
 
+    ProductSubCategory: async (Search: string, categoryId: string) =>
+    {
+        return (await Service.Post("search/product-subcategory", {Search, categoryId}))?.data;
+    },
+
     Combination: async (Search: string) =>
     {
         return (await Service.Post("search/combination", {Search}))?.data;
@@ -130,6 +135,11 @@ export const Search = {
     MeasurementUnit: async (Search: string) =>
     {
         return (await Service.Post("search/measurement-unit", {Search}))?.data;
+    },
+
+    ShippingOrder: async (Search: string) =>
+    {
+        return (await Service.Post("search/shipping-order", {Search}))?.data;
     },
     
 }

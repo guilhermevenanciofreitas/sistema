@@ -8,10 +8,6 @@ export class NfeService {
 
     public static IsValid = (nfe: Nfe) => {
 
-        ///if (nfe.descricao == '') {
-        //    return { success: false, message: 'Informe a descrição!' };
-        //}
-
         return { success: true };
 
     }
@@ -32,20 +28,6 @@ export class NfeService {
 
     public static Update = async (nfe: Nfe, transaction?: Transaction) => {
 
-        /*produto.categoriaId = produto.categoria?.id;
-
-        for (let item of produto?.combinacoes || []) {
-            if (!item.id) {
-                item.id = crypto.randomUUID();
-                item.produtoId = produto.id;
-                item.combinacaoId = item.combinacao?.id;
-                ProdutoCombinacao.create({...item}, {transaction});
-            } else {
-                ProdutoCombinacao.update(item, {where: {id: item.id}, transaction});
-            }
-            ProdutoCombinacao.destroy({where: {produtoId: produto.id, id: {[Op.notIn]: produto?.combinacoes?.filter((c: any) => c.id != "").map(c => c.id)}}, transaction})
-        }
-        */
         await Nfe.update(nfe, {where: {id: nfe.id}, transaction});
 
     }

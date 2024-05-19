@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Auth from "../../auth";
-import { BankAccount, Company, PaymentForm, City, Partner, SaleOrderShippingType, Product, ProductCategory, ProductCombination, ProductCombinationItem, CalledOccurrence, FreightCalculationType, MesoRegion, State, ReceivieForm, Vehicle, ProductPrice, StockLocation, Nfe, ProductSupplier, MeasurementUnit, EconomicActivity, LegalNature, Combination, StockIn } from "../../database";
+import { BankAccount, Company, PaymentForm, City, Partner, SaleOrderShippingType, Product, ProductCategory, ProductCombination, ProductCombinationItem, CalledOccurrence, FreightCalculationType, MesoRegion, State, ReceivieForm, Vehicle, ProductPrice, StockLocation, Nfe, ProductSupplier, MeasurementUnit, EconomicActivity, LegalNature, Combination, StockIn, ProductSubCategory, ShippingOrder, ShippingOrderNfe } from "../../database";
 import { Op } from "sequelize";
 import { Bank } from "../../database/models/bank.model";
 
@@ -486,6 +486,43 @@ export default class SearchController {
         });
     }
 
+    async productSubCategory(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+
+                if (req.body?.Search) {
+                    where = {'name': {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                }
+
+                if (req.body?.categoryId) {
+                    where = {"categoryId": {[Op.eq]: req.body?.categoryId}};
+                }
+
+                const productSubCategory = await ProductSubCategory.findAll({
+                    attributes: ['id', 'name'],
+                    where,
+                    order: [['name', 'asc']],
+                    transaction
+                });
+        
+                sequelize.close();
+
+                res.status(200).json(productSubCategory);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
     async combination(req: Request, res: Response) {
 
         Auth(req, res).then(async ({sequelize}) => {
@@ -858,6 +895,46 @@ export default class SearchController {
                 sequelize.close();
 
                 res.status(200).json(measurementUnits);
+
+            }
+            catch (err) {
+                res.status(500).json(err);
+            }
+        }).catch((err: any) => {
+            res.status(401).json({message: err.message})
+        });
+    }
+
+    async shippingOrder(req: Request, res: Response) {
+
+        Auth(req, res).then(async ({sequelize}) => {
+            try {
+
+                const transaction = await sequelize.transaction();
+
+                let where: any = {};
+
+                //if (req.body?.Search) {
+                //    where = {"name": {[Op.iLike]: `%${req.body?.Search.replace(' ', "%")}%`}};
+                //}
+
+                const shippingOrders = await ShippingOrder.findAll({
+                    attributes: ['id', 'weight', 'predominantProduct'],
+                    include: [
+                        {model: Partner, as: 'sender', attributes: ['id', 'name', 'surname', 'cpfCnpj', 'address']},
+                        {model: Partner, as: 'recipient', attributes: ['id', 'name', 'surname', 'cpfCnpj', 'address']},
+                        {model: ShippingOrderNfe, as: 'nfes', attributes: ['id'],
+                            include: [{model: Nfe, as: 'nfe', attributes: ['id', 'NFe', 'protNFe']}]
+                        },
+                    ],
+                    where,
+                    //order: [["name", "asc"]],
+                    transaction
+                });
+        
+                sequelize.close();
+
+                res.status(200).json(shippingOrders);
 
             }
             catch (err) {

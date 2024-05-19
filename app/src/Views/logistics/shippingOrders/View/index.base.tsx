@@ -15,17 +15,26 @@ export class ViewShippingOrderBase extends React.Component<Readonly<{Title: stri
         company: null,
         date: '',
         status: null,
+        predominantProduct: '',
         value: null,
         sender: null,
         recipient: null,
-        driver: null,
-        vehicle: null,
         weight: null,
-        vehicles: [],
         nfes: []
     }
 
-    public Show = async (id?: string): Promise<any> =>
+    public New = async (shippingOrder: any): Promise<any> =>
+    {
+    
+        this.Limpar();
+
+        this.setState({...shippingOrder});
+
+        return await this.ViewModal.current?.Show();
+    
+    }
+    
+    public Edit = async (id?: string): Promise<any> =>
     {
  
         this.Limpar();
@@ -60,15 +69,7 @@ export class ViewShippingOrderBase extends React.Component<Readonly<{Title: stri
 
             Loading.Show();
 
-            let vehicles = [];
             let nfes = [];
-
-            for (let vehicle of _.get(this.state, 'vehicles') || []) {
-                vehicles.push({
-                    id: _.get(vehicle, 'id'),
-                    vehicleId: _.get(vehicle, 'vehicle.id'),
-                });
-            }
 
             for (let nfe of _.get(this.state, 'nfes') || []) {
                 nfes.push({
@@ -84,10 +85,8 @@ export class ViewShippingOrderBase extends React.Component<Readonly<{Title: stri
                 value: _.get(this.state, 'value') || null,
                 senderId: _.get(this.state.sender, 'id') || null,
                 recipientId: _.get(this.state.recipient, 'id') || null,
-                driverId: _.get(this.state.driver, 'id') || null,
-                vehicleId: _.get(this.state.vehicle, 'id') || null,
+                predominantProduct: _.get(this.state, 'predominantProduct') || null,
                 weight: _.get(this.state, 'weight') || null,
-                vehicles,
                 nfes
             }
 
@@ -118,13 +117,13 @@ export class ViewShippingOrderBase extends React.Component<Readonly<{Title: stri
             id: '',
             number: '',
             company: null,
+            date: '',
+            status: null,
+            predominantProduct: '',
             value: null,
             sender: null,
             recipient: null,
-            driver: null,
-            vehicle: null,
             weight: null,
-            vehicles: [],
             nfes: []
         });
     }

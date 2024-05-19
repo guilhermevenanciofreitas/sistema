@@ -39,7 +39,7 @@ export default class Orders extends OrdersBase {
         return (
             <>
 
-                <ViewOrder ref={this.ViewOrder} Title="Pedido" />
+                <ViewOrder ref={this.ViewOrder} Title="Venda" />
 
                 {/*
                 <ViewImportar ref={this.ViewImportar} />

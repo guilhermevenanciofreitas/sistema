@@ -2,9 +2,7 @@ import { Model, Table, Column, DataType, BelongsTo, HasMany } from "sequelize-ty
 import { Partner } from "./partner.model";
 import { Company } from "./company.model";
 import { ShippingOrderStatus } from "./shippingOrderStatus.model";
-import { Vehicle } from "./vehicle.model";
 import { ShippingOrderNfe } from "./shippingOrderNfe.model";
-import { ShippingOrderVehicle } from "./shippingOrderVehicle.model";
 
 @Table({tableName: 'shippingOrder'})
 export class ShippingOrder extends Model {
@@ -30,11 +28,8 @@ export class ShippingOrder extends Model {
   @Column({type: DataType.UUID, field: 'statusId'})
   statusId?: string;
 
-  @Column({type: DataType.UUID, field: 'driverId'})
-  driverId?: string;
-
-  @Column({type: DataType.UUID, field: 'vehicleId'})
-  vehicleId?: string;
+  @Column({type: DataType.STRING(50), field: 'predominantProduct'})
+  predominantProduct?: string;
 
   @Column({type: DataType.DECIMAL(18, 2), field: 'weight'})
   weight?: number;
@@ -51,15 +46,6 @@ export class ShippingOrder extends Model {
 
   @BelongsTo(() => ShippingOrderStatus, {as: 'status', foreignKey: 'statusId'})
   status?: ShippingOrderStatus;
-
-  @BelongsTo(() => Partner, {as: 'driver', foreignKey: 'driverId'})
-  driver?: Partner;
-
-  @BelongsTo(() => Vehicle, {as: 'vehicle', foreignKey: 'vehicleId'})
-  vehicle?: Vehicle;
-
-  @HasMany(() => ShippingOrderVehicle, {as: 'vehicles', foreignKey: 'shippingOrderId'})
-  vehicles?: ShippingOrderVehicle[];
 
   @HasMany(() => ShippingOrderNfe, {as: 'nfes', foreignKey: 'shippingOrderId'})
   nfes?: ShippingOrderNfe[];

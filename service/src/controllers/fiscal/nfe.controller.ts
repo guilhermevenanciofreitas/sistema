@@ -103,9 +103,13 @@ export default class NfeController {
 
                 const state = await State.findOne({attributes: ['id', 'acronym'], where: {id: company?.address?.stateId}, transaction});
 
-                const request = {certificate: {file: company?.certificate.file, password: company?.certificate.password}, acronym: state?.acronym};
+                //const request = {certificate: {file: company?.certificate.file, password: company?.certificate.password}, acronym: state?.acronym};
 
-                const response = await axios.post('http://localhost:5277/nfe/status-service', request);
+                //const response = await axios.post('http://localhost:5277/nfe/status-service', request);
+
+                const request = {certificate: {file: company?.certificate.file, password: company?.certificate.password}, NSeqEvento: 1, COrgao: 52, CNPJ: company?.cpfCnpj, ChMDFe: '11240404058687000681580050000005001500019864', TpEvento: 110112};
+
+                const response = await axios.post('http://localhost:5277/mdfe/event', request);
 
                 res.status(response.status).json(response.data);
 

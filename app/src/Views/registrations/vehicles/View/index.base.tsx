@@ -28,7 +28,7 @@ export class ViewProductBase extends React.Component<Readonly<{Title: string}>> 
 
     public Edit = async (id?: string): Promise<any> =>
     {
- 
+        
         this.Limpar();
 
         if (id) {

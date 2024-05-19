@@ -80,6 +80,9 @@ export class ViewOrder extends ViewOrderBase {
                             <TabItem Title='Produtos' Visible={true}>
                                 <Itens Itens={this.state.items} OnChange={(items: any[]) => this.setState({items})} />
                             </TabItem>
+                            <TabItem Title='Serviços' Visible={true}>
+                                <Itens Itens={this.state.items} OnChange={(items: any[]) => this.setState({items})} />
+                            </TabItem>
                             <TabItem Title='Pagamento' Visible={true}>
                                 <Receivies receivies={this.state.receivies} OnChange={(receivies: any[]) => this.setState({receivies})} />
                             </TabItem>

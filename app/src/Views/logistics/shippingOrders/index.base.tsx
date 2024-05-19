@@ -8,7 +8,7 @@ import { MessageBox } from "../../../Utils/Controls";
 import { DisplayError } from "../../../Utils/DisplayError";
 import queryString from "query-string";
 
-export default class BaseUsuarios extends BaseIndex {
+export default class ShippingOrdersBase extends BaseIndex {
  
     protected ViewShippingOrder = React.createRef<ViewShippingOrder>();
 
@@ -73,7 +73,7 @@ export default class BaseUsuarios extends BaseIndex {
         try
         {
 
-            const r = await this.ViewShippingOrder.current?.Show(undefined);
+            const r = await this.ViewShippingOrder.current?.New(undefined);
 
             if (r) await this.Pesquisar(this.state.request);
             
@@ -195,7 +195,7 @@ export default class BaseUsuarios extends BaseIndex {
     private OpenShippingOrder = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, '', `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewShippingOrder.current?.Show(id);
+        const r = await this.ViewShippingOrder.current?.Edit(id);
         if (isHitoryBack) history.back();
         return r;
     }

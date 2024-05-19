@@ -1,5 +1,5 @@
 import { Transaction } from "sequelize";
-import { Nfe, ShippingOrder, ShippingOrderNfe, ShippingOrderVehicle } from "../../database";
+import { Nfe, ShippingOrder, ShippingOrderNfe } from "../../database";
 import crypto from "crypto";
 import { Op } from "sequelize";
 
@@ -19,12 +19,6 @@ export class ShippingOrderService {
 
         shippingOrder.id = crypto.randomUUID();
        
-        for (let vehicle of shippingOrder?.vehicles || []) {
-            vehicle.id = crypto.randomUUID();
-            vehicle.shippingOrderId = shippingOrder.id;
-            await ShippingOrderVehicle.create({...vehicle}, {transaction});
-        }
-
         for (let nfe of shippingOrder?.nfes || []) {
             nfe.id = crypto.randomUUID();
             nfe.shippingOrderId = shippingOrder.id;
@@ -36,17 +30,6 @@ export class ShippingOrderService {
     }
 
     public static Update = async (shippingOrder: ShippingOrder, transaction?: Transaction) => {
-
-        for (let vehicle of shippingOrder?.vehicles || []) {
-            if (!vehicle.id) {
-                vehicle.id = crypto.randomUUID();
-                vehicle.shippingOrderId = shippingOrder.id;
-                await ShippingOrderVehicle.create({...vehicle}, {transaction});
-            } else {
-                await ShippingOrderVehicle.update(vehicle, {where: {id: vehicle.id}, transaction});
-            }
-            await ShippingOrderVehicle.destroy({where: {shippingOrderId: shippingOrder.id, id: {[Op.notIn]: shippingOrder?.vehicles?.filter((c: any) => c.id != '').map(c => c.id)}}, transaction})
-        }
 
         for (let nfe of shippingOrder?.nfes || []) {
             if (!nfe.id) {
@@ -63,12 +46,12 @@ export class ShippingOrderService {
 
     }
 
-    public static Upload = async (nfe: Nfe, transaction: Transaction | undefined) => {
+    public static Upload = async (nfe: Nfe, transaction?: Transaction) => {
 
        
     }
 
-    public static Delete = async (id: string, transaction: Transaction | undefined) => {
+    public static Delete = async (id: string, transaction?: Transaction) => {
         await Nfe.update({ativo: false}, {where: {id: id}, transaction});
     }
 

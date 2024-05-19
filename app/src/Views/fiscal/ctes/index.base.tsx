@@ -1,6 +1,6 @@
 import React from "react";
 import { Service } from "../../../Service";
-import { ViewCte } from "./View/index";
+import { ViewConhecimento } from "./View/index";
 import { ViewFiltro } from "./filtro";
 import { BaseIndex } from "../../../Utils/Base";
 import { MessageBox } from "../../../Utils/Controls";
@@ -10,7 +10,7 @@ import queryString from "query-string";
 
 export default class CtesBase extends BaseIndex {
  
-    protected ViewCte = React.createRef<ViewCte>();
+    protected ViewConhecimento = React.createRef<ViewConhecimento>();
 
     //protected ViewImportar = React.createRef<ViewImportar>();
     //protected ViewFiltro = React.createRef<ViewFiltro>();
@@ -73,7 +73,7 @@ export default class CtesBase extends BaseIndex {
         try
         {
 
-            const r = await this.ViewCte.current?.Show(undefined);
+            const r = await this.ViewConhecimento.current?.New({});
 
             if (r) await this.Pesquisar(this.state.request);
             
@@ -195,7 +195,7 @@ export default class CtesBase extends BaseIndex {
     private OpenCte = async (id: string, isHitoryBack: boolean = true) =>
     {
         history.pushState(null, '', `${window.location.origin}${window.location.pathname}?id=${id}`);
-        const r = await this.ViewCte.current?.Show(id);
+        const r = await this.ViewConhecimento.current?.Edit(id);
         if (isHitoryBack) history.back();
         return r;
     }

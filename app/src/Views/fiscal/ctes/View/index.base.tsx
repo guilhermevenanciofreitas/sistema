@@ -3,17 +3,30 @@ import { Service } from "../../../../Service";
 import { ViewModal, MessageBox } from "../../../../Utils/Controls";
 import { DisplayError } from "../../../../Utils/DisplayError";
 import { Loading } from "../../../../Utils/Loading";
+import _ from "lodash";
 
-export class ViewCteBase extends React.Component<Readonly<{Title: string}>> {
+export class ViewConhecimentoBase extends React.Component<Readonly<{Title: string}>> {
 
     protected ViewModal = React.createRef<ViewModal>();
 
     state = {
-        id: '',
-        ide: null,
+        id: "",
+        NFe: null,
+        protNFe: null,
     }
 
-    public Show = async (id?: string): Promise<any> =>
+    public New = async (nfe: any): Promise<any> =>
+    {
+
+        this.Limpar();
+
+        this.setState({...nfe});
+
+        return await this.ViewModal.current?.Show();
+
+    }
+
+    public Edit = async (id?: string): Promise<any> =>
     {
  
         this.Limpar();
@@ -41,19 +54,64 @@ export class ViewCteBase extends React.Component<Readonly<{Title: string}>> {
         }
     }
 
+    private ValidarChaveAcesso = (chNFe: string): boolean =>
+    {
+        // Verifica se a chave tem 44 caracteres
+        if (chNFe.length !== 44) {
+            return false; // Chave com tamanho incorreto
+        }
+
+        // Obtém o dígito verificador
+        var digitoVerificador = parseInt(chNFe.charAt(43), 10);
+
+        // Calcula o dígito verificador esperado
+        var soma = 0;
+        var peso = 2;
+        for (var i = 42; i >= 0; i--) {
+            soma += parseInt(chNFe.charAt(i), 10) * peso;
+            peso = (peso < 9) ? peso + 1 : 2;
+        }
+        var resto = soma % 11;
+        var digitoVerificadorEsperado = (resto === 0 || resto === 1) ? 0 : 11 - resto;
+
+        // Verifica se o dígito verificador informado coincide com o dígito verificador calculado
+        return digitoVerificador === digitoVerificadorEsperado;
+
+    }
+
     protected BtnSalvar_Click = async () =>
     {
         try
         {
 
-            Loading.Show();
+            const chCTe = (_.get(this.state, 'protCTe.infProt.chCTe') as any).replaceAll(' ', '');
 
-            let r = await Service.Post("nfe/save", this.state);
-    
+            if (_.isEmpty(chCTe)) {
+                await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Informe a chave de acesso!", buttons: [{ Text: "OK" }]});
+                return;
+            }
+
+            if (!this.ValidarChaveAcesso(chCTe)) {
+                await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Chave de acesso inválida!", buttons: [{ Text: "OK" }]});
+                return;
+            }
+
+            let protNFe: any = _.cloneDeep(_.get(this.state, 'protNFe'));
+
+            _.set(protNFe, 'infProt.chNFe', (_.get(protNFe, 'infProt.chNFe') as any).replaceAll(' ', ''));
+
+            const request = {
+                id: _.get(this.state, 'id') || null,
+                NFe: _.get(this.state, 'NFe') || null,
+                protNFe: protNFe,
+            }
+
+            Loading.Show();
+            let r = await Service.Post("cte/save", request);
             Loading.Hide();
     
             if (r?.status == 201) {
-                await MessageBox.Show({title: "Info", width: 400, content: r?.data.message, buttons: [{ Text: "OK" }]});
+                await MessageBox.Show({title: "Info", width: 400, type: 'Warning', content: r?.data.message, buttons: [{ Text: "OK" }]});
                 return;
             }
     
@@ -68,28 +126,41 @@ export class ViewCteBase extends React.Component<Readonly<{Title: string}>> {
         }
     }
 
-    protected BtnDownloadXML_Click = async () =>
-        {
-            try
-            {
-                
-                Loading.Show();
+    protected BtnXml_Click = async (event: any) =>
+    {
 
-                let r = await Service.Post("cte/download-xml", [this.state.id]);
+        const file = event.target.files[0];
+
+        const formData = new FormData();
+        formData.append('file', file);
         
-                Loading.Hide();
+        const response = await Service.Post('cte/xml', formData, 'multipart/form-data');
 
-            }
-            catch (err: any)
-            {
-                await DisplayError.Show(err);
-            }
+        this.setState({...response?.data});
+
+    }
+
+    protected BtnConsultar = async () => {
+
+        if (_.isEmpty(_.get(this.state, 'protNFe.infProt.chNFe'))) {
+            await MessageBox.Show({title: "Info", width: 400, type: "Warning", content: "Informe a chave de acesso!", buttons: [{ Text: "OK" }]});
+            return;
         }
+
+        Loading.Show();
+        const response = await Service.Post('nfe/consult', {chNFe: (_.get(this.state, 'protNFe.infProt.chNFe') as any).replaceAll(' ', '')});
+        Loading.Hide();
+
+        this.setState({...response?.data});
+
+    }
 
     private Limpar = () =>
     {
         this.setState({
-            id: ''
+            id: '',
+            NFe: null,
+            protNFe: null,
         });
     }
 

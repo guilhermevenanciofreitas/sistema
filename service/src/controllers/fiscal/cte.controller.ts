@@ -3,6 +3,8 @@ import Auth from "../../auth";
 import { Cte } from "../../database";
 import { CteService } from "../../services/fiscal/cte.service";
 import { Op } from "sequelize";
+import formidable from "formidable";
+import fs from "fs";
 
 export default class CteController {
 
@@ -22,10 +24,11 @@ export default class CteController {
         
                 const ctes = await Cte.findAndCountAll({attributes: [
                     "id",
-                    [sequelize.json('ide.nCT'), 'numero'],
-                    [sequelize.json('ide.serie'), 'serie'],
-                    [sequelize.json('emit.xFant'), 'emitente'],
-                    [sequelize.json('dest.xNome'), 'destinatario'],
+                    [sequelize.json('CTe.infCTe.ide.nCT'), 'numero'],
+                    [sequelize.json('CTe.infCTe.ide.serie'), 'serie'],
+                    [sequelize.json('CTe.infCTe.emit.xFant'), 'emitente'],
+                    [sequelize.json('CTe.infCTe.dest.xNome'), 'destinatario'],
+                    //[sequelize.json('CTe.infCTe.total.ICMSTot.vNF'), 'valor'],
                 ],
                     where, order, limit: pagination.limit, offset: pagination.offset1, transaction
                 });
@@ -58,7 +61,7 @@ export default class CteController {
                 const transaction = await sequelize.transaction();
 
                 const cte = await Cte.findOne({
-                    attributes: ['id', 'ide'],
+                    attributes: ['id', 'CTe', 'protCTe'],
                     where: {id: req.body.id},
                     transaction
                 });
@@ -76,7 +79,7 @@ export default class CteController {
         });
     }
 
-    async downloadXml(req: Request, res: Response) {
+    /*async downloadXml(req: Request, res: Response) {
         
         Auth(req, res).then(async ({sequelize}) => {
             try
@@ -111,6 +114,23 @@ export default class CteController {
         }).catch((err) => {
             res.status(401).json({message: err.message});
         });
+    }
+    */
+
+    async xml(req: Request, res: Response) {
+        
+        const form = formidable();
+
+        form.parse(req, async (err, fields: any, files: any) => {
+
+            const xml = fs.readFileSync(files.file[0].filepath, 'utf8');
+
+            const cte = await CteService.XmlToJson(xml);
+
+            res.status(200).json({CTe: cte.cteProc?.CTe, protCTe: cte.cteProc?.protCTe});
+
+        });
+
     }
 
     async save(req: Request, res: Response) {

@@ -2,6 +2,7 @@ import { Model, Table, Column, DataType, HasMany, BelongsTo, ForeignKey } from "
 import { ProductCombination } from "./productCombination.model";
 import { ProductCategory } from "./productCategory.model";
 import { ProductSupplier } from "./productSupplier.model";
+import { ProductSubCategory } from "./productSubCategory.model";
 
 @Table({tableName: "product"})
 export class Product extends Model {
@@ -17,6 +18,9 @@ export class Product extends Model {
 
   @Column({type: DataType.UUID, field: "categoryId"})
   categoryId?: string;
+
+  @Column({type: DataType.UUID, field: "subCategoryId"})
+  subCategoryId?: string;
 
   @Column({type: DataType.BOOLEAN, field: "isCombination"})
   isCombination?: string;
@@ -44,6 +48,9 @@ export class Product extends Model {
 
   @BelongsTo(() => ProductCategory, {as: 'category', foreignKey: 'categoryId'})
   category?: ProductCategory;
+
+  @BelongsTo(() => ProductSubCategory, {as: 'subCategory', foreignKey: 'subCategoryId'})
+  subCategory?: ProductSubCategory;
 
   @HasMany(() => ProductCombination, {as: 'combinations', foreignKey: 'productId'})
   combinations?: ProductCombination[];

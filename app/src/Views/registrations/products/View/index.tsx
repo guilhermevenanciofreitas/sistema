@@ -1,6 +1,6 @@
 
 import { ViewProductBase } from './index.base';
-import { AutoComplete, Button, CheckBox, Form, ViewModal, Tab, TabItem, TextBox, NumericBox, Content, Actions } from '../../../../Utils/Controls';
+import { AutoComplete, Button, CheckBox, Form, ViewModal, Tab, TabItem, TextBox, NumericBox, Content, Actions, MessageBox } from '../../../../Utils/Controls';
 import { EventArgs } from '../../../../Utils/EventArgs';
 import { ReactNode } from 'react';
 import { Grid } from '@mui/joy';
@@ -11,6 +11,7 @@ import { Suppliers } from './suppliers';
 import { CheckCircleOutline, DeleteForever, TaskAltOutlined } from '@mui/icons-material';
 import { color } from '../../../../Utils/color';
 import _ from 'lodash';
+import { ProductSubCategoryTemplate } from '../../../../Search/Templates/ProductSubCategory';
 
 export class ViewProduct extends ViewProductBase {
 
@@ -26,13 +27,19 @@ export class ViewProduct extends ViewProductBase {
                             <TextBox Label='Nome' TextTransform='UpperCase' Text={this.state.name} OnChange={(args: EventArgs) => this.setState({name: args.Value})} />
                         </Grid>
                         <Grid md={3}>
-                            <AutoComplete Label='Categoria' Action={{Type: 'ProductCategory', New: {Values: {}}, Edit: {Id: _.get(this.state.category, 'id')}}} Pesquisa={async (Text: string) => await Search.ProductCategory(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.category} OnChange={(category: any) => this.setState({category})}>
+                            <AutoComplete Label='Categoria' Action={{Type: 'ProductCategory', New: {Values: {}}, Edit: {Id: _.get(this.state.category, 'id')}}} Pesquisa={async (Text: string) => await Search.ProductCategory(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.category} OnChange={(category: any) => this.setState({category, subCategory: !category ? null : this.state.subCategory})} >
                                 <ProductCategoryTemplate />
                             </AutoComplete>
                         </Grid>
                         <Grid md={3}>
-                            <AutoComplete Label='Sub-categoria' Action={{Type: 'ProductCategory', New: {Values: {}}, Edit: {Id: _.get(this.state.category, 'id')}}} Pesquisa={async (Text: string) => await Search.ProductCategory(Text)} Text={(Item: any) => `${Item.description}` } Value={this.state.category} OnChange={(category: any) => this.setState({category})}>
-                                <ProductCategoryTemplate />
+                            <AutoComplete Label='Sub-categoria' Action={{Type: 'ProductSubCategory', New: {Values: {category: this.state.category}}, Edit: {Id: _.get(this.state.subCategory, 'id')}}} Pesquisa={async (Text: string) => {
+                                if (!this.state.category) {
+                                    await MessageBox.Show({title: 'Info', width: 400, type: 'Warning', content: 'Informe a categoria!', buttons: [{ Text: 'OK' }]});
+                                    return [];
+                                }
+                                return await Search.ProductSubCategory(Text, _.toString(_.get(this.state.category, 'id')))
+                            }} Text={(Item: any) => `${Item.name}` } Value={this.state.subCategory} OnChange={(subCategory: any) => this.setState({subCategory})}>
+                                <ProductSubCategoryTemplate />
                             </AutoComplete>
                         </Grid>
 

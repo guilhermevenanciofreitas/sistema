@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Container, Left, ListView, Right } from "../../../Utils/Controls";
 import { Add, FilterAlt, SearchRounded, Upload, Delete, ChangeCircle } from "@mui/icons-material";
-import { ViewCte } from "./View/index";
+import { ViewConhecimento } from "./View/index";
 import CtesBase from "./index.base";
 import { JoyLayout } from "../../../Layout/JoyLayout";
 import { IconButton } from "@mui/joy";
@@ -25,7 +25,7 @@ export default class Ctes extends CtesBase {
         return (
             <>
 
-                <ViewCte ref={this.ViewCte} Title="Conhecimento de transporte" />
+                <ViewConhecimento ref={this.ViewConhecimento} Title="Conhecimento de transporte" />
 
                 {/* 
                 <ViewImportar ref={this.ViewImportar} />

@@ -9,6 +9,7 @@ export { ControlForm as Form } from '../Controls/Form';
 
 export { ControlAutoComplete as AutoComplete } from '../Controls/Form/AutoComplete';
 export { ControlButton as Button } from '../../Utils/Controls/Form/Button';
+export { ControlButtonSplit as ButtonSplit } from '../../Utils/Controls/Form/ButtonSplit';
 export { ControlCheckBox as CheckBox } from '../../Utils/Controls/Form/CheckBox';
 export { ControlDatePicker as DatePicker } from '../../Utils/Controls/Form/DatePicker';
 export { ControlDateTimePicker as DateTimePicker } from '../../Utils/Controls/Form/DateTimePicker';

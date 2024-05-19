@@ -8,6 +8,8 @@ import { ViewVehicle } from "../../../../views/registrations/vehicles/View";
 import { ViewLocation } from "../../../../views/stock/locations/View";
 import { ViewBankAccount } from "../../../../views/financial/bankAccounts/View";
 import { ViewCombination } from "../../../../views/registrations/combinations/View";
+import { ViewProductSubCategory } from "../../../../views/registrations/productSubCategories/View";
+import { ViewShippingOrder } from "../../../../views/logistics/shippingOrders/View";
 
 export const ResultContext = React.createContext({
     args: undefined,
@@ -33,6 +35,7 @@ export class AutoCompleteBase extends React.Component<Readonly<{Action?: Action,
     protected ViewCombination = React.createRef<ViewCombination>();
     protected ViewProduct = React.createRef<ViewProduct>();
     protected ViewProductCategory = React.createRef<ViewProductCategory>();
+    protected ViewProductSubCategory = React.createRef<ViewProductSubCategory>();
     protected ViewStockLocation = React.createRef<ViewLocation>();
     protected ViewNotaFiscal = React.createRef<ViewNotaFiscal>();
     protected ViewCustomer = React.createRef<ViewPartner>();
@@ -40,6 +43,7 @@ export class AutoCompleteBase extends React.Component<Readonly<{Action?: Action,
     protected ViewEmployee = React.createRef<ViewPartner>();
     protected ViewVehicle = React.createRef<ViewVehicle>();
     protected ViewBankAccount = React.createRef<ViewBankAccount>();
+    protected ViewShippingOrder = React.createRef<ViewShippingOrder>();
     
     static defaultProps = {
         Value: null,
@@ -52,7 +56,7 @@ export class AutoCompleteBase extends React.Component<Readonly<{Action?: Action,
 
     protected Search = async (Text: string) =>
     {
-        this.setState({Loading: true});
+        this.setState({Loading: true, Result: []});
         let Result = await this.props.Pesquisa?.call(null, Text);
         this.setState(({Loading: false, Result: Result}));
     }

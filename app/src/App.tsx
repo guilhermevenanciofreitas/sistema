@@ -16,13 +16,14 @@ import Users from "./views/registrations/users/index";
 
 
 import Contracts from "./views/sales/contracts";
-import Orders from "./views/sales/orders";
+import SaleOrders from "./views/sales/orders";
 
 import { Login } from "./views/Login";
 
 
 import NotasFiscais from "./views/fiscal/nfes";
 
+import BuyOrders from "./views/buy/orders";
 
 
 //import Receipts from "./views/financial/receipts";
@@ -41,6 +42,7 @@ import Vehicles from "./views/registrations/vehicles";
 import Locations from "./views/stock/locations";
 import StockIns from "./views/stock/in";
 import Distributions from "./views/fiscal/distributions";
+import Trips from "./views/logistics/trips";
 
 export default class App extends React.Component {
     render(): React.ReactNode {
@@ -67,8 +69,11 @@ export default class App extends React.Component {
                 <Route path="/stock/locations" element={<RequireLogin><Locations /></RequireLogin>} />
                 <Route path="/stock/in" element={<RequireLogin><StockIns /></RequireLogin>} />
 
+                {/* Compras */}
+                <Route path="/buy/orders" element={<RequireLogin><BuyOrders /></RequireLogin>} />
+
                 {/* Sales */}
-                <Route path="/sales/orders" element={<RequireLogin><Orders /></RequireLogin>} />
+                <Route path="/sales/orders" element={<RequireLogin><SaleOrders /></RequireLogin>} />
                 <Route path="/sales/progress" element={<RequireLogin><Andamento /></RequireLogin>} />
                 <Route path="/sales/invoicing" element={<RequireLogin><Invoicing /></RequireLogin>} />
 
@@ -76,6 +81,7 @@ export default class App extends React.Component {
                 <Route path="/logistic/freight-calculations" element={<RequireLogin><FreightCalculations /></RequireLogin>} />
                 <Route path="/logistic/freight-quotes" element={<RequireLogin><FreightQuotes /></RequireLogin>} />
                 <Route path="/logistic/shipping-orders" element={<RequireLogin><ShippingOrders /></RequireLogin>} />
+                <Route path="/logistic/trips" element={<RequireLogin><Trips /></RequireLogin>} />
 
                 {/* Financial */}
                 <Route path="/financial/payments" element={<RequireLogin><Payments /></RequireLogin>} />

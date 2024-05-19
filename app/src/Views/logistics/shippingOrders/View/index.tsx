@@ -7,8 +7,6 @@ import { Alert, FormLabel, Grid } from '@mui/joy';
 import { PartnerTemplate } from '../../../../Search/Templates/Partner';
 import { Search } from '../../../../Search';
 import { CompanyTemplate } from '../../../../Search/Templates/Company';
-import { VehicleTemplate } from '../../../../Search/Templates/Vehicle';
-import { Vehicles } from './vehicles';
 import { Nfes } from './nfes';
 import _ from 'lodash';
 import { color } from '../../../../Utils/color';
@@ -58,17 +56,11 @@ export class ViewShippingOrder extends ViewShippingOrderBase {
                                 <PartnerTemplate />
                             </AutoComplete>
                         </Grid>
-                        <Grid md={5}>
-                            <AutoComplete Label='Motorista' Action={{Type: 'Employee', New: {Values: {}}, Edit: {Id: _.get(this.state.driver, 'id')}}} Pesquisa={async(Text: string) => await Search.Employee(Text)} Text={(Item: any) => `${Item.surname}` } Value={this.state.driver} OnChange={(driver: any) => this.setState({driver})}>
-                                <PartnerTemplate />
-                            </AutoComplete>
-                        </Grid>
-                        <Grid md={3}>
-                            <AutoComplete Label='Veículo' Action={{Type: 'Vehicle', New: {Values: {}}, Edit: {Id: _.get(this.state.vehicle, 'id')}}} Pesquisa={async(Text: string) => await Search.Vehicle(Text)} Text={(Item: any) => `${Item.name} - ${Item.plate}` } Value={this.state.vehicle} OnChange={(vehicle: any) => this.setState({vehicle})}>
-                                <VehicleTemplate />
-                            </AutoComplete>
-                        </Grid>
                         
+                        <Grid md={4}>
+                            <TextBox Label='Produto predominante' TextTransform='UpperCase' Text={this.state.predominantProduct} OnChange={(args: EventArgs) => this.setState({predominantProduct: args.Value})} />
+                        </Grid>
+
                         <Grid md={2}>
                             <NumericBox Label='Peso' Text={this.state.weight} Scale={3} OnChange={(args: EventArgs) => this.setState({weight: args.Value})} />
                         </Grid>
@@ -81,7 +73,7 @@ export class ViewShippingOrder extends ViewShippingOrderBase {
                             
                             <Tab>
                                 <TabItem Title='Reboques' Visible={true}>
-                                    <Vehicles vehicles={this.state.vehicles} OnChange={(vehicles: any[]) => this.setState({vehicles})} />
+                                    <></>
                                 </TabItem>
                                 <TabItem Title='Notas fiscais' Visible={true}>
                                     <Nfes nfes={this.state.nfes} OnChange={(nfes: any[]) => this.setState({nfes})} />

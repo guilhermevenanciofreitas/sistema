@@ -9,50 +9,6 @@ export default class ProductCategoryController {
 
     async findAll(req: Request, res: Response) {
 
-        Auth(req, res).then(async ({sequelize, pagination}) => {
-            try {
-
-                const transaction = await sequelize.transaction();
-
-                let where: any = {};
-                let order: any = [];
-        
-                if (pagination.filter?.name) {
-                    where = {'name': {[Op.iLike]: `%${pagination.filter?.name.replace(' ', "%")}%`}};
-                }
-        
-                if (pagination.sort) {
-                    order = [[pagination.sort.column, pagination.sort.direction]]
-                }
-        
-                const products = await Product.findAndCountAll({
-                    attributes: ['id', 'name', 'value', 'stockBalance'],
-                    include: [{model: ProductCategory, attributes: ['id', 'description']}],
-                    where,
-                    order,
-                    limit: pagination.limit,
-                    offset: pagination.offset1,
-                    transaction
-                });
-        
-                sequelize.close();
-
-                res.status(200).json({
-                    request: {
-                        ...pagination
-                    },
-                    response: {
-                        rows: products.rows, count: products.count
-                    }
-                });
-
-            }
-            catch (error: any) {
-                Error.Response(res, error);
-            }
-        }).catch((err: any) => {
-            res.status(401).json({message: err.message});
-        });
     }
 
     async findOne(req: Request, res: Response) {
